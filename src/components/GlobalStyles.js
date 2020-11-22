@@ -1,4 +1,4 @@
-import { createStyles, makeStyles } from '@material-ui/core';
+import { colors, createStyles, makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles(() => createStyles({
   '@global': {
@@ -24,7 +24,13 @@ const useStyles = makeStyles(() => createStyles({
     '#root': {
       height: '100%',
       width: '100%'
-    }
+    },
+    '.text-underlined': {
+      textDecoration: 'underline'
+    },
+    '.link-primary': {
+        color: colors.indigo[500]
+    },
   }
 }));
 

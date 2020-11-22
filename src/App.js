@@ -1,20 +1,24 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/components/GlobalStyles';
 import 'src/mixins/chartjs';
 import theme from 'src/theme';
-import routes from 'src/routes';
+import { Provider } from 'react-redux';
+import rootStore from './redux/store';
+import View from './views';
 
 const App = () => {
-  const routing = useRoutes(routes);
-
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      {routing}
-    </ThemeProvider>
+    <Provider store={rootStore}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <View />
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   );
 };
 

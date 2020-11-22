@@ -1,0 +1,13 @@
+export const SET_LOGGED_IN = 'SET_LOGGED_IN';
+export const SET_ACCOUNT_TYPE = 'SET_ACCOUNT_TYPE';
+export const ADMIN = 'ADMIN';
+export const USER = 'USER';
+export const COMMON = 'COMMON';
+export const REDIRECT_TO = 'REDIRECT_TO';
+export const SET_LOGIN_ACTION = 'SET_LOGIN_ACTION';
+export const SET_USER_DATA = 'SET_USER_DATA';
+export const SET_PRODUCT_DATA = 'SET_PRODUCT_DATA';
+export const SET_USER_ORDERS = 'SET_USER_ORDERS';
+export const SET_DELIVERY_PRICES = 'SET_DELIVERY_PRICES';
+export const SET_CATEGORIES = 'SET_CATEGORIES';
+export const SET_CATEGORIES_NAMES_MAP = 'SET_CATEGORIES_NAMES';

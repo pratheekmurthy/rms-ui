@@ -1,7 +1,8 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core';
-import TopBar from './TopBar';
+import { useLocation } from 'react-router';
+import RouteSwitch from 'src/components/RouteSwitch';
+import TopBar from '../DashboardLayout/TopBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,8 +30,12 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const MainLayout = () => {
+const MainLayout = ({ routes }) => {
   const classes = useStyles();
+
+  const location = useLocation();
+
+  const isAdmin = location.pathname.startsWith('/admin');
 
   return (
     <div className={classes.root}>
@@ -38,7 +43,7 @@ const MainLayout = () => {
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <Outlet />
+            <RouteSwitch routes={routes} redirectPath={isAdmin ? '/admin/dashboard' : 'abs'} />
           </div>
         </div>
       </div>

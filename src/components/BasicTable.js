@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import moment from 'moment';
 import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
@@ -8,16 +7,12 @@ import {
   Box,
   Button,
   Card,
-  CardHeader,
-  Chip,
   Divider,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
-  TableSortLabel,
-  Tooltip,
   makeStyles
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -30,13 +25,16 @@ const data = [
     customer: {
       name: 'Ekaterina Tankova'
     },
+    quantity: 10,
     createdAt: 1555016400000,
-    status: 'pending'
+    status: 'pending',
+    pendingWith: 'ABC'
   },
   {
     id: uuid(),
     ref: 'CDD1048',
     amount: 25.1,
+    quantity: 10,
     customer: {
       name: 'Cao Yu'
     },
@@ -47,6 +45,7 @@ const data = [
     id: uuid(),
     ref: 'CDD1047',
     amount: 10.99,
+    quantity: 10,
     customer: {
       name: 'Alexa Richardson'
     },
@@ -57,6 +56,7 @@ const data = [
     id: uuid(),
     ref: 'CDD1046',
     amount: 96.43,
+    quantity: 10,
     customer: {
       name: 'Anje Keizer'
     },
@@ -67,18 +67,9 @@ const data = [
     id: uuid(),
     ref: 'CDD1045',
     amount: 32.54,
+    quantity: 10,
     customer: {
       name: 'Clarke Gillebert'
-    },
-    createdAt: 1554670800000,
-    status: 'delivered'
-  },
-  {
-    id: uuid(),
-    ref: 'CDD1044',
-    amount: 16.76,
-    customer: {
-      name: 'Adam Denisov'
     },
     createdAt: 1554670800000,
     status: 'delivered'
@@ -92,57 +83,42 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const LatestOrders = ({ className, ...rest }) => {
+const BasicTable = ({
+  columns, className, records, ...rest
+}) => {
   const classes = useStyles();
-  const [orders] = useState(data);
-
+  const [orders] = useState(data || records);
   return (
     <Card
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Latest Orders" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  Order Ref
-                </TableCell>
-                <TableCell>
-                  Customer
-                </TableCell>
-                <TableCell sortDirection="desc">
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
-                  >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
-                      Date
-                    </TableSortLabel>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  Status
-                </TableCell>
+                {
+                  columns.map((col) => (
+                    <TableCell>
+                      {col.label}
+                    </TableCell>
+                  ))
+                }
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
+              {orders.map((record, index) => (
                 <TableRow
                   hover
-                  key={order.id}
+                  key={record.id || index}
                 >
-                  <TableCell>
+                  {/* <TableCell>
                     {order.ref}
                   </TableCell>
                   <TableCell>
-                    {order.customer.name}
+                    {order.quantity}
                   </TableCell>
                   <TableCell>
                     {moment(order.createdAt).format('DD/MM/YYYY')}
@@ -154,6 +130,16 @@ const LatestOrders = ({ className, ...rest }) => {
                       size="small"
                     />
                   </TableCell>
+                  <TableCell>
+                    {moment(order.createdAt).format('DD/MM/YYYY')}
+                  </TableCell> */}
+                  {
+                    columns.map((col) => (
+                      <TableCell key={record[col.selector]}>
+                        {record[col.selector]}
+                      </TableCell>
+                    ))
+                  }
                 </TableRow>
               ))}
             </TableBody>
@@ -178,8 +164,13 @@ const LatestOrders = ({ className, ...rest }) => {
   );
 };
 
-LatestOrders.propTypes = {
-  className: PropTypes.string
+BasicTable.propTypes = {
+  className: PropTypes.string,
+  columns: PropTypes.arrayOf(PropTypes.shape({
+    selector: PropTypes.string,
+    label: PropTypes.string
+  })),
+  records: PropTypes.arrayOf(PropTypes.any)
 };
 
-export default LatestOrders;
+export default BasicTable;
