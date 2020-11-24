@@ -7,7 +7,7 @@ import RouteWithSubRoutes from './RouteItem';
 
 function RouteSwitch({ routes, redirectPath, isRoot }) {
     const location = useLocation();
-    console.log(routes)
+    console.log(routes);
     return (
         <Switch>
             {

@@ -1,22 +1,19 @@
-import { ADMIN, USER } from 'src/redux/constants';
-import adminRoutes from './adminRoutes';
-import userRoutes from './userRoutes';
-import MainLayout from '../layouts/MainLayout/index';
-import DashboardLayout from '../layouts/DashboardLayout/index';
+import routes from 'src/modules/dashboard-360/routes';
+import surveyRoutes from 'src/modules/surveys/routes';
+import views from 'src/modules/dashboard-360/views';
+import surveys from 'src/modules/surveys';
 
 export default [
     {
-        path: '/admin',
-        accountType: ADMIN,
-        routes: adminRoutes,
-        key: 'admin',
-        component: MainLayout
+        path: '/dash360',
+        routes,
+        key: 'dash360',
+        component: views
     },
     {
-        path: '/user',
-        accountType: USER,
-        routes: userRoutes,
-        key: 'user',
-        component: DashboardLayout
+        path: '/surveys',
+        routes: surveyRoutes,
+        key: 'surveys',
+        component: surveys
     }
 ];
