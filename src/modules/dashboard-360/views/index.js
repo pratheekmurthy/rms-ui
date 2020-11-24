@@ -21,7 +21,7 @@ View.propTypes = {
 
 const mapStateToProps = (state) => ({
     // Added admin just for testing
-    accountType: state.accountType || 'USER'
+    accountType: state.accountType || 'ADMIN'
 });
 
 export default connect(mapStateToProps)(View);
