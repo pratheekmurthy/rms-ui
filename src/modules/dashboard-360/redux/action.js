@@ -1,21 +1,8 @@
 import {
-    SET_LOGGED_IN, SET_ACCOUNT_TYPE, SET_LOGIN_ACTION, SET_USER_DATA,
+    SET_LOGIN_ACTION, SET_USER_DATA,
     SET_PRODUCT_DATA, SET_USER_ORDERS, SET_DELIVERY_PRICES, SET_CATEGORIES, SET_CATEGORIES_NAMES_MAP
 } from './constants';
 
-export const setLoggedIn = (isLoggedIn) => {
-    return {
-        type: SET_LOGGED_IN,
-        payload: isLoggedIn
-    };
-};
-
-export const setAccountType = (accType) => {
-    return {
-        type: SET_ACCOUNT_TYPE,
-        payload: accType
-    };
-};
 export const setActionAfterLogIn = (actionType, courseId) => {
     return {
         type: SET_LOGIN_ACTION,
