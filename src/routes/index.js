@@ -1,8 +1,9 @@
 import routes from 'src/modules/dashboard-360/routes';
 import surveyRoutes from 'src/modules/surveys/routes';
-//import telephonyRoutes from 'src/modules/telephony/routes';
 import views from 'src/modules/dashboard-360/views';
 import surveys from 'src/modules/surveys';
+import telephonyRoutes from '../modules/telephony/routes';
+import telephony from '../modules/telephony/views';
 
 export default [
     {
@@ -17,10 +18,10 @@ export default [
         key: 'surveys',
         component: surveys
     },
-    // {
-    //     path: '/telephony',
-    //     telephonyRoutes,
-    //     key: 'telephony',
-    //     component: views
-    // }
+    {
+        path: '/telephony',
+        routes: telephonyRoutes,
+        key: 'telephony',
+        component: telephony
+    }
 ];

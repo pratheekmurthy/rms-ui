@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import RouteSwitch from 'src/components/RouteSwitch';
 import { connect } from 'react-redux';
-import { ADMIN, COMMON } from '../redux/constants';
+import { DynamicModuleLoader } from 'redux-dynamic-modules';
+import { ADMIN, COMMON } from '../../../redux/constants';
+import getDashboardModule from '../redux/module';
 
 function View({ accountType, routes }) {
     routes = routes.filter((route) => (
@@ -10,7 +12,9 @@ function View({ accountType, routes }) {
         || route.accountType === COMMON
     ));
     return (
-        <RouteSwitch routes={routes} redirectPath={accountType === ADMIN ? '/dash360/admin/dashboard' : '/dash360/user/profile'} />
+        <DynamicModuleLoader modules={[getDashboardModule()]}>
+            <RouteSwitch routes={routes} redirectPath={accountType === ADMIN ? '/dash360/admin/dashboard' : '/dash360/user/profile'} />
+        </DynamicModuleLoader>
     );
 }
 

@@ -6,7 +6,7 @@ import GlobalStyles from 'src/modules/dashboard-360/components/GlobalStyles';
 import 'src/modules/dashboard-360/mixins/chartjs';
 import theme from 'src/modules/dashboard-360/theme';
 import { Provider } from 'react-redux';
-import rootStore from './modules/dashboard-360/redux/store';
+import rootStore from './redux/store';
 import RouteSwitch from './components/RouteSwitch';
 import routes from './routes';
 

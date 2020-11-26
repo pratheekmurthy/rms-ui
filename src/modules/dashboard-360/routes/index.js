@@ -1,4 +1,4 @@
-import { ADMIN, USER } from '../redux/constants';
+import { ADMIN, USER } from '../../../redux/constants';
 import adminRoutes from './adminRoutes';
 import userRoutes from './userRoutes';
 import MainLayout from '../layouts/MainLayout/index';
