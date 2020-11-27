@@ -1,16 +1,18 @@
 import routes from 'src/modules/dashboard-360/routes';
 import surveyRoutes from 'src/modules/surveys/routes';
-import views from 'src/modules/dashboard-360/views';
-import surveys from 'src/modules/surveys';
+import React from 'react';
 import telephonyRoutes from '../modules/telephony/routes';
-import telephony from '../modules/telephony/views';
+
+export const dash360 = React.lazy(() => import('src/modules/dashboard-360/views'));
+export const surveys = React.lazy(() => import('src/modules/surveys'));
+export const telephony = React.lazy(() => import('src/modules/telephony/views'));
 
 export default [
     {
         path: '/dash360',
         routes,
         key: 'dash360',
-        component: views
+        component: dash360
     },
     {
         path: '/surveys',
