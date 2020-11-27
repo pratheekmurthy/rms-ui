@@ -1,9 +1,9 @@
-import surveys from '../index';
+import home from '../views/home';
 
 export default [
     {
         path: '/home',
-        key: 'admin',
-        component: surveys
+        key: 'home',
+        component: home
     }
 ];
