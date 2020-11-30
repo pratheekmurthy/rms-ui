@@ -31,6 +31,18 @@ const useStyles = makeStyles(() => createStyles({
     '.link-primary': {
         color: colors.indigo[500]
     },
+    '.MuiTab-textColorPrimary': {
+      color: colors.indigo[500]
+    },
+    '.MuiChip-root': {
+      color: colors.common.white
+    },
+    '.MuiChip-colorPrimary': {
+      color: colors.common.white
+    },
+    '.MuiChip-colorSecondary': {
+      color: colors.common.white
+    }
   }
 }));
 

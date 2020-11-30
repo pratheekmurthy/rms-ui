@@ -13,11 +13,14 @@ const theme = createMuiTheme({
       main: colors.indigo[500]
     },
     secondary: {
-      main: colors.indigo[500]
+      light: '#ff7961',
+      main: '#f44336',
+      dark: '#ba000d',
+      contrastText: '#000',
     },
     text: {
       primary: colors.blueGrey[900],
-      secondary: colors.blueGrey[600]
+      secondary: colors.red[600]
     }
   },
   shadows,

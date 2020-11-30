@@ -14,6 +14,11 @@ const useStyles = makeStyles((theme) => ({
     },
     floatRight: {
       float: 'right'
+    },
+    secondaryText: {
+      letterSpacing: 0,
+      fontSize: '0.9rem',
+      color: theme.palette.grey[700]
     }
 }));
 
@@ -41,9 +46,9 @@ export default function TicketsList() {
                 >
                   Profile -&gt; Profile Update
                 </Typography>
-                {' — I moved my business to new location, Please update my address'}
+                <span className={classes.secondaryText}> — I moved my business to new location, Please update my address</span>
                 <br />
-                <Typography component="span" variant="subtitle2" className={classes.floatRight}>23/11/2020</Typography>
+                <Typography component="span" variant="subtitle2" className={`${classes.floatRight} ${classes.secondaryText}`}>23/11/2020</Typography>
               </>
             )}
           />
@@ -69,9 +74,9 @@ export default function TicketsList() {
                 >
                   Profile -&gt; Profile Update
                 </Typography>
-                {' — I moved my business to new location, Please update my address'}
+                <span className={classes.secondaryText}> — I moved my business to new location, Please update my address</span>
                 <br />
-                <Typography component="span" variant="subtitle2" className={classes.floatRight}>23/11/2020</Typography>
+                <Typography component="span" variant="subtitle2" className={`${classes.floatRight} ${classes.secondaryText}`}>23/11/2020</Typography>
               </>
             )}
           />
@@ -97,9 +102,9 @@ export default function TicketsList() {
                 >
                   Profile -&gt; Profile Update
                 </Typography>
-                {' — I moved my business to new location, Please update my address'}
+                <span className={classes.secondaryText}> — I moved my business to new location, Please update my address</span>
                 <br />
-                <Typography component="span" variant="subtitle2" className={classes.floatRight}>23/11/2020</Typography>
+                <Typography component="span" variant="subtitle2" className={`${classes.floatRight} ${classes.secondaryText}`}>23/11/2020</Typography>
               </>
             )}
           />
