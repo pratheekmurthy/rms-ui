@@ -42,7 +42,7 @@ const BasicTable = ({
                 {
                   columns.map((col) => (
                     <TableCell>
-                      {col.label}
+                      {col.headerName}
                     </TableCell>
                   ))
                 }
@@ -66,7 +66,7 @@ const BasicTable = ({
                   <TableCell>
                     <Chip
                       color="primary"
-                      label={order.status}
+                      headerName={order.status}
                       size="small"
                     />
                   </TableCell>
@@ -75,8 +75,8 @@ const BasicTable = ({
                   </TableCell> */}
                   {
                     columns.map((col) => (
-                      <TableCell key={record[col.selector]}>
-                        {record[col.selector]}
+                      <TableCell key={record[col.field]}>
+                        {col.render ? col.render({ row: record }) : record[col.field]}
                       </TableCell>
                     ))
                   }
@@ -107,8 +107,8 @@ const BasicTable = ({
 BasicTable.propTypes = {
   className: PropTypes.string,
   columns: PropTypes.arrayOf(PropTypes.shape({
-    selector: PropTypes.string,
-    label: PropTypes.string
+    field: PropTypes.string,
+    headerName: PropTypes.string
   })),
   records: PropTypes.arrayOf(PropTypes.any)
 };
