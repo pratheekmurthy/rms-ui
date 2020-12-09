@@ -43,7 +43,7 @@ const MainLayout = ({ routes }) => {
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <RouteSwitch routes={routes} redirectPath={isAdmin ? '/admin/dashboard' : 'abs'} />
+            <RouteSwitch routes={routes} redirectPath={isAdmin ? '/admin/dashboard' : ''} />
           </div>
         </div>
       </div>

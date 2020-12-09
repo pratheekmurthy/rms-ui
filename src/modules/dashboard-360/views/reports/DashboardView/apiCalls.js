@@ -4,32 +4,30 @@ import {
     GET_DEALER_KYC, GET_DEALER_ORDERS, GET_DEALER_PROFILE
 } from 'src/modules/dashboard-360/utils/endpoints';
 
-export const getDealerDetails = Axios.get(GET_DEALER_PROFILE, {
-    params: {
-        distributorID: 1001
-    }
+export const getDealerDetails = (distributorID) => Axios.get(GET_DEALER_PROFILE, {
+    params: { distributorID }
 });
 
-export const getDealerJoiningDetails = Axios.get(GET_DEALER_JOINING_DETAILS, {
-    params: {
-        distributorID: 1001
-    }
+export const getDealerJoiningDetails = (distributorID) => Axios.get(GET_DEALER_JOINING_DETAILS, {
+    params: { distributorID }
 });
 
-export const getDealerOrderDetails = Axios.get(GET_DEALER_ORDERS, {
-    params: {
-        distributorID: 1001
-    }
+export const getDealerOrderDetails = (distributorID) => Axios.get(GET_DEALER_ORDERS, {
+    params: { distributorID }
 });
 
-export const getDealerInvoiceDetails = Axios.get(GET_DEALER_INVOICES, {
-    params: {
-        distributorID: 1001
-    }
+export const getDealerInvoiceDetails = (distributorID) => Axios.get(GET_DEALER_INVOICES, {
+    params: { distributorID }
 });
 
-export const getDealerKYCDetails = Axios.get(GET_DEALER_KYC, {
-    params: {
-        distributorID: 1001
-    }
+export const getDealerKYCDetails = (distributorID) => Axios.get(GET_DEALER_KYC, {
+    params: { distributorID }
 });
+
+export default (distributorID) => ([
+    getDealerDetails(distributorID),
+    getDealerJoiningDetails(distributorID),
+    getDealerOrderDetails(distributorID),
+    getDealerInvoiceDetails(distributorID),
+    getDealerKYCDetails(distributorID),
+]);
