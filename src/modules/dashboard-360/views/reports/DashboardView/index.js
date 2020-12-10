@@ -23,20 +23,24 @@ import {
   Tooltip,
   Typography
 } from '@material-ui/core';
+import { ExpandMore } from '@material-ui/icons';
+import Axios from 'axios';
+
 import Page from 'src/modules/dashboard-360/components/Page';
 import CustomTabs from 'src/modules/dashboard-360/components/CustomTabs';
 import CustomTabPanel from 'src/modules/dashboard-360/components/CustomTabPanel';
-import { ExpandMore, Category } from '@material-ui/icons';
 import BasicTable from 'src/modules/dashboard-360/components/BasicTable';
-import Axios from 'axios';
 import MainLoader from 'src/components/MainLoader';
-import DealerCard from './DealerCard';
-import TicketsList from './TicketsList';
-import dealerAPICalls from './apiCalls';
 import {
   invoicesColumns,
   orderColumns
 } from 'src/modules/dashboard-360/utils/columns-config';
+
+import DealerCard from './DealerCard';
+import TicketsList from './TicketsList';
+import dealerAPICalls from './apiCalls';
+import { Alert } from '@material-ui/lab';
+import ErrorAlert from 'src/components/ErrorAlert';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -84,13 +88,22 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    Axios.all(dealerAPICalls(1001)).then(response => {
-      console.log(response);
-      setRootData(response.map(res => res.data));
-      setLoadingDetails(false);
-    });
+    async function get() {
+      try {
+        const response = await Promise.allSettled(dealerAPICalls(1001));
+        console.log(response);
+        setRootData(
+          response.map(res =>
+            res.status === 'fulfilled' ? res.value.data : {}
+          )
+        );
+        setLoadingDetails(false);
+      } catch (err) {
+        console.log(err.response, 'error');
+      }
+    }
+    get();
   }, []);
-  console.log(rootData);
 
   return !loadingDetails ? (
     <Page className={classes.root} title="Dashboard">
@@ -126,14 +139,18 @@ const Dashboard = () => {
         <br />
         <Grid container spacing={3}>
           <Grid item lg={4} md={12} xs={12}>
-            <DealerCard
-              dealerDetails={{
-                ...rootData[0].data[0],
-                ...rootData[1].data[0],
-                lastOrderReference: rootData[2].data[0].OrderNumber
-              }}
-              showCreateIssue={e => setShowCreateIssue(e)}
-            />
+            {rootData[0].data && rootData[1].data ? (
+              <DealerCard
+                dealerDetails={{
+                  ...rootData[0].data[0],
+                  ...rootData[1].data[0],
+                  lastOrderReference: rootData[2].data[0].OrderNumber
+                }}
+                showCreateIssue={e => setShowCreateIssue(e)}
+              />
+            ) : (
+              <ErrorAlert text="Unable to get dealer details" />
+            )}
             <Box mt={2}>
               <Card>
                 <TicketsList />
@@ -162,10 +179,14 @@ const Dashboard = () => {
                     setCurrent={val => setOrderTab(val)}
                   />
                   <CustomTabPanel value={orderTab} index={0}>
-                    <BasicTable
-                      columns={orderColumns}
-                      records={rootData[2].data.slice(0, 5)}
-                    />
+                    {rootData[2].data ? (
+                      <BasicTable
+                        columns={orderColumns}
+                        records={rootData[2].data.slice(0, 5)}
+                      />
+                    ) : (
+                      <ErrorAlert />
+                    )}
                   </CustomTabPanel>
                   <CustomTabPanel value={orderTab} index={1}>
                     Item Three
@@ -194,10 +215,14 @@ const Dashboard = () => {
                     setCurrent={val => setOrderTab(val)}
                   />
                   <CustomTabPanel value={orderTab} index={0}>
-                    <BasicTable
-                      columns={invoicesColumns}
-                      records={rootData[3].data.slice(0, 5)}
-                    />
+                    {rootData[3].data ? (
+                      <BasicTable
+                        columns={invoicesColumns}
+                        records={rootData[3].data.slice(0, 5)}
+                      />
+                    ) : (
+                      <ErrorAlert />
+                    )}
                   </CustomTabPanel>
                   <CustomTabPanel value={orderTab} index={1}>
                     Item Three

@@ -4,6 +4,7 @@ import {
   CardHeader,
   Divider,
   Grid,
+  Link,
   List,
   ListItem,
   ListItemText,
@@ -11,12 +12,16 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   maxW50: {
     maxWidth: '50%',
     width: '50%'
+  },
+  customLink: {
+    '&:hover': {
+      cursor: 'pointer'
+    }
   }
 }));
 
@@ -38,7 +43,12 @@ export default function DealerCard({ dealerDetails, showCreateIssue }) {
         title={
           <Grid container justify="space-between">
             <span>Dealer Details</span>
-            <Link onClick={() => showCreateIssue(true)}>Create Issue</Link>
+            <span
+              className={`MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary ${classes.customLink}`}
+              onClick={() => showCreateIssue(true)}
+            >
+              Create Issue
+            </span>
           </Grid>
         }
       />
