@@ -1,15 +1,15 @@
 import { DataGrid } from '@material-ui/data-grid';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { setDistributorOrders } from 'src/modules/dashboard-360/redux/action';
-import { orderColumns } from 'src/modules/dashboard-360/utils/columns-config';
+import { setDistributorInvoices } from 'src/modules/dashboard-360/redux/action';
+import { invoicesColumns } from 'src/modules/dashboard-360/utils/columns-config';
 import PropTypes from 'prop-types';
 import ErrorAlert from 'src/components/ErrorAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
-  getDealerOrderDetails,
-  getSingleOrderDetails
+  getDealerInvoiceDetails,
+  getSingleInvoiceDetails
 } from '../../reports/DashboardView/apiCalls';
 
 const style = makeStyles(() => ({
@@ -17,7 +17,11 @@ const style = makeStyles(() => ({
     maxHeight: 628
   }
 }));
-function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
+function Invoices({
+  distributorInvoices,
+  setDistributorInvoicesAction,
+  ...props
+}) {
   const classes = style();
   const [showLoader, setShowLoader] = useState(true);
   const {
@@ -26,21 +30,21 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
     }
   } = props;
 
-  const [orderDetails, setSingleOrderDetails] = useState(null);
+  const [invoiceDetails, setSingleInvoiceDetails] = useState(null);
 
   const orderIdPrev = useRef(orderId);
 
   useEffect(() => {
-    if (!distributorOrders || orderIdPrev !== orderId) {
+    if (!distributorInvoices || orderIdPrev !== orderId) {
       (async function getDetails() {
         try {
           const res = await (orderId
-            ? getSingleOrderDetails(orderId)
-            : getDealerOrderDetails(1001));
+            ? getSingleInvoiceDetails(orderId)
+            : getDealerInvoiceDetails(1001));
           if (!orderId) {
-            setDistributorOrdersAction(res.data.data);
+            setDistributorInvoicesAction(res.data.data);
           } else {
-            setSingleOrderDetails(res.data.data);
+            setSingleInvoiceDetails(res.data.data);
           }
         } catch (error) {
           console.log(error);
@@ -51,12 +55,12 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
     }
   }, [orderId]);
   const [page, setPage] = useState(1);
-  return distributorOrders ? (
+  return distributorInvoices ? (
     // <Card>
     <div className={classes.dgContainer}>
       <Box padding="1rem 0.5rem">
         <Typography variant="h6" component="h4">
-          All Orders
+          All Invoices
         </Typography>
       </Box>
       <DataGrid
@@ -68,10 +72,10 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         autoHeight
-        columns={orderColumns}
-        rows={distributorOrders.map(order => ({
+        columns={invoicesColumns}
+        rows={distributorInvoices.map(order => ({
           ...order,
-          id: order.OrderNumber
+          id: order.InvoiceNumber
         }))}
       />
     </div>
@@ -83,17 +87,18 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
   );
 }
 
-Orders.propTypes = {
-  distributorOrders: PropTypes.arrayOf(PropTypes.object),
-  setDistributorOrdersAction: PropTypes.func
+Invoices.propTypes = {
+  distributorInvoices: PropTypes.arrayOf(PropTypes.object),
+  setDistributorInvoicesAction: PropTypes.func
 };
 
 const mapStateToProps = state => ({
-  distributorOrders: state.distributorOrders
+  distributorInvoices: state.distributorInvoices
 });
 
 const mapDispatchToProps = dispatch => ({
-  setDistributorOrdersAction: orders => dispatch(setDistributorOrders(orders))
+  setDistributorInvoicesAction: invoices =>
+    dispatch(setDistributorInvoices(invoices))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Orders);
+export default connect(mapStateToProps, mapDispatchToProps)(Invoices);

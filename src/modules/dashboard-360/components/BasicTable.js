@@ -16,15 +16,29 @@ import {
   makeStyles
 } from '@material-ui/core';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
     justifyContent: 'flex-end'
+  },
+  linkContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    fontWeight: 'bold'
   }
 }));
 
-const BasicTable = ({ columns, className, records, ...rest }) => {
+const BasicTable = ({
+  columns,
+  className,
+  records,
+  redirectLink,
+  redirectLabel,
+  ...rest
+}) => {
   const classes = useStyles();
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
@@ -46,8 +60,8 @@ const BasicTable = ({ columns, className, records, ...rest }) => {
                 <TableRow hover key={record.id || index}>
                   {columns.map((col, index2) => (
                     <TableCell key={`cell-${index}-${index2}`}>
-                      {col.render
-                        ? col.render({ row: record })
+                      {col.renderCell
+                        ? col.renderCell({ row: record })
                         : record[col.field]}
                     </TableCell>
                   ))}
@@ -57,16 +71,14 @@ const BasicTable = ({ columns, className, records, ...rest }) => {
           </Table>
         </Box>
       </PerfectScrollbar>
-      <Box display="flex" justifyContent="flex-end" p={2}>
-        <Button
-          color="primary"
-          endIcon={<ArrowRightIcon />}
-          size="small"
-          variant="text"
-        >
-          View all
-        </Button>
-      </Box>
+      {redirectLink && (
+        <Box display="flex" justifyContent="flex-end" p={2} alignItems="center">
+          <Link to={redirectLink} className={classes.linkContainer}>
+            {redirectLabel}
+            <ArrowRightIcon />
+          </Link>
+        </Box>
+      )}
     </Card>
   );
 };
@@ -79,7 +91,9 @@ BasicTable.propTypes = {
       headerName: PropTypes.string
     })
   ),
-  records: PropTypes.arrayOf(PropTypes.any)
+  records: PropTypes.arrayOf(PropTypes.any),
+  redirectLink: PropTypes.string,
+  redirectLabel: PropTypes.string
 };
 
 export default BasicTable;

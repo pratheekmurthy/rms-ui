@@ -35,6 +35,7 @@
     "react/jsx-indent-props": "off",
     "react/jsx-wrap-multilines": "off",
     "arrow-parens": "off",
-    "no-confusing-arrow": "off"
+    "no-confusing-arrow": "off",
+    "wrap-iife": "off"
   }
 }
