@@ -42,7 +42,7 @@ export default function DealerCard({ dealerDetails, showCreateIssue }) {
       <CardHeader
         title={
           <Grid container justify="space-between">
-            <span>Dealer Details</span>
+            <span>Distributor Details</span>
             <span
               className={`MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary ${classes.customLink}`}
               onClick={() => showCreateIssue(true)}
@@ -59,7 +59,7 @@ export default function DealerCard({ dealerDetails, showCreateIssue }) {
             primary={
               <Box display="flex" flexDirection="row" alignItems="center">
                 <Typography variant="h5" className={classes.maxW50}>
-                  Dealer ID
+                  Distr. ID
                 </Typography>
                 <span>{distributor_id}</span>
               </Box>
@@ -72,13 +72,27 @@ export default function DealerCard({ dealerDetails, showCreateIssue }) {
             primary={
               <Box display="flex" flexDirection="row" alignItems="center">
                 <Typography variant="h5" className={classes.maxW50}>
-                  Dealer Name
+                  Distr. Name
                 </Typography>
                 <span>{distributor_name}</span>
               </Box>
             }
           />
         </ListItem>
+
+        <ListItem>
+          <ListItemText
+            primary={
+              <Box display="flex" flexDirection="row" alignItems="center">
+                <Typography variant="h5" className={classes.maxW50}>
+                  Display Name
+                </Typography>
+                <span>{distributor_name}</span>
+              </Box>
+            }
+          />
+        </ListItem>
+
         <Divider />
         <ListItem>
           <ListItemText
