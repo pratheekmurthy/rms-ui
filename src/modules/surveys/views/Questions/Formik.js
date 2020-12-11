@@ -11,53 +11,53 @@ import {
   Paper,
   FormControlLabel,
   Radio,
-  RadioGroup,
-} from "@material-ui/core";
-import { green, orange, purple } from "@material-ui/core/colors";
-import { CheckBox } from "@material-ui/icons";
-import { Formik, Form, Field } from "formik";
-import { CheckboxWithLabel, Select, TextField } from "formik-material-ui";
-import React, { useEffect, useRef, useState } from "react";
-import * as Yup from "yup";
-import GenerateForm from "./GenerateForm";
-import CheckboxInput from "./InputTypes/Checkbox";
-import RatingInput from "./InputTypes/Rating";
-import TextInput from "./InputTypes/Text";
-import TextareaInput from "./InputTypes/Textarea";
-import RadioInput from "./InputTypes/Radio";
-import SelectInput from "./InputTypes/Select";
-import Axios from "axios";
+  RadioGroup
+} from '@material-ui/core';
+import { green, orange, purple } from '@material-ui/core/colors';
+import { CheckBox } from '@material-ui/icons';
+import { Formik, Form, Field } from 'formik';
+import { CheckboxWithLabel, Select, TextField } from 'formik-material-ui';
+import React, { useEffect, useRef, useState } from 'react';
+import * as Yup from 'yup';
+import GenerateForm from './GenerateForm';
+import CheckboxInput from './InputTypes/Checkbox';
+import RatingInput from './InputTypes/Rating';
+import TextInput from './InputTypes/Text';
+import TextareaInput from './InputTypes/Textarea';
+import RadioInput from './InputTypes/Radio';
+import SelectInput from './InputTypes/Select';
+import Axios from 'axios';
 
 const paragraphTheme = createMuiTheme({
   palette: {
-    primary: orange,
-  },
+    primary: orange
+  }
 });
 
-const GenerateFormBtn = withStyles((theme) => ({
+const GenerateFormBtn = withStyles(theme => ({
   root: {
     color: theme.palette.getContrastText(purple[500]),
     backgroundColor: purple[500],
-    "&:hover": {
-      backgroundColor: purple[700],
-    },
-  },
+    '&:hover': {
+      backgroundColor: purple[700]
+    }
+  }
 }))(Button);
 
 const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   formControl: {
-    minWidth: 200,
-  },
+    minWidth: 200
+  }
 }));
 
 const FormFormik = () => {
   const formRef = useRef();
 
   const classes = useStyles();
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
   const [textList, setTextList] = useState([]);
   const [radioInput, setRadioInput] = useState([]);
   const [questions, setQuestions] = useState({});
@@ -65,31 +65,31 @@ const FormFormik = () => {
 
   let test = true;
 
-  const handleClick = (e) => {
+  const handleClick = e => {
     if (e.target.value !== undefined) {
       setInputValue(e.target.value);
     }
   };
 
   const handleText = () => {
-    let name = document.getElementById("textName").value;
+    let name = document.getElementById('textName').value;
     let label =
-      inputValue === "rating"
+      inputValue === 'rating'
         ? inputValue
-        : inputValue === "radio"
-        ? name.split(";")
+        : inputValue === 'radio'
+        ? name.split(';')
         : name;
-    if (name && label !== "") {
+    if (name && label !== '') {
       setTextList([
         ...textList,
         {
           name: name,
           label: label,
           type: inputValue,
-          row: document.getElementById("textNum")
-            ? document.getElementById("textNum").value
-            : null,
-        },
+          row: document.getElementById('textNum')
+            ? document.getElementById('textNum').value
+            : null
+        }
       ]);
     }
     if (formRef.current) {
@@ -98,35 +98,35 @@ const FormFormik = () => {
   };
 
   useEffect(() => {
-    if (inputValue !== "") {
+    if (inputValue !== '') {
       console.log(inputValue);
     }
     if (input.length !== 0) {
-      console.log("input", input);
+      console.log('input', input);
     }
   }, [inputValue, input]);
 
   let inputs = [];
 
-  const onAddData = (data) => {
+  const onAddData = data => {
     // inputs.push(data);
     // console.log("inputs , ", inputs);
     setInput([...input, data]);
   };
 
-  const handleInputs = (inputValue) => {
+  const handleInputs = inputValue => {
     switch (inputValue) {
-      case "rating":
+      case 'rating':
         return <RatingInput submit={onAddData} />;
-      case "textarea":
+      case 'textarea':
         return <TextareaInput submit={onAddData} />;
-      case "text":
+      case 'text':
         return <TextInput submit={onAddData} />;
-      case "checkbox":
+      case 'checkbox':
         return <CheckboxInput submit={onAddData} />;
-      case "radio":
+      case 'radio':
         return <RadioInput submit={onAddData} />;
-      case "select":
+      case 'select':
         return <SelectInput submit={onAddData} />;
       default:
         return inputValue;
@@ -146,11 +146,11 @@ const FormFormik = () => {
   // }, [inputValue]);
 
   function postQuestions() {
-    Axios.post("https://.typicode.com/posts", input)
-      .then((res) => {
+    Axios.post('https://.typicode.com/posts', input)
+      .then(res => {
         console.log(res);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(input);
       });
   }
@@ -161,30 +161,30 @@ const FormFormik = () => {
         <Formik
           innerRef={formRef}
           initialValues={{
-            select: "",
-            textName: "",
-            textLabel: "",
-            textNum: 3,
+            select: '',
+            textName: '',
+            textLabel: '',
+            textNum: 3
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
             console.log(values);
-            console.log("textList : ", textList);
-            {
-              handleText;
-            }
+            console.log('textList : ', textList);
+            // {
+            //   handleText;
+            // }
             // console.log("onAddData : ", inputs);
           }}
           validationSchema={Yup.object({
             select: Yup.string()
               .oneOf(
-                ["rating", "textarea", "text", "checkbox", "radio", "select"],
-                "Unknown item"
+                ['rating', 'textarea', 'text', 'checkbox', 'radio', 'select'],
+                'Unknown item'
               )
-              .required("Required"),
-            textName: Yup.string().required("Please enter name"),
-            textLabel: Yup.string().required("Label required"),
-            textNum: Yup.number().required("Please add rows value"),
+              .required('Required'),
+            textName: Yup.string().required('Please enter name'),
+            textLabel: Yup.string().required('Label required'),
+            textNum: Yup.number().required('Please add rows value')
           })}
         >
           {({ submitForm, isSubmitting }) => (
@@ -236,7 +236,7 @@ const FormFormik = () => {
                   color="primary"
                   type="submit"
                   id="submit"
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
                 >
                   Submit
                 </Button>

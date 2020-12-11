@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Formik, Form, Field } from "formik";
-import { Button, Grid } from "@material-ui/core";
-import { TextField } from "formik-material-ui";
-import * as Yup from "yup";
+import React, { useEffect, useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import { Button, Grid } from '@material-ui/core';
+import { TextField } from 'formik-material-ui';
+import * as Yup from 'yup';
 
 const TextInput = ({ submit }) => {
   const inputsData = {};
 
   const handleInputs = () => {
-    let name = document.getElementById("name").value;
-    let label = document.getElementById("label").value;
-    if (name !== "" && label !== "") {
-      (inputsData.questionType = "text"),
-        (inputsData.questionName = name),
-        (inputsData.label = label),
-        submit(inputsData);
+    let name = document.getElementById('name').value;
+    let label = document.getElementById('label').value;
+    if (name !== '' && label !== '') {
+      inputsData.questionType = 'text';
+      inputsData.questionName = name;
+      inputsData.label = label;
+      submit(inputsData);
     }
   };
 
@@ -22,8 +22,8 @@ const TextInput = ({ submit }) => {
     <>
       <Formik
         initialValues={{
-          name: "",
-          label: "",
+          name: '',
+          label: ''
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
@@ -43,8 +43,8 @@ const TextInput = ({ submit }) => {
           }
         }}
         validationSchema={Yup.object({
-          name: Yup.string().required("Please enter name"),
-          label: Yup.string().required("Label required"),
+          name: Yup.string().required('Please enter name'),
+          label: Yup.string().required('Label required')
         })}
       >
         {({ submitForm, isSubmitting }) => (

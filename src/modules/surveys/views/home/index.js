@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  ButtonGroup,
   Card,
   CardHeader,
   Container,
@@ -35,16 +36,21 @@ class Home extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(classes);
     return (
       <Page title="Surveys" className={classes.root}>
         <Container maxWidth={false}>
           <Box marginBottom={2}>
-            <Link to="/surveys/new">
-              <Button variant="contained" color="primary">
-                Create New Survey
+            <ButtonGroup
+              color="primary"
+              aria-label="outlined primary button group"
+            >
+              <Button>
+                <Link to="/surveys/new">Create New Survey</Link>
               </Button>
-            </Link>
+              <Button>
+                <Link to="/questions/new">Add New Questions</Link>
+              </Button>
+            </ButtonGroup>
           </Box>
           <Grid container spacing={3}>
             <Grid item xs={12}>
