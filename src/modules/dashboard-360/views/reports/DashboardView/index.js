@@ -44,6 +44,7 @@ import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 
 import { setDistributorOrders } from '../../../redux/action';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -114,6 +115,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
   return !loadingDetails ? (
     <Page className={classes.root} title="Dashboard">
+      <CustomBreadcrumbs />
       <Container maxWidth={false}>
         <Box display="flex" justifyContent="space-between">
           <Box />

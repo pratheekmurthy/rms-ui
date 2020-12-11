@@ -13,7 +13,8 @@ export default [
     path: '/orders',
     exact: true,
     key: 'order',
-    component: Orders
+    component: Orders,
+    crumb: 'Orders'
   },
   {
     path: '/orders/:orderId',
@@ -25,7 +26,8 @@ export default [
     path: '/invoices',
     exact: true,
     key: 'invoices',
-    component: invoices
+    component: invoices,
+    crumb: 'Invoices'
   },
   {
     path: '/invoices/:orderId',

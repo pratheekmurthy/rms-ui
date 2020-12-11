@@ -11,6 +11,7 @@ import {
   getDealerInvoiceDetails,
   getSingleInvoiceDetails
 } from '../../reports/DashboardView/apiCalls';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const style = makeStyles(() => ({
   dgContainer: {
@@ -58,6 +59,9 @@ function Invoices({
   return distributorInvoices ? (
     // <Card>
     <div className={classes.dgContainer}>
+      <Box>
+        <CustomBreadcrumbs />
+      </Box>
       <Box padding="1rem 0.5rem">
         <Typography variant="h6" component="h4">
           All Invoices

@@ -11,11 +11,13 @@ export default [
   {
     path: '/new',
     key: 'createSurvey',
-    component: CreateSurvey
+    component: CreateSurvey,
+    crumb: 'Create Survey'
   },
   {
     path: '/questions/new',
     key: 'addQuestions',
-    component: FormFormik
+    component: FormFormik,
+    crumb: 'Create Question'
   }
 ];
