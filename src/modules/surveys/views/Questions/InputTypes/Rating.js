@@ -1,28 +1,28 @@
-import React from "react";
-import { Formik, Form, Field } from "formik";
-import { Button, Grid } from "@material-ui/core";
-import { TextField } from "formik-material-ui";
-import * as Yup from "yup";
+import React from 'react';
+import { Formik, Form, Field } from 'formik';
+import { Button, Grid } from '@material-ui/core';
+import { TextField } from 'formik-material-ui';
+import * as Yup from 'yup';
 
 const RatingInput = ({ submit }) => {
   const inputsData = {};
 
   const handleInputs = () => {
-    let name = document.getElementById("name").value;
-    let label = document.getElementById("label").value;
-    if (name !== "" && label !== "") {
-      (inputsData.questionType = "rating"),
-        (inputsData.questionName = name),
-        (inputsData.label = label),
-        submit(inputsData);
+    let name = document.getElementById('name').value;
+    let label = document.getElementById('label').value;
+    if (name !== '' && label !== '') {
+      inputsData.questionType = 'rating';
+      inputsData.questionName = name;
+      inputsData.label = label;
+      submit(inputsData);
     }
   };
   return (
     <>
       <Formik
         initialValues={{
-          name: "",
-          label: "",
+          name: '',
+          label: ''
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(false);
@@ -32,8 +32,8 @@ const RatingInput = ({ submit }) => {
           }
         }}
         validationSchema={Yup.object({
-          name: Yup.string().required("Please enter name"),
-          label: Yup.string().required("Label required"),
+          name: Yup.string().required('Please enter name'),
+          label: Yup.string().required('Label required')
         })}
       >
         {({ submitForm, isSubmitting }) => (
@@ -49,17 +49,9 @@ const RatingInput = ({ submit }) => {
                 direction="row"
                 justify="flex-start"
                 alignItems="flex-start"
+                spacing={10}
               >
-                <Grid item xs={3}>
-                  <Field
-                    component={TextField}
-                    name="name"
-                    id="name"
-                    type="text"
-                    label="Rating Name"
-                  />
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="label"
@@ -68,14 +60,19 @@ const RatingInput = ({ submit }) => {
                     label="Label"
                   />
                 </Grid>
+                <Grid item xs={5}>
+                  <Field
+                    component={TextField}
+                    name="name"
+                    id="name"
+                    type="text"
+                    label="Rating Name"
+                  />
+                </Grid>
               </Grid>
               {isSubmitting}
               <br />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={submitForm}
-              >
+              <Button variant="contained" color="inherit" onClick={submitForm}>
                 Add Data
               </Button>
             </Grid>
