@@ -23,7 +23,8 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions
+  CardActions,
+  RadioGroup
 } from '@material-ui/core';
 import { green, orange, purple } from '@material-ui/core/colors';
 import { CheckBox } from '@material-ui/icons';
@@ -49,10 +50,10 @@ const paragraphTheme = createMuiTheme({
 
 const GenerateFormBtn = withStyles(theme => ({
   root: {
-    color: theme.palette.getContrastText(green[500]),
-    backgroundColor: green[500],
+    color: theme.palette.getContrastText(purple[500]),
+    backgroundColor: purple[500],
     '&:hover': {
-      backgroundColor: green[700]
+      backgroundColor: purple[700]
     }
   }
 }))(Button);
@@ -87,6 +88,8 @@ const useStyles = makeStyles(theme => ({
   },
   cardActions: {
     height: '70%'
+    flexGrow: 1
+  }
   }
 }));
 
@@ -183,7 +186,7 @@ const FormFormik = () => {
   // }, [inputValue]);
 
   function postQuestions() {
-    Axios.post('http://localhost:3000/questions', input)
+    Axios.post('/questions', input)
       .then(res => {
         console.log(res);
       })
@@ -230,6 +233,96 @@ const FormFormik = () => {
                           setSubmitting(false);
                           console.log(values);
                           console.log('textList : ', textList);
+    
+      <div>
+        <Formik
+          innerRef={formRef}
+          initialValues={{
+            select: '',
+            textName: '',
+            textLabel: '',
+            textNum: 3
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(false);
+            console.log(values);
+            console.log('textList : ', textList);
+            // {
+            //   handleText;
+            // }
+            // console.log("onAddData : ", inputs);
+          }}
+          validationSchema={Yup.object({
+            select: Yup.string()
+              .oneOf(
+                ['rating', 'textarea', 'text', 'checkbox', 'radio', 'select'],
+                'Unknown item'
+              )
+              .required('Required'),
+            textName: Yup.string().required('Please enter name'),
+            textLabel: Yup.string().required('Label required'),
+            textNum: Yup.number().required('Please add rows value')
+          })}
+        >
+          {({ submitForm, isSubmitting }) => (
+            <Form>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="flex-start"
+                className={classes.root}
+              >
+                <Typography
+                  variant="h5"
+                  component="h6"
+                  color="secondary"
+                  align="center"
+                >
+                  Questions
+                </Typography>
+                <br />
+
+                <FormControl className={classes.formControl}>
+                  <Field
+                    component={TextField}
+                    type="text"
+                    name="select"
+                    id="select"
+                    select={true}
+                    label="Select any 1"
+                    variant="outlined"
+                    size="medium"
+                    onClick={handleClick}
+                  >
+                    <MenuItem value="" disabled>
+                      <em>None</em>
+                    </MenuItem>
+                    <MenuItem value="rating">Rating</MenuItem>
+                    <MenuItem value="textarea">Textarea</MenuItem>
+                    <MenuItem value="text">Text</MenuItem>
+                    <MenuItem value="checkbox">Checkbox</MenuItem>
+                    <MenuItem value="radio">Radio</MenuItem>
+                    <MenuItem value="select">Select</MenuItem>
+                  </Field>
+                </FormControl>
+                {isSubmitting}
+                <br />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  id="submit"
+                  style={{ display: 'none' }}
+                >
+                  Submit
+                </Button>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+
+        {inputValue && handleInputs(inputValue)}
 
                           handleText();
 

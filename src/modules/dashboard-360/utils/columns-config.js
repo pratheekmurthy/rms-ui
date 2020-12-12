@@ -5,7 +5,7 @@ export const orderColumns = [
   {
     field: 'OrderNumber',
     headerName: 'Order ID',
-    render: rowData => (
+    renderCell: rowData => (
       <Link to={`/dash360/admin/orders/${rowData.row.OrderNumber}`}>
         {rowData.row.OrderNumber}
       </Link>
@@ -30,23 +30,28 @@ export const orderColumns = [
 
 export const invoicesColumns = [
   {
-    render: rowData => (
+    renderCell: rowData => (
       <Link to={`/dash360/admin/invoices/${rowData.row.InvoiceNumber}`}>
         {rowData.row.InvoiceNumber}
       </Link>
     ),
-    headerName: 'Invoice Number'
+    headerName: 'Invoice Number',
+    field: 'InvoiceNumber',
+    flex: 1
   },
   {
     field: 'InvoiceAmount',
-    headerName: 'Amount'
+    headerName: 'Amount',
+    flex: 1
   },
   {
     field: 'Status',
-    headerName: 'Status'
+    headerName: 'Status',
+    flex: 1
   },
   {
     field: 'BillingMobile',
-    headerName: 'Billing Mobile'
+    headerName: 'Billing Mobile',
+    flex: 1
   }
 ];
