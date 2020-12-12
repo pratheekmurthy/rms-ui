@@ -37,19 +37,21 @@ const CheckboxInput = ({ submit }) => {
             <Grid item xs={4}>
               <Field
                 component={TextField}
-                name={'label' + val}
-                id={'label' + val}
+                name={'value' + val}
+                id={'value' + val}
                 type="text"
-                label="label"
+                label="Checkbox Value"
+                autoComplete="off"
               />
             </Grid>
             <Grid item xs={5}>
               <Field
                 component={TextField}
-                name={'value' + val}
-                id={'value' + val}
+                name={'label' + val}
+                id={'label' + val}
                 type="text"
-                label="Checkbox Name"
+                label="label"
+                autoComplete="off"
               />
             </Grid>
           </Grid>
@@ -126,10 +128,11 @@ const CheckboxInput = ({ submit }) => {
     <>
       <Formik
         initialValues={initialValuesObj}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
           setSubmitValues({ values });
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -154,19 +157,21 @@ const CheckboxInput = ({ submit }) => {
                 <Grid item xs={4}>
                   <Field
                     component={TextField}
-                    name="label"
-                    id="label"
+                    name="name"
+                    id="name"
                     type="text"
-                    label="Label"
+                    label="Checkbox Name"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={5}>
                   <Field
                     component={TextField}
-                    name="name"
-                    id="name"
+                    name="label"
+                    id="label"
                     type="text"
-                    label="Checkbox Name"
+                    label="label"
+                    autoComplete="off"
                   />
                 </Grid>
               </Grid>
@@ -185,13 +190,16 @@ const CheckboxInput = ({ submit }) => {
             {isSubmitting}
             <br />
             <br />
-            <IconButton
+            <Button variant="contained" color="inherit" onClick={submitForm}>
+              Add Data
+            </Button>
+            {/* <IconButton
               variant="contained"
               color="inherit"
               onClick={submitForm}
             >
               <AddIcon />
-            </IconButton>
+            </IconButton> */}
           </Form>
         )}
       </Formik>
