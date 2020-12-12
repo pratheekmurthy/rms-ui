@@ -23,8 +23,7 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions,
-  RadioGroup
+  CardActions
 } from '@material-ui/core';
 import { green, orange, purple } from '@material-ui/core/colors';
 import { CheckBox } from '@material-ui/icons';
@@ -40,7 +39,7 @@ import TextareaInput from './InputTypes/Textarea';
 import RadioInput from './InputTypes/Radio';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
-import Page from 'src/modules/dashboard-360/components/Page';
+import Page from 'src/components/Page';
 
 const paragraphTheme = createMuiTheme({
   palette: {
@@ -87,9 +86,8 @@ const useStyles = makeStyles(theme => ({
     minWidth: 200
   },
   cardActions: {
-    height: '70%'
+    height: '70%',
     flexGrow: 1
-  }
   }
 }));
 
@@ -198,13 +196,13 @@ const FormFormik = () => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
+      {/* <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" noWrap>
             Preview
           </Typography>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <Drawer
         className={classes.drawer}
         variant="permanent"
@@ -233,99 +231,9 @@ const FormFormik = () => {
                           setSubmitting(false);
                           console.log(values);
                           console.log('textList : ', textList);
-    
-      <div>
-        <Formik
-          innerRef={formRef}
-          initialValues={{
-            select: '',
-            textName: '',
-            textLabel: '',
-            textNum: 3
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-            console.log(values);
-            console.log('textList : ', textList);
-            // {
-            //   handleText;
-            // }
-            // console.log("onAddData : ", inputs);
-          }}
-          validationSchema={Yup.object({
-            select: Yup.string()
-              .oneOf(
-                ['rating', 'textarea', 'text', 'checkbox', 'radio', 'select'],
-                'Unknown item'
-              )
-              .required('Required'),
-            textName: Yup.string().required('Please enter name'),
-            textLabel: Yup.string().required('Label required'),
-            textNum: Yup.number().required('Please add rows value')
-          })}
-        >
-          {({ submitForm, isSubmitting }) => (
-            <Form>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="flex-start"
-                className={classes.root}
-              >
-                <Typography
-                  variant="h5"
-                  component="h6"
-                  color="secondary"
-                  align="center"
-                >
-                  Questions
-                </Typography>
-                <br />
-
-                <FormControl className={classes.formControl}>
-                  <Field
-                    component={TextField}
-                    type="text"
-                    name="select"
-                    id="select"
-                    select={true}
-                    label="Select any 1"
-                    variant="outlined"
-                    size="medium"
-                    onClick={handleClick}
-                  >
-                    <MenuItem value="" disabled>
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value="rating">Rating</MenuItem>
-                    <MenuItem value="textarea">Textarea</MenuItem>
-                    <MenuItem value="text">Text</MenuItem>
-                    <MenuItem value="checkbox">Checkbox</MenuItem>
-                    <MenuItem value="radio">Radio</MenuItem>
-                    <MenuItem value="select">Select</MenuItem>
-                  </Field>
-                </FormControl>
-                {isSubmitting}
-                <br />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  id="submit"
-                  style={{ display: 'none' }}
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </Form>
-          )}
-        </Formik>
-
-        {inputValue && handleInputs(inputValue)}
-
-                          handleText();
-
+                          // {
+                          //   handleText;
+                          // }
                           // console.log("onAddData : ", inputs);
                         }}
                         validationSchema={Yup.object({
@@ -359,12 +267,12 @@ const FormFormik = () => {
                               className={classes.root}
                             >
                               <Typography
-                                variant="h3"
-                                component="h3"
-                                color="inherit"
+                                variant="h5"
+                                component="h6"
+                                color="secondary"
                                 align="center"
                               >
-                                Feedback Designer
+                                Questions
                               </Typography>
                               <br />
 
@@ -375,7 +283,7 @@ const FormFormik = () => {
                                   name="select"
                                   id="select"
                                   select={true}
-                                  label="Select question"
+                                  label="Select any 1"
                                   variant="outlined"
                                   size="medium"
                                   onClick={handleClick}
@@ -450,22 +358,5 @@ const FormFormik = () => {
     </div>
   );
 };
-
-//   return (
-//     <>
-
-//                     <br />
-//                     <br />
-
-//                   </CardContent>
-//                 </Card>
-//               </Grid>
-//             </Grid>
-//           </Box>
-//         </Page>
-//       </div>
-//     </>
-//   );
-// };
 
 export default FormFormik;
