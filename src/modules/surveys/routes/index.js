@@ -9,6 +9,12 @@ export default [
     component: home
   },
   {
+    path: '/questions/new',
+    key: 'addQuestions',
+    component: FormFormik,
+    crumb: 'Add Question'
+  },
+  {
     path: '/new',
     key: 'createSurvey',
     component: CreateSurvey,

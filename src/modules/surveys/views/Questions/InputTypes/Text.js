@@ -60,17 +60,9 @@ const TextInput = ({ submit }) => {
                 direction="row"
                 justify="flex-start"
                 alignItems="flex-start"
+                spacing={10}
               >
-                <Grid item xs={3}>
-                  <Field
-                    component={TextField}
-                    name="name"
-                    id="name"
-                    type="text"
-                    label="Text Name"
-                  />
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="label"
@@ -79,15 +71,20 @@ const TextInput = ({ submit }) => {
                     label="Label"
                   />
                 </Grid>
+                <Grid item xs={5}>
+                  <Field
+                    component={TextField}
+                    name="name"
+                    id="name"
+                    type="text"
+                    label="Text Name"
+                  />
+                </Grid>
               </Grid>
               {isSubmitting}
               <br />
               <br />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={submitForm}
-              >
+              <Button variant="contained" color="inherit" onClick={submitForm}>
                 Add Data
               </Button>
             </Grid>

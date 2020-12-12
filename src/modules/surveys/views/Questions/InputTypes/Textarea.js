@@ -55,18 +55,10 @@ const TextareaInput = ({ submit }) => {
                 container
                 direction="row"
                 justify="flex-start"
-                alignItems="center"
+                alignItems="flex-start"
+                spacing={6}
               >
-                <Grid item xs={3}>
-                  <Field
-                    component={TextField}
-                    name="name"
-                    id="name"
-                    type="text"
-                    label="Textarea Name"
-                  />
-                </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="label"
@@ -75,14 +67,24 @@ const TextareaInput = ({ submit }) => {
                     label="Label"
                   />
                 </Grid>
+                <Grid item xs={4}>
+                  <Field
+                    component={TextField}
+                    name="name"
+                    id="name"
+                    type="text"
+                    label="Textarea Name"
+                  />
+                </Grid>
 
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="rows"
                     id="rows"
                     type="number"
                     label="Rows"
+                    style={{ marginLeft: '30%' }}
                     InputLabelProps={{
                       shrink: true
                     }}
@@ -94,11 +96,7 @@ const TextareaInput = ({ submit }) => {
               {isSubmitting}
               <br />
               <br />
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={submitForm}
-              >
+              <Button variant="contained" color="inherit" onClick={submitForm}>
                 Add Data
               </Button>
             </Grid>

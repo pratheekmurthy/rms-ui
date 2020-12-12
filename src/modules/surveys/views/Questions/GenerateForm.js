@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Formik, Form, Field } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
+import React, { useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import { CheckboxWithLabel, TextField } from 'formik-material-ui';
 import {
   Button,
   RadioGroup,
@@ -11,17 +11,17 @@ import {
   Typography,
   FormControl,
   MenuItem,
-  Grid,
-} from "@material-ui/core";
-import RatingComponent from "./RatingComponent";
+  Grid
+} from '@material-ui/core';
+import RatingComponent from './RatingComponent';
 
 const useStyles = makeStyles(() => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   formControl: {
-    minWidth: 200,
-  },
+    minWidth: 200
+  }
 }));
 
 const GenerateForm = ({ inputs }) => {
@@ -33,12 +33,12 @@ const GenerateForm = ({ inputs }) => {
   //     : (obj[input.name] = "")
   // );
 
-  inputs.forEach((input) => (obj[input.questionName] = ""));
+  inputs.forEach(input => (obj[input.questionName] = ''));
 
-  console.log("obj : ", obj);
+  console.log('obj : ', obj);
 
   let [ratingValue, setRatingValue] = useState(0);
-  const getRatingValue = (data) => {
+  const getRatingValue = data => {
     setRatingValue(data);
   };
 
@@ -51,7 +51,7 @@ const GenerateForm = ({ inputs }) => {
           initialValues={obj}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
-            console.log("Values : ", values);
+            console.log('Values : ', values);
           }}
         >
           {({ submitForm, isSubmitting }) => (
@@ -59,7 +59,7 @@ const GenerateForm = ({ inputs }) => {
               <br />
               {inputs.map((input, index) => {
                 switch (input.questionType) {
-                  case "rating":
+                  case 'rating':
                     return (
                       <span key={Math.random()}>
                         <RatingComponent
@@ -69,7 +69,7 @@ const GenerateForm = ({ inputs }) => {
                         />
                       </span>
                     );
-                  case "text":
+                  case 'text':
                     return (
                       <div key={index}>
                         <Field
@@ -84,7 +84,7 @@ const GenerateForm = ({ inputs }) => {
                         <br />
                       </div>
                     );
-                  case "textarea":
+                  case 'textarea':
                     return (
                       <div key={input.questionName}>
                         <Field
@@ -97,13 +97,13 @@ const GenerateForm = ({ inputs }) => {
                           multiline
                           rows={input.additionalConfig.rows}
                           label={input.label}
-                          style={{ width: "70vw" }}
+                          style={{ width: '100%' }}
                         />
                         <br />
                         <br />
                       </div>
                     );
-                  case "checkbox":
+                  case 'checkbox':
                     return (
                       <div key={input.name}>
                         <Field
@@ -128,7 +128,7 @@ const GenerateForm = ({ inputs }) => {
                         ))}
                       </div>
                     );
-                  case "radio":
+                  case 'radio':
                     return (
                       <>
                         <Field component={RadioGroup} name={input.questionName}>
@@ -146,7 +146,7 @@ const GenerateForm = ({ inputs }) => {
                         </Field>
                       </>
                     );
-                  case "select":
+                  case 'select':
                     return (
                       <>
                         <FormControl className={classes.formControl}>
@@ -182,7 +182,7 @@ const GenerateForm = ({ inputs }) => {
                 variant="contained"
                 color="primary"
                 type="submit"
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
               >
                 Submit
               </Button>
