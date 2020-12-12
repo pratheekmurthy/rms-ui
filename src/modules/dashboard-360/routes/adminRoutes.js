@@ -1,6 +1,6 @@
 import invoices from '../views/admin/invoices';
 import Orders from '../views/admin/orders';
-import Dashboard from '../views/reports/DashboardView/index';
+import Dashboard from '../views/DashboardView/index';
 
 export default [
   {

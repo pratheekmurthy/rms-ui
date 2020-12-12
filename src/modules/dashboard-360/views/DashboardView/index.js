@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Card,
+  CardHeader,
   Chip,
   Container,
   Dialog,
@@ -43,7 +44,7 @@ import TicketsList from './TicketsList';
 
 import dealerAPICalls from './apiCalls';
 
-import { setDistributorOrders } from '../../../redux/action';
+import { setDistributorOrders } from '../../redux/action';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const useStyles = makeStyles(theme => {
@@ -57,15 +58,6 @@ const useStyles = makeStyles(theme => {
     },
     panelBody: {
       padding: 0
-    },
-    chipPrimary: {
-      backgroundColor: theme.palette.success.light
-    },
-    rootChip: {
-      color: theme.palette.common.white
-    },
-    chipWarning: {
-      backgroundColor: theme.palette.warning.light
     },
     formControl: {
       minWidth: 350
@@ -115,39 +107,15 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
   return !loadingDetails ? (
     <Page className={classes.root} title="Dashboard">
-      <CustomBreadcrumbs />
       <Container maxWidth={false}>
-        <Box display="flex" justifyContent="space-between">
+        {/* <Box display="flex" justifyContent="space-between">
           <Box />
-          <Box>
-            <Tooltip title="Verified">
-              <Chip
-                color="primary"
-                label="Aadhar"
-                className={`${classes.chipPrimary} ${classes.rootChip} `}
-              />
-            </Tooltip>
-            &nbsp;
-            <Tooltip title="Not Verified">
-              <Chip
-                color="secondary"
-                label="PAN"
-                className={` ${classes.rootChip} `}
-              />
-            </Tooltip>
-            &nbsp;
-            <Tooltip title="Verification Pending">
-              <Chip
-                color="secondary"
-                label="Cheque book"
-                className={`${classes.chipWarning} ${classes.rootChip} `}
-              />
-            </Tooltip>
+          
           </Box>
-        </Box>
+        </Box> */}
         <br />
         <Grid container spacing={3}>
-          <Grid item lg={4} md={12} xs={12}>
+          <Grid item lg={3} md={12} xs={12}>
             {rootData[0].data && rootData[1].data ? (
               <DealerCard
                 dealerDetails={{
@@ -168,8 +136,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               </Card>
             </Box>
           </Grid>
-          <Grid item lg={8} xs={12}>
-            <Accordion
+          <Grid item lg={5} xs={12}>
+            {/* <Accordion
               expanded={expanded === 'panel1'}
               onChange={handleChange('panel1')}
             >
@@ -319,7 +287,36 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   </CustomTabPanel>
                 </Box>
               </AccordionDetails>
-            </Accordion>
+                    </Accordion> */}
+            <Card>
+              <CardHeader title="Orders" />
+              {rootData[2].data ? (
+                <BasicTable
+                  columns={orderColumns}
+                  records={rootData[2].data.slice(0, 4)}
+                  redirectLink="/dash360/admin/orders"
+                  redirectLabel="View All"
+                />
+              ) : (
+                <ErrorAlert />
+              )}
+            </Card>
+            <br />
+            <Card>
+              <CardHeader title="Invoices" />
+              {rootData[3].data ? (
+                <div>
+                  <BasicTable
+                    columns={invoicesColumns}
+                    records={rootData[3].data.slice(0, 3)}
+                    redirectLink="/dash360/admin/invoices"
+                    redirectLabel="View All"
+                  />
+                </div>
+              ) : (
+                <ErrorAlert />
+              )}
+            </Card>
           </Grid>
           {/* <Grid
             item

@@ -10,7 +10,7 @@ import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
   getDealerOrderDetails,
   getSingleOrderDetails
-} from '../../reports/DashboardView/apiCalls';
+} from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const style = makeStyles(() => ({
