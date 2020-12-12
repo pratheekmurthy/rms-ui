@@ -23,7 +23,12 @@ import {
   Card,
   CardHeader,
   CardContent,
-  CardActions
+  CardActions,
+  Divider,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText
 } from '@material-ui/core';
 import { green, orange, purple } from '@material-ui/core/colors';
 import { CheckBox } from '@material-ui/icons';
@@ -40,6 +45,7 @@ import RadioInput from './InputTypes/Radio';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
+import { Autocomplete } from '@material-ui/lab';
 
 const paragraphTheme = createMuiTheme({
   palette: {
@@ -137,10 +143,10 @@ const FormFormik = () => {
 
   useEffect(() => {
     if (inputValue !== '') {
-      console.log(inputValue);
+      // console.log(inputValue);
     }
     if (input.length !== 0) {
-      console.log('input', input);
+      // console.log('input', input);
     }
   }, [inputValue, input]);
 
@@ -194,168 +200,123 @@ const FormFormik = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      {/* <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Preview
-          </Typography>
-        </Toolbar>
-      </AppBar> */}
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper
-        }}
-        anchor="left"
-      >
-        <div className={classes.toolbar} />
-        <div>
-          <Page title="questions">
-            <Box margin="1rem">
-              <Grid container spacing={4}>
-                <Grid xs={12} item>
-                  <Card style={{ width: '100%' }}>
-                    <CardContent style={{ minHeight: '400px' }}>
-                      <Formik
-                        innerRef={formRef}
-                        initialValues={{
-                          select: '',
-                          textName: '',
-                          textLabel: '',
-                          textNum: 3
-                        }}
-                        onSubmit={(values, { setSubmitting }) => {
-                          setSubmitting(false);
-                          console.log(values);
-                          console.log('textList : ', textList);
-                          // {
-                          //   handleText;
-                          // }
-                          // console.log("onAddData : ", inputs);
-                        }}
-                        validationSchema={Yup.object({
-                          select: Yup.string()
-                            .oneOf(
-                              [
-                                'rating',
-                                'textarea',
-                                'text',
-                                'checkbox',
-                                'radio',
-                                'select'
-                              ],
-                              'Unknown item'
-                            )
-                            .required('Required'),
-                          textName: Yup.string().required('Please enter name'),
-                          textLabel: Yup.string().required('Label required'),
-                          textNum: Yup.number().required(
-                            'Please add rows value'
-                          )
-                        })}
-                      >
-                        {({ submitForm, isSubmitting }) => (
-                          <Form>
-                            <Grid
-                              container
-                              direction="column"
-                              justify="center"
-                              alignItems="flex-start"
-                              className={classes.root}
-                            >
-                              <Typography
-                                variant="h5"
-                                component="h6"
-                                color="secondary"
-                                align="center"
-                              >
-                                Questions
-                              </Typography>
-                              <br />
+    <Page title="questions">
+      <Box margin="1rem">
+        <Grid container spacing={2}>
+          <Grid xs={12} lg={5} item>
+            <Card style={{ width: '100%' }}>
+              <CardHeader title="Feedback Designer" />
+              <Divider />
+              <CardContent>
+                <Formik
+                  innerRef={formRef}
+                  initialValues={{
+                    select: '',
+                    textName: '',
+                    textLabel: '',
+                    textNum: 3
+                  }}
+                  onSubmit={(values, { setSubmitting }) => {
+                    setSubmitting(false);
+                    // console.log(values);
+                    // console.log('textList : ', textList);
 
-                              <FormControl className={classes.formControl}>
-                                <Field
-                                  component={TextField}
-                                  type="text"
-                                  name="select"
-                                  id="select"
-                                  select={true}
-                                  label="Select any 1"
-                                  variant="outlined"
-                                  size="medium"
-                                  onClick={handleClick}
-                                >
-                                  <MenuItem value="" disabled>
-                                    <em>None</em>
-                                  </MenuItem>
-                                  <MenuItem value="rating">Rating</MenuItem>
-                                  <MenuItem value="textarea">Textarea</MenuItem>
-                                  <MenuItem value="text">Text</MenuItem>
-                                  <MenuItem value="checkbox">Checkbox</MenuItem>
-                                  <MenuItem value="radio">Radio</MenuItem>
-                                  <MenuItem value="select">Select</MenuItem>
-                                </Field>
-                              </FormControl>
-                              {isSubmitting}
-                              <br />
-                              <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                id="submit"
-                                style={{ display: 'none' }}
-                              >
-                                Submit
-                              </Button>
-                            </Grid>
-                          </Form>
-                        )}
-                      </Formik>
-
-                      {inputValue && handleInputs(inputValue)}
-                    </CardContent>
-                    <CardActions>
-                      <GenerateFormBtn
+                    // {
+                    //   handleText;
+                    // }
+                    // console.log("onAddData : ", inputs);
+                  }}
+                  validationSchema={Yup.object({
+                    select: Yup.string()
+                      .oneOf(
+                        [
+                          'rating',
+                          'textarea',
+                          'text',
+                          'checkbox',
+                          'radio',
+                          'select'
+                        ],
+                        'Unknown item'
+                      )
+                      .required('Required'),
+                    textName: Yup.string().required('Please enter name'),
+                    textLabel: Yup.string().required('Label required'),
+                    textNum: Yup.number().required('Please add rows value')
+                  })}
+                >
+                  {({ submitForm, isSubmitting }) => (
+                    <Form>
+                      <FormControl className={classes.formControl}>
+                        <Field
+                          component={TextField}
+                          type="text"
+                          name="select"
+                          id="select"
+                          select={true}
+                          label="Select any 1"
+                          variant="outlined"
+                          size="medium"
+                          onClick={handleClick}
+                        >
+                          <MenuItem value="" disabled>
+                            <em>None</em>
+                          </MenuItem>
+                          <MenuItem value="rating">Rating</MenuItem>
+                          <MenuItem value="textarea">Textarea</MenuItem>
+                          <MenuItem value="text">Text</MenuItem>
+                          <MenuItem value="checkbox">Checkbox</MenuItem>
+                          <MenuItem value="radio">Radio</MenuItem>
+                          <MenuItem value="select">Select</MenuItem>
+                        </Field>
+                      </FormControl>
+                      {isSubmitting}
+                      <br />
+                      <Button
                         variant="contained"
                         color="primary"
-                        type="button"
-                        onClick={() => {
-                          if (input.length !== 0) {
-                            postQuestions();
-                          }
-                        }}
+                        type="submit"
+                        id="submit"
+                        style={{ display: 'none' }}
                       >
-                        Save questions
-                      </GenerateFormBtn>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              </Grid>
-            </Box>
-          </Page>
-        </div>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+                        Submit
+                      </Button>
+                    </Form>
+                  )}
+                </Formik>
+                {inputValue && handleInputs(inputValue)}
+              </CardContent>
+            </Card>
+          </Grid>
 
-        <div>
-          <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="flex-start"
-          ></Grid>
-          {test ? (
-            <>
-              <GenerateForm inputs={input} />
-            </>
-          ) : null}
-        </div>
-      </main>
-    </div>
+          <Grid xs={12} lg={7} item>
+            <Card style={{ width: '100%' }}>
+              <CardHeader title="Survey Preview" />
+              <Divider />
+              <CardContent>
+                {test ? (
+                  <>
+                    <GenerateForm inputs={input} />
+                  </>
+                ) : null}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="button"
+                  onClick={() => {
+                    if (input.length !== 0) {
+                      postQuestions();
+                    }
+                  }}
+                >
+                  Save questions
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+    </Page>
   );
 };
 

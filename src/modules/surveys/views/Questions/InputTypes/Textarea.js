@@ -27,12 +27,12 @@ const TextareaInput = ({ submit }) => {
           label: '',
           rows: 3
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
-          {
-            handleInputs();
-          }
+
+          handleInputs();
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -65,6 +65,7 @@ const TextareaInput = ({ submit }) => {
                     id="label"
                     type="text"
                     label="Label"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={4}>
@@ -74,6 +75,7 @@ const TextareaInput = ({ submit }) => {
                     id="name"
                     type="text"
                     label="Textarea Name"
+                    autoComplete="off"
                   />
                 </Grid>
 
