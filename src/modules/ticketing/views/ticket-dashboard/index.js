@@ -11,12 +11,17 @@ import {
   ListItemIcon,
   Box,
   LinearProgress,
-  Avatar
+  Button,
+  Avatar,
+  TextareaAutosize
 } from '@material-ui/core';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import { purple, orange, green } from '@material-ui/core/colors';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import LinkIcon from '@material-ui/icons/Link';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
 const BorderLinearProgress = withStyles((theme) => ({
   root: {
@@ -92,6 +97,22 @@ const useStyles = makeStyles((theme) => ({
     color: '#fff',
     backgroundColor: green[500],
     marginTop: 10
+  },
+  button: {
+    margin: 5,
+    marginTop: 20,
+    marginBottom: 20
+  },
+  boxDiv: {
+    paddingBottom: 10,
+    paddingTop: 10
+  },
+  textareaClass: {
+    padding: 5
+  },
+  subtaskClass: {
+    margin: 0,
+    padding: 0
   }
 }));
 
@@ -106,168 +127,198 @@ export default function TicketDashboard() {
          */}
         <Grid item sm={12} md={3}>
           <Paper className={classes.paper}>
-            <List className={classes.listRow}>
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+            <box component="div" overflow="auto">
+              <List className={classes.listRow} overflow="auto">
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <ListItemText className={classes.ticketMargin}>
+                          IV-382648
+                        </ListItemText>
+                      </ListItemIcon>
+                    </div>
+                    <Typography
+                      variant="body2"
+                      color="textPrimary"
+                      textOverflow="ellipsis"
+                    >
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography
+                      variant="body2"
+                      color="textPrimary"
+                      textOverflow="ellipsis"
+                    >
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-              <Divider light />
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
 
-              <ListItem
-                alignItems="flex-start"
-                className={classes.listItemClass}
-              >
-                <ListItemText>
-                  <div className={classes.textBold}>
-                    <ListItemIcon>
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>IV-382648</span>
-                    </ListItemIcon>
-                  </div>
-                  <Typography variant="body2" color="textPrimary">
-                    All function and features required for a survey tic...
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-            </List>
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+                <Divider light />
+
+                <ListItem
+                  alignItems="flex-start"
+                  className={classes.listItemClass}
+                >
+                  <ListItemText>
+                    <div className={classes.textBold}>
+                      <ListItemIcon>
+                        <OfflineBoltIcon style={{ color: purple[500] }} />
+                        <span className={classes.ticketMargin}>IV-382648</span>
+                      </ListItemIcon>
+                    </div>
+                    <Typography variant="body2" color="textPrimary">
+                      All function and features required for a survey tic...
+                    </Typography>
+                  </ListItemText>
+                </ListItem>
+              </List>
+            </box>
           </Paper>
         </Grid>
 
@@ -276,30 +327,163 @@ export default function TicketDashboard() {
          */}
         <Grid item sm={12} md={6}>
           <Paper className={classes.paper}>
-            <Box
-              display="flex"
-              flexDirection="row"
-              className={classes.metadataClass}
-            >
-              <Avatar
-                alt="IV"
-                src="/static/images/products/product_1.png"
-                className={classes.large}
-              />
-              <Box
-                display="flex"
-                flexDirection="column"
-                className={classes.ticketMargin}
-              >
-                <Typography variant="body1" className={classes.textBold}>
-                  IV-38648
-                </Typography>
-                <Typography variant="h3" color="textPrimary">
-                  This captures all user stories and tasks related to the Cloud
-                  Deployment Framework.
-                </Typography>
+            <div className={classes.metadataClass}>
+              <Box display="flex" flexDirection="row">
+                <Avatar
+                  alt="IV"
+                  src="/static/images/products/product_1.png"
+                  className={classes.large}
+                />
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  className={classes.ticketMargin}
+                >
+                  <Typography variant="body1" className={classes.textBold}>
+                    IV-38648
+                  </Typography>
+                  <Typography variant="h3" color="textPrimary">
+                    This captures all user stories and tasks related to the
+                    Cloud Deployment Framework.
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
+              <div display="flex" flexDirection="row">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<AttachFileIcon />}
+                >
+                  Attach
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<AccountTreeIcon />}
+                >
+                  Create issue in epic
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<LinkIcon />}
+                >
+                  Link issue
+                </Button>
+              </div>
+              <div className={classes.boxDiv}>
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  fontWeight="fontWeightMedium"
+                  className={classes.avatarValue}
+                >
+                  Description
+                </Typography>
+                <TextareaAutosize
+                  width="auto"
+                  aria-label="textArea"
+                  rowsMin={12}
+                  rowsMax={30}
+                  placeholder="Add a description..."
+                />
+              </div>
+              <div component="div" className={classes.boxDiv}>
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  className={classes.avatarValue}
+                >
+                  Attachments
+                </Typography>
+                <TextareaAutosize
+                  aria-label="textArea"
+                  className={classes.textareaClass}
+                  rowsMin={5}
+                  rowsMax={30}
+                  placeholder="Drop files to attach, or browse"
+                />
+              </div>
+              <div component="div" className={classes.boxDiv}>
+                <Typography
+                  variant="body1"
+                  color="textPrimary"
+                  className={classes.avatarValue}
+                >
+                  Sub-Tasks
+                </Typography>
+                <List className={classes.subtaskClass} overflow="auto">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <CheckBoxIcon style={{ color: green[500] }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography
+                        variant="body2"
+                        color="textPrimary"
+                        textOverflow="ellipsis"
+                      >
+                        IV-382648 - All function and features req...
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <Divider light />
+
+                  <ListItem button>
+                    <ListItemIcon>
+                      <CheckBoxIcon style={{ color: green[500] }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography
+                        variant="body2"
+                        color="textPrimary"
+                        textOverflow="ellipsis"
+                      >
+                        IV-382648 - All function and features req...
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
+                  <Divider light />
+
+                  <ListItem button>
+                    <ListItemIcon>
+                      <CheckBoxIcon style={{ color: green[500] }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography
+                        variant="body2"
+                        color="textPrimary"
+                        textOverflow="ellipsis"
+                      >
+                        IV-382648 - All function and features req...
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
+
+                  <Divider light />
+                  <ListItem button>
+                    <ListItemIcon>
+                      <CheckBoxIcon style={{ color: green[500] }} />
+                    </ListItemIcon>
+                    <ListItemText>
+                      <Typography
+                        variant="body2"
+                        color="textPrimary"
+                        textOverflow="ellipsis"
+                      >
+                        IV-382648 - All function and features req...
+                      </Typography>
+                    </ListItemText>
+                  </ListItem>
+                </List>
+              </div>
+            </div>
           </Paper>
         </Grid>
 
