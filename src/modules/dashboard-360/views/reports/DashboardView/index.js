@@ -24,9 +24,9 @@ import {
   Typography
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
-import Axios from 'axios';
+import PropTypes from 'prop-types';
 
-import Page from 'src/modules/dashboard-360/components/Page';
+import Page from 'src/components/Page';
 import CustomTabs from 'src/modules/dashboard-360/components/CustomTabs';
 import CustomTabPanel from 'src/modules/dashboard-360/components/CustomTabPanel';
 import BasicTable from 'src/modules/dashboard-360/components/BasicTable';
@@ -36,11 +36,15 @@ import {
   orderColumns
 } from 'src/modules/dashboard-360/utils/columns-config';
 
+import ErrorAlert from 'src/components/ErrorAlert';
+import { connect } from 'react-redux';
 import DealerCard from './DealerCard';
 import TicketsList from './TicketsList';
+
 import dealerAPICalls from './apiCalls';
-import { Alert } from '@material-ui/lab';
-import ErrorAlert from 'src/components/ErrorAlert';
+
+import { setDistributorOrders } from '../../../redux/action';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -72,7 +76,7 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const Dashboard = () => {
+const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const classes = useStyles();
   const [orderTab, setOrderTab] = useState(0);
   const [invoicesTab, setInvoicesTab] = useState(0);
@@ -91,11 +95,15 @@ const Dashboard = () => {
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
-        console.log(response);
         setRootData(
           response.map(res =>
             res.status === 'fulfilled' ? res.value.data : {}
           )
+        );
+        setDistributorOrdersAction(
+          response[2].status === 'fulfilled'
+            ? response[2].value.data.data
+            : null
         );
         setLoadingDetails(false);
       } catch (err) {
@@ -107,6 +115,7 @@ const Dashboard = () => {
 
   return !loadingDetails ? (
     <Page className={classes.root} title="Dashboard">
+      <CustomBreadcrumbs />
       <Container maxWidth={false}>
         <Box display="flex" justifyContent="space-between">
           <Box />
@@ -144,7 +153,9 @@ const Dashboard = () => {
                 dealerDetails={{
                   ...rootData[0].data[0],
                   ...rootData[1].data[0],
-                  lastOrderReference: rootData[2].data[0].OrderNumber
+                  lastOrderReference: rootData[2].data
+                    ? rootData[2].data[0].OrderNumber
+                    : ''
                 }}
                 showCreateIssue={e => setShowCreateIssue(e)}
               />
@@ -183,6 +194,8 @@ const Dashboard = () => {
                       <BasicTable
                         columns={orderColumns}
                         records={rootData[2].data.slice(0, 5)}
+                        redirectLink="/dash360/admin/orders"
+                        redirectLabel="View All"
                       />
                     ) : (
                       <ErrorAlert />
@@ -219,6 +232,8 @@ const Dashboard = () => {
                       <BasicTable
                         columns={invoicesColumns}
                         records={rootData[3].data.slice(0, 5)}
+                        redirectLink="/dash360/admin/invoices"
+                        redirectLabel="View All"
                       />
                     ) : (
                       <ErrorAlert />
@@ -407,5 +422,21 @@ const Dashboard = () => {
     <MainLoader />
   );
 };
+Dashboard.propTypes = {
+  distributorOrders: PropTypes.arrayOf(PropTypes.object),
+  setDistributorOrdersAction: PropTypes.func
+};
 
-export default Dashboard;
+const mapStateToProps = state => {
+  return {
+    distributorOrders: state.distributorOrders
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setDistributorOrdersAction: orders => dispatch(setDistributorOrders(orders))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

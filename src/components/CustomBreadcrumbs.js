@@ -1,0 +1,46 @@
+import { Box, Breadcrumbs, Grid } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
+  const [breadCrumbLinks, setbreadCrumbLinks] = useState([]);
+  useEffect(() => {
+    if (urlMatchFound) {
+      console.log('found', crumbs.get(activatedRoute));
+      setbreadCrumbLinks(crumbs.get(activatedRoute));
+    }
+  }, [urlMatchFound, activatedRoute]);
+  let newLink = '/';
+  return (
+    <Grid container spacing={2}>
+      {breadCrumbLinks?.length ? (
+        <Box style={{ margin: '1.5rem 2rem 0 2rem' }}>
+          <Breadcrumbs>
+            {activatedRoute
+              .split('/')
+              .slice(1)
+              .map((route, index) => {
+                newLink += route + '/';
+                return breadCrumbLinks[index] ? (
+                  <Link to={newLink}>{breadCrumbLinks[index]}</Link>
+                ) : (
+                  ''
+                );
+              })}
+          </Breadcrumbs>
+        </Box>
+      ) : (
+        ''
+      )}
+    </Grid>
+  );
+}
+
+const mapSTP = state => ({
+  activatedRoute: state.activatedRoute,
+  crumbs: state.crumbs,
+  urlMatchFound: state.urlMatchFound
+});
+
+export default connect(mapSTP)(CustomBreadcrumbs);

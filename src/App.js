@@ -13,18 +13,16 @@ import MainLoader from './components/MainLoader';
 
 const App = () => {
   return (
-      <Provider store={rootStore}>
-        <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <React.Suspense
-              fallback={<MainLoader />}
-            >
-              <GlobalStyles />
-              <RouteSwitch routes={routes} isRoot />
-            </React.Suspense>
-          </ThemeProvider>
-        </BrowserRouter>
-      </Provider>
+    <Provider store={rootStore}>
+      <BrowserRouter>
+        <ThemeProvider theme={theme}>
+          <React.Suspense fallback={<MainLoader />}>
+            <GlobalStyles />
+            <RouteSwitch routes={routes} isRoot />
+          </React.Suspense>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   );
 };
 

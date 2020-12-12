@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core';
 import { useLocation } from 'react-router';
 import RouteSwitch from 'src/components/RouteSwitch';
 import TopBar from '../DashboardLayout/TopBar';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.default,
     display: 'flex',
@@ -43,7 +44,10 @@ const MainLayout = ({ routes }) => {
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <RouteSwitch routes={routes} redirectPath={isAdmin ? '/admin/dashboard' : ''} />
+            <RouteSwitch
+              routes={routes}
+              redirectPath={isAdmin ? '/admin/dashboard' : ''}
+            />
           </div>
         </div>
       </div>
