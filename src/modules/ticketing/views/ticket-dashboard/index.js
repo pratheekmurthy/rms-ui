@@ -1,7 +1,37 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
+import {
+  Paper,
+  Grid,
+  List,
+  ListItem,
+  Divider,
+  ListItemText,
+  Typography,
+  ListItemIcon,
+  Box,
+  LinearProgress,
+  Avatar
+} from '@material-ui/core';
+import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
+import { purple, orange, green } from '@material-ui/core/colors';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+
+const BorderLinearProgress = withStyles((theme) => ({
+  root: {
+    height: 10,
+    borderRadius: 5
+  },
+  colorPrimary: {
+    backgroundColor:
+      theme.palette.grey[theme.palette.type === 'light' ? 200 : 700]
+  },
+  bar: {
+    borderRadius: 5,
+    backgroundColor: '#1a90ff'
+  }
+}))(LinearProgress);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,13 +39,60 @@ const useStyles = makeStyles((theme) => ({
     margin: 15
   },
   textBold: {
-    fontWeight: "600"
+    fontWeight: '600'
   },
   paper: {
-    padding: theme.spacing(2),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+    padding: theme.spacing(1)
   },
+  listRow: {
+    flexGrow: 1,
+    fontSize: 10,
+    padding: 0
+  },
+  ticketMargin: {
+    marginLeft: 5
+  },
+  listItemClass: {
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  metadataClass: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 16,
+    paddingBottom: 16
+  },
+  labelClass: {
+    fontWeight: '500',
+    float: 'left',
+    width: '50%'
+  },
+  valueClass: {
+    width: '50%'
+  },
+  belowMargin: {
+    marginBottom: 20
+  },
+  dateMargin: {
+    marginBottom: 5
+  },
+  green: {
+    color: theme.palette.getContrastText(green[900]),
+    backgroundColor: green[900],
+    width: theme.spacing(4),
+    height: theme.spacing(4)
+  },
+  avatarValue: {
+    marginLeft: 5,
+    marginTop: 5
+  },
+  large: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    color: '#fff',
+    backgroundColor: green[500],
+    marginTop: 10
+  }
 }));
 
 export default function TicketDashboard() {
@@ -23,43 +100,386 @@ export default function TicketDashboard() {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
+      <Grid container spacing={1}>
         {/**
          * This is the ticket List block
          */}
-        <Grid item sm={12} md={4}>
-          <Paper className={classes.paper}><span className={classes.textBold}>Divya</span></Paper>
+        <Grid item sm={12} md={3}>
+          <Paper className={classes.paper}>
+            <List className={classes.listRow}>
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <OfflineBoltIcon style={{ color: purple[500] }} />
+                      <span className={classes.ticketMargin}>IV-382648</span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography variant="body2" color="textPrimary">
+                    All function and features required for a survey tic...
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+            </List>
+          </Paper>
         </Grid>
+
         {/**
          * This is the ticket Detail block
          */}
         <Grid item sm={12} md={6}>
-          <Paper className={classes.paper}><span className={classes.textBold}>Divya</span></Paper>
+          <Paper className={classes.paper}>
+            <Box
+              display="flex"
+              flexDirection="row"
+              className={classes.metadataClass}
+            >
+              <Avatar
+                alt="IV"
+                src="/static/images/products/product_1.png"
+                className={classes.large}
+              />
+              <Box
+                display="flex"
+                flexDirection="column"
+                className={classes.ticketMargin}
+              >
+                <Typography variant="body1" className={classes.textBold}>
+                  IV-38648
+                </Typography>
+                <Typography variant="h3" color="textPrimary">
+                  This captures all user stories and tasks related to the Cloud
+                  Deployment Framework.
+                </Typography>
+              </Box>
+            </Box>
+          </Paper>
         </Grid>
+
         {/**
          * This is the ticket Metadata block
          */}
-        <Grid item sm={12} md={2}>
-          <Paper className={classes.paper}><span className={classes.textBold}>Divya</span></Paper>
+        <Grid item sm={12} md={3}>
+          <Paper className={classes.paper}>
+            <div className={classes.metadataClass}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Assignee
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Avatar className={classes.green}>SA</Avatar>
+                  <span className={classes.avatarValue}>Sandra Adams</span>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Reporter
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Avatar className={classes.green}>SA</Avatar>
+                  <span className={classes.avatarValue}>Sandra Adams</span>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Label
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
+                  <span className={classes.ticketMargin}>None</span>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Priority
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <ArrowUpwardIcon style={{ color: orange[500] }} />
+                  <span className={classes.ticketMargin}>Medium</span>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Epic Name
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  {/* <ArrowUpwardIcon style={{ color: orange[500] }} /> */}
+                  <span className={classes.ticketMargin}>AWS Framework</span>
+                </Box>
+              </Box>
+            </div>
+            <Divider light />
+            <div className={classes.metadataClass}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Due:
+                </Typography>
+                <span className={classes.ticketMargin}>20/12/2020</span>
+              </Box>
+
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Created:
+                </Typography>
+                <span className={classes.ticketMargin}>
+                  12/12/2020, 9:40 AM
+                </span>
+              </Box>
+
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Updated:
+                </Typography>
+                <span className={classes.ticketMargin}>
+                  12/12/2020, 12:40 PM
+                </span>
+              </Box>
+            </div>
+            <Divider light />
+            <div className={classes.metadataClass}>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Estimated:
+                </Typography>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </Box>
+
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Remaining:
+                </Typography>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </Box>
+
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.dateMargin}
+              >
+                <Typography variant="body1" className={classes.valueClass}>
+                  Logged:
+                </Typography>
+                <BorderLinearProgress variant="determinate" value={50} />
+              </Box>
+            </div>
+          </Paper>
         </Grid>
-        {/* <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>xs=6</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid>
-        <Grid item xs={3}>
-          <Paper className={classes.paper}>xs=3</Paper>
-        </Grid> */}
       </Grid>
     </div>
   );
