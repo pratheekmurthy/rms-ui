@@ -60,6 +60,12 @@ const useStyles = makeStyles(() =>
       },
       '.MuiFormLabel-root': {
         color: '#3f51b5'
+      },
+      '.position-relative': {
+        position: 'relative'
+      },
+      '.position-absolute': {
+        position: 'absolute'
       }
     }
   })

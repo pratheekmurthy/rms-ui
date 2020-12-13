@@ -115,7 +115,42 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         </Box> */}
         {/* <br /> */}
         <Grid container spacing={3}>
-          <Grid item lg={3} md={12} xs={12}>
+          <Grid item lg={4} md={6} xs={12}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Button color="primary" variant="contained">
+                  Create Issue
+                </Button>
+                &nbsp;&nbsp;
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  style={{ color: 'white' }}
+                >
+                  BreakIn/BreakOut
+                </Button>
+                <SearchBar style={{ marginTop: '1rem' }} />
+              </Grid>
+              <Grid item>
+                <Card>
+                  <CustomTabs
+                    variant="fullWidth"
+                    indicatorColor="primary"
+                    textColor="primary"
+                    tabNames={['Disposition', 'Incentives', 'E-Wallet']}
+                    setCurrent={val => setTab(val)}
+                  />
+                  <CustomTabPanel value={tab} index={0}>
+                    <Box padding="1rem">
+                      <DispositionForm />
+                    </Box>
+                  </CustomTabPanel>
+                </Card>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item lg={3} md={6} xs={12}>
             {rootData[0].data && rootData[1].data ? (
               <DealerCard
                 dealerDetails={{
@@ -137,157 +172,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             </Box>
           </Grid>
           <Grid item lg={5} xs={12}>
-            {/* <Accordion
-              expanded={expanded === 'panel1'}
-              onChange={handleChange('panel1')}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography className={classes.heading}>Orders</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.panelBody}>
-                <Box width="100%">
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Open Orders', 'History']}
-                    setCurrent={val => setTab(val)}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    {rootData[2].data ? (
-                      <BasicTable
-                        columns={orderColumns}
-                        records={rootData[2].data.slice(0, 5)}
-                        redirectLink="/dash360/admin/orders"
-                        redirectLabel="View All"
-                      />
-                    ) : (
-                      <ErrorAlert />
-                    )}
-                  </CustomTabPanel>
-                  <CustomTabPanel value={tab} index={1}>
-                    Item Three
-                  </CustomTabPanel>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={expanded === 'panel2'}
-              onChange={handleChange('panel2')}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel2a-content"
-                id="panel2a-header"
-              >
-                <Typography className={classes.heading}>Invoices</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.panelBody}>
-                <Box width="100%">
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Invoices', 'History']}
-                    setCurrent={val => setTab(val)}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    {rootData[3].data ? (
-                      <BasicTable
-                        columns={invoicesColumns}
-                        records={rootData[3].data.slice(0, 5)}
-                        redirectLink="/dash360/admin/invoices"
-                        redirectLabel="View All"
-                      />
-                    ) : (
-                      <ErrorAlert />
-                    )}
-                  </CustomTabPanel>
-                  <CustomTabPanel value={tab} index={1}>
-                    Item Three
-                  </CustomTabPanel>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={expanded === 'panel3'}
-              onChange={handleChange('panel3')}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel3a-content"
-                id="panel3a-header"
-              >
-                <Typography className={classes.heading}>Incentives</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.panelBody}>
-                <Box width="100%">
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Incentives']}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    <Box padding="1rem">Incentives will appear here</Box>
-                  </CustomTabPanel>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={expanded === 'panel4'}
-              onChange={handleChange('panel4')}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel3a-content"
-                id="panel3a-header"
-              >
-                <Typography className={classes.heading}>Profile</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.panelBody}>
-                <Box width="100%">
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Profile']}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    <Box padding="1rem">Profile details will appear here</Box>
-                  </CustomTabPanel>
-                </Box>
-              </AccordionDetails>
-            </Accordion>
-            <Accordion
-              expanded={expanded === 'panel5'}
-              onChange={handleChange('panel5')}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMore />}
-                aria-controls="panel3a-content"
-                id="panel3a-header"
-              >
-                <Typography className={classes.heading}>E-wallet</Typography>
-              </AccordionSummary>
-              <AccordionDetails className={classes.panelBody}>
-                <Box width="100%">
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Summary']}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    <Box padding="1rem">E-wallet summary will appear here</Box>
-                  </CustomTabPanel>
-                </Box>
-              </AccordionDetails>
-                    </Accordion> */}
             <Card>
               <CardHeader title="Orders" />
               {rootData[2].data ? (
@@ -318,65 +202,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               )}
             </Card>
           </Grid>
-          <Grid item lg={4} xs={12}>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <Button color="primary" variant="contained">
-                  Create Issue
-                </Button>
-                &nbsp;&nbsp;
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  style={{ color: 'white' }}
-                >
-                  In/Out Option
-                </Button>
-                <SearchBar style={{ marginTop: '1rem' }} />
-              </Grid>
-              <Grid item>
-                <Card>
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Disposition', 'Incentives', 'E-Wallet']}
-                    setCurrent={val => setTab(val)}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    <Box padding="1rem">
-                      <DispositionForm />
-                    </Box>
-                  </CustomTabPanel>
-                </Card>
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <TrafficByDevice />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <LatestProducts />
-          </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          /> */}
         </Grid>
       </Container>
       {!!showCreateIssue && (

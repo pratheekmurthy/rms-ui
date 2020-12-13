@@ -10,7 +10,7 @@ import {
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BorderRight } from '@material-ui/icons';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const useStyles = makeStyles(theme => ({
   maxW50: {
@@ -46,6 +46,9 @@ const useStyles = makeStyles(theme => ({
       bottom: '50%',
       transform: 'translateY(-50%)'
     }
+  },
+  profileIcon: {
+    right: 5
   }
 }));
 
@@ -104,7 +107,13 @@ export default function DealerCard({ dealerDetails, showCreateIssue }) {
         </ListItem> */}
       {/* <Divider /> */}
       <CardContent>
-        <Grid container justify="center">
+        <Grid container justify="center" className="position-relative">
+          <Tooltip
+            title="View More Details"
+            className={`position-absolute ${classes.profileIcon} `}
+          >
+            <AccountCircleIcon color="primary" />
+          </Tooltip>
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
               {distributor_name}
