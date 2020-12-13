@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Paper,
   Grid,
@@ -13,7 +13,7 @@ import {
   Button,
   Avatar,
   TextField,
-  Drawer
+  Modal
 } from '@material-ui/core';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import { purple, orange, green } from '@material-ui/core/colors';
@@ -21,11 +21,31 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
+import CreateTicket from '../create-ticket';
+
+function rand() {
+  return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+  const top = 50 + rand();
+  const left = 50 + rand();
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`
+  };
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    margin: 15
+    margin: 15,
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200
+    }
   },
   textBold: {
     fontWeight: '600'
@@ -102,6 +122,11 @@ const useStyles = makeStyles((theme) => ({
   },
   drawerPaper: {
     width: '25%'
+  },
+  modal: {
+    alignItems: 'center',
+    width: '30%',
+    height: '60%'
   }
 }));
 
@@ -170,6 +195,9 @@ export default function TicketDashboard() {
     }
   ];
 
+  const [modalStyle] = React.useState(getModalStyle);
+  const [open, setOpen] = React.useState(false);
+
   function getTicketList() {
     return (
       <List className={classes.listRow}>
@@ -198,6 +226,14 @@ export default function TicketDashboard() {
     );
   }
 
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={classes.root}>
       <Button
@@ -206,9 +242,20 @@ export default function TicketDashboard() {
         size="small"
         className={classes.button}
         startIcon={<AddIcon />}
+        onClick={handleOpen}
       >
         Create Ticket
       </Button>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        className={classes.modal}
+        style={{ maxWidth: '200', maxHeight: '400', overflow: 'auto' }}
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+      >
+        <CreateTicket />
+      </Modal>
       <Grid container spacing={1}>
         {/**
          * This is the ticket List block
