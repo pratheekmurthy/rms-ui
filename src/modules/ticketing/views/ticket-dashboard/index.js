@@ -23,10 +23,6 @@ import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -121,8 +117,8 @@ const useStyles = makeStyles((theme) => ({
   },
   modal: {
     alignItems: 'center',
-    width: '30%',
-    height: '60%'
+    width: '100%',
+    height: '100%'
   }
 }));
 
@@ -198,25 +194,27 @@ export default function TicketDashboard() {
     return (
       <List className={classes.listRow}>
         {ticketListData.map((ticket) => (
-          <ListItem alignItems="flex-start" className={classes.listItemClass}>
-            <ListItemText>
-              <div className={classes.textBold}>
-                <ListItemIcon>
-                  <OfflineBoltIcon style={{ color: purple[500] }} />
-                  <span className={classes.ticketMargin}>{ticket.id}</span>
-                </ListItemIcon>
-              </div>
-              <Typography
-                variant="body2"
-                color="textPrimary"
-                style={{ textOverflow: 'ellipsis' }}
-              >
-                {ticket.title}
-              </Typography>
-
-              <Divider light></Divider>
-            </ListItemText>
-          </ListItem>
+          <>
+            <ListItem alignItems="flex-start" className={classes.listItemClass}>
+              <ListItemText>
+                <div className={classes.textBold}>
+                  <ListItemIcon>
+                    <OfflineBoltIcon style={{ color: purple[500] }} />
+                    <span className={classes.ticketMargin}>{ticket.id}</span>
+                  </ListItemIcon>
+                </div>
+                <Typography
+                  variant="body2"
+                  color="textPrimary"
+                  style={{ textOverflow: 'ellipsis' }}
+                  noWrap
+                >
+                  {ticket.title}
+                </Typography>
+              </ListItemText>
+            </ListItem>
+            <Divider light />
+          </>
         ))}
       </List>
     );
@@ -246,7 +244,7 @@ export default function TicketDashboard() {
         open={open}
         onClose={handleClose}
         className={classes.modal}
-        style={{ maxWidth: '200', maxHeight: '400', overflow: 'auto' }}
+        style={{ overflow: 'auto' }}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
@@ -259,7 +257,7 @@ export default function TicketDashboard() {
         <Grid item sm={12} md={3}>
           <Paper
             className={classes.paper}
-            style={{ maxHeight: 820, overflow: 'auto' }}
+            style={{ maxHeight: 790, overflow: 'auto' }}
           >
             <box component="div" overflow="auto">
               {getTicketList()}
@@ -326,83 +324,143 @@ export default function TicketDashboard() {
                   Details
                 </Typography>
                 <div className={classes.metadataClass}>
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    className={classes.belowMargin}
-                  >
-                    <Typography variant="body1" className={classes.labelClass}>
-                      Type
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      className={classes.valueClass}
-                    >
-                      <OfflineBoltIcon style={{ color: purple[500] }} />
-                      <span className={classes.ticketMargin}>Epic</span>
-                    </Box>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    className={classes.belowMargin}
-                  >
-                    <Typography variant="body1" className={classes.labelClass}>
-                      Priority
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      className={classes.valueClass}
-                    >
-                      <ArrowUpwardIcon style={{ color: orange[500] }} />
-                      <span className={classes.ticketMargin}>Medium</span>
-                    </Box>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    className={classes.belowMargin}
-                  >
-                    <Typography variant="body1" className={classes.labelClass}>
-                      Category
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      className={classes.valueClass}
-                    >
-                      <span className={classes.ticketMargin}>Survey</span>
-                    </Box>
-                  </Box>
-                  <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    className={classes.belowMargin}
-                  >
-                    <Typography variant="body1" className={classes.labelClass}>
-                      Status
-                    </Typography>
-                    <Box
-                      display="flex"
-                      flexDirection="row"
-                      className={classes.valueClass}
-                    >
-                      <Typography
-                        component="span"
-                        variant="body1"
-                        style={{ color: green[500] }}
-                        className={classes.ticketMargin}
-                      >
-                        Active
-                      </Typography>
-                    </Box>
-                  </Box>
+                  <Grid container spacing={1}>
+                    <Grid container item xs={12} spacing={6}>
+                      <React.Fragment>
+                        <Grid item xs={6}>
+                          <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: '500',
+                                float: 'left',
+                                width: '40%'
+                              }}
+                            >
+                              Type
+                            </Typography>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              className={classes.valueClass}
+                            >
+                              <OfflineBoltIcon style={{ color: purple[500] }} />
+                              <Typography
+                                variant="body1"
+                                className={classes.ticketMargin}
+                                component="span"
+                              >
+                                Epic
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: '500',
+                                float: 'left',
+                                width: '40%'
+                              }}
+                            >
+                              Priority
+                            </Typography>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              className={classes.valueClass}
+                            >
+                              <ArrowUpwardIcon style={{ color: orange[500] }} />
+                              <Typography
+                                variant="body1"
+                                className={classes.ticketMargin}
+                                component="span"
+                              >
+                                Medium
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Grid>
+                      </React.Fragment>
+                    </Grid>
+                    <Grid container item xs={12} spacing={6}>
+                      <React.Fragment>
+                        <Grid item xs={6}>
+                          <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: '500',
+                                float: 'left',
+                                width: '40%'
+                              }}
+                            >
+                              Category
+                            </Typography>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              className={classes.valueClass}
+                            >
+                              <Typography
+                                variant="body1"
+                                className={classes.ticketMargin}
+                                component="span"
+                              >
+                                Survey
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: '500',
+                                float: 'left',
+                                width: '40%'
+                              }}
+                            >
+                              Status
+                            </Typography>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              className={classes.valueClass}
+                            >
+                              <Typography
+                                component="span"
+                                variant="body1"
+                                style={{ color: green[500] }}
+                                className={classes.ticketMargin}
+                              >
+                                Active
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Grid>
+                      </React.Fragment>
+                    </Grid>
+                  </Grid>
                 </div>
               </div>
               <div className={classes.boxDiv}>
@@ -435,6 +493,7 @@ export default function TicketDashboard() {
                   id="outlined-textarea"
                   placeholder="Drop files to attach, or browse"
                   rows={5}
+                  rowsMax={20}
                   multiline
                   fullWidth
                   variant="outlined"
@@ -464,7 +523,13 @@ export default function TicketDashboard() {
                   className={classes.valueClass}
                 >
                   <Avatar className={classes.green}>SA</Avatar>
-                  <span className={classes.avatarValue}>Sandra Adams</span>
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    Sandra Adams
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -481,7 +546,13 @@ export default function TicketDashboard() {
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <span className={classes.ticketMargin}>SA26744</span>
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    SA26744
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -498,7 +569,13 @@ export default function TicketDashboard() {
                   className={classes.valueClass}
                 >
                   <Avatar className={classes.green}>AS</Avatar>
-                  <span className={classes.avatarValue}>Adams Sandra</span>
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    Adams Sandra
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -515,8 +592,13 @@ export default function TicketDashboard() {
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
-                  <span className={classes.ticketMargin}>AS23784</span>
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    SA23344
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -533,7 +615,13 @@ export default function TicketDashboard() {
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <span className={classes.ticketMargin}>ABC</span>
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    ABCD
+                  </Typography>
                 </Box>
               </Box>
             </div>
@@ -548,7 +636,13 @@ export default function TicketDashboard() {
                 <Typography variant="body1" className={classes.valueClass}>
                   Due:
                 </Typography>
-                <span className={classes.ticketMargin}>20/12/2020</span>
+                <Typography
+                  variant="body1"
+                  className={classes.ticketMargin}
+                  component="span"
+                >
+                  20/12/2020
+                </Typography>
               </Box>
 
               <Box
@@ -560,9 +654,13 @@ export default function TicketDashboard() {
                 <Typography variant="body1" className={classes.valueClass}>
                   Created:
                 </Typography>
-                <span className={classes.ticketMargin}>
+                <Typography
+                  variant="body1"
+                  className={classes.ticketMargin}
+                  component="span"
+                >
                   12/12/2020, 9:40 AM
-                </span>
+                </Typography>
               </Box>
 
               <Box
@@ -574,9 +672,13 @@ export default function TicketDashboard() {
                 <Typography variant="body1" className={classes.valueClass}>
                   Updated:
                 </Typography>
-                <span className={classes.ticketMargin}>
+                <Typography
+                  variant="body1"
+                  className={classes.ticketMargin}
+                  component="span"
+                >
                   12/12/2020, 12:40 PM
-                </span>
+                </Typography>
               </Box>
             </div>
           </Paper>
