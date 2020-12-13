@@ -44,7 +44,7 @@ const BasicTable = ({
     <Card className={clsx(classes.root, className)} {...rest}>
       <Divider />
       <PerfectScrollbar>
-        <Box minWidth={800}>
+        <Box width={'100%'}>
           <Table>
             <TableHead>
               <TableRow>

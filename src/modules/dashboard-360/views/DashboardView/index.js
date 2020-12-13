@@ -45,7 +45,8 @@ import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 
 import { setDistributorOrders } from '../../redux/action';
-import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import DispositionForm from './DispositionForm';
+import SearchBar from 'material-ui-search-bar';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -70,8 +71,7 @@ const useStyles = makeStyles(theme => {
 
 const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const classes = useStyles();
-  const [orderTab, setOrderTab] = useState(0);
-  const [invoicesTab, setInvoicesTab] = useState(0);
+  const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
 
@@ -113,7 +113,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           
           </Box>
         </Box> */}
-        <br />
+        {/* <br /> */}
         <Grid container spacing={3}>
           <Grid item lg={3} md={12} xs={12}>
             {rootData[0].data && rootData[1].data ? (
@@ -155,9 +155,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     indicatorColor="primary"
                     textColor="primary"
                     tabNames={['Open Orders', 'History']}
-                    setCurrent={val => setOrderTab(val)}
+                    setCurrent={val => setTab(val)}
                   />
-                  <CustomTabPanel value={orderTab} index={0}>
+                  <CustomTabPanel value={tab} index={0}>
                     {rootData[2].data ? (
                       <BasicTable
                         columns={orderColumns}
@@ -169,7 +169,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       <ErrorAlert />
                     )}
                   </CustomTabPanel>
-                  <CustomTabPanel value={orderTab} index={1}>
+                  <CustomTabPanel value={tab} index={1}>
                     Item Three
                   </CustomTabPanel>
                 </Box>
@@ -193,9 +193,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     indicatorColor="primary"
                     textColor="primary"
                     tabNames={['Invoices', 'History']}
-                    setCurrent={val => setOrderTab(val)}
+                    setCurrent={val => setTab(val)}
                   />
-                  <CustomTabPanel value={orderTab} index={0}>
+                  <CustomTabPanel value={tab} index={0}>
                     {rootData[3].data ? (
                       <BasicTable
                         columns={invoicesColumns}
@@ -207,7 +207,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       <ErrorAlert />
                     )}
                   </CustomTabPanel>
-                  <CustomTabPanel value={orderTab} index={1}>
+                  <CustomTabPanel value={tab} index={1}>
                     Item Three
                   </CustomTabPanel>
                 </Box>
@@ -232,7 +232,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     textColor="primary"
                     tabNames={['Incentives']}
                   />
-                  <CustomTabPanel value={orderTab} index={0}>
+                  <CustomTabPanel value={tab} index={0}>
                     <Box padding="1rem">Incentives will appear here</Box>
                   </CustomTabPanel>
                 </Box>
@@ -257,7 +257,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     textColor="primary"
                     tabNames={['Profile']}
                   />
-                  <CustomTabPanel value={orderTab} index={0}>
+                  <CustomTabPanel value={tab} index={0}>
                     <Box padding="1rem">Profile details will appear here</Box>
                   </CustomTabPanel>
                 </Box>
@@ -282,7 +282,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     textColor="primary"
                     tabNames={['Summary']}
                   />
-                  <CustomTabPanel value={orderTab} index={0}>
+                  <CustomTabPanel value={tab} index={0}>
                     <Box padding="1rem">E-wallet summary will appear here</Box>
                   </CustomTabPanel>
                 </Box>
@@ -293,7 +293,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               {rootData[2].data ? (
                 <BasicTable
                   columns={orderColumns}
-                  records={rootData[2].data.slice(0, 4)}
+                  records={rootData[2].data.slice(0, 3)}
                   redirectLink="/dash360/admin/orders"
                   redirectLabel="View All"
                 />
@@ -317,6 +317,40 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                 <ErrorAlert />
               )}
             </Card>
+          </Grid>
+          <Grid item lg={4} xs={12}>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <Button color="primary" variant="contained">
+                  Create Issue
+                </Button>
+                &nbsp;&nbsp;
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  style={{ color: 'white' }}
+                >
+                  In/Out Option
+                </Button>
+                <SearchBar style={{ marginTop: '1rem' }} />
+              </Grid>
+              <Grid item>
+                <Card>
+                  <CustomTabs
+                    variant="fullWidth"
+                    indicatorColor="primary"
+                    textColor="primary"
+                    tabNames={['Disposition', 'Incentives', 'E-Wallet']}
+                    setCurrent={val => setTab(val)}
+                  />
+                  <CustomTabPanel value={tab} index={0}>
+                    <Box padding="1rem">
+                      <DispositionForm />
+                    </Box>
+                  </CustomTabPanel>
+                </Card>
+              </Grid>
+            </Grid>
           </Grid>
           {/* <Grid
             item
