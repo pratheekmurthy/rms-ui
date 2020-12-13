@@ -28,8 +28,8 @@ function rand() {
 }
 
 function getModalStyle() {
-  const top = 50 + rand();
-  const left = 50 + rand();
+  const top = 50;
+  const left = 50;
 
   return {
     top: `${top}%`,
@@ -41,11 +41,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    margin: 15,
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: 200
-    }
+    margin: 15
   },
   textBold: {
     fontWeight: '600'

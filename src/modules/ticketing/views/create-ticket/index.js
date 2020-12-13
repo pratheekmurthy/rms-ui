@@ -38,10 +38,7 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateTicket() {
   const classes = useStyles();
   return (
-    <div
-      className={classes.paper}
-      style={{ maxWidth: '200', maxHeight: '400', overflow: 'auto' }}
-    >
+    <div className={classes.paper}>
       <Box component="div">
         <Typography variant="h5" style={{ fontWeight: '500' }}>
           Tickets Details
