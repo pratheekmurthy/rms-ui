@@ -24,12 +24,12 @@ const RatingInput = ({ submit }) => {
           name: '',
           label: ''
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
-          {
-            handleInputs();
-          }
+
+          handleInputs();
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -58,6 +58,7 @@ const RatingInput = ({ submit }) => {
                     id="label"
                     type="text"
                     label="Label"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={5}>
@@ -67,6 +68,7 @@ const RatingInput = ({ submit }) => {
                     id="name"
                     type="text"
                     label="Rating Name"
+                    autoComplete="off"
                   />
                 </Grid>
               </Grid>
