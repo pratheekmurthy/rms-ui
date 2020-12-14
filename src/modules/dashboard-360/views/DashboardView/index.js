@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Card,
+  CardContent,
   CardHeader,
   Chip,
   Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControl,
+  Divider,
   Grid,
   InputLabel,
   makeStyles,
@@ -63,9 +56,9 @@ const useStyles = makeStyles(theme => {
     panelBody: {
       padding: 0
     },
-    formControl: {
-      minWidth: 350
-    },
+    // formControl: {
+    //   minWidth: 350
+    // },
     dialogActions: {
       padding: '0 1.5rem 1rem'
     },
@@ -144,7 +137,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   >
                     BreakIn/BreakOut
                   </Button>
-                  <SearchBar style={{ marginTop: '1rem' }} />
+                  {/* <SearchBar style={{ marginTop: '1rem' }} /> */}
                 </Grid>
                 <Grid item>
                   <Card>
@@ -152,13 +145,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       variant="fullWidth"
                       indicatorColor="primary"
                       textColor="primary"
-                      tabNames={['Disposition', 'Incentives', 'E-Wallet']}
+                      tabNames={['Tickets', 'Incentives', 'E-Wallet']}
                       setCurrent={val => setTab(val)}
                     />
                     <CustomTabPanel value={tab} index={0}>
-                      <Box padding="1rem">
-                        <DispositionForm />
-                      </Box>
+                      {/* <Box padding="1rem"> */}
+                      <TicketsList />
+                      {/* </Box> */}
                     </CustomTabPanel>
                   </Card>
                 </Grid>
@@ -166,11 +159,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             </Grid>
 
             <Grid item lg={3} md={6} xs={12}>
-              {rootData[0].data && rootData[1].data ? (
+              {rootData[0].data ? (
                 <DealerCard
                   dealerDetails={{
                     ...rootData[0].data[0],
-                    ...rootData[1].data[0],
+                    // ...rootData[1].data[0],
                     lastOrderReference: rootData[2].data
                       ? rootData[2].data[0].OrderNumber
                       : ''
@@ -181,7 +174,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               )}
               <Box mt={2}>
                 <Card>
-                  <TicketsList />
+                  <CardHeader title="Disposition Details" />
+                  <Divider />
+                  <CardContent>
+                    <DispositionForm />
+                  </CardContent>
                 </Card>
               </Box>
             </Grid>
@@ -287,7 +284,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             <div style={{ flex: '1 0 0' }} />
           </DialogActions> 
         </Dialog>*/}
-        )}
       </Page>
       {showCreateTicket ? (
         <Modal
