@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DealerCard({ dealerDetails, showCreateIssue }) {
+export default function DealerCard({ dealerDetails }) {
   const classes = useStyles();
   const {
     distributor_name,

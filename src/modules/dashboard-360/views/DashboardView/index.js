@@ -19,6 +19,7 @@ import {
   InputLabel,
   makeStyles,
   MenuItem,
+  Modal,
   Select,
   TextField,
   Tooltip,
@@ -47,6 +48,8 @@ import dealerAPICalls from './apiCalls';
 import { setDistributorOrders } from '../../redux/action';
 import DispositionForm from './DispositionForm';
 import SearchBar from 'material-ui-search-bar';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -65,6 +68,12 @@ const useStyles = makeStyles(theme => {
     },
     dialogActions: {
       padding: '0 1.5rem 1rem'
+    },
+
+    modal: {
+      alignItems: 'center',
+      width: '100%',
+      height: '100%'
     }
   };
 });
@@ -77,11 +86,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
   const [expanded, setExpanded] = React.useState('panel1');
 
-  const [showCreateIssue, setShowCreateIssue] = useState(false);
+  const [showCreateTicket, setShowCreateTicket] = useState(false);
 
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  // const handleChange = panel => (event, isExpanded) => {
+  //   setExpanded(isExpanded ? panel : false);
+  // };
 
   useEffect(() => {
     async function get() {
@@ -106,107 +115,113 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   }, []);
 
   return !loadingDetails ? (
-    <Page className={classes.root} title="Dashboard">
-      <Container maxWidth={false}>
-        {/* <Box display="flex" justifyContent="space-between">
+    <>
+      <CustomBreadcrumbs />
+      <Page className={classes.root} title="Dashboard">
+        <Container maxWidth={false}>
+          {/* <Box display="flex" justifyContent="space-between">
           <Box />
           
           </Box>
         </Box> */}
-        {/* <br /> */}
-        <Grid container spacing={3}>
-          <Grid item lg={4} md={6} xs={12}>
-            <Grid container direction="column" spacing={2}>
-              <Grid item>
-                <Button color="primary" variant="contained">
-                  Create Issue
-                </Button>
-                &nbsp;&nbsp;
-                <Button
-                  color="secondary"
-                  variant="contained"
-                  style={{ color: 'white' }}
-                >
-                  BreakIn/BreakOut
-                </Button>
-                <SearchBar style={{ marginTop: '1rem' }} />
-              </Grid>
-              <Grid item>
-                <Card>
-                  <CustomTabs
-                    variant="fullWidth"
-                    indicatorColor="primary"
-                    textColor="primary"
-                    tabNames={['Disposition', 'Incentives', 'E-Wallet']}
-                    setCurrent={val => setTab(val)}
-                  />
-                  <CustomTabPanel value={tab} index={0}>
-                    <Box padding="1rem">
-                      <DispositionForm />
-                    </Box>
-                  </CustomTabPanel>
-                </Card>
+          {/* <br /> */}
+          <Grid container spacing={3}>
+            <Grid item lg={4} md={6} xs={12}>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    onClick={() => setShowCreateTicket(true)}
+                  >
+                    Create Ticket
+                  </Button>
+                  &nbsp;&nbsp;
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    style={{ color: 'white' }}
+                  >
+                    BreakIn/BreakOut
+                  </Button>
+                  <SearchBar style={{ marginTop: '1rem' }} />
+                </Grid>
+                <Grid item>
+                  <Card>
+                    <CustomTabs
+                      variant="fullWidth"
+                      indicatorColor="primary"
+                      textColor="primary"
+                      tabNames={['Disposition', 'Incentives', 'E-Wallet']}
+                      setCurrent={val => setTab(val)}
+                    />
+                    <CustomTabPanel value={tab} index={0}>
+                      <Box padding="1rem">
+                        <DispositionForm />
+                      </Box>
+                    </CustomTabPanel>
+                  </Card>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
 
-          <Grid item lg={3} md={6} xs={12}>
-            {rootData[0].data && rootData[1].data ? (
-              <DealerCard
-                dealerDetails={{
-                  ...rootData[0].data[0],
-                  ...rootData[1].data[0],
-                  lastOrderReference: rootData[2].data
-                    ? rootData[2].data[0].OrderNumber
-                    : ''
-                }}
-                showCreateIssue={e => setShowCreateIssue(e)}
-              />
-            ) : (
-              <ErrorAlert text="Unable to get dealer details" />
-            )}
-            <Box mt={2}>
-              <Card>
-                <TicketsList />
-              </Card>
-            </Box>
-          </Grid>
-          <Grid item lg={5} xs={12}>
-            <Card>
-              <CardHeader title="Orders" />
-              {rootData[2].data ? (
-                <BasicTable
-                  columns={orderColumns}
-                  records={rootData[2].data.slice(0, 3)}
-                  redirectLink="/dash360/admin/orders"
-                  redirectLabel="View All"
+            <Grid item lg={3} md={6} xs={12}>
+              {rootData[0].data && rootData[1].data ? (
+                <DealerCard
+                  dealerDetails={{
+                    ...rootData[0].data[0],
+                    ...rootData[1].data[0],
+                    lastOrderReference: rootData[2].data
+                      ? rootData[2].data[0].OrderNumber
+                      : ''
+                  }}
                 />
               ) : (
-                <ErrorAlert />
+                <ErrorAlert text="Unable to get dealer details" />
               )}
-            </Card>
-            <br />
-            <Card>
-              <CardHeader title="Invoices" />
-              {rootData[3].data ? (
-                <div>
+              <Box mt={2}>
+                <Card>
+                  <TicketsList />
+                </Card>
+              </Box>
+            </Grid>
+            <Grid item lg={5} xs={12}>
+              <Card>
+                <CardHeader title="Orders" />
+                {rootData[2].data ? (
                   <BasicTable
-                    columns={invoicesColumns}
-                    records={rootData[3].data.slice(0, 3)}
-                    redirectLink="/dash360/admin/invoices"
+                    columns={orderColumns}
+                    records={rootData[2].data.slice(0, 3)}
+                    redirectLink="/dash360/admin/orders"
                     redirectLabel="View All"
                   />
-                </div>
-              ) : (
-                <ErrorAlert />
-              )}
-            </Card>
+                ) : (
+                  <ErrorAlert />
+                )}
+              </Card>
+              <br />
+              <Card>
+                <CardHeader title="Invoices" />
+                {rootData[3].data ? (
+                  <div>
+                    <BasicTable
+                      columns={invoicesColumns}
+                      records={rootData[3].data.slice(0, 3)}
+                      redirectLink="/dash360/admin/invoices"
+                      redirectLabel="View All"
+                    />
+                  </div>
+                ) : (
+                  <ErrorAlert />
+                )}
+              </Card>
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
-      {!!showCreateIssue && (
-        <Dialog open onClose={() => setShowCreateIssue(false)}>
-          <DialogTitle id="alert-dialog-title">Create a new Issue</DialogTitle>
+        </Container>
+        {/* {!!showCreateTicket && (
+      <Dialog open onClose={() => setShowCreateTicket(false)}>
+           <DialogTitle id="alert-dialog-title">Create a new Ticket</DialogTitle>
+
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               <FormControl variant="outlined" className={classes.formControl}>
@@ -263,17 +278,32 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           </DialogContent>
           <DialogActions className={classes.dialogActions}>
             <Button
-              onClick={() => setShowCreateIssue(false)}
+              onClick={() => setShowCreateTicket(true)}
               color="primary"
               variant="contained"
             >
-              Create Issue
+              Create Ticket
             </Button>
             <div style={{ flex: '1 0 0' }} />
-          </DialogActions>
-        </Dialog>
+          </DialogActions> 
+        </Dialog>*/}
+        )}
+      </Page>
+      {showCreateTicket ? (
+        <Modal
+          open
+          onClose={() => setShowCreateTicket(false)}
+          className={classes.modal}
+          style={{ overflow: 'auto' }}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <CreateTicket />
+        </Modal>
+      ) : (
+        ''
       )}
-    </Page>
+    </>
   ) : (
     <MainLoader />
   );

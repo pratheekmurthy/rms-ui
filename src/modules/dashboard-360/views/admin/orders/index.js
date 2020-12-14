@@ -56,7 +56,7 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
   return distributorOrders ? (
     // <Card>
     <div className={classes.dgContainer}>
-      <Box>{/* <CustomBreadcrumbs /> */}</Box>
+      <CustomBreadcrumbs />
       <Box padding="1rem 0.5rem">
         <Typography variant="h6" component="h4">
           All Orders

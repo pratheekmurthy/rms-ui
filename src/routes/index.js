@@ -21,7 +21,7 @@ export default [
     routes,
     key: 'dash360',
     component: dash360,
-    crumb: ['Dashboard 360']
+    crumb: 'Dashboard 360'
   },
   {
     path: '/surveys',
@@ -34,12 +34,14 @@ export default [
     path: '/telephony',
     routes: telephonyRoutes,
     key: 'telephony',
-    component: telephony
+    component: telephony,
+    crumb: 'Telephony'
   },
   {
     path: '/ticketing',
     routes: ticketingRoutes,
     key: 'ticketing',
-    component: ticketing
+    component: ticketing,
+    crumb: 'Ticketing'
   }
 ];

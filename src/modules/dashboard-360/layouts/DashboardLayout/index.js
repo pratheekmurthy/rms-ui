@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
+import TopBar from 'src/components/TopBar';
 import NavBar from './NavBar';
-import TopBar from './TopBar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +46,7 @@ const DashboardLayout = () => {
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
+            <span>XYZ</span>
           </div>
         </div>
       </div>

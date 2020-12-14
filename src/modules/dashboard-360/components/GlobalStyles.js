@@ -66,6 +66,9 @@ const useStyles = makeStyles(() =>
       },
       '.position-absolute': {
         position: 'absolute'
+      },
+      '.MuiToolbar-regular': {
+        minHeight: 64
       }
     }
   })
