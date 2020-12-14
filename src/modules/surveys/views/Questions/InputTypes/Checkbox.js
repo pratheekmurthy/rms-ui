@@ -34,7 +34,7 @@ const CheckboxInput = ({ submit }) => {
             alignItems="flex-start"
             spacing={10}
           >
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Field
                 component={TextField}
                 name={'value' + val}
@@ -44,7 +44,7 @@ const CheckboxInput = ({ submit }) => {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <Field
                 component={TextField}
                 name={'label' + val}
@@ -154,7 +154,7 @@ const CheckboxInput = ({ submit }) => {
                 alignItems="flex-start"
                 spacing={10}
               >
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <Field
                     component={TextField}
                     name="name"
@@ -164,7 +164,7 @@ const CheckboxInput = ({ submit }) => {
                     autoComplete="off"
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="label"

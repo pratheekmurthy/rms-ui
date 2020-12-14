@@ -25,7 +25,7 @@ const TextInput = ({ submit }) => {
           name: '',
           label: ''
         }}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
           // let name = values.name;
@@ -38,9 +38,9 @@ const TextInput = ({ submit }) => {
           //   });
           //   submit(allData);
           // }
-          {
-            handleInputs();
-          }
+
+          handleInputs();
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -69,6 +69,7 @@ const TextInput = ({ submit }) => {
                     id="label"
                     type="text"
                     label="Label"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={5}>
@@ -78,6 +79,7 @@ const TextInput = ({ submit }) => {
                     id="name"
                     type="text"
                     label="Text Name"
+                    autoComplete="off"
                   />
                 </Grid>
               </Grid>

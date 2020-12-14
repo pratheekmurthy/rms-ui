@@ -39,6 +39,7 @@ const SelectInput = ({ submit }) => {
                 id={'value' + val}
                 type="text"
                 label="Option Value"
+                autoComplete="off"
               />
             </Grid>
             <Grid item xs={5}>
@@ -48,6 +49,7 @@ const SelectInput = ({ submit }) => {
                 id={'label' + val}
                 type="text"
                 label="label"
+                autoComplete="off"
               />
             </Grid>
           </Grid>
@@ -104,10 +106,11 @@ const SelectInput = ({ submit }) => {
     <>
       <Formik
         initialValues={initialValuesObj}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
           setSubmitValues({ values });
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -136,6 +139,7 @@ const SelectInput = ({ submit }) => {
                     id="name"
                     type="text"
                     label="Select Name"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={5}>
@@ -144,7 +148,8 @@ const SelectInput = ({ submit }) => {
                     name="label"
                     id="label"
                     type="text"
-                    label="Label"
+                    label="label"
+                    autoComplete="off"
                   />
                 </Grid>
               </Grid>

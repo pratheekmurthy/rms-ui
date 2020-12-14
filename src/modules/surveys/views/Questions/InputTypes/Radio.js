@@ -38,6 +38,7 @@ const RadioInput = ({ submit }) => {
                 id={'value' + val}
                 type="text"
                 label="Radio Value"
+                autoComplete="off"
               />
             </Grid>
             <Grid item xs={5}>
@@ -47,6 +48,7 @@ const RadioInput = ({ submit }) => {
                 id={'label' + val}
                 type="text"
                 label="label"
+                autoComplete="off"
               />
             </Grid>
           </Grid>
@@ -113,10 +115,11 @@ const RadioInput = ({ submit }) => {
     <>
       <Formik
         initialValues={initialValuesObj}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           // console.log(values);
           setSubmitValues({ values });
+          resetForm();
         }}
         validationSchema={Yup.object({
           name: Yup.string().required('Please enter name'),
@@ -145,6 +148,7 @@ const RadioInput = ({ submit }) => {
                     id="name"
                     type="text"
                     label="Radio Name"
+                    autoComplete="off"
                   />
                 </Grid>
                 <Grid item xs={5}>
@@ -154,6 +158,7 @@ const RadioInput = ({ submit }) => {
                     id="label"
                     type="text"
                     label="label"
+                    autoComplete="off"
                   />
                 </Grid>
               </Grid>
