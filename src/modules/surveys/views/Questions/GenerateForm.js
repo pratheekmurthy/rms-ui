@@ -35,7 +35,7 @@ const GenerateForm = ({ inputs }) => {
 
   inputs.forEach(input => (obj[input.questionName] = ''));
 
-  console.log('obj : ', obj);
+  // console.log('obj : ', obj);
 
   let [ratingValue, setRatingValue] = useState(0);
   const getRatingValue = data => {
@@ -51,7 +51,7 @@ const GenerateForm = ({ inputs }) => {
           initialValues={obj}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
-            console.log('Values : ', values);
+            // console.log('Values : ', values);
           }}
         >
           {({ submitForm, isSubmitting }) => (
@@ -106,14 +106,7 @@ const GenerateForm = ({ inputs }) => {
                   case 'checkbox':
                     return (
                       <div key={input.name}>
-                        <Field
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          name={input.questionName}
-                          color="primary"
-                          defaultValue={false}
-                          Label={{ label: input.label }}
-                        />
+                        <Typography>{input.label}</Typography>
                         {input.options.map((option, index) => (
                           <div key={index}>
                             <Field
@@ -173,7 +166,7 @@ const GenerateForm = ({ inputs }) => {
                       </>
                     );
                   default:
-                    return <div>Empty</div>;
+                    return null;
                 }
               })}
 

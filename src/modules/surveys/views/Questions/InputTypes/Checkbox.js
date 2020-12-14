@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { Button, Grid, IconButton } from '@material-ui/core';
+import { Button, Grid, Fade, IconButton, Tooltip } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
 import AddIcon from '@material-ui/icons/Add';
 
 const CheckboxInput = ({ submit }) => {
@@ -97,25 +96,6 @@ const CheckboxInput = ({ submit }) => {
     }
   }, [submitValues]);
 
-  // const handleInputs = () => {
-
-  //   const obj = { ...initialValuesObj };
-  //   obj["label" + count] = "";
-  //   obj["value" + count] = "";
-  //   console.log(initialValuesObj, count);
-  //   setCount(count + 1);
-  //   setValues(obj);
-
-  //   // let name = document.getElementById("name").value;
-  //   // let label = document.getElementById("label").value;
-  //   // if (name !== "" && label !== "") {
-  //   //   (inputsData.questionType = "checkbox"),
-  //   //     (inputsData.questionName = name),
-  //   //     (inputsData.label = label),
-  //   //     submit(inputsData);
-  //   // }
-  // };
-
   const handleOptions = () => {
     const obj = { ...initialValuesObj };
     obj['label' + count] = '';
@@ -124,6 +104,7 @@ const CheckboxInput = ({ submit }) => {
     setCount(count + 1);
     setValues(obj);
   };
+  
   return (
     <>
       <Formik
@@ -178,28 +159,52 @@ const CheckboxInput = ({ submit }) => {
             </Grid>
             {count > 0 ? addOptions() : null}
             <br />
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              endIcon={<AddCircleRoundedIcon style={{ fontSize: 23 }} />}
-              onClick={handleOptions}
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="flex-start"
             >
-              Options
-            </Button>
-            {isSubmitting}
-            <br />
-            <br />
-            <Button variant="contained" color="inherit" onClick={submitForm}>
-              Add Data
-            </Button>
-            {/* <IconButton
-              variant="contained"
-              color="inherit"
-              onClick={submitForm}
-            >
-              <AddIcon />
-            </IconButton> */}
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                spacing={10}
+              >
+                <Grid item xs={5}>
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 600 }}
+                    title="Add Options"
+                    aria-label="Add Options"
+                    placement="bottom"
+                    style={{ marginLeft: '25%', marginTop: '-5%' }}
+                  >
+                    <IconButton
+                      type="button"
+                      variant="contained"
+                      color="primary"
+                      onClick={handleOptions}
+                    >
+                      <AddIcon fontSize="large" />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={4}>
+                  {isSubmitting}
+                  {/* <br />
+            <br /> */}
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    onClick={submitForm}
+                  >
+                    Add Data
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
           </Form>
         )}
       </Formik>

@@ -1,40 +1,21 @@
-// import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-// import Typography from '@material-ui/core/Typography';
 import {
-  Typography,
-  createMuiTheme,
-  ThemeProvider,
   Button,
   MenuItem,
   FormControl,
   makeStyles,
-  withStyles,
   Grid,
-  Paper,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   Box,
   Card,
   CardHeader,
   CardContent,
-  CardActions,
   Divider,
-  List,
   ListItem,
-  ListItemIcon,
-  ListItemText
+  ListItemText,
+  IconButton
 } from '@material-ui/core';
-import { green, orange, purple } from '@material-ui/core/colors';
-import { CheckBox } from '@material-ui/icons';
 import { Formik, Form, Field } from 'formik';
-import { CheckboxWithLabel, Select, TextField } from 'formik-material-ui';
-import React, { useEffect, useRef, useState } from 'react';
+import { TextField } from 'formik-material-ui';
+import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import GenerateForm from './GenerateForm';
 import CheckboxInput from './InputTypes/Checkbox';
@@ -45,23 +26,7 @@ import RadioInput from './InputTypes/Radio';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
-import { Autocomplete } from '@material-ui/lab';
-
-const paragraphTheme = createMuiTheme({
-  palette: {
-    primary: orange
-  }
-});
-
-const GenerateFormBtn = withStyles(theme => ({
-  root: {
-    color: theme.palette.getContrastText(purple[500]),
-    backgroundColor: purple[500],
-    '&:hover': {
-      backgroundColor: purple[700]
-    }
-  }
-}))(Button);
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const drawerWidth = '45%';
 
@@ -103,8 +68,6 @@ const FormFormik = () => {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState('');
   const [textList, setTextList] = useState([]);
-  const [radioInput, setRadioInput] = useState([]);
-  const [questions, setQuestions] = useState({});
   const [input, setInput] = useState([]);
 
   let test = true;
@@ -115,46 +78,33 @@ const FormFormik = () => {
     }
   };
 
-  const handleText = () => {
-    let name = document.getElementById('textName').value;
-    let label =
-      inputValue === 'rating'
-        ? inputValue
-        : inputValue === 'radio'
-        ? name.split(';')
-        : name;
-    if (name && label !== '') {
-      setTextList([
-        ...textList,
-        {
-          name: name,
-          label: label,
-          type: inputValue,
-          row: document.getElementById('textNum')
-            ? document.getElementById('textNum').value
-            : null
-        }
-      ]);
-    }
-    if (formRef.current) {
-      formRef.current.handleSubmit();
-    }
-  };
-
-  useEffect(() => {
-    if (inputValue !== '') {
-      // console.log(inputValue);
-    }
-    if (input.length !== 0) {
-      // console.log('input', input);
-    }
-  }, [inputValue, input]);
-
-  let inputs = [];
+  // const handleText = () => {
+  //   let name = document.getElementById('textName').value;
+  //   let label =
+  //     inputValue === 'rating'
+  //       ? inputValue
+  //       : inputValue === 'radio'
+  //       ? name.split(';')
+  //       : name;
+  //   if (name && label !== '') {
+  //     setTextList([
+  //       ...textList,
+  //       {
+  //         name: name,
+  //         label: label,
+  //         type: inputValue,
+  //         row: document.getElementById('textNum')
+  //           ? document.getElementById('textNum').value
+  //           : null
+  //       }
+  //     ]);
+  //   }
+  //   if (formRef.current) {
+  //     formRef.current.handleSubmit();
+  //   }
+  // };
 
   const onAddData = data => {
-    // inputs.push(data);
-    // console.log("inputs , ", inputs);
     setInput([...input, data]);
   };
 
@@ -173,21 +123,9 @@ const FormFormik = () => {
       case 'select':
         return <SelectInput submit={onAddData} />;
       default:
-        return inputValue;
+        return null;
     }
   };
-
-  // const fakeData = { userId: 2, title: "title 1", body: "body 1" };
-
-  // useEffect(() => {
-  //   Axios.post("https://.typicode.com/posts", input)
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(input);
-  //     });
-  // }, [inputValue]);
 
   function postQuestions() {
     Axios.post('/questions', input)
@@ -198,6 +136,11 @@ const FormFormik = () => {
         console.log(input);
       });
   }
+
+  const handleDelete = data => {
+    let filterInput = input.filter(currentObj => currentObj !== data);
+    setInput(filterInput);
+  };
 
   return (
     <Page title="questions">
@@ -218,13 +161,6 @@ const FormFormik = () => {
                   }}
                   onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(false);
-                    // console.log(values);
-                    // console.log('textList : ', textList);
-
-                    // {
-                    //   handleText;
-                    // }
-                    // console.log("onAddData : ", inputs);
                   }}
                   validationSchema={Yup.object({
                     select: Yup.string()
@@ -254,7 +190,7 @@ const FormFormik = () => {
                           name="select"
                           id="select"
                           select={true}
-                          label="Select any 1"
+                          label="Select question"
                           variant="outlined"
                           size="medium"
                           onClick={handleClick}
@@ -285,6 +221,26 @@ const FormFormik = () => {
                   )}
                 </Formik>
                 {inputValue && handleInputs(inputValue)}
+                {!!input.length &&
+                  input.map((data, index) => (
+                    <div>
+                      <ListItem key={index} style={{ marginTop: '-1%' }}>
+                        <IconButton
+                          aria-label="delete"
+                          color="secondary"
+                          onClick={() => {
+                            handleDelete(data);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                        <ListItemText
+                          primary={data.label}
+                          style={{ marginLeft: '5%' }}
+                        />
+                      </ListItem>
+                    </div>
+                  ))}
               </CardContent>
             </Card>
           </Grid>

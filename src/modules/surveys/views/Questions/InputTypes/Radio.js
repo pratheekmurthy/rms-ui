@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, Fade, IconButton, Tooltip } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
-import AddCircleRoundedIcon from '@material-ui/icons/AddCircleRounded';
+import AddIcon from '@material-ui/icons/Add';
 
 const RadioInput = ({ submit }) => {
   const inputsData = {};
@@ -31,7 +31,7 @@ const RadioInput = ({ submit }) => {
             alignItems="flex-start"
             spacing={10}
           >
-            <Grid item xs={4}>
+            <Grid item xs={5}>
               <Field
                 component={TextField}
                 name={'value' + val}
@@ -41,7 +41,7 @@ const RadioInput = ({ submit }) => {
                 autoComplete="off"
               />
             </Grid>
-            <Grid item xs={5}>
+            <Grid item xs={4}>
               <Field
                 component={TextField}
                 name={'label' + val}
@@ -141,7 +141,7 @@ const RadioInput = ({ submit }) => {
                 alignItems="flex-start"
                 spacing={10}
               >
-                <Grid item xs={4}>
+                <Grid item xs={5}>
                   <Field
                     component={TextField}
                     name="name"
@@ -151,7 +151,7 @@ const RadioInput = ({ submit }) => {
                     autoComplete="off"
                   />
                 </Grid>
-                <Grid item xs={5}>
+                <Grid item xs={4}>
                   <Field
                     component={TextField}
                     name="label"
@@ -165,22 +165,52 @@ const RadioInput = ({ submit }) => {
             </Grid>
             {count > 0 ? addOptions() : null}
             <br />
-            <Button
-              type="button"
-              variant="contained"
-              color="primary"
-              endIcon={<AddCircleRoundedIcon style={{ fontSize: 23 }} />}
-              onClick={handleOptions}
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="flex-start"
             >
-              Options
-            </Button>
-
-            {isSubmitting}
-            <br />
-            <br />
-            <Button variant="contained" color="inherit" onClick={submitForm}>
-              Add Data
-            </Button>
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                spacing={10}
+              >
+                <Grid item xs={5}>
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 600 }}
+                    title="Add Options"
+                    aria-label="Add Options"
+                    placement="bottom"
+                    style={{ marginLeft: '25%', marginTop: '-5%' }}
+                  >
+                    <IconButton
+                      type="button"
+                      variant="contained"
+                      color="primary"
+                      onClick={handleOptions}
+                    >
+                      <AddIcon fontSize="large" />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={4}>
+                  {isSubmitting}
+                  {/* <br />
+            <br /> */}
+                  <Button
+                    variant="contained"
+                    color="inherit"
+                    onClick={submitForm}
+                  >
+                    Add Data
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
           </Form>
         )}
       </Formik>

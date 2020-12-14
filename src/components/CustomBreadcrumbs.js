@@ -13,7 +13,7 @@ function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
   }, [urlMatchFound, activatedRoute]);
   let newLink = '/';
   return (
-    <Grid container spacing={2}>
+    <>
       {breadCrumbLinks?.length ? (
         <Box style={{ margin: '1.5rem 2rem 0 2rem' }}>
           <Breadcrumbs>
@@ -33,7 +33,7 @@ function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
       ) : (
         ''
       )}
-    </Grid>
+    </>
   );
 }
 
