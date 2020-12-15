@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
-    minWidth: 300
+    width: '100%'
   }
 }));
 export default function DispositionForm() {
@@ -92,24 +92,20 @@ export default function DispositionForm() {
                 component={TextField}
                 variant="outlined"
                 multiline
-                rows={3}
+                rows={2}
                 label="Comments"
               />
             </Grid>
             <Grid item>
-              <Field component={RadioGroup} name="type">
+              <Field component={RadioGroup} name="type" row>
+                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
                 <FormControlLabel
-                  value="painting"
+                  value="raisedIssue"
                   control={<Radio />}
                   label="Raised Issue"
                 />
                 <FormControlLabel
-                  value="drawing"
-                  control={<Radio />}
-                  label="Provided Details"
-                />
-                <FormControlLabel
-                  value="closes"
+                  value="closed"
                   control={<Radio />}
                   label="Closed"
                 />

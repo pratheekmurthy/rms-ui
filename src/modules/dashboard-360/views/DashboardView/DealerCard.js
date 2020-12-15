@@ -1,16 +1,24 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   Grid,
   Tooltip,
   Typography
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { getAddressFromObj } from '../../utils/util-functions';
 
 const useStyles = makeStyles(theme => ({
   maxW50: {
@@ -49,6 +57,9 @@ const useStyles = makeStyles(theme => ({
   },
   profileIcon: {
     right: 5
+  },
+  dialog: {
+    minWidth: 400
   }
 }));
 
@@ -62,61 +73,38 @@ export default function DealerCard({ dealerDetails }) {
     lastOrderReference,
     distributor_rank,
     Joiningdate,
-    email_id
+    distributor_status,
+    email_id,
+    display_name,
+    mob_no,
+    pan_no,
+    adhar_no,
+    phone_no,
+    SelfDOB
   } = dealerDetails;
+
+  const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
+
+  const getIconColor = () => {
+    return 'primary';
+  };
   return (
     <Card>
-      {/* <CardHeader
-        title={
-          <Grid container justify="space-between">
-            <span>Distributor Details</span>
-            <span
-              className={`MuiTypography-root MuiLink-root MuiLink-underlineHover MuiTypography-colorPrimary ${classes.customLink}`}
-              onClick={() => showCreateIssue(true)}
-            >
-              Create Issue
-            </span>
-          </Grid>
-        }
-      /> */}
-      {/* <Divider />
-      <List>
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Distr. ID
-                </Typography>
-                <span>{distributor_id}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography gutterBottom variant="h5" component="h2">
-                  {distributor_name}
-                </Typography>
-              </Box>
-            }
-          />
-        </ListItem> */}
-      {/* <Divider /> */}
       <CardContent>
         <Grid container justify="center" className="position-relative">
           <Tooltip
             title="View More Details"
             className={`position-absolute ${classes.profileIcon} `}
           >
-            <AccountCircleIcon color="primary" />
+            <AccountCircleIcon
+              color="primary"
+              style={{ cursor: 'pointer' }}
+              onClick={() => setShowFullDetailsModal(true)}
+            />
           </Tooltip>
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
-              {distributor_name}
+              {display_name}
             </Typography>
 
             <Typography
@@ -177,7 +165,141 @@ export default function DealerCard({ dealerDetails }) {
           </Grid>
         </Grid>
       </CardContent>
-
+      {showFullDetailsModal && (
+        <Dialog
+          open
+          onClose={() => setShowFullDetailsModal(false)}
+          classes={{ paper: classes.dialog }}
+        >
+          <DialogTitle>User Profile</DialogTitle>
+          <Divider light />
+          <DialogContent>
+            <Typography variant="h6">
+              {display_name}
+              <Tooltip title={distributor_status}>
+                <CheckCircleIcon
+                  color={getIconColor()}
+                  style={{ marginBottom: -3, marginLeft: 5 }}
+                />
+              </Tooltip>
+            </Typography>
+            <Typography color="textSecondary">{distributor_id}</Typography>
+            {/* <Typography color="textSecondary" display="inline" variant="p">
+              Distributor Name:
+            </Typography>
+            <Typography color="textSecondary" display="inline">
+              {display_name}
+            </Typography> */}
+            <br />
+            <Grid container wrap>
+              <Grid container item xs={12} wrap>
+                <Box style={{ flexBasis: '100%' }}>
+                  <Typography variant="h4">Contact Details</Typography>
+                </Box>
+                <Box style={{ flexBasis: '100%' }} marginTop={2} />
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Email Id:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {email_id}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Mobile Number:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {mob_no}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Phone Number:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {phone_no || '-'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Billing Address:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {getAddressFromObj(dealerDetails)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Box style={{ flexBasis: '100%' }}>
+                <br />
+              </Box>
+              <Grid container item xs={12}>
+                <Box style={{ flexBasis: '100%' }}>
+                  <Typography variant="h4">Personal Details</Typography>
+                </Box>
+                <Box style={{ flexBasis: '100%' }} marginTop={2} />
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Distributor Name:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {distributor_name}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Aadhar Number:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {adhar_no}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">PAN Number:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {pan_no}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Date Of Birth:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                      {SelfDOB.substring(0, 10)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={() => setShowFullDetailsModal(false)}
+            >
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
       {/* <ListItem>
           <ListItemText
             primary={

@@ -69,6 +69,9 @@ const useStyles = makeStyles(() =>
       },
       '.MuiToolbar-regular': {
         minHeight: 64
+      },
+      '.color-white': {
+        color: 'white'
       }
     }
   })

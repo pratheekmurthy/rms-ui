@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Box,
   Button,
   Card,
+  CardContent,
   CardHeader,
   Chip,
   Container,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  FormControl,
+  Divider,
   Grid,
   InputLabel,
   makeStyles,
@@ -40,6 +37,10 @@ import {
 
 import ErrorAlert from 'src/components/ErrorAlert';
 import { connect } from 'react-redux';
+import SearchBar from 'material-ui-search-bar';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import CreateTicket from 'src/modules/ticketing/views/create-ticket';
+import CallIcon from '@material-ui/icons/Call';
 import DealerCard from './DealerCard';
 import TicketsList from './TicketsList';
 
@@ -47,9 +48,7 @@ import dealerAPICalls from './apiCalls';
 
 import { setDistributorOrders } from '../../redux/action';
 import DispositionForm from './DispositionForm';
-import SearchBar from 'material-ui-search-bar';
-import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
-import CreateTicket from 'src/modules/ticketing/views/create-ticket';
+import TimerComp from './TimerComp';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -63,9 +62,9 @@ const useStyles = makeStyles(theme => {
     panelBody: {
       padding: 0
     },
-    formControl: {
-      minWidth: 350
-    },
+    // formControl: {
+    //   minWidth: 350
+    // },
     dialogActions: {
       padding: '0 1.5rem 1rem'
     },
@@ -74,6 +73,25 @@ const useStyles = makeStyles(theme => {
       alignItems: 'center',
       width: '100%',
       height: '100%'
+    },
+    timerComp: {
+      position: 'absolute',
+      top: 0,
+      left: '55%',
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '1.2rem',
+      backgroundColor: theme.palette.secondary.light,
+      padding: '8px 10px',
+      // paddingBottom: 20,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8
+    },
+    callWrapper: {
+      left: 'calc(55% + 90px)'
+    },
+    callInbound: {
+      backgroundColor: theme.palette.success.light
     }
   };
 });
@@ -115,13 +133,25 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   }, []);
 
   return !loadingDetails ? (
-    <>
+    <div style={{ position: 'relative' }}>
+      <div className={classes.timerComp}>
+        <TimerComp />
+      </div>
+      <Box
+        alignItems="center"
+        display="flex"
+        className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+      >
+        <CallIcon />
+        &nbsp;
+        <Typography display="inline">Inbound Call In Progress</Typography>
+      </Box>
       <CustomBreadcrumbs />
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           {/* <Box display="flex" justifyContent="space-between">
           <Box />
-          
+
           </Box>
         </Box> */}
           {/* <br /> */}
@@ -144,7 +174,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   >
                     BreakIn/BreakOut
                   </Button>
-                  <SearchBar style={{ marginTop: '1rem' }} />
+                  {/* <SearchBar style={{ marginTop: '1rem' }} /> */}
                 </Grid>
                 <Grid item>
                   <Card>
@@ -152,13 +182,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       variant="fullWidth"
                       indicatorColor="primary"
                       textColor="primary"
-                      tabNames={['Disposition', 'Incentives', 'E-Wallet']}
+                      tabNames={['Tickets', 'Incentives', 'E-Wallet']}
                       setCurrent={val => setTab(val)}
                     />
                     <CustomTabPanel value={tab} index={0}>
-                      <Box padding="1rem">
-                        <DispositionForm />
-                      </Box>
+                      {/* <Box padding="1rem"> */}
+                      <TicketsList />
+                      {/* </Box> */}
                     </CustomTabPanel>
                   </Card>
                 </Grid>
@@ -166,11 +196,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             </Grid>
 
             <Grid item lg={3} md={6} xs={12}>
-              {rootData[0].data && rootData[1].data ? (
+              {rootData[0].data ? (
                 <DealerCard
                   dealerDetails={{
                     ...rootData[0].data[0],
-                    ...rootData[1].data[0],
+                    // ...rootData[1].data[0],
                     lastOrderReference: rootData[2].data
                       ? rootData[2].data[0].OrderNumber
                       : ''
@@ -181,7 +211,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               )}
               <Box mt={2}>
                 <Card>
-                  <TicketsList />
+                  <CardHeader title="Disposition Details" />
+                  <Divider />
+                  <CardContent>
+                    <DispositionForm />
+                  </CardContent>
                 </Card>
               </Box>
             </Grid>
@@ -285,56 +319,55 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               Create Ticket
             </Button>
             <div style={{ flex: '1 0 0' }} />
-          </DialogActions> 
-        </Dialog>*/}
-        )}
+          </DialogActions>
+        </Dialog> */}
       </Page>
       {showCreateTicket ? (
-            <Dialog
-            open
-            fullWidth
-            maxWidth="md"
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
-            <DialogContent dividers>
-              <CreateTicket />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                 onClose={() => setShowCreateTicket(false)}
-                color="primary"
-                variant="contained"
-                size="small"
-              >
-                Create
-              </Button>
-              <Button
-                 onClose={() => setShowCreateTicket(false)}
-                color="primary"
-                size="small"
-                variant="outlined"
-                autoFocus
-              >
-                Cancel
-              </Button>
-            </DialogActions>
-          </Dialog>
-      //   <Modal
-      //     open
-      //     onClose={() => setShowCreateTicket(false)}
-      //     className={classes.modal}
-      //     style={{ overflow: 'auto' }}
-      //     aria-labelledby="simple-modal-title"
-      //     aria-describedby="simple-modal-description"
-      //   >
-      //     <CreateTicket />
-      //   </Modal>
+        <Dialog
+          open
+          fullWidth
+          maxWidth="md"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+          <DialogContent dividers>
+            <CreateTicket />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClose={() => setShowCreateTicket(false)}
+              color="primary"
+              variant="contained"
+              size="small"
+            >
+              Create
+            </Button>
+            <Button
+              onClose={() => setShowCreateTicket(false)}
+              color="primary"
+              size="small"
+              variant="outlined"
+              autoFocus
+            >
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
       ) : (
-       ''
+        //   <Modal
+        //     open
+        //     onClose={() => setShowCreateTicket(false)}
+        //     className={classes.modal}
+        //     style={{ overflow: 'auto' }}
+        //     aria-labelledby="simple-modal-title"
+        //     aria-describedby="simple-modal-description"
+        //   >
+        //     <CreateTicket />
+        //   </Modal>
+        ''
       )}
-    </>
+    </div>
   ) : (
     <MainLoader />
   );
