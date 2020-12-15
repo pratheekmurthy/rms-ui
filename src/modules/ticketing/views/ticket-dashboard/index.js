@@ -13,7 +13,12 @@ import {
   Button,
   Avatar,
   TextField,
-  Modal
+  Modal,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  DialogContentText
 } from '@material-ui/core';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import { purple, orange, green } from '@material-ui/core/colors';
@@ -187,8 +192,9 @@ export default function TicketDashboard() {
     }
   ];
 
-  const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [fullWidth, setFullWidth] = React.useState(true);
+  const [maxWidth, setMaxWidth] = React.useState('sm');
 
   function getTicketList() {
     return (
@@ -220,12 +226,11 @@ export default function TicketDashboard() {
     );
   }
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   return (
@@ -234,22 +239,43 @@ export default function TicketDashboard() {
         variant="outlined"
         color="primary"
         size="small"
-        className={classes.button}
+        style={{marginBottom:15}}
         startIcon={<AddIcon />}
         onClick={handleOpen}
       >
         Create Ticket
       </Button>
-      <Modal
+      <Dialog
         open={open}
-        onClose={handleClose}
-        className={classes.modal}
-        style={{ overflow: 'auto' }}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <CreateTicket />
-      </Modal>
+        <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+        <DialogContent dividers>
+          <CreateTicket />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            variant="contained"
+            size="small"
+          >
+            Create
+          </Button>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            size="small"
+            variant="outlined"
+            autoFocus
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid container spacing={1}>
         {/**
          * This is the ticket List block
@@ -257,7 +283,7 @@ export default function TicketDashboard() {
         <Grid item sm={12} md={3}>
           <Paper
             className={classes.paper}
-            style={{ maxHeight: 790, overflow: 'auto' }}
+            style={{ maxHeight: 720, overflow: 'auto' }}
           >
             <box component="div" overflow="auto">
               {getTicketList()}
@@ -271,9 +297,9 @@ export default function TicketDashboard() {
         <Grid item sm={12} md={6}>
           <Paper
             className={classes.paper}
-            style={{ maxHeight: 820, overflow: 'auto' }}
+            style={{ maxHeight: 720, overflow: 'auto' }}
           >
-            <div className={classes.metadataClass}>
+            <div className={classes.listItemClass}>
               <Box display="flex" flexDirection="row">
                 <Avatar
                   alt="IV"
@@ -323,9 +349,9 @@ export default function TicketDashboard() {
                 >
                   Details
                 </Typography>
-                <div className={classes.metadataClass}>
-                  <Grid container spacing={1}>
-                    <Grid container item xs={12} spacing={6}>
+                <div style={{ paddingRight: 15, paddingLeft: 15 }}>
+                  <Grid container spacing={0}>
+                    <Grid container item xs={12} spacing={1}>
                       <React.Fragment>
                         <Grid item xs={6}>
                           <Box
@@ -338,17 +364,17 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '40%'
+                                width: '35%'
                               }}
                             >
-                              Type
+                              Type :
                             </Typography>
                             <Box
                               display="flex"
                               flexDirection="row"
                               className={classes.valueClass}
                             >
-                              <OfflineBoltIcon style={{ color: purple[500] }} />
+                              {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
                               <Typography
                                 variant="body1"
                                 className={classes.ticketMargin}
@@ -370,10 +396,10 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '40%'
+                                width: '35%'
                               }}
                             >
-                              Priority
+                              Priority :
                             </Typography>
                             <Box
                               display="flex"
@@ -393,7 +419,7 @@ export default function TicketDashboard() {
                         </Grid>
                       </React.Fragment>
                     </Grid>
-                    <Grid container item xs={12} spacing={6}>
+                    <Grid container item xs={12} spacing={1}>
                       <React.Fragment>
                         <Grid item xs={6}>
                           <Box
@@ -406,10 +432,10 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '40%'
+                                width: '35%'
                               }}
                             >
-                              Category
+                              Category :
                             </Typography>
                             <Box
                               display="flex"
@@ -437,10 +463,10 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '40%'
+                                width: '35%'
                               }}
                             >
-                              Status
+                              Status :
                             </Typography>
                             <Box
                               display="flex"
@@ -450,7 +476,7 @@ export default function TicketDashboard() {
                               <Typography
                                 component="span"
                                 variant="body1"
-                                style={{ color: green[500] }}
+                                // style={{ color: green[500] }}
                                 className={classes.ticketMargin}
                               >
                                 Active
