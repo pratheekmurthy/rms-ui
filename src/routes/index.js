@@ -9,7 +9,7 @@ export const dash360 = React.lazy(() =>
 );
 export const surveys = React.lazy(() => import('src/modules/surveys'));
 export const telephony = React.lazy(() =>
-  import('src/modules/telephony/views')
+  import('src/modules/telephony/views/index')
 );
 export const ticketing = React.lazy(() =>
   import('src/modules/ticketing/views')

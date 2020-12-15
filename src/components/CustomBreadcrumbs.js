@@ -14,18 +14,22 @@ function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
   }, [urlMatchFound, activatedRoute]);
   let newLink = '/';
   return (
-    <Grid container >
+    <Grid container>
       {breadCrumbLinks?.length ? (
         <Box style={{ margin: '1.5rem 2rem 0 1.5rem' }}>
           <Breadcrumbs>
-            <Link to="/"><HomeIcon/></Link>
+            <Link to="/">
+              <HomeIcon />
+            </Link>
             {activatedRoute
               .split('/')
               .slice(1)
               .map((route, index) => {
                 newLink += route + '/';
                 return breadCrumbLinks[index] ? (
-                  <Link to={newLink} key={newLink}>{breadCrumbLinks[index]}</Link>
+                  <Link to={newLink} key={newLink}>
+                    {breadCrumbLinks[index]}
+                  </Link>
                 ) : (
                   ''
                 );
