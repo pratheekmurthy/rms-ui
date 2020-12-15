@@ -14,7 +14,8 @@ function a11yProps(index) {
 
 const useStyles = makeStyles(() => ({
   textTransformNone: {
-    textTransform: 'none'
+    textTransform: 'none',
+    minWidth: 'fit-content'
   }
 }));
 

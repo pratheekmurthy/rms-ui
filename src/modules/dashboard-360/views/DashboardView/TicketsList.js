@@ -2,7 +2,6 @@ import {
   Box,
   Chip,
   Divider,
-  Link,
   List,
   ListItem,
   ListItemText,
@@ -10,6 +9,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React from 'react';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,6 +27,12 @@ const useStyles = makeStyles(theme => ({
     letterSpacing: 0,
     fontSize: '0.9rem',
     color: theme.palette.grey[700]
+  },
+  linkContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    display: 'flex',
+    fontWeight: 'bold'
   }
 }));
 
@@ -155,6 +162,16 @@ export default function TicketsList() {
           }
         />
       </ListItem>
+      <Divider />
+      <Box display="flex" justifyContent="flex-end" p={2} alignItems="center">
+        <Link
+          to="/ticketing/ticket-dashboard"
+          className={classes.linkContainer}
+        >
+          View All
+          <ArrowRightIcon />
+        </Link>
+      </Box>
     </List>
   );
 }
