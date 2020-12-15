@@ -290,18 +290,49 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         )}
       </Page>
       {showCreateTicket ? (
-        <Modal
-          open
-          onClose={() => setShowCreateTicket(false)}
-          className={classes.modal}
-          style={{ overflow: 'auto' }}
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
-        >
-          <CreateTicket />
-        </Modal>
+            <Dialog
+            open
+            fullWidth
+            maxWidth="md"
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+            <DialogContent dividers>
+              <CreateTicket />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                 onClose={() => setShowCreateTicket(false)}
+                color="primary"
+                variant="contained"
+                size="small"
+              >
+                Create
+              </Button>
+              <Button
+                 onClose={() => setShowCreateTicket(false)}
+                color="primary"
+                size="small"
+                variant="outlined"
+                autoFocus
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
+      //   <Modal
+      //     open
+      //     onClose={() => setShowCreateTicket(false)}
+      //     className={classes.modal}
+      //     style={{ overflow: 'auto' }}
+      //     aria-labelledby="simple-modal-title"
+      //     aria-describedby="simple-modal-description"
+      //   >
+      //     <CreateTicket />
+      //   </Modal>
       ) : (
-        ''
+       ''
       )}
     </>
   ) : (
