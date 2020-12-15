@@ -1,28 +1,23 @@
 import { DataGrid } from '@material-ui/data-grid';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { setDistributorInvoices } from 'src/modules/dashboard-360/redux/action';
-import { invoicesColumns } from 'src/modules/dashboard-360/utils/columns-config';
+import { setDistributorOrders } from 'src/modules/dashboard-360/redux/action';
+import { orderColumns } from 'src/modules/dashboard-360/utils/columns-config';
 import PropTypes from 'prop-types';
 import ErrorAlert from 'src/components/ErrorAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
-  getDealerInvoiceDetails,
-  getSingleInvoiceDetails
+  getDealerOrderDetails,
+  getSingleOrderDetails
 } from '../../DashboardView/apiCalls';
-import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 
 const style = makeStyles(() => ({
   dgContainer: {
     maxHeight: 628
   }
 }));
-function Invoices({
-  distributorInvoices,
-  setDistributorInvoicesAction,
-  ...props
-}) {
+function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
   const classes = style();
   const [showLoader, setShowLoader] = useState(true);
   const {
@@ -31,21 +26,21 @@ function Invoices({
     }
   } = props;
 
-  const [invoiceDetails, setSingleInvoiceDetails] = useState(null);
+  const [orderDetails, setSingleOrderDetails] = useState(null);
 
   const orderIdPrev = useRef(orderId);
 
   useEffect(() => {
-    if (!distributorInvoices || orderIdPrev !== orderId) {
+    if (!distributorOrders || orderIdPrev !== orderId) {
       (async function getDetails() {
         try {
           const res = await (orderId
-            ? getSingleInvoiceDetails(orderId)
-            : getDealerInvoiceDetails(1001));
+            ? getSingleOrderDetails(orderId)
+            : getDealerOrderDetails(1001));
           if (!orderId) {
-            setDistributorInvoicesAction(res.data.data);
+            setDistributorOrdersAction(res.data.data);
           } else {
-            setSingleInvoiceDetails(res.data.data);
+            setSingleOrderDetails(res.data.data);
           }
         } catch (error) {
           console.log(error);
@@ -56,15 +51,12 @@ function Invoices({
     }
   }, [orderId]);
   const [page, setPage] = useState(1);
-  return distributorInvoices ? (
+  return distributorOrders ? (
     // <Card>
     <div className={classes.dgContainer}>
-      <Box>
-        <CustomBreadcrumbs />
-      </Box>
       <Box padding="1rem 0.5rem">
         <Typography variant="h6" component="h4">
-          All Invoices
+          All Orders
         </Typography>
       </Box>
       <DataGrid
@@ -76,10 +68,10 @@ function Invoices({
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         autoHeight
-        columns={invoicesColumns}
-        rows={distributorInvoices.map(order => ({
+        columns={orderColumns}
+        rows={distributorOrders.map(order => ({
           ...order,
-          id: order.InvoiceNumber
+          id: order.OrderNumber
         }))}
       />
     </div>
@@ -91,18 +83,17 @@ function Invoices({
   );
 }
 
-Invoices.propTypes = {
-  distributorInvoices: PropTypes.arrayOf(PropTypes.object),
-  setDistributorInvoicesAction: PropTypes.func
+Orders.propTypes = {
+  distributorOrders: PropTypes.arrayOf(PropTypes.object),
+  setDistributorOrdersAction: PropTypes.func
 };
 
 const mapStateToProps = state => ({
-  distributorInvoices: state.distributorInvoices
+  distributorOrders: state.distributorOrders
 });
 
 const mapDispatchToProps = dispatch => ({
-  setDistributorInvoicesAction: invoices =>
-    dispatch(setDistributorInvoices(invoices))
+  setDistributorOrdersAction: orders => dispatch(setDistributorOrders(orders))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Invoices);
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);

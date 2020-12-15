@@ -13,10 +13,6 @@ function a11yProps(index) {
 }
 
 const useStyles = makeStyles(() => ({
-  root: {
-    maxWidth: 50, // a number of your choice
-    width: 50 // a number of your choice
-  },
   textTransformNone: {
     textTransform: 'none'
   }
@@ -45,7 +41,7 @@ export default function CustomTabs({
         label={tab}
         key={`tab-${index}`}
         {...a11yProps(0)}
-        className={`${styles.root} ${styles.textTransformNone} `}
+        className={`${styles.textTransformNone} `}
       />
     ));
   }
