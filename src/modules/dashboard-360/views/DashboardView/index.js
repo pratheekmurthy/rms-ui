@@ -33,6 +33,10 @@ import {
 
 import ErrorAlert from 'src/components/ErrorAlert';
 import { connect } from 'react-redux';
+import SearchBar from 'material-ui-search-bar';
+import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import CreateTicket from 'src/modules/ticketing/views/create-ticket';
+import CallIcon from '@material-ui/icons/Call';
 import DealerCard from './DealerCard';
 import TicketsList from './TicketsList';
 
@@ -40,9 +44,7 @@ import dealerAPICalls from './apiCalls';
 
 import { setDistributorOrders } from '../../redux/action';
 import DispositionForm from './DispositionForm';
-import SearchBar from 'material-ui-search-bar';
-import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
-import CreateTicket from 'src/modules/ticketing/views/create-ticket';
+import TimerComp from './TimerComp';
 
 const useStyles = makeStyles(theme => {
   console.log(theme);
@@ -67,6 +69,25 @@ const useStyles = makeStyles(theme => {
       alignItems: 'center',
       width: '100%',
       height: '100%'
+    },
+    timerComp: {
+      position: 'absolute',
+      top: 0,
+      left: '55%',
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '1.2rem',
+      backgroundColor: theme.palette.secondary.light,
+      padding: '8px 10px',
+      // paddingBottom: 20,
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 8
+    },
+    callWrapper: {
+      left: 'calc(55% + 90px)'
+    },
+    callInbound: {
+      backgroundColor: theme.palette.success.light
     }
   };
 });
@@ -108,13 +129,25 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   }, []);
 
   return !loadingDetails ? (
-    <>
+    <div style={{ position: 'relative' }}>
+      <div className={classes.timerComp}>
+        <TimerComp />
+      </div>
+      <Box
+        alignItems="center"
+        display="flex"
+        className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+      >
+        <CallIcon />
+        &nbsp;
+        <Typography display="inline">Inbound Call In Progress</Typography>
+      </Box>
       <CustomBreadcrumbs />
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           {/* <Box display="flex" justifyContent="space-between">
           <Box />
-          
+
           </Box>
         </Box> */}
           {/* <br /> */}
@@ -282,8 +315,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               Create Ticket
             </Button>
             <div style={{ flex: '1 0 0' }} />
-          </DialogActions> 
-        </Dialog>*/}
+          </DialogActions>
+        </Dialog> */}
       </Page>
       {showCreateTicket ? (
         <Modal
@@ -299,7 +332,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       ) : (
         ''
       )}
-    </>
+    </div>
   ) : (
     <MainLoader />
   );
