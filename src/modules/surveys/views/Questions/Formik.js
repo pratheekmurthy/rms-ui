@@ -128,7 +128,7 @@ const FormFormik = () => {
   };
 
   function postQuestions() {
-    Axios.post('/questions', input)
+    Axios.post('/survey/questions', input)
       .then(res => {
         console.log(res);
       })

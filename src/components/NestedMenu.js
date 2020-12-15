@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import {
-  Button,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Typography
-} from '@material-ui/core';
+import { makeStyles, Menu, MenuItem, Typography } from '@material-ui/core';
 
-import NestedMenuItem from 'material-ui-nested-menu-item';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useHistory } from 'react-router-dom';
+
 const styles = makeStyles(() => ({
   toggler: {
     display: 'inline-flex',
@@ -22,7 +16,6 @@ const styles = makeStyles(() => ({
 }));
 export default function NestedMenu(props) {
   const [menuPosition, setMenuPosition] = useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const classes = styles();
   const history = useHistory();
   const handleClick = event => {
@@ -57,16 +50,18 @@ export default function NestedMenu(props) {
         keepMounted
         open={!!menuPosition}
       >
-        <MenuItem onClick={e => handleItemClick('/ticketing/ticket-dashboard')}>
+        <MenuItem
+          onClick={() => handleItemClick('/ticketing/ticket-dashboard')}
+        >
           Ticketing
         </MenuItem>
-        <MenuItem onClick={e => handleItemClick('/telephony/dashboard')}>
+        <MenuItem onClick={() => handleItemClick('/telephony/dashboard')}>
           Telephony
         </MenuItem>
-        <MenuItem onClick={e => handleItemClick('/dash360/')}>
+        <MenuItem onClick={() => handleItemClick('/dash360/')}>
           Dashboard
         </MenuItem>
-        <MenuItem onClick={e => handleItemClick('/surveys/home')}>
+        <MenuItem onClick={() => handleItemClick('/surveys/home')}>
           Surveys
         </MenuItem>
         {/* <NestedMenuItem
