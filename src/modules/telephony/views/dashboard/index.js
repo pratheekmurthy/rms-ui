@@ -7,19 +7,14 @@ import {
   ListItemAvatar,
   ListItemText,
   makeStyles,
-  Paper,
-  Card,
-  CardContent,
   Typography,
-  CardActions,
-  Button,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Drawer,
-  Divider,
-  AppBar,
-  Toolbar
+  Card,
+  CardContent,
+  Box
 } from '@material-ui/core';
 import CallIcon from '@material-ui/icons/Call';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
@@ -37,11 +32,8 @@ import Timer10RoundedIcon from '@material-ui/icons/Timer10Rounded';
 import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
 import StarsIcon from '@material-ui/icons/Stars';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { deepOrange, grey } from '@material-ui/core/colors';
-import MenuIcon from '@material-ui/icons/Menu';
-import IconButton from '@material-ui/core/IconButton';
+import { grey } from '@material-ui/core/colors';
 
-const drawerWidth = '30%';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -60,26 +52,22 @@ const useStyles = makeStyles(theme => ({
   paper: {
     textAlign: 'center'
   },
-  list: {
-    minWidth: '250px'
-  },
-  appBar: {
-    width: `calc(100% - ${drawerWidth}%)`,
-    marginRight: drawerWidth
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
+  list: {},
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     marginRight: '0.5vw'
+  },
+  listItem: {
+    padding: 0
+  },
+  cardcontent: {
+    padding: '0 0 0 5%',
+    '&:last-child': {
+      paddingBottom: 0
+    }
   }
 }));
 
@@ -172,76 +160,83 @@ const Inbound = () => {
   return (
     <>
       <div className={classes.root}>
-        <main className={classes.content} style={{ height: '100vh' }}>
-          <Grid container>
-            {InboundDataList.map((array, index) => (
-              <Grid container item xs={12} sm={4}>
-                <List key={index} className={classes.list}>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar className={classes.grey}>{array.icon}</Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={array.data}
-                      secondary={array.label}
-                    />
-                  </ListItem>
-                </List>
-              </Grid>
-            ))}
+        <Box css={{ margin: '0.5rem' }}>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+            spacing={1}
+          >
+            <Grid container item xs={9} spacing={1}>
+              {InboundDataList.map((array, index) => (
+                <Grid item lg={3} sm={6}>
+                  <Card>
+                    <CardContent className={classes.cardcontent}>
+                      <List key={index} className={classes.list}>
+                        <ListItem classes={{ root: classes.listItem }}>
+                          <ListItemAvatar>
+                            <Avatar className={classes.grey}>
+                              {array.icon}
+                            </Avatar>
+                          </ListItemAvatar>
+                          <ListItemText
+                            primary={array.data}
+                            secondary={array.label}
+                          />
+                        </ListItem>
+                      </List>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+            <Grid item xs={3}>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Calls in Queue (0)
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>Details</Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Live Calls (0)
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>Details</Typography>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Agents Live Status :: Logged in (34) / On Break (17)
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>Details</Typography>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
           </Grid>
-        </main>
-        <Drawer
-          className={classes.drawer}
-          variant="permanent"
-          classes={{
-            paper: classes.drawerPaper
-          }}
-          anchor="right"
-        >
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>
-                Calls in Queue (0)
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>Details</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>
-                Live Calls (0)
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>Details</Typography>
-            </AccordionDetails>
-          </Accordion>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>
-                Agents Live Status :: Logged in (34) / On Break (17)
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>Details</Typography>
-            </AccordionDetails>
-          </Accordion>
-        </Drawer>
+        </Box>
       </div>
     </>
   );
