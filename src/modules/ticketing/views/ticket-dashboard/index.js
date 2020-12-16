@@ -1,5 +1,12 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import config from '../../views/config.json';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
   Paper,
   Grid,
@@ -27,7 +34,14 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
-
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -195,18 +209,129 @@ export default function TicketDashboard() {
   const [open, setOpen] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [tickets, setTickets] = useState([]);
+     const [viewticket, setviewTickets] = useState({});
+     const [apiTickets, setApiTickets] = useState([]);
+       const [ticketHistory, setTicketHistory] = useState([]);
 
+
+
+       //new code
+  const [ticketNumber, setTicketNumber] = useState('');
+  const [distributorName, setDistributorName] = useState('');
+  const [distributorId, setDistributorId] = useState('');
+  const [distributorEmail, setDistributorEmail] = useState('');
+  const [distributorMobile, setDistributorMobile] = useState('');
+  const [createdByName, setCreatedByName] = useState('');
+  const [createdById, setCreatedById] = useState('');
+  const [ticketSubject, setTicketSubject] = useState('');
+  const [ticketDescription, setTicketDescription] = useState('');
+  const [remarks, setRemarks] = useState('');
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [ticketType, setTicketType] = useState({
+    ticketTypeId: '',
+    ticketType: ''
+  });
+  // const [open, setOpen] = React.useState(true);
+  const [medium, setMedium] = useState([]);
+  const [media, setMedia] = useState({
+    value: '',
+    label: ''
+  });
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState({ value: '', label: '' });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategoryItems, setSubCategoryItems] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    value: '',
+    label: ''
+  });
+  const [departments, setDepartments] = useState([]);
+  const [department, setDepartment] = useState({
+    value: '',
+    label: ''
+  });
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState({
+    value: '',
+    label: ''
+  });
+  const [priorities, setPriorities] = useState([]);
+  const [priority, setPriority] = useState({
+    value: '',
+    label: '',
+    sla: 0
+  });
+  const [statuses, setStatuses] = useState([]);
+  const [status, setStatus] = useState({
+    value: '',
+    label: '',
+    slaOnHold: false
+  });
+  const [executives, setExecutives] = useState([]);
+  const [executive, setExecutive] = useState({
+    value: '',
+    label: '',
+    executiveEmail: '',
+    executiveMobile: ''
+  });
+
+
+  // alert("all" + distributorId);
+
+  const [loading, setLoading] = useState(true);
+  const [createdTime, setCreatedTime] = useState();
+  const [file, setFile] = useState('');
+  useEffect(() => {
+    const apiUrl = config.APIS_URL + '/tickets';
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        setApiTickets(repos.data);
+        setTickets(repos.data);
+      });
+  }, [apiTickets]);
+  const viewTicket = item => {
+    console.log('item', item);
+     setviewTickets(item)
+let unmounted = false;
+     async function getHistoryItems() {
+     
+       const response = await fetch(
+         config.APIS_URL + '/ticketHistory/' + item._id
+       );
+       const tktHistory = (await response.json()).data;
+       console.log("ticket history", tktHistory)
+       if (!unmounted) {
+         setTicketHistory(tktHistory);
+       }
+     }
+     getHistoryItems();
+    // localStorage.setItem('viewtkt', JSON.stringify(item));
+    // let path = `CreateTicket`;
+
+    // history.push(path);
+  };
   function getTicketList() {
     return (
       <List className={classes.listRow}>
-        {ticketListData.map((ticket) => (
+        {tickets.map(ticket => (
           <>
             <ListItem alignItems="flex-start" className={classes.listItemClass}>
               <ListItemText>
                 <div className={classes.textBold}>
                   <ListItemIcon>
                     <OfflineBoltIcon style={{ color: purple[500] }} />
-                    <span className={classes.ticketMargin}>{ticket.id}</span>
+                    <span
+                      className={classes.ticketMargin}
+                      onClick={e => viewTicket(ticket)}
+                    >
+                      {ticket.ticketNumber}
+                    </span>
                   </ListItemIcon>
                 </div>
                 <Typography
@@ -215,7 +340,7 @@ export default function TicketDashboard() {
                   style={{ textOverflow: 'ellipsis' }}
                   noWrap
                 >
-                  {ticket.title}
+                  {ticket.ticketSubject}
                 </Typography>
               </ListItemText>
             </ListItem>
@@ -239,7 +364,7 @@ export default function TicketDashboard() {
         variant="outlined"
         color="primary"
         size="small"
-        style={{marginBottom:15}}
+        style={{ marginBottom: 15 }}
         startIcon={<AddIcon />}
         onClick={handleOpen}
       >
@@ -254,7 +379,41 @@ export default function TicketDashboard() {
       >
         <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
         <DialogContent dividers>
-          <CreateTicket />
+          <CreateTicket
+            //new code
+            ticketNumber={ticketNumber}
+            distributorName={distributorName}
+            distributorId={distributorId}
+            distributorEmail={distributorEmail}
+            distributorMobile={distributorMobile}
+            createdByName={createdByName}
+            createdById={createdById}
+            ticketSubject={ticketSubject}
+            ticketDescription={ticketDescription}
+            remarks={remarks}
+            ticketTypes={ticketTypes}
+            ticketType={ticketType}
+            medium={medium}
+            media={media}
+            categories={categories}
+            category={category}
+            subCategories={subCategories}
+            subCategory={subCategory}
+            subCategoryItems={subCategoryItems}
+            subCategoryItem={subCategoryItem}
+            departments={departments}
+            department={department}
+            teams={teams}
+            team={team}
+            priorities={priorities}
+            priority={priority}
+            statuses={statuses}
+            status={status}
+            executives={executives}
+            executive={executive}
+            createdTime={createdTime}
+            
+          />
         </DialogContent>
         <DialogActions>
           <Button
@@ -312,11 +471,10 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                 >
                   <Typography variant="body1" className={classes.textBold}>
-                    IV-38648
+                    {viewticket.ticketNumber}
                   </Typography>
                   <Typography variant="h3" color="textPrimary">
-                    This captures all user stories and tasks related to the
-                    Cloud Deployment Framework.
+                    {viewticket.ticketSubject}
                   </Typography>
                 </Box>
               </Box>
@@ -380,7 +538,7 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Epic
+                                {viewticket.ticketType}
                               </Typography>
                             </Box>
                           </Box>
@@ -406,13 +564,33 @@ export default function TicketDashboard() {
                               flexDirection="row"
                               className={classes.valueClass}
                             >
-                              <ArrowUpwardIcon style={{ color: orange[500] }} />
+                              {viewticket.priority === 'Medium' ? (
+                                <ArrowUpwardIcon
+                                  style={{ color: purple[500] }}
+                                />
+                              ) : (
+                                <></>
+                              )}
+                              {viewticket.priority === 'High' ? (
+                                <ArrowUpwardIcon
+                                  style={{ color: orange[500] }}
+                                />
+                              ) : (
+                                <></>
+                              )}
+                              {viewticket.priority === 'Low' ? (
+                                <ArrowDownwardIcon
+                                  style={{ color: green[500] }}
+                                />
+                              ) : (
+                                <></>
+                              )}
                               <Typography
                                 variant="body1"
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Medium
+                                {viewticket.priority}
                               </Typography>
                             </Box>
                           </Box>
@@ -447,7 +625,7 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Survey
+                                {viewticket.category}
                               </Typography>
                             </Box>
                           </Box>
@@ -479,7 +657,7 @@ export default function TicketDashboard() {
                                 // style={{ color: green[500] }}
                                 className={classes.ticketMargin}
                               >
-                                Active
+                                {viewticket.status}
                               </Typography>
                             </Box>
                           </Box>
@@ -505,6 +683,7 @@ export default function TicketDashboard() {
                   fullWidth
                   multiline
                   variant="outlined"
+                  value={viewticket.ticketDescription}
                 />
               </div>
               <div component="div" className={classes.boxDiv}>
@@ -548,13 +727,13 @@ export default function TicketDashboard() {
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <Avatar className={classes.green}>SA</Avatar>
+                  {/* <Avatar className={classes.green}>SA</Avatar> */}
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
                   >
-                    Sandra Adams
+                    {viewticket.distributorName}
                   </Typography>
                 </Box>
               </Box>
@@ -577,7 +756,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    SA26744
+                    {viewticket.distributorId}
                   </Typography>
                 </Box>
               </Box>
@@ -587,20 +766,20 @@ export default function TicketDashboard() {
                 className={classes.belowMargin}
               >
                 <Typography variant="h5" className={classes.labelClass}>
-                  Source
+                  Escalation
                 </Typography>
                 <Box
                   display="flex"
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <Avatar className={classes.green}>AS</Avatar>
+                  {/* <Avatar className={classes.green}>AS</Avatar> */}
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
                   >
-                    Adams Sandra
+                    {/* {viewticket.media} */}
                   </Typography>
                 </Box>
               </Box>
@@ -623,7 +802,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    SA23344
+                    {viewticket.mediaId}
                   </Typography>
                 </Box>
               </Box>
@@ -646,7 +825,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    ABCD
+                    {viewticket.media}
                   </Typography>
                 </Box>
               </Box>
@@ -667,7 +846,7 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  20/12/2020
+                  {/* 20/12/2020 */}
                 </Typography>
               </Box>
 
@@ -685,7 +864,7 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  12/12/2020, 9:40 AM
+                  {viewticket.createdAt}
                 </Typography>
               </Box>
 
@@ -703,13 +882,53 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  12/12/2020, 12:40 PM
+                  {viewticket.updatedAt}
                 </Typography>
               </Box>
             </div>
           </Paper>
         </Grid>
       </Grid>
+
+      <br />
+      <ExpansionPanel defaultExpanded>
+        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>
+            Ticket History{' '}
+            {/* {TouchPoint.length ? (
+                <lablel>
+                  {Distributer.DistributerId} {Distributer.DistributerName}
+                </lablel>
+              ) : null} */}
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <div style={{ width: '100%' }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableRow>
+                <TableCell className="GridCell">Time</TableCell>
+                <TableCell className="GridCell">Updated By</TableCell>
+                <TableCell className="GridCell">Status</TableCell>
+                <TableCell className="GridCell">Assigned</TableCell>
+                <TableCell className="GridCell">Category</TableCell>
+                <TableCell className="GridCell">Priority</TableCell>
+                <TableCell className="GridCell">Remarks</TableCell>
+              </TableRow>
+              {ticketHistory.map((item, idx) => (
+                <TableRow>
+                  <TableCell>{item.createdTime}</TableCell>
+                  <TableCell>{item.updatedByName}</TableCell>
+                  <TableCell>{item.status}</TableCell>
+                  <TableCell>{item.assignedExecutiveName}</TableCell>
+                  <TableCell>{item.category}</TableCell>
+                  <TableCell>{item.priority}</TableCell>
+                  <TableCell>{item.remarks}</TableCell>
+                </TableRow>
+              ))}
+            </Table>
+          </div>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
     </div>
   );
 }
