@@ -119,74 +119,74 @@ export default function TicketDashboard() {
   
   return (
     <div className={classes.root}>
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         {/**
          * This is the ticket List block
          */}
-        <Grid item sm={12} md={12}>
-          <Paper
-            className={classes.paper}
-            style={{ maxHeight: 720, overflow: 'auto' }}
+        <Grid item sm={3}>
+          {/* <Paper
+            // className={classes.paper}
+            // style={{ maxHeight: 720, overflow: 'auto' }}
+          > */}
+
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            className={classes.tabs}
           >
-          
-            <Tabs
-              orientation="vertical"
-              variant="scrollable"
-              value={value}
-              onChange={handleChange}
-              aria-label="Vertical tabs example"
-              className={classes.tabs}
-            >
-              <Tab label="Ticket Type" {...a11yProps(0)} />
-              <Tab label="Media" {...a11yProps(1)} />
-              <Tab label="Category" {...a11yProps(2)} />
-              <Tab label="Sub category" {...a11yProps(3)} />
-              <Tab label="Sub Category Item" {...a11yProps(4)} />
-              <Tab label="Priority" {...a11yProps(5)} />
-              <Tab label="Status" {...a11yProps(6)} />
-              <Tab label="Department" {...a11yProps(7)} />
-              <Tab label="Team" {...a11yProps(8)} />
-              <Tab label="Excutive" {...a11yProps(9)} />
-            </Tabs>
-            <TabPanel value={value} index={0}>
-              <TicketType />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <MediaConfig />
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-              <CategoryConfig />
-            </TabPanel>
-            <TabPanel value={value} index={3}>
-              <SubCategoryConfig />
-            </TabPanel>
-            <TabPanel value={value} index={4}>
-              <SubCategoryItemConfig />
-            </TabPanel>
-            <TabPanel value={value} index={5}>
-              <PriorityConfig />
-            </TabPanel>
-            <TabPanel value={value} index={6}>
-              <StatusConfig />
-            </TabPanel>
-            <TabPanel value={value} index={7}>
-              <DepartmentConfig />
-            </TabPanel>
-            <TabPanel value={value} index={8}>
-              <TeamConfig />
-            </TabPanel>
-            <TabPanel value={value} index={9}>
-              <ExecutiveConfig />
-            </TabPanel>
-          </Paper>
+            <Tab label="Ticket Type" {...a11yProps(0)} />
+            <Tab label="Media" {...a11yProps(1)} />
+            <Tab label="Category" {...a11yProps(2)} />
+            <Tab label="Sub category" {...a11yProps(3)} />
+            <Tab label="Sub Category Item" {...a11yProps(4)} />
+            <Tab label="Priority" {...a11yProps(5)} />
+            <Tab label="Status" {...a11yProps(6)} />
+            <Tab label="Department" {...a11yProps(7)} />
+            <Tab label="Team" {...a11yProps(8)} />
+            <Tab label="Excutive" {...a11yProps(9)} />
+          </Tabs>
+        </Grid>
+        <Grid item sm={8}>
+          <TabPanel value={value} index={0}>
+            <TicketType />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <MediaConfig />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <CategoryConfig />
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <SubCategoryConfig />
+          </TabPanel>
+          <TabPanel value={value} index={4}>
+            <SubCategoryItemConfig />
+          </TabPanel>
+          <TabPanel value={value} index={5}>
+            <PriorityConfig />
+          </TabPanel>
+          <TabPanel value={value} index={6}>
+            <StatusConfig />
+          </TabPanel>
+          <TabPanel value={value} index={7}>
+            <DepartmentConfig />
+          </TabPanel>
+          <TabPanel value={value} index={8}>
+            <TeamConfig />
+          </TabPanel>
+          <TabPanel value={value} index={9}>
+            <ExecutiveConfig />
+          </TabPanel>
+          {/* </Paper> */}
         </Grid>
 
         {/**
          * This is the ticket Detail block
          */}
       </Grid>
-
-     
     </div>
   );
 }

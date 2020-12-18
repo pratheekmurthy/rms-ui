@@ -149,10 +149,9 @@ const useStyles = makeStyles(theme => ({
     // width: drawerWidth,
     flexShrink: 0
   },
-   drawerPaper: {
+  drawerPaper: {
     // width: drawerWidth,
-    top: 62,
-   
+    top: 62
   },
   modal: {
     alignItems: 'center',
@@ -168,6 +167,11 @@ const useStyles = makeStyles(theme => ({
   textField: {
     fontSize: 10,
     height: 22
+  },
+  typography: {
+    // In Chinese and Japanese the characters are usually larger,
+    // so a smaller fontsize may be appropriate.
+    fontSize: 9
   }
 }));
 
@@ -237,6 +241,7 @@ export default function TicketDashboard() {
   ];
 
   const [open, setOpen] = React.useState(false);
+   const [opentimeline, setOpentimeline] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
     const [tickets, setTickets] = useState([]);
@@ -343,6 +348,32 @@ export default function TicketDashboard() {
         setTickets(repos.data);
       });
   }, [apiTickets]);
+   useEffect(() => {
+     let unmounted = false;
+     async function getItems() {
+       const response = await fetch(config.APIS_URL + '/statuses');
+       const body = await response.json();
+       if (!unmounted) {
+         setStatuses([
+           ...[{ label: 'All', value: '' }],
+           ...body.data.map(({ _id, status }) => ({
+             label: status,
+             value: _id
+           }))
+         ]);
+         setLoading(false);
+         setStatus({
+           label: 'All',
+           value: ''
+         });
+       }
+     }
+     getItems();
+     return () => {
+       unmounted = true;
+     };
+   }, []);
+
   const viewTicket = item => {
     console.log('item', item);
      setviewTickets(item)
@@ -368,34 +399,46 @@ let unmounted = false;
   function getTicketList() {
     return (
       <List className={classes.listRow}>
-        {tickets.map(ticket => (
-          <>
-            <ListItem alignItems="flex-start" className={classes.listItemClass}>
-              <ListItemText>
-                <div className={classes.textBold}>
-                  <ListItemIcon>
-                    <OfflineBoltIcon style={{ color: purple[500] }} />
-                    <span
-                      className={classes.ticketMargin}
-                      onClick={e => viewTicket(ticket)}
-                    >
-                      {ticket.ticketNumber}
-                    </span>
-                  </ListItemIcon>
-                </div>
-                <Typography
-                  variant="body2"
-                  color="textPrimary"
-                  style={{ textOverflow: 'ellipsis' }}
-                  noWrap
-                >
-                  {ticket.ticketSubject}
-                </Typography>
-              </ListItemText>
-            </ListItem>
-            <Divider light />
-          </>
-        ))}
+        {tickets
+          .filter(tkt =>
+            status.label === 'All'
+              ? tkt.status === tkt.status
+              : tkt.status === status.label
+          )
+          .map(ticket => (
+            <>
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
+                      <Avatar className={classes.green}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                      <span
+                        className={classes.ticketMargin}
+                        onClick={e => viewTicket(ticket)}
+                      >
+                        {ticket.ticketNumber}
+                      </span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography
+                    variant="body2"
+                    color="textPrimary"
+                    style={{ textOverflow: 'ellipsis' }}
+                    noWrap
+                  >
+                    {ticket.ticketSubject}
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+            </>
+          ))}
       </List>
     );
   }
@@ -637,6 +680,144 @@ let unmounted = false;
           </Drawer>
         </React.Fragment>
       ))}
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'All',
+            label: 'All'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        All
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'New',
+            label: 'New'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        New
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Open',
+            label: 'Open'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Open
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Work In Progress',
+            label: 'Work In Progress'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Work In Progress
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Resolved',
+            label: 'Resolved'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Resolved
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Closed',
+            label: 'Closed'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Closed
+      </Button>
+      {/* <TextField
+        id="sm"
+        select
+        size="small"
+        label="Status"
+        SelectProps={{
+          native: true
+        }}
+        style={{ width: '31%' }}
+        variant="outlined"
+        value={status.value || ''}
+        onChange={e => {
+          setStatus({
+            value: e.target.value,
+            label: statuses.filter(status => status.value === e.target.value)[0]
+              .label,
+            slaOnHold: statuses.filter(
+              status => status.value === e.target.value
+            )[0].slaOnHold
+          });
+          // props.setStatus({
+          //   value: e.target.value,
+          //   label: statuses.filter(status => status.value === e.target.value)[0]
+          //     .label,
+          //   slaOnHold: statuses.filter(
+          //     status => status.value === e.target.value
+          //   )[0].slaOnHold
+          // });
+        }}
+      >
+        {statuses.map(({ label, value }) => (
+          <option key={value} value={value}>
+            {label}
+          </option>
+        ))}
+      </TextField> */}
       <Dialog
         open={open}
         fullWidth
@@ -816,6 +997,42 @@ let unmounted = false;
           </Button>
         </DialogActions>
       </Dialog>
+      {/* timeline modal */}
+
+      <Dialog
+        open={opentimeline}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+        <DialogContent dividers>
+          {/* <CreateTicket
+            //new code
+            
+          /> */}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={addRow}
+            color="primary"
+            variant="contained"
+            size="small"
+          >
+            Create
+          </Button>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            size="small"
+            variant="outlined"
+            autoFocus
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid container spacing={1}>
         {/**
          * This is the ticket List block
@@ -826,6 +1043,7 @@ let unmounted = false;
             style={{ maxHeight: 720, overflow: 'auto' }}
           >
             <box component="div" overflow="auto">
+              <h3>{status.label}</h3>
               {getTicketList()}
             </box>
           </Paper>
@@ -877,6 +1095,16 @@ let unmounted = false;
                   startIcon={<LinkIcon />}
                 >
                   Link issue
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  // startIcon={<LinkIcon />}
+                  // onClick={setOpentimeline(true)}
+                >
+                  History
                 </Button>
               </div>
               <div className={classes.boxDiv}>
@@ -1067,7 +1295,7 @@ let unmounted = false;
                   value={viewticket.ticketDescription}
                 />
               </div>
-              <div component="div" className={classes.boxDiv}>
+              {/* <div component="div" className={classes.boxDiv}>
                 <Typography
                   variant="body1"
                   color="textPrimary"
@@ -1084,7 +1312,7 @@ let unmounted = false;
                   fullWidth
                   variant="outlined"
                 />
-              </div>
+              </div> */}
             </div>
           </Paper>
         </Grid>
@@ -1210,6 +1438,29 @@ let unmounted = false;
                   </Typography>
                 </Box>
               </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Assigned To
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    {/* {viewticket.media} */}
+                  </Typography>
+                </Box>
+              </Box>
             </div>
             <Divider light />
             <div className={classes.metadataClass}>
@@ -1245,7 +1496,10 @@ let unmounted = false;
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {viewticket.createdAt}
+                  {new Date(viewticket.createdAt).toLocaleString(undefined, {
+                    timeZone: 'Asia/Kolkata'
+                  })}
+                  {/* {viewticket.createdAt} */}
                 </Typography>
               </Box>
 
@@ -1263,7 +1517,10 @@ let unmounted = false;
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {viewticket.updatedAt}
+                  {new Date(viewticket.updatedAt).toLocaleString(undefined, {
+                    timeZone: 'Asia/Kolkata'
+                  })}
+                  {/* {viewticket.updatedAt} */}
                 </Typography>
               </Box>
             </div>
