@@ -124,6 +124,11 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
               Surveys
             </Link>
           </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/ticketing/setup" className="color-white">
+             Setup
+            </Link>
+          </Typography>
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}

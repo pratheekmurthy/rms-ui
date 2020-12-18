@@ -103,13 +103,88 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [rootData, setRootData] = useState(null);
 
   const [expanded, setExpanded] = React.useState('panel1');
-
+//chaitra
   const [showCreateTicket, setShowCreateTicket] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [ticketNumber, setTicketNumber] = useState('');
+  const [distributorName, setDistributorName] = useState('');
+  const [distributorId, setDistributorId] = useState('');
+  const [distributorEmail, setDistributorEmail] = useState('');
+  const [distributorMobile, setDistributorMobile] = useState('');
+  const [createdByName, setCreatedByName] = useState('');
+  const [createdById, setCreatedById] = useState('');
+  const [ticketSubject, setTicketSubject] = useState('');
+  const [ticketDescription, setTicketDescription] = useState('');
+  const [remarks, setRemarks] = useState('');
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [ticketType, setTicketType] = useState({
+    ticketTypeId: '',
+    ticketType: ''
+  });
+  // const [open, setOpen] = React.useState(true);
+  const [medium, setMedium] = useState([]);
+  const [media, setMedia] = useState({
+    value: '',
+    label: ''
+  });
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState({ value: '', label: '' });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategoryItems, setSubCategoryItems] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    value: '',
+    label: ''
+  });
+  const [departments, setDepartments] = useState([]);
+  const [department, setDepartment] = useState({
+    value: '',
+    label: ''
+  });
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState({
+    value: '',
+    label: ''
+  });
+  const [priorities, setPriorities] = useState([]);
+  const [priority, setPriority] = useState({
+    value: '',
+    label: '',
+    sla: 0
+  });
+  const [statuses, setStatuses] = useState([]);
+  const [status, setStatus] = useState({
+    value: '',
+    label: '',
+    slaOnHold: false
+  });
+  const [executives, setExecutives] = useState([]);
+  const [executive, setExecutive] = useState({
+    value: '',
+    label: '',
+    executiveEmail: '',
+    executiveMobile: ''
+  });
+
+  // alert("all" + distributorId);
+
+  const [loading, setLoading] = useState(true);
+  const [createdTime, setCreatedTime] = useState();
+  const [file, setFile] = useState('');
 
   // const handleChange = panel => (event, isExpanded) => {
   //   setExpanded(isExpanded ? panel : false);
   // };
-
+ const handleClose = () => {
+   setOpen(false);
+   
+ };
+const handleOpen = () => {
+  setOpen(true);
+};
   useEffect(() => {
     async function get() {
       try {
@@ -163,6 +238,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     color="primary"
                     variant="contained"
                     onClick={() => setShowCreateTicket(true)}
+                    // onClick={() => handleOpen}
                   >
                     Create Ticket
                   </Button>
@@ -332,7 +408,155 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         >
           <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
           <DialogContent dividers>
-            <CreateTicket />
+            <CreateTicket
+              //new code chaitra
+              ticketNumber={ticketNumber}
+              setTicketNumber={tks => {
+                setTicketNumber(tks);
+              }}
+              distributorName={distributorName}
+              setDistributorName={disname => {
+                setDistributorName(disname);
+              }}
+              distributorId={distributorId}
+              setDistributorId={disid => {
+                setDistributorId(disid);
+              }}
+              distributorEmail={distributorEmail}
+              setDistributorEmail={disemail => {
+                setDistributorEmail(disemail);
+              }}
+              distributorMobile={distributorMobile}
+              setDistributorMobile={dismob => {
+                setDistributorMobile(dismob);
+              }}
+              createdByName={createdByName}
+              setCreatedByName={crename => {
+                setCreatedByName(crename);
+              }}
+              createdById={createdById}
+              setCreatedById={creid => {
+                setCreatedById(creid);
+              }}
+              ticketSubject={ticketSubject}
+              setTicketSubject={tktsub => {
+                setTicketSubject(tktsub);
+              }}
+              ticketDescription={ticketDescription}
+              setTicketDescription={tktdisp => {
+                setTicketDescription(tktdisp);
+              }}
+              remarks={remarks}
+              setRemarks={rks => {
+                // alert(JSON.stringify(cmts))
+                setRemarks(rks);
+              }}
+              ticketTypes={ticketTypes}
+              setTicketTypes={tkstyps => {
+                // alert(JSON.stringify(cmts))
+                setTicketTypes(tkstyps);
+              }}
+              ticketType={ticketType}
+              setTicketType={tkstyp => {
+                // alert(JSON.stringify(cmts))
+                setTicketType(tkstyp);
+              }}
+              medium={medium}
+              setMedium={mdm => {
+                // alert(JSON.stringify(cmts))
+                setMedium(mdm);
+              }}
+              media={media}
+              setMedia={media => {
+                // alert(JSON.stringify(cmts))
+                setMedia(media);
+              }}
+              categories={categories}
+              setCategories={catgs => {
+                // alert(JSON.stringify(cmts))
+                setCategories(catgs);
+              }}
+              category={category}
+              setCategory={cat => {
+                // alert(JSON.stringify(cmts))
+                setCategory(cat);
+              }}
+              subCategories={subCategories}
+              setSubCategories={subcats => {
+                // alert(JSON.stringify(cmts))
+                setSubCategories(subcats);
+              }}
+              subCategory={subCategory}
+              setSubCategory={subcat => {
+                // alert(JSON.stringify(cmts))
+                setSubCategory(subcat);
+              }}
+              subCategoryItems={subCategoryItems}
+              setSubCategoryItems={subcatitems => {
+                // alert(JSON.stringify(cmts))
+                setSubCategoryItems(subcatitems);
+              }}
+              subCategoryItem={subCategoryItem}
+              setSubCategoryItem={subcatitem => {
+                // alert(JSON.stringify(cmts))
+                setSubCategoryItem(subcatitem);
+              }}
+              departments={departments}
+              setDepartments={deps => {
+                // alert(JSON.stringify(cmts))
+                setDepartments(deps);
+              }}
+              department={department}
+              setDepartment={dept => {
+                // alert(JSON.stringify(cmts))
+                setDepartment(dept);
+              }}
+              teams={teams}
+              setTeams={tms => {
+                // alert(JSON.stringify(cmts))
+                setTeams(tms);
+              }}
+              team={team}
+              setTeam={tm => {
+                // alert(JSON.stringify(cmts))
+                setTeam(tm);
+              }}
+              priorities={priorities}
+              setPriorities={prts => {
+                // alert(JSON.stringify(cmts))
+                setPriorities(prts);
+              }}
+              priority={priority}
+              setPriority={prt => {
+                // alert(JSON.stringify(cmts))
+                setPriority(prt);
+              }}
+              statuses={statuses}
+              setStatuses={stses => {
+                // alert(JSON.stringify(cmts))
+                setStatuses(stses);
+              }}
+              status={status}
+              setStatus={sts => {
+                // alert(JSON.stringify(cmts))
+                setStatus(sts);
+              }}
+              executives={executives}
+              setExecutives={exts => {
+                // alert(JSON.stringify(cmts))
+                setExecutives(exts);
+              }}
+              executive={executive}
+              setExecutive={ext => {
+                // alert(JSON.stringify(cmts))
+                setExecutive(ext);
+              }}
+              createdTime={createdTime}
+              setCreatedTime={cretime => {
+                // alert(JSON.stringify(cmts))
+                setCreatedTime(cretime);
+              }}
+            />
           </DialogContent>
           <DialogActions>
             <Button
@@ -340,15 +564,18 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               color="primary"
               variant="contained"
               size="small"
+              onClick={handleOpen}
             >
               Create
             </Button>
             <Button
-              onClose={() => setShowCreateTicket(false)}
+              // onClose={() => setShowCreateTicket(true)}
               color="primary"
               size="small"
               variant="outlined"
               autoFocus
+            // chaitra
+              onClick={() => setShowCreateTicket(false)}
             >
               Cancel
             </Button>

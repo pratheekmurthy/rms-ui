@@ -40,6 +40,7 @@ export default function CreateTicket(props) {
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketDescription, setTicketDescription] = useState('');
   const [remarks, setRemarks] = useState('');
+   const [viewtkt, setViewtkt] = useState({});
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({
     ticketTypeId: '',
@@ -102,27 +103,37 @@ export default function CreateTicket(props) {
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
+        props.setTicketNumber(e.target.value);
         return setTicketNumber(e.target.value);
       case 'distributorName':
+         props.setDistributorName(e.target.value);
         return setDistributorName(e.target.value);
       case 'distributorId':
+         props.setDistributorId(e.target.value);
         return setDistributorId(e.target.value);
       case 'distributorEmail':
+          props.setDistributorEmail(e.target.value);
         return setDistributorEmail(e.target.value);
       case 'distributorMobile':
+         props.setDistributorMobile(e.target.value);
         return setDistributorMobile(e.target.value);
       case 'createdByName':
+         props.setCreatedByName(e.target.value);
         return setCreatedByName(e.target.value);
       case 'createdById':
+         props.setCreatedById(e.target.value);
         return setCreatedById(e.target.value);
       case 'ticketSubject':
+        props.setTicketSubject(e.target.value);
         return setTicketSubject(e.target.value);
       case 'ticketDescription':
-        props.setComments(e.target.value);
+        props.setTicketDescription(e.target.value);
         return setTicketDescription(e.target.value);
 
       case 'remarks':
+          props.setRemarks(e.target.value);
         return setRemarks(e.target.value);
+       
       case 'file':
         return setFile(e.target.files[0]);
       default:
@@ -146,6 +157,8 @@ export default function CreateTicket(props) {
     console.log('1', distributorId);
     setTicketNumber('TKT' + year + month + date + result);
     setCreatedTime(new Date().toDateString());
+     props.setTicketNumber('TKT' + year + month + date + result);
+     props.setCreatedTime(new Date().toDateString());
     // alert(props.comments)
     setTicketDescription(props.comments);
     console.log('valu', distributorId);
@@ -683,6 +696,12 @@ export default function CreateTicket(props) {
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
+              props.setTicketType({
+                value: e.target.value,
+                label: ticketTypes.filter(
+                  ticketType => ticketType.value === e.target.value
+                )[0].label
+              });
             }}
           >
             {ticketTypes.map(({ label, value }) => (
@@ -709,12 +728,12 @@ export default function CreateTicket(props) {
                   category => category.value === e.target.value
                 )[0].label
               });
-              // props.setCategory({
-              //   value: e.target.value,
-              //   label: categories.filter(
-              //     category => category.value === e.target.value
-              //   )[0].label
-              // });
+              props.setCategory({
+                value: e.target.value,
+                label: categories.filter(
+                  category => category.value === e.target.value
+                )[0].label
+              });
             }}
           >
             {' '}
@@ -743,12 +762,12 @@ export default function CreateTicket(props) {
                     subCategory => subCategory.value === e.target.value
                   )[0].label
                 });
-                // props.setSubCategory({
-                //   value: e.target.value,
-                //   label: subCategories.filter(
-                //     subCategory => subCategory.value === e.target.value
-                //   )[0].label
-                // });
+                props.setSubCategory({
+                  value: e.target.value,
+                  label: subCategories.filter(
+                    subCategory => subCategory.value === e.target.value
+                  )[0].label
+                });
               }}
             >
               {' '}
@@ -780,12 +799,12 @@ export default function CreateTicket(props) {
                     subCategoryItem => subCategoryItem.value === e.target.value
                   )[0].label
                 });
-                // props.setSubCategoryItem({
-                //   value: e.target.value,
-                //   label: subCategoryItems.filter(
-                //     subCategoryItem => subCategoryItem.value === e.target.value
-                //   )[0].label
-                // });
+                props.setSubCategoryItem({
+                  value: e.target.value,
+                  label: subCategoryItems.filter(
+                    subCategoryItem => subCategoryItem.value === e.target.value
+                  )[0].label
+                });
               }}
             >
               {' '}
@@ -820,6 +839,15 @@ export default function CreateTicket(props) {
                   priority => priority.value === e.target.value
                 )[0].sla
               });
+               props.setPriority({
+                 value: e.target.value,
+                 label: priorities.filter(
+                   priority => priority.value === e.target.value
+                 )[0].label,
+                 sla: priorities.filter(
+                   priority => priority.value === e.target.value
+                 )[0].sla
+               });
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -850,6 +878,15 @@ export default function CreateTicket(props) {
                   status => status.value === e.target.value
                 )[0].slaOnHold
               });
+              props.setStatus({
+                value: e.target.value,
+                label: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].label,
+                slaOnHold: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].slaOnHold
+              });
             }}
           >
             {statuses.map(({ label, value }) => (
@@ -866,18 +903,7 @@ export default function CreateTicket(props) {
             style={{ width: '32%' }}
             value={createdTime}
           ></TextField>
-          <TextField
-            id="sm"
-            size="small"
-            error={ticketSubject === ''}
-            label="Ticket Subject"
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            value={ticketSubject}
-            onChange={e => {
-              handleChange('ticketSubject', e);
-            }}
-          ></TextField>
+         
           <br />
           <TextField
             error={ticketDescription === ''}
@@ -976,6 +1002,17 @@ export default function CreateTicket(props) {
                   media => media.value === e.target.value
                 )[0].idLabel
               });
+              props.setMedia({
+                value: e.target.value,
+                label: medium.filter(media => media.value === e.target.value)[0]
+                  .label,
+                nameLabel: medium.filter(
+                  media => media.value === e.target.value
+                )[0].nameLabel,
+                idLabel: medium.filter(
+                  media => media.value === e.target.value
+                )[0].idLabel
+              });
             }}
           >
             {medium.map(({ label, value }) => (
@@ -1028,7 +1065,14 @@ export default function CreateTicket(props) {
                   department => department.value === e.target.value
                 )[0].label
               });
+              props.setDepartment({
+                value: e.target.value,
+                label: departments.filter(
+                  department => department.value === e.target.value
+                )[0].label
+              });
             }}
+            
           >
             {departments.map(({ label, value }) => (
               <option key={value} value={value}>
@@ -1050,6 +1094,11 @@ export default function CreateTicket(props) {
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
+               props.setTeam({
+                 value: e.target.value,
+                 label: teams.filter(team => team.value === e.target.value)[0]
+                   .label
+               });
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1069,6 +1118,18 @@ export default function CreateTicket(props) {
             value={executive.value}
             onChange={e => {
               setExecutive({
+                value: e.target.value,
+                label: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].label,
+                executiveEmail: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].executiveEmail,
+                executiveMobile: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].executiveMobile
+              });
+              props.setExecutive({
                 value: e.target.value,
                 label: executives.filter(
                   executive => executive.value === e.target.value
