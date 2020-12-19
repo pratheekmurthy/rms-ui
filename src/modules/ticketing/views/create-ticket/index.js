@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
+import { useDropzone } from 'react-dropzone';
+
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -140,6 +142,14 @@ export default function CreateTicket(props) {
         return;
     }
   };
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+    const files = acceptedFiles.map(file => (
+      <li key={file.path}>
+        {file.path} - {file.size} bytes
+      </li>
+    ));
+
   useEffect(() => {
     const distid = localStorage.getItem('search');
     setDistributorId(distid);
@@ -839,15 +849,15 @@ export default function CreateTicket(props) {
                   priority => priority.value === e.target.value
                 )[0].sla
               });
-               props.setPriority({
-                 value: e.target.value,
-                 label: priorities.filter(
-                   priority => priority.value === e.target.value
-                 )[0].label,
-                 sla: priorities.filter(
-                   priority => priority.value === e.target.value
-                 )[0].sla
-               });
+              props.setPriority({
+                value: e.target.value,
+                label: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].label,
+                sla: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].sla
+              });
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -903,7 +913,7 @@ export default function CreateTicket(props) {
             style={{ width: '32%' }}
             value={createdTime}
           ></TextField>
-         
+
           <br />
           <TextField
             error={ticketDescription === ''}
@@ -934,7 +944,7 @@ export default function CreateTicket(props) {
           />
           <Button
             className="btn btn-primary"
-            onClick={()=>getDistributorByIdd(distributorId)}
+            onClick={() => getDistributorByIdd(distributorId)}
           >
             <SearchIcon color="primary" />
           </Button>
@@ -1072,7 +1082,6 @@ export default function CreateTicket(props) {
                 )[0].label
               });
             }}
-            
           >
             {departments.map(({ label, value }) => (
               <option key={value} value={value}>
@@ -1094,11 +1103,11 @@ export default function CreateTicket(props) {
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
-               props.setTeam({
-                 value: e.target.value,
-                 label: teams.filter(team => team.value === e.target.value)[0]
-                   .label
-               });
+              props.setTeam({
+                value: e.target.value,
+                label: teams.filter(team => team.value === e.target.value)[0]
+                  .label
+              });
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1164,7 +1173,14 @@ export default function CreateTicket(props) {
             }}
             value={remarks}
           />
-
+          {/* <div {...getRootProps({ className: 'dropzone' })}>
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop some files here, or click to select files</p>
+          </div>
+          <aside>
+            <h4>Files</h4>
+            <ul>{files}</ul>
+          </aside> */}
           <TextField
             id="SoftCopyFile"
             label="Drop a file"

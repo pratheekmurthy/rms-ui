@@ -1,6 +1,7 @@
 import ticketDashboard from '../views/ticket-dashboard';
 import createTicket from '../views/create-ticket';
 import ticketSetup from '../views/ticketsetup';
+import ticketChart from '../views/Ticket-charts';
 export default [
   {
     path: '/ticket-dashboard',
@@ -16,5 +17,10 @@ export default [
     path: '/setup',
     key: 'ticketSetup',
     component: ticketSetup
+  },
+  {
+    path: '/charts',
+    key: 'ticketChart',
+    component: ticketChart
   }
 ];

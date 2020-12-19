@@ -17,6 +17,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import HistoryIcon from '@material-ui/icons/History';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -53,6 +54,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import Timeline from './timeline'
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -177,69 +179,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function TicketDashboard() {
   const classes = useStyles();
-  const ticketListData = [
-    {
-      id: 'IV-10202',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10222',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10122',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10732',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10312',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-12302',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10232',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10122',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10732',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10312',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-12302',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      id: 'IV-10232',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    }
-  ];
-
+  
   const [open, setOpen] = React.useState(false);
    const [opentimeline, setOpentimeline] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
@@ -513,9 +453,16 @@ let unmounted = false;
     setOpen(true);
     
   };
+    const handleTimelineOpen = () => {
+      setOpentimeline(true);
+    };
+     const handleTimelineClose = () => {
+        setOpentimeline(false);
+     };
+ 
   const handleClose = () => {
     setOpen(false);
-    // alert(remarks)
+   
   };
    const list = anchor => (
      <div
@@ -655,6 +602,94 @@ let unmounted = false;
       >
         Create Ticket
       </Button>
+
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'All',
+            label: 'All'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+        color="primary"
+      >
+        All(30)
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'New',
+            label: 'New'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        New(20)
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Open',
+            label: 'Open'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+        color="Green"
+      >
+        Open(5)
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Work In Progress',
+            label: 'Work In Progress'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Work In Progress(0)
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Resolved',
+            label: 'Resolved'
+            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
+            //   .slaOnHold
+          });
+        }}
+      >
+        Resolved(0)
+      </Button>
       {['right'].map(anchor => (
         <React.Fragment key={anchor}>
           <Button
@@ -662,7 +697,7 @@ let unmounted = false;
             color="primary"
             size="small"
             startIcon={<FilterListIcon />}
-            style={{ marginBottom: 15 }}
+            style={{ marginBottom: 15, float: 'right' }}
             onClick={toggleDrawer(anchor, true)}
           >
             Filter
@@ -688,48 +723,14 @@ let unmounted = false;
         style={{ marginBottom: 15 }}
         onClick={() => {
           setStatus({
-            value: 'All',
-            label: 'All'
+            value: 'Closed',
+            label: 'Closed'
             // slaOnHold: statuses.filter(status => status.value === 'New')[0]
             //   .slaOnHold
           });
         }}
       >
-        All
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'New',
-            label: 'New'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
-          });
-        }}
-      >
-        New
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'Open',
-            label: 'Open'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
-          });
-        }}
-      >
-        Open
+        Closed(0)
       </Button>
       <Button
         variant="outlined"
@@ -745,42 +746,9 @@ let unmounted = false;
             //   .slaOnHold
           });
         }}
+        color="secondary"
       >
-        Work In Progress
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'Resolved',
-            label: 'Resolved'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
-          });
-        }}
-      >
-        Resolved
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'Closed',
-            label: 'Closed'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
-          });
-        }}
-      >
-        Closed
+        Escalation(0)
       </Button>
       {/* <TextField
         id="sm"
@@ -1006,24 +974,21 @@ let unmounted = false;
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'Timeline'}</DialogTitle>
         <DialogContent dividers>
-          {/* <CreateTicket
-            //new code
-            
-          /> */}
+          <Timeline />
         </DialogContent>
         <DialogActions>
-          <Button
+          {/* <Button
             onClick={addRow}
             color="primary"
             variant="contained"
             size="small"
           >
             Create
-          </Button>
+          </Button> */}
           <Button
-            onClick={handleClose}
+            onClick={handleTimelineClose}
             color="primary"
             size="small"
             variant="outlined"
@@ -1101,8 +1066,8 @@ let unmounted = false;
                   color="primary"
                   size="small"
                   className={classes.button}
-                  // startIcon={<LinkIcon />}
-                  // onClick={setOpentimeline(true)}
+                  startIcon={<HistoryIcon />}
+                  onClick={handleTimelineOpen}
                 >
                   History
                 </Button>
@@ -1461,6 +1426,29 @@ let unmounted = false;
                   </Typography>
                 </Box>
               </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Created By
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    {/* {viewticket.media} */}
+                  </Typography>
+                </Box>
+              </Box>
             </div>
             <Divider light />
             <div className={classes.metadataClass}>
@@ -1529,15 +1517,11 @@ let unmounted = false;
       </Grid>
 
       <br />
-      <ExpansionPanel defaultColapsed>
+      {/* <ExpansionPanel defaultColapsed>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>
             Ticket History{' '}
-            {/* {TouchPoint.length ? (
-                <lablel>
-                  {Distributer.DistributerId} {Distributer.DistributerName}
-                </lablel>
-              ) : null} */}
+          
           </Typography>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
@@ -1566,7 +1550,7 @@ let unmounted = false;
             </Table>
           </div>
         </ExpansionPanelDetails>
-      </ExpansionPanel>
+      </ExpansionPanel> */}
     </div>
   );
 }
