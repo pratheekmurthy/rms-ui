@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import clsx from 'clsx';
-// import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -11,24 +10,13 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
 import HistoryIcon from '@material-ui/icons/History';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import {
-  Paper,
-  Grid,
 
+import {
+  Grid,
   Typography,
- 
   Box,
- 
   Avatar,
   TextField,
   Modal,
@@ -38,7 +26,7 @@ import {
   DialogTitle,
   DialogContentText
 } from '@material-ui/core';
-import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
+
 import { purple, orange, green } from '@material-ui/core/colors';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
@@ -46,15 +34,9 @@ import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+
 import FilterListIcon from '@material-ui/icons/FilterList';
-import Timeline from './timeline'
+import Timeline from './timeline';
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -140,19 +122,11 @@ const useStyles = makeStyles(theme => ({
     marginTop: 5,
     fontWeight: 600
   },
-  // drawer: {
-  //   width: '100%',
-  //   flexShrink: 0
-  // },
-  // drawerPaper: {
-  //   width: '25%'
-  // },
+
   drawer: {
-    // width: drawerWidth,
     flexShrink: 0
   },
   drawerPaper: {
-    // width: drawerWidth,
     top: 62
   },
   modal: {
@@ -171,29 +145,24 @@ const useStyles = makeStyles(theme => ({
     height: 22
   },
   typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
     fontSize: 9
   }
 }));
 
 export default function TicketDashboard() {
   const classes = useStyles();
-  
+
   const [open, setOpen] = React.useState(false);
-   const [opentimeline, setOpentimeline] = React.useState(false);
+  const [opentimeline, setOpentimeline] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
-    const [tickets, setTickets] = useState([]);
-     const [viewticket, setviewTickets] = useState({});
-     const [apiTickets, setApiTickets] = useState([]);
-       const [ticketHistory, setTicketHistory] = useState([]);
-
-
-
-       //new code
+  const [tickets, setTickets] = useState([]);
+  const [viewticket, setviewTickets] = useState({});
+  const [apiTickets, setApiTickets] = useState([]);
+  const [ticketHistory, setTicketHistory] = useState([]);
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
+  const [filterDistributorName, setFilterDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
   const [distributorEmail, setDistributorEmail] = useState('');
   const [distributorMobile, setDistributorMobile] = useState('');
@@ -207,7 +176,7 @@ export default function TicketDashboard() {
     ticketTypeId: '',
     ticketType: ''
   });
-  // const [open, setOpen] = React.useState(true);
+
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({
     value: '',
@@ -255,29 +224,25 @@ export default function TicketDashboard() {
     executiveMobile: ''
   });
 
-
-  // alert("all" + distributorId);
-
   const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
-  const [file, setFile] = useState('');
-   const [state, setState] = React.useState({
-     top: false,
-     left: false,
-     bottom: false,
-     right: false
-   });
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false
+  });
 
-   const toggleDrawer = (anchor, open) => event => {
-     if (
-       event.type === 'keydown' &&
-       (event.key === 'Tab' || event.key === 'Shift')
-     ) {
-       return;
-     }
+  const toggleDrawer = (anchor, open) => event => {
+    if (
+      event.type === 'keydown' &&
+      (event.key === 'Tab' || event.key === 'Shift')
+    ) {
+      return;
+    }
 
-     setState({ ...state, [anchor]: open });
-   };
+    setState({ ...state, [anchor]: open });
+  };
 
   useEffect(() => {
     const apiUrl = config.APIS_URL + '/tickets';
@@ -288,53 +253,46 @@ export default function TicketDashboard() {
         setTickets(repos.data);
       });
   }, [apiTickets]);
-   useEffect(() => {
-     let unmounted = false;
-     async function getItems() {
-       const response = await fetch(config.APIS_URL + '/statuses');
-       const body = await response.json();
-       if (!unmounted) {
-         setStatuses([
-           ...[{ label: 'All', value: '' }],
-           ...body.data.map(({ _id, status }) => ({
-             label: status,
-             value: _id
-           }))
-         ]);
-         setLoading(false);
-         setStatus({
-           label: 'All',
-           value: ''
-         });
-       }
-     }
-     getItems();
-     return () => {
-       unmounted = true;
-     };
-   }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/statuses');
+      const body = await response.json();
+      if (!unmounted) {
+        setStatuses([
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, status }) => ({
+            label: status,
+            value: _id
+          }))
+        ]);
+        setLoading(false);
+        setStatus({
+          label: 'All',
+          value: ''
+        });
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
 
   const viewTicket = item => {
-    console.log('item', item);
-     setviewTickets(item)
-let unmounted = false;
-     async function getHistoryItems() {
-     
-       const response = await fetch(
-         config.APIS_URL + '/ticketHistory/' + item._id
-       );
-       const tktHistory = (await response.json()).data;
-       console.log("ticket history", tktHistory)
-       if (!unmounted) {
-         setTicketHistory(tktHistory);
-       }
-     }
-     getHistoryItems();
-    
-    // localStorage.setItem('viewtkt', JSON.stringify(item));
-    // let path = `CreateTicket`;
+    setviewTickets(item);
+    let unmounted = false;
+    async function getHistoryItems() {
+      const response = await fetch(
+        config.APIS_URL + '/ticketHistory/' + item._id
+      );
+      const tktHistory = (await response.json()).data;
 
-    // history.push(path);
+      if (!unmounted) {
+        setTicketHistory(tktHistory);
+      }
+    }
+    getHistoryItems();
   };
   function getTicketList() {
     return (
@@ -354,7 +312,6 @@ let unmounted = false;
                 <ListItemText>
                   <div className={classes.textBold}>
                     <ListItemIcon>
-                      {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
                       <Avatar className={classes.green}>
                         {ticket.status.substring(0, 1)}
                       </Avatar>
@@ -384,212 +341,138 @@ let unmounted = false;
   }
 
   const addRow = () => {
-    // console.log("data on click", ticketNumber,distributorName,distributorId,distributorEmail,distributorMobile,createdByName)
-    
-  //  code is added above
     const viewtkt = JSON.parse(localStorage.getItem('viewtkt'));
     setOpen(false);
-     const apiUrl = config.APIS_URL + '/tickets';
-     var apiParam = {
-       method: viewtkt ? 'PUT' : 'POST',
-       headers: {
-         ticketNumber,
-         createdTime,
-        //  updatedTime,
-         distributorName,
-         distributorId,
-         distributorEmail,
-         distributorMobile,
-         createdByName,
-         createdById,
-        //  updatedByName,
-        //  updatedById,
-         ticketSubject,
-         ticketDescription,
-         remarks,
-         ticketTypeId: ticketType.value,
-         ticketType: ticketType.label,
-         mediaId: media.value,
-         media: media.label,
-         categoryId: category.value,
-         category: category.label,
-         subCategoryId: subCategory.value,
-         subCategory: subCategory.label,
-         subCategoryItemId: subCategoryItem.value,
-         subCategoryItem: subCategoryItem.label,
-         departmentId: department.value,
-         department: department.label,
-         teamId: team.value,
-         team: team.label,
-         priorityId: priority.value,
-         priority: priority.label,
-         sla: priority.sla,
-         elapsedSLA: 0,
-         statusId: status.value,
-         status: status.label,
-         slaOnHold: status.slaOnHold,
-         executiveId: executive.value,
-         executive: executive.label,
-         executiveEmail: executive.executiveEmail,
-         executiveMobile: executive.executiveMobile
-       }
-     };
-     console.log("apiParam", apiParam)
-      // alert(apiParam);
-     if (viewtkt) {
-       apiParam.headers = {
-         ...apiParam.headers,
-         ticketid: viewtkt._id
-       };
-     }
-    //  fetch(apiUrl, apiParam)
-    //    .then(res => res.json())
-    //    .then(repos => {
-    //       alert(JSON.stringify(repos));
-    //    });
-    
+    const apiUrl = config.APIS_URL + '/tickets';
+    var apiParam = {
+      method: viewtkt ? 'PUT' : 'POST',
+      headers: {
+        ticketNumber,
+        createdTime,
+        distributorName,
+        distributorId,
+        distributorEmail,
+        distributorMobile,
+        createdByName,
+        createdById,
+        ticketSubject,
+        ticketDescription,
+        remarks,
+        ticketTypeId: ticketType.value,
+        ticketType: ticketType.label,
+        mediaId: media.value,
+        media: media.label,
+        categoryId: category.value,
+        category: category.label,
+        subCategoryId: subCategory.value,
+        subCategory: subCategory.label,
+        subCategoryItemId: subCategoryItem.value,
+        subCategoryItem: subCategoryItem.label,
+        departmentId: department.value,
+        department: department.label,
+        teamId: team.value,
+        team: team.label,
+        priorityId: priority.value,
+        priority: priority.label,
+        sla: priority.sla,
+        elapsedSLA: 0,
+        statusId: status.value,
+        status: status.label,
+        slaOnHold: status.slaOnHold,
+        executiveId: executive.value,
+        executive: executive.label,
+        executiveEmail: executive.executiveEmail,
+        executiveMobile: executive.executiveMobile
+      }
+    };
+
+    if (viewtkt) {
+      apiParam.headers = {
+        ...apiParam.headers,
+        ticketid: viewtkt._id
+      };
+    }
   };
   const handleOpen = () => {
     setOpen(true);
-    
   };
-    const handleTimelineOpen = () => {
-      setOpentimeline(true);
-    };
-     const handleTimelineClose = () => {
-        setOpentimeline(false);
-     };
- 
+  const handleTimelineOpen = () => {
+    setOpentimeline(true);
+  };
+  const handleTimelineClose = () => {
+    setOpentimeline(false);
+  };
+
   const handleClose = () => {
     setOpen(false);
-   
   };
-   const list = anchor => (
-     <div
-       className={clsx(classes.list, {
-         [classes.fullList]: anchor === 'top' || anchor === 'bottom'
-       })}
-       role="presentation"
-       onClick={toggleDrawer(anchor, false)}
-       onKeyDown={toggleDrawer(anchor, false)}
-     >
-       <List>
-         <center>
-           {' '}
-           <h3>Filter By</h3>
-         </center>
-         <Divider />
-         {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <TextField
-               label="Ticket Number"
-               id="outlined-size-small"
-               value={ticketNumber}
-               onChange={e => setTicketNumber(e.target.value)}
-               variant="outlined"
-               size="small"
-               //  style={{ fontSize: 6 }}
-               //  className={classes.textField}
-             />
-           </ListItem>
-         ))}
-         {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <TextField
-               label="Distributor Name"
-               id="outlined-size-small"
-               value={distributorName}
-               onChange={e => setDistributorName(e.target.value)}
-               variant="outlined"
-               size="small"
-               //  className={classes.textField}
-             />
-           </ListItem>
-         ))}
-         {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <TextField
-               label="Distributor Id"
-               id="outlined-size-small"
-               value={distributorId}
-               onChange={e => setDistributorId(e.target.value)}
-               variant="outlined"
-               size="small"
-               //  className={classes.textField}
-             />
-           </ListItem>
-         ))}
-         {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <TextField
-               label="Ticket Subject"
-               id="outlined-size-small"
-               value={ticketSubject}
-               onChange={e => setTicketSubject(e.target.value)}
-               variant="outlined"
-               size="small"
-               //  className={classes.textField}
-             />
-           </ListItem>
-         ))}
-         {/* {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <TextField
-               label="Ticket Description"
-               id="outlined-size-small"
-               value={ticketDescription}
-               onChange={e => setTicketDescription(e.target.value)}
-               variant="outlined"
-               size="small"
-               //  className={classes.textField}
-             />
-           </ListItem>
-         ))} */}
-         {/* {['Inbox'].map((text, index) => (
-           <ListItem button key={text}>
-             <FormControl variant="outlined" className={classes.formControl}>
-               <InputLabel htmlFor="outlined-age-native-simple"></InputLabel>
-               <Select
-                 native
-                 disabled={loading}
-                 label="Ticket Type"
-                 inputProps={{
-                   name: 'tickettype',
-                   id: 'tickettype'
-                 }}
-                 defaultValue={ticketType.value}
-                 onChange={e => {
-                   setTicketType({
-                     value: e.target.value,
-                     label: ticketTypes.filter(
-                       ticketType => ticketType.value === e.target.value
-                     )[0].label
-                   });
-                 }}
-               >
-                 {ticketTypes.map(({ label, value }) => (
-                   <option key={value} value={value}>
-                     {label}
-                   </option>
-                 ))}
-               </Select>
-             </FormControl>
-           </ListItem>
-         ))} */}
-       </List>
-       <Divider />
-       {/* <List>
-         {['All mail', 'Trash', 'Spam'].map((text, index) => (
-           <ListItem button key={text}>
-             <ListItemIcon>
-               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-             </ListItemIcon>
-             <ListItemText primary={text} />
-           </ListItem>
-         ))}
-       </List> */}
-     </div>
-   );
+  const list = anchor => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom'
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        <center>
+          {' '}
+          <h3>Filter By</h3>
+        </center>
+        <Divider />
+        {['Inbox'].map((text, index) => (
+          <ListItem button key={text}>
+            <TextField
+              label="Ticket Number"
+              id="outlined-size-small"
+              value={ticketNumber}
+              onChange={e => setTicketNumber(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+          </ListItem>
+        ))}
+        {['Inbox'].map((text, index) => (
+          <ListItem button key={text}>
+            <TextField
+              label="Distributor Name"
+              id="outlined-size-small"
+              value={filterDistributorName}
+              onChange={e => setFilterDistributorName(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+          </ListItem>
+        ))}
+        {['Inbox'].map((text, index) => (
+          <ListItem button key={text}>
+            <TextField
+              label="Distributor Id"
+              id="outlined-size-small"
+              value={distributorId}
+              onChange={e => setDistributorId(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+          </ListItem>
+        ))}
+        {['Inbox'].map((text, index) => (
+          <ListItem button key={text}>
+            <TextField
+              label="Ticket Subject"
+              id="outlined-size-small"
+              value={ticketSubject}
+              onChange={e => setTicketSubject(e.target.value)}
+              variant="outlined"
+              size="small"
+            />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </div>
+  );
   return (
     <div className={classes.root}>
       <Button
@@ -613,8 +496,6 @@ let unmounted = false;
           setStatus({
             value: 'All',
             label: 'All'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
         color="primary"
@@ -631,8 +512,6 @@ let unmounted = false;
           setStatus({
             value: 'New',
             label: 'New'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
       >
@@ -648,8 +527,6 @@ let unmounted = false;
           setStatus({
             value: 'Open',
             label: 'Open'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
         color="Green"
@@ -666,8 +543,6 @@ let unmounted = false;
           setStatus({
             value: 'Work In Progress',
             label: 'Work In Progress'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
       >
@@ -683,8 +558,6 @@ let unmounted = false;
           setStatus({
             value: 'Resolved',
             label: 'Resolved'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
       >
@@ -725,8 +598,6 @@ let unmounted = false;
           setStatus({
             value: 'Closed',
             label: 'Closed'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
       >
@@ -742,50 +613,13 @@ let unmounted = false;
           setStatus({
             value: 'Work In Progress',
             label: 'Work In Progress'
-            // slaOnHold: statuses.filter(status => status.value === 'New')[0]
-            //   .slaOnHold
           });
         }}
         color="secondary"
       >
         Escalation(0)
       </Button>
-      {/* <TextField
-        id="sm"
-        select
-        size="small"
-        label="Status"
-        SelectProps={{
-          native: true
-        }}
-        style={{ width: '31%' }}
-        variant="outlined"
-        value={status.value || ''}
-        onChange={e => {
-          setStatus({
-            value: e.target.value,
-            label: statuses.filter(status => status.value === e.target.value)[0]
-              .label,
-            slaOnHold: statuses.filter(
-              status => status.value === e.target.value
-            )[0].slaOnHold
-          });
-          // props.setStatus({
-          //   value: e.target.value,
-          //   label: statuses.filter(status => status.value === e.target.value)[0]
-          //     .label,
-          //   slaOnHold: statuses.filter(
-          //     status => status.value === e.target.value
-          //   )[0].slaOnHold
-          // });
-        }}
-      >
-        {statuses.map(({ label, value }) => (
-          <option key={value} value={value}>
-            {label}
-          </option>
-        ))}
-      </TextField> */}
+
       <Dialog
         open={open}
         fullWidth
@@ -796,7 +630,6 @@ let unmounted = false;
         <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
         <DialogContent dividers>
           <CreateTicket
-            //new code
             ticketNumber={ticketNumber}
             setTicketNumber={tks => {
               setTicketNumber(tks);
@@ -835,112 +668,90 @@ let unmounted = false;
             }}
             remarks={remarks}
             setRemarks={rks => {
-              // alert(JSON.stringify(cmts))
               setRemarks(rks);
             }}
             ticketTypes={ticketTypes}
             setTicketTypes={tkstyps => {
-              // alert(JSON.stringify(cmts))
               setTicketTypes(tkstyps);
             }}
             ticketType={ticketType}
             setTicketType={tkstyp => {
-              // alert(JSON.stringify(cmts))
               setTicketType(tkstyp);
             }}
             medium={medium}
             setMedium={mdm => {
-              // alert(JSON.stringify(cmts))
               setMedium(mdm);
             }}
             media={media}
             setMedia={media => {
-              // alert(JSON.stringify(cmts))
               setMedia(media);
             }}
             categories={categories}
             setCategories={catgs => {
-              // alert(JSON.stringify(cmts))
               setCategories(catgs);
             }}
             category={category}
             setCategory={cat => {
-              // alert(JSON.stringify(cmts))
               setCategory(cat);
             }}
             subCategories={subCategories}
             setSubCategories={subcats => {
-              // alert(JSON.stringify(cmts))
               setSubCategories(subcats);
             }}
             subCategory={subCategory}
             setSubCategory={subcat => {
-              // alert(JSON.stringify(cmts))
               setSubCategory(subcat);
             }}
             subCategoryItems={subCategoryItems}
             setSubCategoryItems={subcatitems => {
-              // alert(JSON.stringify(cmts))
               setSubCategoryItems(subcatitems);
             }}
             subCategoryItem={subCategoryItem}
             setSubCategoryItem={subcatitem => {
-              // alert(JSON.stringify(cmts))
               setSubCategoryItem(subcatitem);
             }}
             departments={departments}
             setDepartments={deps => {
-              // alert(JSON.stringify(cmts))
               setDepartments(deps);
             }}
             department={department}
             setDepartment={dept => {
-              // alert(JSON.stringify(cmts))
               setDepartment(dept);
             }}
             teams={teams}
             setTeams={tms => {
-              // alert(JSON.stringify(cmts))
               setTeams(tms);
             }}
             team={team}
             setTeam={tm => {
-              // alert(JSON.stringify(cmts))
               setTeam(tm);
             }}
             priorities={priorities}
             setPriorities={prts => {
-              // alert(JSON.stringify(cmts))
               setPriorities(prts);
             }}
             priority={priority}
             setPriority={prt => {
-              // alert(JSON.stringify(cmts))
               setPriority(prt);
             }}
             statuses={statuses}
             setStatuses={stses => {
-              // alert(JSON.stringify(cmts))
               setStatuses(stses);
             }}
             status={status}
             setStatus={sts => {
-              // alert(JSON.stringify(cmts))
               setStatus(sts);
             }}
             executives={executives}
             setExecutives={exts => {
-              // alert(JSON.stringify(cmts))
               setExecutives(exts);
             }}
             executive={executive}
             setExecutive={ext => {
-              // alert(JSON.stringify(cmts))
               setExecutive(ext);
             }}
             createdTime={createdTime}
             setCreatedTime={cretime => {
-              // alert(JSON.stringify(cmts))
               setCreatedTime(cretime);
             }}
           />
@@ -965,7 +776,6 @@ let unmounted = false;
           </Button>
         </DialogActions>
       </Dialog>
-      {/* timeline modal */}
 
       <Dialog
         open={opentimeline}
@@ -979,14 +789,6 @@ let unmounted = false;
           <Timeline />
         </DialogContent>
         <DialogActions>
-          {/* <Button
-            onClick={addRow}
-            color="primary"
-            variant="contained"
-            size="small"
-          >
-            Create
-          </Button> */}
           <Button
             onClick={handleTimelineClose}
             color="primary"
@@ -999,9 +801,6 @@ let unmounted = false;
         </DialogActions>
       </Dialog>
       <Grid container spacing={1}>
-        {/**
-         * This is the ticket List block
-         */}
         <Grid item sm={12} md={3}>
           <Paper
             className={classes.paper}
@@ -1014,9 +813,6 @@ let unmounted = false;
           </Paper>
         </Grid>
 
-        {/**
-         * This is the ticket Detail block
-         */}
         <Grid item sm={12} md={6}>
           <Paper
             className={classes.paper}
@@ -1106,7 +902,6 @@ let unmounted = false;
                               flexDirection="row"
                               className={classes.valueClass}
                             >
-                              {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
                               <Typography
                                 variant="body1"
                                 className={classes.ticketMargin}
@@ -1228,7 +1023,6 @@ let unmounted = false;
                               <Typography
                                 component="span"
                                 variant="body1"
-                                // style={{ color: green[500] }}
                                 className={classes.ticketMargin}
                               >
                                 {viewticket.status}
@@ -1260,24 +1054,6 @@ let unmounted = false;
                   value={viewticket.ticketDescription}
                 />
               </div>
-              {/* <div component="div" className={classes.boxDiv}>
-                <Typography
-                  variant="body1"
-                  color="textPrimary"
-                  className={classes.detailTitle}
-                >
-                  Attachments
-                </Typography>
-                <TextField
-                  id="outlined-textarea"
-                  placeholder="Drop files to attach, or browse"
-                  rows={5}
-                  rowsMax={20}
-                  multiline
-                  fullWidth
-                  variant="outlined"
-                />
-              </div> */}
             </div>
           </Paper>
         </Grid>
@@ -1301,7 +1077,6 @@ let unmounted = false;
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  {/* <Avatar className={classes.green}>SA</Avatar> */}
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
@@ -1347,14 +1122,11 @@ let unmounted = false;
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  {/* <Avatar className={classes.green}>AS</Avatar> */}
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  >
-                    {/* {viewticket.media} */}
-                  </Typography>
+                  ></Typography>
                 </Box>
               </Box>
               <Box
@@ -1421,9 +1193,7 @@ let unmounted = false;
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  >
-                    {/* {viewticket.media} */}
-                  </Typography>
+                  ></Typography>
                 </Box>
               </Box>
               <Box
@@ -1444,9 +1214,7 @@ let unmounted = false;
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  >
-                    {/* {viewticket.media} */}
-                  </Typography>
+                  ></Typography>
                 </Box>
               </Box>
             </div>
@@ -1465,9 +1233,7 @@ let unmounted = false;
                   variant="body1"
                   className={classes.ticketMargin}
                   component="span"
-                >
-                  {/* 20/12/2020 */}
-                </Typography>
+                ></Typography>
               </Box>
 
               <Box
@@ -1487,7 +1253,6 @@ let unmounted = false;
                   {new Date(viewticket.createdAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
-                  {/* {viewticket.createdAt} */}
                 </Typography>
               </Box>
 
@@ -1508,7 +1273,6 @@ let unmounted = false;
                   {new Date(viewticket.updatedAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
-                  {/* {viewticket.updatedAt} */}
                 </Typography>
               </Box>
             </div>
@@ -1517,40 +1281,6 @@ let unmounted = false;
       </Grid>
 
       <br />
-      {/* <ExpansionPanel defaultColapsed>
-        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>
-            Ticket History{' '}
-          
-          </Typography>
-        </ExpansionPanelSummary>
-        <ExpansionPanelDetails>
-          <div style={{ width: '100%' }}>
-            <Table stickyHeader aria-label="sticky table">
-              <TableRow>
-                <TableCell className="GridCell">Time</TableCell>
-                <TableCell className="GridCell">Updated By</TableCell>
-                <TableCell className="GridCell">Status</TableCell>
-                <TableCell className="GridCell">Assigned</TableCell>
-                <TableCell className="GridCell">Category</TableCell>
-                <TableCell className="GridCell">Priority</TableCell>
-                <TableCell className="GridCell">Remarks</TableCell>
-              </TableRow>
-              {ticketHistory.map((item, idx) => (
-                <TableRow>
-                  <TableCell>{item.createdTime}</TableCell>
-                  <TableCell>{item.updatedByName}</TableCell>
-                  <TableCell>{item.status}</TableCell>
-                  <TableCell>{item.assignedExecutiveName}</TableCell>
-                  <TableCell>{item.category}</TableCell>
-                  <TableCell>{item.priority}</TableCell>
-                  <TableCell>{item.remarks}</TableCell>
-                </TableRow>
-              ))}
-            </Table>
-          </div>
-        </ExpansionPanelDetails>
-      </ExpansionPanel> */}
     </div>
   );
 }

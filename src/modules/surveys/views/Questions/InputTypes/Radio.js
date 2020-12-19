@@ -98,18 +98,9 @@ const RadioInput = ({ submit }) => {
     const obj = { ...initialValuesObj };
     obj['label' + count] = '';
     obj['value' + count] = '';
-    // console.log(initialValuesObj, count);
+
     setCount(count + 1);
     setValues(obj);
-
-    // let name = document.getElementById("name").value;
-    // let label = document.getElementById("label").value;
-    // if (name && label !== "") {
-    //   (inputsData.questionType = "checkbox"),
-    //     (inputsData.questionName = name),
-    //     (inputsData.label = label),
-    //     submit(inputsData);
-    // }
   };
   return (
     <>
@@ -117,7 +108,7 @@ const RadioInput = ({ submit }) => {
         initialValues={initialValuesObj}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
+
           setSubmitValues({ values });
           resetForm();
         }}
@@ -199,8 +190,7 @@ const RadioInput = ({ submit }) => {
                 </Grid>
                 <Grid item xs={4}>
                   {isSubmitting}
-                  {/* <br />
-            <br /> */}
+
                   <Button
                     variant="contained"
                     color="inherit"

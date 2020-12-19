@@ -8,7 +8,6 @@ function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
   const [breadCrumbLinks, setbreadCrumbLinks] = useState([]);
   useEffect(() => {
     if (urlMatchFound) {
-      console.log('found', crumbs.get(activatedRoute));
       setbreadCrumbLinks(crumbs.get(activatedRoute));
     }
   }, [urlMatchFound, activatedRoute]);

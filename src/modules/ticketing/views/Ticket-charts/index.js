@@ -1,27 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
-import config from '../../views/config.json';
-// import PieHooks from './PieHooks';
-// import * as d3 from 'd3';
-import {
-  Paper,
-  Grid,
-  Typography,
-  Box,
-  Avatar,
-  TextField,
-  Modal,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  DialogContentText
-} from '@material-ui/core';
 
-import { purple, orange, green } from '@material-ui/core/colors';
+import { Paper, Grid } from '@material-ui/core';
 
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import { green } from '@material-ui/core/colors';
+
 import c3 from 'c3';
 const useStyles = makeStyles(theme => ({
   root: {
@@ -99,11 +83,9 @@ const useStyles = makeStyles(theme => ({
   },
 
   drawer: {
-    // width: drawerWidth,
     flexShrink: 0
   },
   drawerPaper: {
-    // width: drawerWidth,
     top: 62
   },
   modal: {
@@ -122,61 +104,12 @@ const useStyles = makeStyles(theme => ({
     height: 22
   },
   typography: {
-    // In Chinese and Japanese the characters are usually larger,
-    // so a smaller fontsize may be appropriate.
     fontSize: 9
   }
 }));
 
 export default function TicketDashboard() {
   const classes = useStyles();
-  const [displayTitle, setdisplayTitle] = useState(true);
-  const [displayLegend, setdisplayLegend] = useState(false);
-  const [legendPosition, setlegendPosition] = useState('bottom');
-
-  const [pieData, setpieData] = useState({
-    chartData: {
-      labels: [
-        'Boston',
-        'Worcester',
-        'Springfield',
-        'Lowell',
-        'Cambridge',
-        'New Bedford'
-      ],
-      datasets: [
-        {
-          data: [617594, 181045, 153060, 106519, 105162, 95072],
-          //backgroundColor:'green',
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.6)',
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(255, 206, 86, 0.6)',
-            'rgba(75, 192, 192, 0.6)',
-            'rgba(153, 102, 255, 0.6)',
-            'rgba(255, 159, 64, 0.6)',
-            'rgba(255, 99, 132, 0.6)'
-          ]
-        }
-      ]
-    }
-  });
-
-  //  const generateData = (value, length = 5) =>
-  //    d3.range(length).map((item, index) => ({
-  //      date: index,
-  //      value:
-  //        value === null || value === undefined ? Math.random() * 100 : value
-  //    }));
-
-  //  const [data, setData] = useState(generateData(0));
-  //  const changeData = () => {
-  //    setData(generateData());
-  //  };
-
-  //  useEffect(() => {
-  //    setData(generateData());
-  //  }, [!data]);
 
   useEffect(() => {
     var chart = c3.generate({
@@ -187,15 +120,9 @@ export default function TicketDashboard() {
           ['data2', 120]
         ],
         type: 'donut',
-        onclick: function(d, i) {
-          console.log('onclick', d, i);
-        },
-        onmouseover: function(d, i) {
-          console.log('onmouseover', d, i);
-        },
-        onmouseout: function(d, i) {
-          console.log('onmouseout', d, i);
-        }
+        onclick: function(d, i) {},
+        onmouseover: function(d, i) {},
+        onmouseout: function(d, i) {}
       },
       donut: {
         title: 'Iris Petal Width'
@@ -377,25 +304,17 @@ export default function TicketDashboard() {
       });
     }, 2500);
 
-    // pie chart
     var chart2 = c3.generate({
       bindto: '#chart2',
       data: {
-        // iris data from R
         columns: [
           ['data1', 30],
           ['data2', 120]
         ],
         type: 'pie',
-        onclick: function(d, i) {
-          console.log('onclick', d, i);
-        },
-        onmouseover: function(d, i) {
-          console.log('onmouseover', d, i);
-        },
-        onmouseout: function(d, i) {
-          console.log('onmouseout', d, i);
-        }
+        onclick: function(d, i) {},
+        onmouseover: function(d, i) {},
+        onmouseout: function(d, i) {}
       }
     });
 
@@ -573,29 +492,22 @@ export default function TicketDashboard() {
         ids: 'data2'
       });
     }, 2500);
-    // bar chart
+
     var chart3 = c3.generate({
       bindto: '#chart3',
       data: {
-        columns: [
-          ['data1', 30, 200, 100, 400, 150, 250],
-        //   ['data2', 130, 100, 140, 200, 150, 50]
-        ],
+        columns: [['data1', 30, 200, 100, 400, 150, 250]],
         type: 'bar'
       },
       bar: {
         width: {
-          ratio: 0.5 // this makes bar width 50% of length between ticks
+          ratio: 0.5
         }
-        // or
-        //width: 100 // this makes bar width 100px
       }
     });
 
     setTimeout(function() {
-      chart3.load({
-        // columns: [['data3', 130, -150, 200, 300, -200, 100]]
-      });
+      chart3.load({});
     }, 1000);
   }, []);
 
@@ -607,69 +519,18 @@ export default function TicketDashboard() {
             className={classes.paper}
             style={{ maxHeight: 720, overflow: 'auto' }}
           >
-           
             <div id="chart3"></div>
-            {/* <PieHooks
-              data={data}
-              width={200}
-              height={200}
-              innerRadius={60}
-              outerRadius={100}
-            /> */}
           </Paper>
         </Grid>
-        {/* 
-        <Grid item sm={12} md={6}>
-          <Paper
-            className={classes.paper}
-            style={{ maxHeight: 720, overflow: 'auto' }}
-          >
-            <div className={classes.listItemClass}>
-              <div display="flex" flexDirection="row"></div>
-              <div className={classes.boxDiv}>
-                <div style={{ paddingRight: 15, paddingLeft: 15 }}>
-                  <Grid container spacing={0}>
-                    <Grid container item xs={12} spacing={1}>
-                      <React.Fragment>
-                        <Grid item xs={6}></Grid>
-                        <Grid item xs={6}></Grid>
-                      </React.Fragment>
-                    </Grid>
-                    <Grid container item xs={12} spacing={1}>
-                      <React.Fragment>
-                        <Grid item xs={6}></Grid>
-                        <Grid item xs={6}></Grid>
-                      </React.Fragment>
-                    </Grid>
-                  </Grid>
-                </div>
-              </div>
-              <div className={classes.boxDiv}></div>
-            </div>
-          </Paper>
-        </Grid> */}
 
-        {/**
-         * This is the ticket Metadata block
-         */}
         <Grid item sm={12} md={6}>
           <Paper className={classes.paper}>
-           
-              <div id="chart1"></div>
-          
-            {/* <Grid item sm={6} md={6}>
-              <div id="chart2"></div>
-            </Grid> */}
+            <div id="chart1"></div>
           </Paper>
         </Grid>
         <Grid item sm={12} md={6}>
           <Paper className={classes.paper}>
-            {/* <Grid item sm={6} md={6}>
-              <div id="chart1"></div>
-            </Grid> */}
-            {/* <Grid item sm={6} md={6}> */}
-              <div id="chart2"></div>
-            {/* </Grid> */}
+            <div id="chart2"></div>
           </Paper>
         </Grid>
       </Grid>

@@ -1,98 +1,89 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import config from "../config.json";
-//table import
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import config from '../config.json';
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Checkbox from '@material-ui/core/Checkbox';
 function CategoryConfig() {
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
-        width: '25ch',
-      },
-    },
-   
-  })); 
+        width: '25ch'
+      }
+    }
+  }));
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setChecked(event.target.checked);
   };
-  const [newRow, setNewRow] = useState({ category: "", active: true });
+  const [newRow, setNewRow] = useState({ category: '', active: true });
   const [apiCategories, setApiCategories] = useState([]);
   const [categories, setCategories] = useState([]);
   const [isEditing, setIsEditing] = useState(-1);
-  const [updatedRow, setUpdatedRow] = useState({ category: "", active: false });
+  const [updatedRow, setUpdatedRow] = useState({ category: '', active: false });
 
   const updateRow = () => {
-     const val = JSON.stringify(updatedRow.category);
-      // alert(val);
-     if (val.length === 2) {
-       alert("Please enter value");
-     }
-     else{
-    setIsEditing(-1);
-    const apiUrl = config.APIS_URL + "/categories";
-    var apiParam = {
-      method: "PUT",
-      headers: updatedRow,
-    };
-    fetch(apiUrl, apiParam)
-      .then((res) => res.json())
-      .then((repos) => {
-        setApiCategories([]);
-      });
-     }
+    const val = JSON.stringify(updatedRow.category);
+
+    if (val.length === 2) {
+      alert('Please enter value');
+    } else {
+      setIsEditing(-1);
+      const apiUrl = config.APIS_URL + '/categories';
+      var apiParam = {
+        method: 'PUT',
+        headers: updatedRow
+      };
+      fetch(apiUrl, apiParam)
+        .then(res => res.json())
+        .then(repos => {
+          setApiCategories([]);
+        });
+    }
   };
 
-  const addRow = (e) => {
-     const val = JSON.stringify(newRow.category);
-      // alert(val);
-     if (val.length === 2) {
-       alert("Please enter value");
-     }
-     else{
-    const apiUrl = config.APIS_URL + "/categories";
-    var apiParam = {
-      method: "POST",
-      headers: {
-        category: newRow.category,
-        active: newRow.active,
-      },
-    };
-    fetch(apiUrl, apiParam)
-      .then((res) => res.json())
-      .then((repos) => {
-        setApiCategories([]);
-        setNewRow({ category: "", active: true });
-      });
+  const addRow = e => {
+    const val = JSON.stringify(newRow.category);
+
+    if (val.length === 2) {
+      alert('Please enter value');
+    } else {
+      const apiUrl = config.APIS_URL + '/categories';
+      var apiParam = {
+        method: 'POST',
+        headers: {
+          category: newRow.category,
+          active: newRow.active
+        }
+      };
+      fetch(apiUrl, apiParam)
+        .then(res => res.json())
+        .then(repos => {
+          setApiCategories([]);
+          setNewRow({ category: '', active: true });
+        });
     }
   };
 
   useEffect(() => {
-    const apiUrl = config.APIS_URL + "/categories";
+    const apiUrl = config.APIS_URL + '/categories';
     fetch(apiUrl)
-      .then((res) => res.json())
-      .then((repos) => {
+      .then(res => res.json())
+      .then(repos => {
         setApiCategories(repos.data);
         setCategories(apiCategories);
       });
   }, [apiCategories]);
 
   useEffect(() => {
-    setUpdatedRow(isEditing === "-1" ? {} : categories[isEditing]);
+    setUpdatedRow(isEditing === '-1' ? {} : categories[isEditing]);
   }, [isEditing]);
 
   useEffect(() => {}, [categories]);
@@ -101,7 +92,7 @@ function CategoryConfig() {
     setUpdatedRow({
       id: categories[index]._id,
       category: event.target.value,
-      active: updatedRow.active,
+      active: updatedRow.active
     });
   };
 
@@ -109,7 +100,7 @@ function CategoryConfig() {
     setUpdatedRow({
       id: categories[index]._id,
       category: updatedRow.category,
-      active: event.target.checked,
+      active: event.target.checked
     });
   };
 
@@ -120,40 +111,42 @@ function CategoryConfig() {
         <TableRow>
           <TableCell>Sl. No.</TableCell>
           <TableCell>Category</TableCell>
-          <TableCell style={{ textAlign: "center" }}>Active</TableCell>
+          <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
         <TableRow>
           <TableCell></TableCell>
           <TableCell>
-          <TextField
-          label="Category"
-          id="outlined-size-small"
-          value={newRow.category}
-              onChange={(e) =>
+            <TextField
+              label="Category"
+              id="outlined-size-small"
+              value={newRow.category}
+              onChange={e =>
                 setNewRow({ category: e.target.value, active: newRow.active })
               }
-          variant="outlined"
-          size="small"
-        /> 
-
-           
+              variant="outlined"
+              size="small"
+            />
           </TableCell>
           <TableCell>
-          <Checkbox
-          onChange={(e) =>
-            setNewRow({
-              category: newRow.category,
-              active: e.target.checked,
-            })
-          }
-          checked={newRow.active}
-        inputProps={{ 'aria-label': 'primary checkbox' }}
-      />
-           
+            <Checkbox
+              onChange={e =>
+                setNewRow({
+                  category: newRow.category,
+                  active: e.target.checked
+                })
+              }
+              checked={newRow.active}
+              inputProps={{ 'aria-label': 'primary checkbox' }}
+            />
           </TableCell>
           <TableCell>
-            <Button variant="contained" color="primary" onClick={addRow} className="SmallButton">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addRow}
+              className="SmallButton"
+            >
               Add
             </Button>
           </TableCell>
@@ -165,35 +158,35 @@ function CategoryConfig() {
               <TableCell>
                 {isEditing === idx ? (
                   <TextField
-                  label="Category"
-                  id="outlined-size-small"
-                  defaultValue={item.category}
-                  onChange={(e) => handleCategoryChange(idx, e)}
-                  variant="outlined"
-                  size="small"
-                /> 
-                  
+                    label="Category"
+                    id="outlined-size-small"
+                    defaultValue={item.category}
+                    onChange={e => handleCategoryChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
                 ) : (
                   item.category
                 )}
               </TableCell>
-              <TableCell style={{ textAlign: "center" }}>
-              <Checkbox
-           defaultChecked={item.active}
-           disabled={isEditing === idx ? false : true}
-           onChange={(e) => handleActiveChange(idx, e)}
-        inputProps={{ 'aria-label': 'primary checkbox' }}
-      />
-                
+              <TableCell style={{ textAlign: 'center' }}>
+                <Checkbox
+                  defaultChecked={item.active}
+                  disabled={isEditing === idx ? false : true}
+                  onChange={e => handleActiveChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
               </TableCell>
               <TableCell>
-                <Button variant="contained" color="primary"
-                  onClick={(e) =>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={e =>
                     isEditing === idx ? updateRow(item) : setIsEditing(idx)
                   }
                   className="SmallButton"
                 >
-                  {isEditing === idx ? "Update" : "Edit"}
+                  {isEditing === idx ? 'Update' : 'Edit'}
                 </Button>
               </TableCell>
             </TableRow>

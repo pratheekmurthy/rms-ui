@@ -27,22 +27,13 @@ const useStyles = makeStyles(() => ({
 const GenerateForm = ({ inputs }) => {
   const classes = useStyles();
   const obj = {};
-  // inputs.forEach((input) =>
-  //   input.type === "checkbox"
-  //     ? (obj[input.name] = false)
-  //     : (obj[input.name] = "")
-  // );
 
   inputs.forEach(input => (obj[input.questionName] = ''));
-
-  // console.log('obj : ', obj);
 
   let [ratingValue, setRatingValue] = useState(0);
   const getRatingValue = data => {
     setRatingValue(data);
   };
-
-  // console.log("ratingValue , ", ratingValue);
 
   return (
     <>
@@ -51,7 +42,6 @@ const GenerateForm = ({ inputs }) => {
           initialValues={obj}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
-            // console.log('Values : ', values);
           }}
         >
           {({ submitForm, isSubmitting }) => (

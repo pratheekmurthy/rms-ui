@@ -48,7 +48,6 @@ function Invoices({
             setSingleInvoiceDetails(res.data.data);
           }
         } catch (error) {
-          console.log(error);
         } finally {
           setShowLoader(false);
         }

@@ -8,7 +8,6 @@ import { setNewCrumb, setUrlMatchFound } from 'src/redux/action';
  */
 function RouteWithSubRoutes(route) {
   useEffect(() => {
-    console.log(route, route.activatedRoute);
     if (route.activatedRoute === route.computedMatch.url) {
       route.setMatchFound();
     }

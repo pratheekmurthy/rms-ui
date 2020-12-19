@@ -42,7 +42,7 @@ export default function CreateTicket(props) {
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketDescription, setTicketDescription] = useState('');
   const [remarks, setRemarks] = useState('');
-   const [viewtkt, setViewtkt] = useState({});
+  const [viewtkt, setViewtkt] = useState({});
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({
     ticketTypeId: '',
@@ -96,9 +96,6 @@ export default function CreateTicket(props) {
     executiveMobile: ''
   });
 
-
-  // alert("all" + distributorId);
-
   const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
   const [file, setFile] = useState('');
@@ -108,22 +105,22 @@ export default function CreateTicket(props) {
         props.setTicketNumber(e.target.value);
         return setTicketNumber(e.target.value);
       case 'distributorName':
-         props.setDistributorName(e.target.value);
+        props.setDistributorName(e.target.value);
         return setDistributorName(e.target.value);
       case 'distributorId':
-         props.setDistributorId(e.target.value);
+        props.setDistributorId(e.target.value);
         return setDistributorId(e.target.value);
       case 'distributorEmail':
-          props.setDistributorEmail(e.target.value);
+        props.setDistributorEmail(e.target.value);
         return setDistributorEmail(e.target.value);
       case 'distributorMobile':
-         props.setDistributorMobile(e.target.value);
+        props.setDistributorMobile(e.target.value);
         return setDistributorMobile(e.target.value);
       case 'createdByName':
-         props.setCreatedByName(e.target.value);
+        props.setCreatedByName(e.target.value);
         return setCreatedByName(e.target.value);
       case 'createdById':
-         props.setCreatedById(e.target.value);
+        props.setCreatedById(e.target.value);
         return setCreatedById(e.target.value);
       case 'ticketSubject':
         props.setTicketSubject(e.target.value);
@@ -133,27 +130,27 @@ export default function CreateTicket(props) {
         return setTicketDescription(e.target.value);
 
       case 'remarks':
-          props.setRemarks(e.target.value);
+        props.setRemarks(e.target.value);
         return setRemarks(e.target.value);
-       
+
       case 'file':
         return setFile(e.target.files[0]);
       default:
         return;
     }
   };
-    const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-    const files = acceptedFiles.map(file => (
-      <li key={file.path}>
-        {file.path} - {file.size} bytes
-      </li>
-    ));
+  const files = acceptedFiles.map(file => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
 
   useEffect(() => {
     const distid = localStorage.getItem('search');
     setDistributorId(distid);
-    console.log('set', distributorId);
+
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var charactersLength = characters.length;
@@ -164,16 +161,15 @@ export default function CreateTicket(props) {
     let date = newDate.getDate().toString();
     let month = (newDate.getMonth() + 1).toString();
     let year = newDate.getFullYear().toString();
-    console.log('1', distributorId);
+
     setTicketNumber('TKT' + year + month + date + result);
     setCreatedTime(new Date().toDateString());
-     props.setTicketNumber('TKT' + year + month + date + result);
-     props.setCreatedTime(new Date().toDateString());
-    // alert(props.comments)
+    props.setTicketNumber('TKT' + year + month + date + result);
+    props.setCreatedTime(new Date().toDateString());
+
     setTicketDescription(props.comments);
-    console.log('valu', distributorId);
+
     getDistributorByIdd(distid);
-    console.log('value', distributorId);
   }, []);
 
   useEffect(() => {
@@ -317,7 +313,7 @@ export default function CreateTicket(props) {
           subCategory.value
       );
       const body = await response.json();
-      // alert(JSON.stringify(body));
+
       if (!unmounted) {
         setSubCategoryItems(
           body.data.map(({ _id, subCategoryItem }) => ({
@@ -330,7 +326,7 @@ export default function CreateTicket(props) {
 
         const cat = localStorage.getItem('setSubCategoryItem');
         const value = JSON.parse(cat);
-        // alert("subitem", value);
+
         if (value.subCategoryItem) {
           setSubCategoryItem(value.subCategoryItem);
         } else {
@@ -420,6 +416,7 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
+
         body.data[0]
           ? setDepartment({
               label: body.data[0].department,
@@ -449,6 +446,7 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
+
         body.data[0]
           ? setTeam({
               label: body.data[0].team,
@@ -482,6 +480,7 @@ export default function CreateTicket(props) {
           )
         );
         setLoading(false);
+
         body.data[0]
           ? setExecutive({
               label: body.data[0].executiveName,
@@ -498,57 +497,52 @@ export default function CreateTicket(props) {
     };
   }, [team]);
 
-  // useEffect(() => {}, [media, distributorId, distributorMobile]);
-
   const getDistributorByIdd = distid => {
-    // alert("chaitra")
-    console.log('value before api', distid);
-    // alert(distid);
     async function getItems() {
-    const apiUrl = config.APIS_URL + '/boapi/distributorbyid';
-    var apiParam = {
-      method: 'POST',
-      headers: { distid: distid, key: 'uZpsyVk4yc' }
-    };
-    fetch(apiUrl, apiParam)
-      .then(res => res.json())
-      .then(repos => {
-        console.log('value1', repos.data);
-        // setDistributorId(
-        //   JSON.parse(repos.data).data
-        //     ? JSON.parse(repos.data).data[0].distributor_id || ""
-        //     : ""
-        // );
-        //  setDistributorName(
-        //   JSON.parse(repos.data).data.distributor_name
-        //  );
-        // alert(JSON.parse(repos.data).data[0].distributor_name);
-        console.log('disname', repos.data);
-        setDistributorName(
-          // repos.data.data ? repos.data.data[0].distributor_name || '': ''
-          JSON.parse(repos.data).data
-            ? JSON.parse(repos.data).data[0].distributor_name || ''
-            : ''
-        );
+      const apiUrl = config.APIS_URL + '/boapi/distributorbyid';
+      var apiParam = {
+        method: 'POST',
+        headers: { distid: distid, key: 'uZpsyVk4yc' }
+      };
+      fetch(apiUrl, apiParam)
+        .then(res => res.json())
+        .then(repos => {
+          setDistributorId(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].distributor_id || ''
+              : ''
+          );
 
-        setDistributorMobile(
-          JSON.parse(repos.data).data
-            ? JSON.parse(repos.data).data[0].mob_no || ''
-            : ''
-        );
-        setDistributorEmail(
-          JSON.parse(repos.data).data
-            ? JSON.parse(repos.data).data[0].email_id || ''
-            : ''
-        );
-      });
+          setDistributorName(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].distributor_name || ''
+              : ''
+          );
+          props.setDistributorName(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].distributor_name || ''
+              : ''
+          );
+          props.setDistributorMobile(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].mob_no || ''
+              : ''
+          );
+          setDistributorMobile(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].mob_no || ''
+              : ''
+          );
+
+          setDistributorEmail(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].email_id || ''
+              : ''
+          );
+        });
     }
     getItems();
   };
-
-
-
-
 
   const getDistributorByMobile = () => {
     const apiUrl = config.APIS_URL + '/boapi/distributorbymobile';
@@ -624,13 +618,10 @@ export default function CreateTicket(props) {
         executiveMobile: executive.executiveMobile
       }
     };
-    // alert(JSON.stringify(apiParam.headers))
+
     fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
-        console.log('api res', repos);
-
-        // alert(repos.message);
         if (repos.status === 200) {
           props.setOpen(false);
         }
@@ -642,12 +633,7 @@ export default function CreateTicket(props) {
     myHeaders.append('ticketnumber', ticketNumber);
 
     var formdata = new FormData();
-    formdata.append(
-      'SoftCopyFile',
-      file
-      // fileInput.files[0],
-      // "Screenshot from 2020-11-30 14-55-01.png"
-    );
+    formdata.append('SoftCopyFile', file);
 
     var requestOptions = {
       method: 'POST',
@@ -1173,14 +1159,7 @@ export default function CreateTicket(props) {
             }}
             value={remarks}
           />
-          {/* <div {...getRootProps({ className: 'dropzone' })}>
-            <input {...getInputProps()} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
-          </div>
-          <aside>
-            <h4>Files</h4>
-            <ul>{files}</ul>
-          </aside> */}
+
           <TextField
             id="SoftCopyFile"
             label="Drop a file"

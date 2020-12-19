@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import config from "../config.json";
-//Table import
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import config from '../config.json';
+
 import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
+
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
+
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -21,56 +19,56 @@ import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 function SubCategoryConfig() {
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     root: {
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
-        width: '25ch',
-      },
+        width: '25ch'
+      }
     },
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 220,
+      minWidth: 220
     },
     selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  })); 
+      marginTop: theme.spacing(2)
+    }
+  }));
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setChecked(event.target.checked);
   };
   const [loading, setLoading] = React.useState(true);
-  const [newRow, setNewRow] = useState({ subcategory: "", active: true });
+  const [newRow, setNewRow] = useState({ subcategory: '', active: true });
   const [apiSubCategories, setApiSubCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
   const [categories, setCategories] = React.useState([]);
   const [category, setCategory] = React.useState({});
   const [isEditing, setIsEditing] = useState(-1);
   const [updatedRow, setUpdatedRow] = useState({
-    subcategory: "",
-    active: false,
+    subcategory: '',
+    active: false
   });
 
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
-      const response = await fetch(config.APIS_URL+"/categories");
+      const response = await fetch(config.APIS_URL + '/categories');
       const body = await response.json();
       if (!unmounted) {
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
-            value: _id,
+            value: _id
           }))
         );
         setLoading(false);
         body.data[0]
           ? setCategory({
               label: body.data[0].category,
-              value: body.data[0]._id,
+              value: body.data[0]._id
             })
           : setCategory({});
       }
@@ -82,70 +80,68 @@ function SubCategoryConfig() {
   }, []);
 
   const updateRow = () => {
-      const val = JSON.stringify(updatedRow.subcategory);
-      // alert(val);
-      if (val.length === 2) {
-        alert("Please enter value");
-      }
-      else{
-    setIsEditing(-1);
-    const apiUrl = config.APIS_URL + "/subcategories";
-    var apiParam = {
-      method: "PUT",
-      headers: updatedRow,
-    };
-    fetch(apiUrl, apiParam)
-      .then((res) => res.json())
-      .then((repos) => {
-        setApiSubCategories([]);
-      });
-      }
+    const val = JSON.stringify(updatedRow.subcategory);
+
+    if (val.length === 2) {
+      alert('Please enter value');
+    } else {
+      setIsEditing(-1);
+      const apiUrl = config.APIS_URL + '/subcategories';
+      var apiParam = {
+        method: 'PUT',
+        headers: updatedRow
+      };
+      fetch(apiUrl, apiParam)
+        .then(res => res.json())
+        .then(repos => {
+          setApiSubCategories([]);
+        });
+    }
   };
 
-  const addRow = (e) => {
+  const addRow = e => {
     const val = JSON.stringify(newRow.subcategory);
-      // alert(val);
-      if (val.length === 2) {
-        alert("Please enter value");
-      }
-      else{
-    const apiUrl = config.APIS_URL + "/subcategories";
-    var apiParam = {
-      method: "POST",
-      headers: {
-        categoryid: category.value,
-        category: category.label,
-        subcategory: newRow.subcategory,
-        active: newRow.active,
-      },
-    };
-    fetch(apiUrl, apiParam)
-      .then((res) => res.json())
-      .then((repos) => {
-        setApiSubCategories([]);
-        setNewRow({
-          categoryid: "",
-          category: "",
-          subcategory: "",
-          active: true,
-        });
-      })
-      .catch((e) => alert(JSON.stringify(e)));
+
+    if (val.length === 2) {
+      alert('Please enter value');
+    } else {
+      const apiUrl = config.APIS_URL + '/subcategories';
+      var apiParam = {
+        method: 'POST',
+        headers: {
+          categoryid: category.value,
+          category: category.label,
+          subcategory: newRow.subcategory,
+          active: newRow.active
+        }
+      };
+      fetch(apiUrl, apiParam)
+        .then(res => res.json())
+        .then(repos => {
+          setApiSubCategories([]);
+          setNewRow({
+            categoryid: '',
+            category: '',
+            subcategory: '',
+            active: true
+          });
+        })
+        .catch(e => alert(JSON.stringify(e)));
     }
   };
 
   useEffect(() => {
-    const apiUrl = config.APIS_URL + "/subcategories/" + category.value;
+    const apiUrl = config.APIS_URL + '/subcategories/' + category.value;
     fetch(apiUrl)
-      .then((res) => res.json())
-      .then((repos) => {
+      .then(res => res.json())
+      .then(repos => {
         setApiSubCategories(repos.data);
         setSubCategories(repos.data);
       });
   }, [category.value, apiSubCategories]);
 
   useEffect(() => {
-    setUpdatedRow(isEditing === "-1" ? {} : subCategories[isEditing]);
+    setUpdatedRow(isEditing === '-1' ? {} : subCategories[isEditing]);
   }, [isEditing]);
 
   useEffect(() => {}, [subCategories]);
@@ -156,7 +152,7 @@ function SubCategoryConfig() {
       categoryid: category.value,
       category: category.label,
       subCategory: event.target.value,
-      active: updatedRow.active,
+      active: updatedRow.active
     });
   };
 
@@ -166,7 +162,7 @@ function SubCategoryConfig() {
       categoryid: category.value,
       category: category.label,
       subCategory: updatedRow.subCategory,
-      active: event.target.checked,
+      active: event.target.checked
     });
   };
 
@@ -174,25 +170,23 @@ function SubCategoryConfig() {
     <div>
       <FormControl variant="outlined" className={classes.formControl}>
         <div className="SectionHeader">
-          SubCategories of Category{" "}
-          <InputLabel htmlFor="outlined-age-native-simple">
-           
-          </InputLabel>
+          SubCategories of Category{' '}
+          <InputLabel htmlFor="outlined-age-native-simple"></InputLabel>
           <Select
             native
             disabled={loading}
             label="categories"
             inputProps={{
-              name: "categories",
-              id: "categories",
+              name: 'categories',
+              id: 'categories'
             }}
             value={category.value}
-            onChange={(e) => {
+            onChange={e => {
               setCategory({
                 value: e.target.value,
                 label: categories.filter(
-                  (category) => category.value === e.target.value
-                )[0].label,
+                  category => category.value === e.target.value
+                )[0].label
               });
             }}
           >
@@ -208,7 +202,7 @@ function SubCategoryConfig() {
         <TableRow>
           <TableCell>Sl. No.</TableCell>
           <TableCell>SubCategory</TableCell>
-          <TableCell style={{ textAlign: "center" }}>Active</TableCell>
+          <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
         <TableRow>
@@ -218,12 +212,12 @@ function SubCategoryConfig() {
               label="SubCategory"
               id="outlined-size-small"
               value={newRow.subcategory}
-              onChange={(e) =>
+              onChange={e =>
                 setNewRow({
                   categoryid: category.value,
                   category: category.label,
                   subcategory: e.target.value,
-                  active: newRow.active,
+                  active: newRow.active
                 })
               }
               variant="outlined"
@@ -232,16 +226,16 @@ function SubCategoryConfig() {
           </TableCell>
           <TableCell>
             <Checkbox
-              onChange={(e) =>
+              onChange={e =>
                 setNewRow({
                   categoryid: category.value,
                   category: category.label,
                   subcategory: newRow.subcategory,
-                  active: e.target.checked,
+                  active: e.target.checked
                 })
               }
               checked={newRow.active}
-              inputProps={{ "aria-label": "primary checkbox" }}
+              inputProps={{ 'aria-label': 'primary checkbox' }}
             />
           </TableCell>
           <TableCell>
@@ -265,7 +259,7 @@ function SubCategoryConfig() {
                     label="Sub Categor"
                     id="outlined-size-small"
                     defaultValue={item.subCategory}
-                    onChange={(e) => handleSubCategoryChange(idx, e)}
+                    onChange={e => handleSubCategoryChange(idx, e)}
                     variant="outlined"
                     size="small"
                   />
@@ -277,20 +271,20 @@ function SubCategoryConfig() {
                 <Checkbox
                   defaultChecked={item.active}
                   disabled={isEditing === idx ? false : true}
-                  onChange={(e) => handleActiveChange(idx, e)}
-                  inputProps={{ "aria-label": "primary checkbox" }}
+                  onChange={e => handleActiveChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
               </TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={(e) =>
+                  onClick={e =>
                     isEditing === idx ? updateRow(item) : setIsEditing(idx)
                   }
                   className="SmallButton"
                 >
-                  {isEditing === idx ? "Update" : "Edit"}
+                  {isEditing === idx ? 'Update' : 'Edit'}
                 </Button>
               </TableCell>
             </TableRow>

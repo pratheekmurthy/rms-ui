@@ -7,10 +7,6 @@ import TimelineConnector from '@material-ui/lab/TimelineConnector';
 import TimelineContent from '@material-ui/lab/TimelineContent';
 import TimelineOppositeContent from '@material-ui/lab/TimelineOppositeContent';
 import TimelineDot from '@material-ui/lab/TimelineDot';
-import FastfoodIcon from '@material-ui/icons/Fastfood';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import HotelIcon from '@material-ui/icons/Hotel';
-import RepeatIcon from '@material-ui/icons/Repeat';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
@@ -35,9 +31,7 @@ export default function CustomizedTimeline() {
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator>
-          <TimelineDot>
-            {/* <FastfoodIcon /> */}
-          </TimelineDot>
+          <TimelineDot></TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
@@ -56,9 +50,7 @@ export default function CustomizedTimeline() {
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator>
-          <TimelineDot color="primary">
-            {/* <LaptopMacIcon /> */}
-          </TimelineDot>
+          <TimelineDot color="primary"></TimelineDot>
           <TimelineConnector />
         </TimelineSeparator>
         <TimelineContent>
@@ -77,9 +69,7 @@ export default function CustomizedTimeline() {
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator>
-          <TimelineDot color="primary" variant="outlined">
-            {/* <HotelIcon /> */}
-          </TimelineDot>
+          <TimelineDot color="primary" variant="outlined"></TimelineDot>
           <TimelineConnector className={classes.secondaryTail} />
         </TimelineSeparator>
         <TimelineContent>
@@ -98,9 +88,7 @@ export default function CustomizedTimeline() {
           </Typography>
         </TimelineOppositeContent>
         <TimelineSeparator>
-          <TimelineDot color="secondary">
-            {/* <RepeatIcon /> */}
-          </TimelineDot>
+          <TimelineDot color="secondary"></TimelineDot>
         </TimelineSeparator>
         <TimelineContent>
           <Paper elevation={3} className={classes.paper}>
@@ -111,7 +99,6 @@ export default function CustomizedTimeline() {
           </Paper>
         </TimelineContent>
       </TimelineItem>
-    
     </Timeline>
   );
 }

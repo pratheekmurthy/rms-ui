@@ -1,114 +1,110 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
-import config from "../config.json";
-//table import
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import InputLabel from "@material-ui/core/InputLabel";
+import React, { useState, useEffect } from 'react';
+import './App.css';
+import config from '../config.json';
 
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import TextField from "@material-ui/core/TextField";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import TextField from '@material-ui/core/TextField';
 function StatusConfig() {
-  const useStyles = makeStyles((theme) => ({
+  const useStyles = makeStyles(theme => ({
     root: {
-      "& .MuiTextField-root": {
+      '& .MuiTextField-root': {
         margin: theme.spacing(1),
-        width: "25ch",
-      },
-    },
+        width: '25ch'
+      }
+    }
   }));
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setChecked(event.target.checked);
   };
   const [newRow, setNewRow] = useState({
-    status: "",
+    status: '',
     slahold: false,
-    active: true,
+    active: true
   });
   const [apiStatuses, setApiStatuses] = useState([]);
   const [statuses, setStatuses] = useState([]);
   const [isEditing, setIsEditing] = useState(-1);
   const [updatedRow, setUpdatedRow] = useState({
-    status: "",
+    status: '',
     slahold: false,
-    active: false,
+    active: false
   });
 
   const updateRow = () => {
     const val = JSON.stringify(updatedRow.status);
-    // alert(val);
+
     if (val.length === 2) {
-      alert("Please enter value");
-    }
-    // alert(JSON.stringify(updatedRow));
-    else {
+      alert('Please enter value');
+    } else {
       setIsEditing(-1);
-      const apiUrl = config.APIS_URL + "/statuses";
+      const apiUrl = config.APIS_URL + '/statuses';
       var apiParam = {
-        method: "PUT",
-        headers: updatedRow,
+        method: 'PUT',
+        headers: updatedRow
       };
       fetch(apiUrl, apiParam)
-        .then((res) => res.json())
-        .then((repos) => {
+        .then(res => res.json())
+        .then(repos => {
           setApiStatuses([]);
         });
     }
   };
 
-  const addRow = (e) => {
+  const addRow = e => {
     const val = JSON.stringify(newRow.status);
-    // alert(val);
+
     if (val.length === 2) {
-      alert("Please enter value");
-    }
-    // alert(JSON.stringify(updatedRow));
-    else {
-      const apiUrl = config.APIS_URL + "/statuses";
+      alert('Please enter value');
+    } else {
+      const apiUrl = config.APIS_URL + '/statuses';
       var apiParam = {
-        method: "POST",
+        method: 'POST',
         headers: {
           status: newRow.status,
           slahold: newRow.slahold,
-          active: newRow.active,
-        },
+          active: newRow.active
+        }
       };
       fetch(apiUrl, apiParam)
-        .then((res) => res.json())
-        .then((repos) => {
+        .then(res => res.json())
+        .then(repos => {
           setApiStatuses([]);
-          setNewRow({ status: "", slahold: false, active: true });
+          setNewRow({ status: '', slahold: false, active: true });
         });
     }
   };
 
   useEffect(() => {
-    const apiUrl = config.APIS_URL + "/statuses";
+    const apiUrl = config.APIS_URL + '/statuses';
     fetch(apiUrl)
-      .then((res) => res.json())
-      .then((repos) => {
+      .then(res => res.json())
+      .then(repos => {
         setApiStatuses(repos.data);
         setStatuses(apiStatuses);
       });
   }, [apiStatuses]);
 
   useEffect(() => {
-    setUpdatedRow(isEditing === "-1" ? {} : statuses[isEditing]);
+    setUpdatedRow(isEditing === '-1' ? {} : statuses[isEditing]);
   }, [isEditing]);
 
   useEffect(() => {}, [statuses]);
@@ -118,7 +114,7 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: event.target.value,
       slahold: updatedRow.slahold,
-      active: updatedRow.active,
+      active: updatedRow.active
     });
   };
 
@@ -127,7 +123,7 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: updatedRow.status,
       slahold: event.target.checked,
-      active: updatedRow.active,
+      active: updatedRow.active
     });
   };
 
@@ -136,7 +132,7 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: updatedRow.status,
       slahold: updatedRow.slahold,
-      active: event.target.checked,
+      active: event.target.checked
     });
   };
 
@@ -147,8 +143,8 @@ function StatusConfig() {
         <TableRow>
           <TableCell>Sl. No.</TableCell>
           <TableCell>Status</TableCell>
-          <TableCell style={{ textAlign: "center" }}>SLA on Hold</TableCell>
-          <TableCell style={{ textAlign: "center" }}>Active</TableCell>
+          <TableCell style={{ textAlign: 'center' }}>SLA on Hold</TableCell>
+          <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
         <TableRow>
@@ -158,11 +154,11 @@ function StatusConfig() {
               label="Status"
               id="outlined-size-small"
               value={newRow.status}
-              onChange={(e) =>
+              onChange={e =>
                 setNewRow({
                   status: e.target.value,
                   slahold: newRow.slahold,
-                  active: newRow.active,
+                  active: newRow.active
                 })
               }
               variant="outlined"
@@ -172,27 +168,27 @@ function StatusConfig() {
           <TableCell>
             <Checkbox
               checked={newRow.slahold}
-              onChange={(e) =>
+              onChange={e =>
                 setNewRow({
                   status: newRow.status,
                   slahold: e.target.checked,
-                  active: newRow.active,
+                  active: newRow.active
                 })
               }
-              inputProps={{ "aria-label": "primary checkbox" }}
+              inputProps={{ 'aria-label': 'primary checkbox' }}
             />
           </TableCell>
           <TableCell>
             <Checkbox
               checked={newRow.active}
-              onChange={(e) =>
+              onChange={e =>
                 setNewRow({
                   status: newRow.status,
                   slahold: newRow.slahold,
-                  active: e.target.checked,
+                  active: e.target.checked
                 })
               }
-              inputProps={{ "aria-label": "primary checkbox" }}
+              inputProps={{ 'aria-label': 'primary checkbox' }}
             />
           </TableCell>
           <TableCell>
@@ -216,7 +212,7 @@ function StatusConfig() {
                     label="Status"
                     id="outlined-size-small"
                     defaultValue={item.status}
-                    onChange={(e) => handleStatusChange(idx, e)}
+                    onChange={e => handleStatusChange(idx, e)}
                     variant="outlined"
                     size="small"
                   />
@@ -224,32 +220,32 @@ function StatusConfig() {
                   item.status
                 )}
               </TableCell>
-              <TableCell style={{ textAlign: "center" }}>
+              <TableCell style={{ textAlign: 'center' }}>
                 <Checkbox
                   defaultChecked={item.slahold}
                   disabled={isEditing === idx ? false : true}
-                  onChange={(e) => handleSlaHoldChange(idx, e)}
-                  inputProps={{ "aria-label": "primary checkbox" }}
+                  onChange={e => handleSlaHoldChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
               </TableCell>
-              <TableCell style={{ textAlign: "center" }}>
+              <TableCell style={{ textAlign: 'center' }}>
                 <Checkbox
                   defaultChecked={item.active}
                   disabled={isEditing === idx ? false : true}
-                  onChange={(e) => handleActiveChange(idx, e)}
-                  inputProps={{ "aria-label": "primary checkbox" }}
+                  onChange={e => handleActiveChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
               </TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={(e) =>
+                  onClick={e =>
                     isEditing === idx ? updateRow(item) : setIsEditing(idx)
                   }
                   className="SmallButton"
                 >
-                  {isEditing === idx ? "Update" : "Edit"}
+                  {isEditing === idx ? 'Update' : 'Edit'}
                 </Button>
               </TableCell>
             </TableRow>

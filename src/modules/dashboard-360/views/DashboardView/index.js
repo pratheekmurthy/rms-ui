@@ -51,7 +51,6 @@ import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
 const useStyles = makeStyles(theme => {
-  console.log(theme);
   return {
     root: {
       backgroundColor: theme.palette.background.dark,
@@ -62,9 +61,7 @@ const useStyles = makeStyles(theme => {
     panelBody: {
       padding: 0
     },
-    // formControl: {
-    //   minWidth: 350
-    // },
+
     dialogActions: {
       padding: '0 1.5rem 1rem'
     },
@@ -83,7 +80,7 @@ const useStyles = makeStyles(theme => {
       fontSize: '1.2rem',
       backgroundColor: theme.palette.secondary.light,
       padding: '8px 10px',
-      // paddingBottom: 20,
+
       borderBottomLeftRadius: 8,
       borderBottomRightRadius: 8
     },
@@ -103,7 +100,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [rootData, setRootData] = useState(null);
 
   const [expanded, setExpanded] = React.useState('panel1');
-//chaitra
+
   const [showCreateTicket, setShowCreateTicket] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
@@ -121,7 +118,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     ticketTypeId: '',
     ticketType: ''
   });
-  // const [open, setOpen] = React.useState(true);
+
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({
     value: '',
@@ -169,22 +166,16 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     executiveMobile: ''
   });
 
-  // alert("all" + distributorId);
-
   const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
   const [file, setFile] = useState('');
 
-  // const handleChange = panel => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
-  // };
- const handleClose = () => {
-   setOpen(false);
-   
- };
-const handleOpen = () => {
-  setOpen(true);
-};
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
   useEffect(() => {
     async function get() {
       try {
@@ -229,7 +220,7 @@ const handleOpen = () => {
 
           </Box>
         </Box> */}
-          {/* <br /> */}
+
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
               <Grid container direction="column" spacing={2}>
@@ -238,7 +229,6 @@ const handleOpen = () => {
                     color="primary"
                     variant="contained"
                     onClick={() => setShowCreateTicket(true)}
-                    // onClick={() => handleOpen}
                   >
                     Create Ticket
                   </Button>
@@ -276,7 +266,7 @@ const handleOpen = () => {
                 <DealerCard
                   dealerDetails={{
                     ...rootData[0].data[0],
-                    // ...rootData[1].data[0],
+
                     lastOrderReference: rootData[2].data
                       ? rootData[2].data[0].OrderNumber
                       : ''
@@ -328,75 +318,6 @@ const handleOpen = () => {
             </Grid>
           </Grid>
         </Container>
-        {/* {!!showCreateTicket && (
-      <Dialog open onClose={() => setShowCreateTicket(false)}>
-           <DialogTitle id="alert-dialog-title">Create a new Ticket</DialogTitle>
-
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Select Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value=""
-                  onChange={handleChange}
-                  label="Select Category"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>First</MenuItem>
-                  <MenuItem value={20}>Second</MenuItem>
-                  <MenuItem value={30}>Third</MenuItem>
-                </Select>
-              </FormControl>
-              <br />
-              <br />
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Select Sub Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value=""
-                  onChange={handleChange}
-                  label="Select Sub Category"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>First</MenuItem>
-                  <MenuItem value={20}>Second</MenuItem>
-                  <MenuItem value={30}>Third</MenuItem>
-                </Select>
-              </FormControl>
-              <br />
-              <br />
-              <TextField
-                className={classes.formControl}
-                id="outlined-multiline-static"
-                label="Additional Comments"
-                multiline
-                rows={4}
-                variant="outlined"
-              />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions className={classes.dialogActions}>
-            <Button
-              onClick={() => setShowCreateTicket(true)}
-              color="primary"
-              variant="contained"
-            >
-              Create Ticket
-            </Button>
-            <div style={{ flex: '1 0 0' }} />
-          </DialogActions>
-        </Dialog> */}
       </Page>
       {showCreateTicket ? (
         <Dialog
@@ -409,7 +330,6 @@ const handleOpen = () => {
           <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
           <DialogContent dividers>
             <CreateTicket
-              //new code chaitra
               ticketNumber={ticketNumber}
               setTicketNumber={tks => {
                 setTicketNumber(tks);
@@ -448,112 +368,90 @@ const handleOpen = () => {
               }}
               remarks={remarks}
               setRemarks={rks => {
-                // alert(JSON.stringify(cmts))
                 setRemarks(rks);
               }}
               ticketTypes={ticketTypes}
               setTicketTypes={tkstyps => {
-                // alert(JSON.stringify(cmts))
                 setTicketTypes(tkstyps);
               }}
               ticketType={ticketType}
               setTicketType={tkstyp => {
-                // alert(JSON.stringify(cmts))
                 setTicketType(tkstyp);
               }}
               medium={medium}
               setMedium={mdm => {
-                // alert(JSON.stringify(cmts))
                 setMedium(mdm);
               }}
               media={media}
               setMedia={media => {
-                // alert(JSON.stringify(cmts))
                 setMedia(media);
               }}
               categories={categories}
               setCategories={catgs => {
-                // alert(JSON.stringify(cmts))
                 setCategories(catgs);
               }}
               category={category}
               setCategory={cat => {
-                // alert(JSON.stringify(cmts))
                 setCategory(cat);
               }}
               subCategories={subCategories}
               setSubCategories={subcats => {
-                // alert(JSON.stringify(cmts))
                 setSubCategories(subcats);
               }}
               subCategory={subCategory}
               setSubCategory={subcat => {
-                // alert(JSON.stringify(cmts))
                 setSubCategory(subcat);
               }}
               subCategoryItems={subCategoryItems}
               setSubCategoryItems={subcatitems => {
-                // alert(JSON.stringify(cmts))
                 setSubCategoryItems(subcatitems);
               }}
               subCategoryItem={subCategoryItem}
               setSubCategoryItem={subcatitem => {
-                // alert(JSON.stringify(cmts))
                 setSubCategoryItem(subcatitem);
               }}
               departments={departments}
               setDepartments={deps => {
-                // alert(JSON.stringify(cmts))
                 setDepartments(deps);
               }}
               department={department}
               setDepartment={dept => {
-                // alert(JSON.stringify(cmts))
                 setDepartment(dept);
               }}
               teams={teams}
               setTeams={tms => {
-                // alert(JSON.stringify(cmts))
                 setTeams(tms);
               }}
               team={team}
               setTeam={tm => {
-                // alert(JSON.stringify(cmts))
                 setTeam(tm);
               }}
               priorities={priorities}
               setPriorities={prts => {
-                // alert(JSON.stringify(cmts))
                 setPriorities(prts);
               }}
               priority={priority}
               setPriority={prt => {
-                // alert(JSON.stringify(cmts))
                 setPriority(prt);
               }}
               statuses={statuses}
               setStatuses={stses => {
-                // alert(JSON.stringify(cmts))
                 setStatuses(stses);
               }}
               status={status}
               setStatus={sts => {
-                // alert(JSON.stringify(cmts))
                 setStatus(sts);
               }}
               executives={executives}
               setExecutives={exts => {
-                // alert(JSON.stringify(cmts))
                 setExecutives(exts);
               }}
               executive={executive}
               setExecutive={ext => {
-                // alert(JSON.stringify(cmts))
                 setExecutive(ext);
               }}
               createdTime={createdTime}
               setCreatedTime={cretime => {
-                // alert(JSON.stringify(cmts))
                 setCreatedTime(cretime);
               }}
             />
@@ -569,12 +467,10 @@ const handleOpen = () => {
               Create
             </Button>
             <Button
-              // onClose={() => setShowCreateTicket(true)}
               color="primary"
               size="small"
               variant="outlined"
               autoFocus
-            // chaitra
               onClick={() => setShowCreateTicket(false)}
             >
               Cancel
@@ -582,16 +478,6 @@ const handleOpen = () => {
           </DialogActions>
         </Dialog>
       ) : (
-        //   <Modal
-        //     open
-        //     onClose={() => setShowCreateTicket(false)}
-        //     className={classes.modal}
-        //     style={{ overflow: 'auto' }}
-        //     aria-labelledby="simple-modal-title"
-        //     aria-describedby="simple-modal-description"
-        //   >
-        //     <CreateTicket />
-        //   </Modal>
         ''
       )}
     </div>

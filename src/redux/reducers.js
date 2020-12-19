@@ -31,7 +31,6 @@ export const accountType = (state = accountTypeInitialState, action) => {
 export const activatedRoute = (state = '', action) => {
   switch (action.type) {
     case SET_ACTIVATED_ROUTE: {
-      console.log('activating', action);
       return action.payload;
     }
     default:

@@ -1,50 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
-import config from '../../views/config.json';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import {
-  Paper,
-  Grid,
-  List,
-  ListItem,
-  Divider,
-  ListItemText,
-  Typography,
-  ListItemIcon,
-  Box,
-  Button,
-  Avatar,
-  TextField,
-  Modal,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  DialogContentText
-} from '@material-ui/core';
-import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
-import { purple, orange, green } from '@material-ui/core/colors';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import LinkIcon from '@material-ui/icons/Link';
-import AddIcon from '@material-ui/icons/Add';
-import CreateTicket from '../create-ticket';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-//config file import
+
+import { Grid, Typography, Box } from '@material-ui/core';
 import MediaConfig from './mediaconfig';
 import TicketType from './tickettypeconfig';
 import CategoryConfig from './categoryconfig';
@@ -97,11 +57,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     height: 'auto'
   },
- 
+
   paper: {
     padding: theme.spacing(1)
   },
-  
+
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     color: 'blue',
@@ -116,19 +76,11 @@ export default function TicketDashboard() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  
+
   return (
     <div className={classes.root}>
       <Grid container spacing={2}>
-        {/**
-         * This is the ticket List block
-         */}
         <Grid item sm={3}>
-          {/* <Paper
-            // className={classes.paper}
-            // style={{ maxHeight: 720, overflow: 'auto' }}
-          > */}
-
           <Tabs
             orientation="vertical"
             variant="scrollable"
@@ -180,12 +132,7 @@ export default function TicketDashboard() {
           <TabPanel value={value} index={9}>
             <ExecutiveConfig />
           </TabPanel>
-          {/* </Paper> */}
         </Grid>
-
-        {/**
-         * This is the ticket Detail block
-         */}
       </Grid>
     </div>
   );
