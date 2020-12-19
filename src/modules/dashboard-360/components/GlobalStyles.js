@@ -78,12 +78,12 @@ const useStyles = makeStyles(() =>
 );
 
 const GlobalStyles = ({ activateRoute, location, activatedRoute }) => {
-  console.log('activated', activatedRoute);
+ 
   const loc = useRef(null);
   useStyles();
   useEffect(() => {
     if (loc.current !== location) {
-      console.log(location);
+      
       activateRoute(location.pathname);
       loc.current = location;
     }
