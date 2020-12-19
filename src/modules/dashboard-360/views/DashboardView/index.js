@@ -35,6 +35,7 @@ import {
   orderColumns
 } from 'src/modules/dashboard-360/utils/columns-config';
 
+import EditIcon from '@material-ui/icons/Edit';
 import ErrorAlert from 'src/components/ErrorAlert';
 import { connect } from 'react-redux';
 import SearchBar from 'material-ui-search-bar';
@@ -50,7 +51,7 @@ import { setDistributorOrders } from '../../redux/action';
 import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   console.log(theme);
   return {
     root: {
@@ -92,6 +93,12 @@ const useStyles = makeStyles(theme => {
     },
     callInbound: {
       backgroundColor: theme.palette.success.light
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      width: '100%',
+      padding: theme.spacing(1, 1)
     }
   };
 });
@@ -115,7 +122,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
         setRootData(
-          response.map(res =>
+          response.map((res) =>
             res.status === 'fulfilled' ? res.value.data : {}
           )
         );
@@ -183,7 +190,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       indicatorColor="primary"
                       textColor="primary"
                       tabNames={['Tickets', 'Incentives', 'E-Wallet']}
-                      setCurrent={val => setTab(val)}
+                      setCurrent={(val) => setTab(val)}
                     />
                     <CustomTabPanel value={tab} index={0}>
                       {/* <Box padding="1rem"> */}
@@ -330,13 +337,24 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            <Box component="span" className={classes.drawerHeader}>
+              <EditIcon />
+              <Typography
+                variant="h4"
+                color="textPrimary"
+                style={{ marginLeft: 10 }}
+              >
+                Create Ticket
+              </Typography>
+            </Box>
+          </DialogTitle>
           <DialogContent dividers>
             <CreateTicket />
           </DialogContent>
           <DialogActions>
             <Button
-              onClose={() => setShowCreateTicket(false)}
+              onClick={() => setShowCreateTicket(false)}
               color="primary"
               variant="contained"
               size="small"
@@ -344,7 +362,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               Create
             </Button>
             <Button
-              onClose={() => setShowCreateTicket(false)}
+              onClick={() => setShowCreateTicket(false)}
               color="primary"
               size="small"
               variant="outlined"
@@ -377,15 +395,16 @@ Dashboard.propTypes = {
   setDistributorOrdersAction: PropTypes.func
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     distributorOrders: state.distributorOrders
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setDistributorOrdersAction: orders => dispatch(setDistributorOrders(orders))
+    setDistributorOrdersAction: (orders) =>
+      dispatch(setDistributorOrders(orders))
   };
 };
 

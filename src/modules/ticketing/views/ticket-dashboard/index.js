@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
   Paper,
   Grid,
@@ -13,12 +13,12 @@ import {
   Button,
   Avatar,
   TextField,
-  Modal,
+  Drawer,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  DialogContentText
+  Tooltip
 } from '@material-ui/core';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
 import { purple, orange, green } from '@material-ui/core/colors';
@@ -27,18 +27,15 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
+import FilterTicket from '../filter-ticket';
+import EditIcon from '@material-ui/icons/Edit';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
-function getModalStyle() {
-  const top = 50;
-  const left = 50;
+import IconButton from '@material-ui/core/IconButton';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
-  };
-}
-
+const drawerWidth = 350;
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -113,17 +110,45 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     fontWeight: 600
   },
-  drawer: {
-    width: '100%',
-    flexShrink: 0
-  },
-  drawerPaper: {
-    width: '25%'
-  },
   modal: {
     alignItems: 'center',
     width: '100%',
     height: '100%'
+  },
+  hide: {
+    display: 'none'
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: drawerWidth
+  },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    padding: theme.spacing(1, 1)
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    marginLeft: -drawerWidth
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginLeft: 0
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1
   }
 }));
 
@@ -192,9 +217,88 @@ export default function TicketDashboard() {
     }
   ];
 
+  const ticketTypes = [
+    {
+      value: 'complaint',
+      label: 'Complaint'
+    },
+    {
+      value: 'request',
+      label: 'Request'
+    },
+    {
+      value: 'info',
+      label: 'Information'
+    }
+  ];
+  const [type, setTicketType] = React.useState('complaint');
+  const handleTicketTypeChange = (event) => {
+    setTicketType(event.target.value);
+  };
+
+  const priorityList = [
+    {
+      value: 'low',
+      label: 'Low'
+    },
+    {
+      value: 'medium',
+      label: 'Medium'
+    },
+    {
+      value: 'high',
+      label: 'High'
+    }
+  ];
+  const [priority, setPriority] = React.useState('medium');
+  const handlePriorityChange = (event) => {
+    setPriority(event.target.value);
+  };
+
+  const categoryList = [
+    {
+      value: 'delay',
+      label: 'Delayed dispatch'
+    },
+    {
+      value: 'dispute',
+      label: 'Dispute'
+    },
+    {
+      value: 'replacement',
+      label: 'Replacement'
+    }
+  ];
+  const [category, setCategory] = React.useState('delay');
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+
+  const statusList = [
+    {
+      value: 'open',
+      label: 'Open'
+    },
+    {
+      value: 'wip',
+      label: 'Work in Progress'
+    },
+    {
+      value: 'resolved',
+      label: 'Resolved'
+    },
+    {
+      value: 'close',
+      label: 'Closed'
+    }
+  ];
+  const [status, setStatus] = React.useState('wip');
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
+
   const [open, setOpen] = React.useState(false);
-  const [fullWidth, setFullWidth] = React.useState(true);
-  const [maxWidth, setMaxWidth] = React.useState('sm');
+  const [isEditable, makeEditable] = React.useState(false);
 
   function getTicketList() {
     return (
@@ -233,18 +337,99 @@ export default function TicketDashboard() {
     setOpen(true);
   };
 
+  const configureEditable = () => {
+    if (isEditable) {
+      makeEditable(false);
+    } else {
+      makeEditable(true);
+    }
+  };
+  const makeEditableFalse = () => {
+    makeEditable(false);
+  };
+
+  const theme = useTheme();
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpenDrawer(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpenDrawer(false);
+  };
+
   return (
     <div className={classes.root}>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        style={{marginBottom:15}}
-        startIcon={<AddIcon />}
-        onClick={handleOpen}
+      <Box
+        component="div"
+        display="flex"
+        flexDirection="row"
+        className={classes.appBar}
       >
-        Create Ticket
-      </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          style={{ marginBottom: 15 }}
+          startIcon={<AddIcon />}
+          onClick={handleOpen}
+        >
+          Create Ticket
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          style={{ marginBottom: 15, marginLeft: 10 }}
+          startIcon={<FilterListIcon />}
+          onClick={handleDrawerOpen}
+        >
+          Filter
+        </Button>
+      </Box>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={openDrawer}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <FilterListIcon />
+          <Typography
+            variant="h4"
+            color="textPrimary"
+            style={{ marginLeft: 10 }}
+          >
+            Filter
+          </Typography>
+          <div style={{ marginLeft: '64%' }}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </div>
+        </div>
+        <Divider />
+        <FilterTicket />
+        <Divider />
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          width="50"
+          style={{ margin: 12 }}
+          onClick={handleDrawerClose}
+        >
+          Save
+        </Button>
+      </Drawer>
       <Dialog
         open={open}
         fullWidth
@@ -252,7 +437,18 @@ export default function TicketDashboard() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{'Create Ticket'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <Box component="span" className={classes.drawerHeader}>
+            <EditIcon />
+            <Typography
+              variant="h4"
+              color="textPrimary"
+              style={{ marginLeft: 10 }}
+            >
+              Create Ticket
+            </Typography>
+          </Box>
+        </DialogTitle>
         <DialogContent dividers>
           <CreateTicket />
         </DialogContent>
@@ -276,6 +472,7 @@ export default function TicketDashboard() {
           </Button>
         </DialogActions>
       </Dialog>
+
       <Grid container spacing={1}>
         {/**
          * This is the ticket List block
@@ -285,9 +482,9 @@ export default function TicketDashboard() {
             className={classes.paper}
             style={{ maxHeight: 720, overflow: 'auto' }}
           >
-            <box component="div" overflow="auto">
+            <Box component="div" overflow="auto">
               {getTicketList()}
-            </box>
+            </Box>
           </Paper>
         </Grid>
 
@@ -319,8 +516,14 @@ export default function TicketDashboard() {
                     Cloud Deployment Framework.
                   </Typography>
                 </Box>
+                <Tooltip title="Edit">
+                  <EditIcon
+                    onClick={configureEditable}
+                    style={{ marginTop: 25, cursor: 'pointer' }}
+                  />
+                </Tooltip>
               </Box>
-              <div display="flex" flexDirection="row">
+              <Box component="div" display="flex" flexDirection="row">
                 <Button
                   variant="contained"
                   color="primary"
@@ -339,7 +542,7 @@ export default function TicketDashboard() {
                 >
                   Link issue
                 </Button>
-              </div>
+              </Box>
               <div className={classes.boxDiv}>
                 <Typography
                   variant="body1"
@@ -352,23 +555,39 @@ export default function TicketDashboard() {
                 <div style={{ paddingRight: 15, paddingLeft: 15 }}>
                   <Grid container spacing={0}>
                     <Grid container item xs={12} spacing={1}>
-                      <React.Fragment>
-                        <Grid item xs={6}>
-                          <Box
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
+                      <Grid item xs={6}>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          alignItems="center"
+                        >
+                          <Typography
+                            variant="body1"
+                            style={{
+                              fontWeight: '500',
+                              float: 'left',
+                              width: '35%'
+                            }}
                           >
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: '500',
-                                float: 'left',
-                                width: '35%'
+                            Type :
+                          </Typography>
+                          {isEditable ? (
+                            <TextField
+                              id="type"
+                              select
+                              value={type}
+                              onChange={handleTicketTypeChange}
+                              SelectProps={{
+                                native: true
                               }}
                             >
-                              Type :
-                            </Typography>
+                              {ticketTypes.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </TextField>
+                          ) : (
                             <Box
                               display="flex"
                               flexDirection="row"
@@ -380,27 +599,45 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Epic
+                                Complaint
                               </Typography>
                             </Box>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
+                          )}
+                        </Box>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          alignItems="center"
+                        >
+                          <Typography
+                            variant="body1"
+                            style={{
+                              fontWeight: '500',
+                              float: 'left',
+                              width: '35%'
+                            }}
                           >
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: '500',
-                                float: 'left',
-                                width: '35%'
+                            Priority :
+                          </Typography>
+                          {isEditable ? (
+                            <TextField
+                              id="priority"
+                              select
+                              value={priority}
+                              onChange={handlePriorityChange}
+                              SelectProps={{
+                                native: true
                               }}
                             >
-                              Priority :
-                            </Typography>
+                              {priorityList.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </TextField>
+                          ) : (
                             <Box
                               display="flex"
                               flexDirection="row"
@@ -415,28 +652,44 @@ export default function TicketDashboard() {
                                 Medium
                               </Typography>
                             </Box>
-                          </Box>
-                        </Grid>
-                      </React.Fragment>
+                          )}
+                        </Box>
+                      </Grid>
                     </Grid>
                     <Grid container item xs={12} spacing={1}>
-                      <React.Fragment>
-                        <Grid item xs={6}>
-                          <Box
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
+                      <Grid item xs={6}>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          alignItems="center"
+                        >
+                          <Typography
+                            variant="body1"
+                            style={{
+                              fontWeight: '500',
+                              float: 'left',
+                              width: '35%'
+                            }}
                           >
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: '500',
-                                float: 'left',
-                                width: '35%'
+                            Category :
+                          </Typography>
+                          {isEditable ? (
+                            <TextField
+                              id="category"
+                              select
+                              value={category}
+                              onChange={handleCategoryChange}
+                              SelectProps={{
+                                native: true
                               }}
                             >
-                              Category :
-                            </Typography>
+                              {categoryList.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </TextField>
+                          ) : (
                             <Box
                               display="flex"
                               flexDirection="row"
@@ -447,27 +700,45 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Survey
+                                Delayed dispatch
                               </Typography>
                             </Box>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
+                          )}
+                        </Box>
+                      </Grid>
+                      <Grid item xs={6}>
+                        <Box
+                          display="flex"
+                          flexDirection="row"
+                          alignItems="center"
+                        >
+                          <Typography
+                            variant="body1"
+                            style={{
+                              fontWeight: '500',
+                              float: 'left',
+                              width: '35%'
+                            }}
                           >
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: '500',
-                                float: 'left',
-                                width: '35%'
+                            Status :
+                          </Typography>
+                          {isEditable ? (
+                            <TextField
+                              id="status"
+                              select
+                              value={status}
+                              onChange={handleStatusChange}
+                              SelectProps={{
+                                native: true
                               }}
                             >
-                              Status :
-                            </Typography>
+                              {statusList.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </TextField>
+                          ) : (
                             <Box
                               display="flex"
                               flexDirection="row"
@@ -476,15 +747,14 @@ export default function TicketDashboard() {
                               <Typography
                                 component="span"
                                 variant="body1"
-                                // style={{ color: green[500] }}
                                 className={classes.ticketMargin}
                               >
-                                Active
+                                Work in Progress
                               </Typography>
                             </Box>
-                          </Box>
-                        </Grid>
-                      </React.Fragment>
+                          )}
+                        </Box>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </div>
@@ -498,14 +768,30 @@ export default function TicketDashboard() {
                 >
                   Description
                 </Typography>
-                <TextField
-                  id="outlined-textarea"
-                  placeholder="Add a description..."
-                  rows={10}
-                  fullWidth
-                  multiline
-                  variant="outlined"
-                />
+                {isEditable ? (
+                  <TextField
+                    id="outlined-textarea"
+                    placeholder="Add a description..."
+                    defaultValue="Distributor has not received the incentive for the week 12."
+                    rows={5}
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                  />
+                ) : (
+                  <TextField
+                    id="outlined-textarea"
+                    placeholder="Add a description..."
+                    defaultValue="The distributor has not received the incentive for week 12."
+                    rows={5}
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                )}
               </div>
               <div component="div" className={classes.boxDiv}>
                 <Typography
@@ -515,16 +801,47 @@ export default function TicketDashboard() {
                 >
                   Attachments
                 </Typography>
-                <TextField
-                  id="outlined-textarea"
-                  placeholder="Drop files to attach, or browse"
-                  rows={5}
-                  rowsMax={20}
-                  multiline
-                  fullWidth
-                  variant="outlined"
-                />
+                {isEditable ? (
+                  <TextField
+                    id="outlined-textarea"
+                    defaultValue="Drop files to attach, or browse"
+                    rows={5}
+                    rowsMax={20}
+                    multiline
+                    fullWidth
+                    variant="outlined"
+                  />
+                ) : (
+                  <TextField
+                    id="outlined-textarea"
+                    defaultValue="Drop files to attach, or browse"
+                    rows={5}
+                    rowsMax={20}
+                    multiline
+                    fullWidth
+                    variant="outlined"
+                    InputProps={{
+                      readOnly: true
+                    }}
+                  />
+                )}
               </div>
+              {(() => {
+                if (isEditable) {
+                  return (
+                    <div className={classes.boxDiv}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={makeEditableFalse}
+                      >
+                        Save
+                      </Button>
+                    </div>
+                  );
+                }
+              })()}
             </div>
           </Paper>
         </Grid>
@@ -646,7 +963,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    ABCD
+                    Whatsapp
                   </Typography>
                 </Box>
               </Box>
