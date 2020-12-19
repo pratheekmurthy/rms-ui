@@ -1,7 +1,7 @@
 import { colors, createStyles, makeStyles } from '@material-ui/core';
 import { useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
-import { setActivatedRoute } from 'src/redux/action';
+import { setActivatedRoute, setUrlMatchFound } from 'src/redux/action';
 import { useLocation, withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles(() =>
@@ -77,13 +77,19 @@ const useStyles = makeStyles(() =>
   })
 );
 
-const GlobalStyles = ({ activateRoute, location, activatedRoute }) => {
+const GlobalStyles = ({
+  activateRoute,
+  location,
+  activatedRoute,
+  resetMatchFound
+}) => {
   console.log('activated', activatedRoute);
   const loc = useRef(null);
   useStyles();
   useEffect(() => {
     if (loc.current !== location) {
       console.log(location);
+      resetMatchFound();
       activateRoute(location.pathname);
       loc.current = location;
     }
@@ -95,7 +101,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  activateRoute: route => dispatch(setActivatedRoute(route))
+  activateRoute: route => dispatch(setActivatedRoute(route)),
+  resetMatchFound: () => dispatch(setUrlMatchFound(false))
 });
 export default withRouter(
   connect(mapStateToProps, mapDispatchToProps)(GlobalStyles)

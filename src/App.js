@@ -5,7 +5,7 @@ import { makeStyles, ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/modules/dashboard-360/components/GlobalStyles';
 import 'src/modules/dashboard-360/mixins/chartjs';
 import theme from 'src/modules/dashboard-360/theme';
-import { Provider } from 'react-redux';
+import { connect, Provider } from 'react-redux';
 import rootStore from './redux/store';
 import RouteSwitch from './components/RouteSwitch';
 import routes from './routes';
@@ -48,19 +48,7 @@ const App = () => {
           <React.Suspense fallback={<MainLoader />}>
             <div className={classes.root}>
               <GlobalStyles />
-              <TopBar />
-              <NavBar openMobile={false} onMobileClose={() => null} />
-              <div className={classes.wrapper}>
-                <div className={classes.contentContainer}>
-                  <div className={classes.content}>
-                    <RouteSwitch
-                      routes={routes}
-                      isRoot
-                      redirectPath="/dash360"
-                    />
-                  </div>
-                </div>
-              </div>
+              <Container classes={classes} />
             </div>
           </React.Suspense>
         </ThemeProvider>
@@ -68,5 +56,37 @@ const App = () => {
     </Provider>
   );
 };
+
+const mapStateToProps = state => ({
+  isLoggedIn: state.logInState
+});
+
+function ContainerComp({ isLoggedIn, classes }) {
+  const filteredRoutes = routes.filter(
+    route => route.requiresAuth === isLoggedIn
+  );
+  console.log(filteredRoutes, 'route', routes);
+  return isLoggedIn ? (
+    <>
+      <TopBar />
+      <NavBar openMobile={false} onMobileClose={() => null} />
+      <div className={classes.wrapper}>
+        <div className={classes.contentContainer}>
+          <div className={classes.content}>
+            <RouteSwitch
+              routes={filteredRoutes}
+              isRoot
+              redirectPath="/dash360"
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  ) : (
+    <RouteSwitch routes={filteredRoutes} isRoot redirectPath="/auth/login" />
+  );
+}
+
+const Container = connect(mapStateToProps)(ContainerComp);
 
 export default App;

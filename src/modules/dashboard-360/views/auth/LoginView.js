@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
 
 const LoginView = () => {
   const classes = useStyles();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   return (
     <Page className={classes.root} title="Login">
@@ -53,7 +53,7 @@ const LoginView = () => {
                 .required('Password is required')
             })}
             onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
+              // navigate('/app/dashboard', { replace: true });
             }}
           >
             {({
