@@ -55,7 +55,7 @@ export default function CreateSurvey(props) {
     chooseQuestion: '',
     description: ''
   });
-
+  const isPost = !match.params.surveyId;
   const [questions, setQuestions] = useState([]);
   const [surveyDetails, setSurveyDetails] = useState({
     title: '',
@@ -78,7 +78,7 @@ export default function CreateSurvey(props) {
 
   useEffect(() => {
     console.log(props);
-    if (match.params.surveyId) {
+    if (!isPost) {
       (async function getSurveyDetails() {
         try {
           showSpinner(true);
@@ -152,7 +152,6 @@ export default function CreateSurvey(props) {
   }
 
   async function saveSurvey() {
-    const isPost = !match.params.surveyId;
     console.log(isPost, match);
     try {
       const res = await Axios[isPost ? 'post' : 'patch'](
@@ -175,7 +174,7 @@ export default function CreateSurvey(props) {
     }
   }
   return (
-    <Page title="Create Survey">
+    <Page title={isPost ? 'Create Survey' : 'Edit Survey'}>
       <Box margin="1rem">
         <Grid container spacing={4}>
           <Grid xs={12} lg={5} item>
