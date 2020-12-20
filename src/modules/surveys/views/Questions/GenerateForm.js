@@ -42,8 +42,6 @@ const GenerateForm = ({ inputs }) => {
     setRatingValue(data);
   };
 
-  // console.log("ratingValue , ", ratingValue);
-
   return (
     <>
       <div>
