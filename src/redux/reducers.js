@@ -6,7 +6,7 @@ import {
   SET_URL_MATCH_FOUND
 } from './constants';
 
-const logInInitialState = false;
+const logInInitialState = true;
 const accountTypeInitialState = '';
 
 export const logInState = (state = logInInitialState, action) => {
@@ -31,7 +31,6 @@ export const accountType = (state = accountTypeInitialState, action) => {
 export const activatedRoute = (state = '', action) => {
   switch (action.type) {
     case SET_ACTIVATED_ROUTE: {
-      console.log('activating', action);
       return action.payload;
     }
     default:

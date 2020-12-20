@@ -6,26 +6,54 @@ import {
   CardHeader,
   Divider,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
+  ListItemSecondaryAction,
   ListItemText,
+  makeStyles,
+  Tooltip,
   Typography
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Field, Form, Formik } from 'formik';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Page from 'src/components/Page';
 import * as yup from 'yup';
 import { TextField } from 'formik-material-ui';
 import GenerateForm from '../Questions/GenerateForm';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AwesomeDebouncePromise from 'awesome-debounce-promise';
+import Axios from 'axios';
+import SaveIcon from '@material-ui/icons/Save';
+import Spinner from 'src/components/Spinner';
+import CommonAlert from 'src/components/CommonAlert';
 
-export default function CreateSurvey() {
-  const [chooseQuestion] = useState({
-    surveyTitle: '',
+const asyncFunction = async text =>
+  Axios.get('/survey/question/search/' + text)
+    .then(val => val.data)
+    .catch(err => console.log(err));
+
+const asyncFunctionDebounced = AwesomeDebouncePromise(asyncFunction, 200);
+
+const useStyle = makeStyles(theme => ({
+  container: {
+    width: 400,
+    position: 'relative'
+  },
+  listItem: {
+    paddingRight: theme.spacing(5)
+  }
+}));
+
+export default function CreateSurvey(props) {
+  const classes = useStyle();
+  const { match, history } = props;
+  const [initFormVal, setInitFormVal] = useState({
+    title: '',
     chooseQuestion: '',
-    surveyDescription: ''
+    description: ''
   });
 
   const [questions, setQuestions] = useState([]);
@@ -33,35 +61,118 @@ export default function CreateSurvey() {
     title: '',
     description: ''
   });
+
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
 
   const formRef = useRef({});
 
+  const [suggestions, setSuggestions] = useState([]);
+
+  const [spinner, showSpinner] = useState(false);
+  const [error, showError] = useState(false);
+
+  const handleChange = async text => {
+    const result = await asyncFunctionDebounced(text.target.value);
+    setSuggestions(result || []);
+  };
+
+  useEffect(() => {
+    console.log(props);
+    if (match.params.surveyId) {
+      (async function getSurveyDetails() {
+        try {
+          showSpinner(true);
+          const res = await Axios.get('/survey/' + match.params.surveyId);
+          const obj = res.data;
+          setInitFormVal({ ...obj, chooseQuestion: '' });
+          setQuestions(obj.questions);
+          setSurveyDetails(obj);
+          showSpinner(false);
+        } catch (err) {
+          // Error handling
+          showError(true);
+          showSpinner(false);
+        }
+      })();
+    }
+  }, [match]);
+
   function addQuestionEvent(e) {
-    const arr = questions.slice();
-    arr.push(e.chooseQuestion);
-    setQuestions(arr);
+    console.log(e);
+    if (e.chooseQuestion) {
+      if (
+        !questions.map(q => q.questionId).includes(e.chooseQuestion.questionId)
+      ) {
+        const arr = questions.slice();
+        setAutoCompleteKey(Math.random());
+        arr.push(e.chooseQuestion);
+        setQuestions(arr);
+        console.log('resetting', arr.length);
+        formRef.current.setFieldValue('chooseQuestion', '');
+        formRef.current.setTouched({ chooseQuestion: false });
+      } else {
+        formRef.current.setErrors({
+          chooseQuestion: 'Question Already Exists!'
+        });
+      }
+    }
     setSurveyDetails({
-      title: e.surveyTitle,
-      description: e.surveyDescription
+      title: e.title,
+      description: e.description
     });
-    setAutoCompleteKey(arr.length);
-    formRef.current.setFieldValue('chooseQuestion', '');
+  }
+
+  function deleteQuestionFromList(id) {
+    console.log(id, 'id');
+    setQuestions(questions.filter(q => q.questionId !== id));
   }
 
   function getQuestionsString() {
     return (
       <List component="nav" aria-label="main mailbox folders">
         {questions.map(question => (
-          <ListItem>
-            <ListItemIcon button>
-              <DeleteIcon color="secondary" />
-            </ListItemIcon>
+          <ListItem
+            key={question.questionId}
+            classes={{ container: classes.container, root: classes.listItem }}
+          >
             <ListItemText primary={question.label} />
+            <ListItemSecondaryAction>
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => deleteQuestionFromList(question.questionId)}
+              >
+                <DeleteIcon color="secondary" />
+              </IconButton>
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>
     );
+  }
+
+  async function saveSurvey() {
+    const isPost = !match.params.surveyId;
+    console.log(isPost, match);
+    try {
+      const res = await Axios[isPost ? 'post' : 'patch'](
+        isPost ? '/survey' : `/survey/${match.params.surveyId}`,
+        {
+          questions,
+          ...surveyDetails,
+          state: 'draft'
+        }
+      );
+      console.log(res);
+      history.push({
+        pathname: '/surveys/home',
+        state: {
+          surveyOperation: isPost ? 'create' : 'update'
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
   }
   return (
     <Page title="Create Survey">
@@ -72,105 +183,121 @@ export default function CreateSurvey() {
               <CardHeader title="Create a survey" />
               <Divider />
               <CardContent>
-                <Formik
-                  initialValues={chooseQuestion}
-                  onSubmit={e => addQuestionEvent(e)}
-                  innerRef={formRef}
-                  validationSchema={yup.object({
-                    surveyTitle: yup
-                      .string()
-                      .required('Please Enter Survey Title'),
-                    surveyDescription: yup
-                      .string()
-                      .required('Please Enter Survey Description'),
-                    chooseQuestion: yup
-                      .object()
-                      .required('Please select a question')
-                      .typeError('Please select a valid question')
-                  })}
-                >
-                  {({ setFieldValue }) => (
-                    <Form>
-                      <Field
-                        name="surveyTitle"
-                        component={TextField}
-                        style={{ width: 400 }}
-                        label="Enter Survey Title"
-                        variant="outlined"
-                        disabled={false}
-                      />
-                      <br />
-                      <br />
-                      <Field
-                        name="surveyDescription"
-                        component={TextField}
-                        style={{ width: 400 }}
-                        rows="3"
-                        label="Enter Survey Description"
-                        variant="outlined"
-                        multiline
-                        disabled={false}
-                      />
-                      <br />
-                      <br />
-                      {!!questions.length && (
-                        <>
-                          {getQuestionsString()}
-                          <br />
-                        </>
-                      )}
-                      <Autocomplete
-                        options={[
-                          {
-                            questionType: 'rating',
-                            questionName: 'Rating',
-                            label: 'How would you like to rate us?',
-                            id: '1234'
-                          },
-                          {
-                            questionType: 'textarea',
-                            questionName: 'AnyComments',
-                            label:
-                              'Any other feedback that you want to provide',
-                            additionalConfig: {
-                              rows: '3'
-                            },
-                            id: '1235'
+                {!spinner ? (
+                  error ? (
+                    <CommonAlert />
+                  ) : (
+                    <Formik
+                      initialValues={initFormVal}
+                      onSubmit={e => addQuestionEvent(e)}
+                      innerRef={formRef}
+                      validationSchema={yup.object({
+                        title: yup
+                          .string()
+                          .required('Please Enter Survey Title'),
+                        description: yup
+                          .string()
+                          .required('Please Enter Survey Description'),
+                        chooseQuestion: yup.lazy(value => {
+                          if (!questions.length) {
+                            return yup
+                              .object()
+                              .required('Please select a question')
+                              .typeError('Please select a valid question');
                           }
-                        ]}
-                        getOptionLabel={option => option.label}
-                        style={{ width: 400 }}
-                        getOptionSelected={(option, value) =>
-                          value.id === option.id
-                        }
-                        key={autoCompleteKey}
-                        onChange={(event, value) =>
-                          setFieldValue('chooseQuestion', value)
-                        }
-                        renderInput={params => (
+                          return yup
+                            .string()
+                            .nullable()
+                            .notRequired()
+                            .typeError('Please select a valid question');
+                        })
+                      })}
+                    >
+                      {({ setFieldValue }) => (
+                        <Form>
                           <Field
+                            name="title"
                             component={TextField}
-                            {...params}
-                            label="Choose a question"
+                            style={{ width: 400 }}
+                            label="Enter Survey Title"
                             variant="outlined"
+                            disabled={false}
+                          />
+                          <br />
+                          <br />
+                          <Field
+                            name="description"
+                            component={TextField}
+                            style={{ width: 400 }}
+                            rows="3"
+                            label="Enter Survey Description"
+                            variant="outlined"
+                            multiline
+                            disabled={false}
+                          />
+                          <br />
+                          <br />
+                          {!!questions.length && (
+                            <>
+                              {getQuestionsString()}
+                              <br />
+                            </>
+                          )}
+                          <Autocomplete
+                            options={suggestions}
+                            getOptionLabel={option => option.label}
+                            style={{ width: 400 }}
+                            getOptionSelected={(option, value) =>
+                              value.id === option.id
+                            }
+                            key={autoCompleteKey}
+                            onChange={(event, value) =>
+                              setFieldValue('chooseQuestion', value)
+                            }
+                            renderInput={params => (
+                              <Field
+                                component={TextField}
+                                {...params}
+                                label="Choose a question"
+                                variant="outlined"
+                                name="chooseQuestion"
+                                onChange={handleChange}
+                              />
+                            )}
                             name="chooseQuestion"
                           />
-                        )}
-                        name="chooseQuestion"
-                      />
-                      <br />
-                      <Button color="primary" variant="contained" type="submit">
-                        Update Preview
-                      </Button>
-                    </Form>
-                  )}
-                </Formik>
+                          <br />
+                          <Button
+                            color="primary"
+                            variant="contained"
+                            type="submit"
+                          >
+                            Update Preview
+                          </Button>
+                        </Form>
+                      )}
+                    </Formik>
+                  )
+                ) : (
+                  <Spinner />
+                )}
               </CardContent>
             </Card>
           </Grid>
           <Grid xs={12} lg={7} item>
             <Card style={{ width: '100%' }}>
-              <CardHeader title="Survey Preview" />
+              <CardHeader
+                title="Survey Preview"
+                action={
+                  !!questions.length && (
+                    <Tooltip title="Save Survey">
+                      <IconButton aria-label="Save Survey" onClick={saveSurvey}>
+                        <SaveIcon color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  )
+                }
+              />
               <Divider />
               <CardContent>
                 <Typography variant="h6">{surveyDetails.title}</Typography>

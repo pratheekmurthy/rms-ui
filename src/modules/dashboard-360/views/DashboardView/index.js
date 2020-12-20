@@ -35,7 +35,7 @@ import {
   orderColumns
 } from 'src/modules/dashboard-360/utils/columns-config';
 
-import ErrorAlert from 'src/components/ErrorAlert';
+import CommonAlert from 'src/components/CommonAlert';
 import { connect } from 'react-redux';
 import SearchBar from 'material-ui-search-bar';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
@@ -207,7 +207,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   }}
                 />
               ) : (
-                <ErrorAlert text="Unable to get dealer details" />
+                <CommonAlert text="Unable to get dealer details" />
               )}
               <Box mt={2}>
                 <Card>
@@ -230,7 +230,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                  <ErrorAlert />
+                  <CommonAlert />
                 )}
               </Card>
               <br />
@@ -246,7 +246,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                  <ErrorAlert />
+                  <CommonAlert />
                 )}
               </Card>
             </Grid>
