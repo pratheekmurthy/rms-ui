@@ -51,7 +51,11 @@ import { setDistributorOrders } from '../../redux/action';
 import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
-const useStyles = makeStyles((theme) => {
+import socketIOClient from "socket.io-client";
+
+const SOCKETENDPOINT = "http://192.168.3.45:42002/";
+
+const useStyles = makeStyles(theme => {
   console.log(theme);
   return {
     root: {
@@ -63,9 +67,6 @@ const useStyles = makeStyles((theme) => {
     panelBody: {
       padding: 0
     },
-    // formControl: {
-    //   minWidth: 350
-    // },
     dialogActions: {
       padding: '0 1.5rem 1rem'
     },
@@ -84,7 +85,6 @@ const useStyles = makeStyles((theme) => {
       fontSize: '1.2rem',
       backgroundColor: theme.palette.secondary.light,
       padding: '8px 10px',
-      // paddingBottom: 20,
       borderBottomLeftRadius: 8,
       borderBottomRightRadius: 8
     },
@@ -108,19 +108,42 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
-
   const [expanded, setExpanded] = React.useState('panel1');
-
   const [showCreateTicket, setShowCreateTicket] = useState(false);
+  const [currentCall, setCurrentCall] = useState({
+    callUniqueId: localStorage.getItem("callUniqueId"),
+    callType: localStorage.getItem("callType"),
+    callStatus: localStorage.getItem("callStatus"),
+    callDetails: localStorage.getItem("callDetails"),
+    callDispositionStatus: localStorage.getItem("callDispositionStatus")
 
-  // const handleChange = panel => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
-  // };
+  });
+  const [agent, setAgent] = useState({
+    AgentId: "1234",
+    AgentSipId: "9999"
+  })
+
+  function setCurrentCallDetails(callUniqueId, callType, callStatus, callDetails, callDispositionStatus) {
+    localStorage.setItem('callUniqueId', callUniqueId);
+    localStorage.setItem('callType', callType);
+    localStorage.setItem('callStatus', callStatus);
+    localStorage.setItem('callDetails', callDetails);
+    localStorage.setItem('callDispositionStatus', callDispositionStatus);
+    setCurrentCall({
+      callUniqueId: localStorage.getItem("callUniqueId"),
+      callType: localStorage.getItem("callType"),
+      callStatus: localStorage.getItem("callStatus"),
+      callDetails: localStorage.getItem("callDetails"),
+      callDispositionStatus: localStorage.getItem("callDispositionStatus")
+
+    })
+  }
 
   useEffect(() => {
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
+        console.log("response", response);
         setRootData(
           response.map((res) =>
             res.status === 'fulfilled' ? res.value.data : {}
@@ -136,32 +159,57 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         console.log(err.response, 'error');
       }
     }
-    get();
-  }, []);
+    const socket = socketIOClient(SOCKETENDPOINT);
+    socket.on("AstriskEvent", data => {
+      if (data.Event === "Bridge") {
+        if (data.CallerID2 === agent.AgentSipId && data.Bridgestate === "Link") {
+          setCurrentCallDetails(data.Uniqueid2, "Inbound", "connected", data, "NotDisposed")
+          get();
+
+        }
+      }
+
+      if (data.Event === "Hangup") {
+
+        if (data.ConnectedLineNum === agent.AgentSipId) {
+          console.log("data", data)
+          setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), "disconnected", data, localStorage.getItem("callDispositionStatus"))
+        }
+      }
+    })
+    setRootData([[], [], [], [], []].map(res =>
+      res.status === 'fulfilled' ? res.value.data : {}
+    ))
+    setLoadingDetails(false);
+
+  }, [currentCall.callDispositionStatus]);
+
+
 
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
-      <div className={classes.timerComp}>
-        <TimerComp />
-      </div>
-      <Box
-        alignItems="center"
-        display="flex"
-        className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
-      >
-        <CallIcon />
+
+      {currentCall.callStatus === "connected" ?
+        <div>
+          <div className={classes.timerComp}>
+            <TimerComp />
+          </div>
+
+          <Box
+            alignItems="center"
+            display="flex"
+            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+          >
+
+            <CallIcon />
         &nbsp;
-        <Typography display="inline">Inbound Call In Progress</Typography>
-      </Box>
+
+        <Typography display="inline">{currentCall.callType} Call In Progress</Typography>
+          </Box> </div>
+        : null}
       <CustomBreadcrumbs />
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
-          {/* <Box display="flex" justifyContent="space-between">
-          <Box />
-
-          </Box>
-        </Box> */}
-          {/* <br /> */}
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
               <Grid container direction="column" spacing={2}>
@@ -181,7 +229,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   >
                     BreakIn/BreakOut
                   </Button>
-                  {/* <SearchBar style={{ marginTop: '1rem' }} /> */}
                 </Grid>
                 <Grid item>
                   <Card>
@@ -193,9 +240,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       setCurrent={(val) => setTab(val)}
                     />
                     <CustomTabPanel value={tab} index={0}>
-                      {/* <Box padding="1rem"> */}
                       <TicketsList />
-                      {/* </Box> */}
                     </CustomTabPanel>
                   </Card>
                 </Grid>
@@ -207,24 +252,24 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                 <DealerCard
                   dealerDetails={{
                     ...rootData[0].data[0],
-                    // ...rootData[1].data[0],
                     lastOrderReference: rootData[2].data
                       ? rootData[2].data[0].OrderNumber
                       : ''
                   }}
                 />
               ) : (
-                <ErrorAlert text="Unable to get dealer details" />
-              )}
-              <Box mt={2}>
-                <Card>
-                  <CardHeader title="Disposition Details" />
-                  <Divider />
-                  <CardContent>
-                    <DispositionForm />
-                  </CardContent>
-                </Card>
-              </Box>
+                  <ErrorAlert text="Unable to get dealer details" />
+                )}
+              {currentCall.callDispositionStatus === "NotDisposed" ?
+                <Box mt={2}>
+                  <Card>
+                    <CardHeader title="Disposition Details" />
+                    <Divider />
+                    <CardContent>
+                      <DispositionForm setCurrentCallDetails={setCurrentCallDetails} />
+                    </CardContent>
+                  </Card>
+                </Box> : null}
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -237,8 +282,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                  <ErrorAlert />
-                )}
+                    <ErrorAlert />
+                  )}
               </Card>
               <br />
               <Card>
@@ -253,81 +298,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                  <ErrorAlert />
-                )}
+                    <ErrorAlert />
+                  )}
               </Card>
             </Grid>
           </Grid>
         </Container>
-        {/* {!!showCreateTicket && (
-      <Dialog open onClose={() => setShowCreateTicket(false)}>
-           <DialogTitle id="alert-dialog-title">Create a new Ticket</DialogTitle>
-
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Select Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value=""
-                  onChange={handleChange}
-                  label="Select Category"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>First</MenuItem>
-                  <MenuItem value={20}>Second</MenuItem>
-                  <MenuItem value={30}>Third</MenuItem>
-                </Select>
-              </FormControl>
-              <br />
-              <br />
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-simple-select-outlined-label">
-                  Select Sub Category
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-outlined-label"
-                  id="demo-simple-select-outlined"
-                  value=""
-                  onChange={handleChange}
-                  label="Select Sub Category"
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value={10}>First</MenuItem>
-                  <MenuItem value={20}>Second</MenuItem>
-                  <MenuItem value={30}>Third</MenuItem>
-                </Select>
-              </FormControl>
-              <br />
-              <br />
-              <TextField
-                className={classes.formControl}
-                id="outlined-multiline-static"
-                label="Additional Comments"
-                multiline
-                rows={4}
-                variant="outlined"
-              />
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions className={classes.dialogActions}>
-            <Button
-              onClick={() => setShowCreateTicket(true)}
-              color="primary"
-              variant="contained"
-            >
-              Create Ticket
-            </Button>
-            <div style={{ flex: '1 0 0' }} />
-          </DialogActions>
-        </Dialog> */}
       </Page>
       {showCreateTicket ? (
         <Dialog
@@ -373,22 +349,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           </DialogActions>
         </Dialog>
       ) : (
-        //   <Modal
-        //     open
-        //     onClose={() => setShowCreateTicket(false)}
-        //     className={classes.modal}
-        //     style={{ overflow: 'auto' }}
-        //     aria-labelledby="simple-modal-title"
-        //     aria-describedby="simple-modal-description"
-        //   >
-        //     <CreateTicket />
-        //   </Modal>
-        ''
-      )}
+
+          ''
+        )}
     </div>
   ) : (
-    <MainLoader />
-  );
+      <MainLoader />
+    );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),
