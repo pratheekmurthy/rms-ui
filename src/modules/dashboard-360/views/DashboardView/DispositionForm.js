@@ -15,7 +15,7 @@ const useStyle = makeStyles(() => ({
     width: '100%'
   }
 }));
-export default function DispositionForm() {
+export default function DispositionForm(props) {
   const [initialValue] = useState({
     category: '',
     subcategory: '',
@@ -24,6 +24,10 @@ export default function DispositionForm() {
     solution: ''
   });
   const classes = useStyle();
+  function handleSubmit(){
+    localStorage.setItem("callDispositionStatus","Disposed")  
+    props.setCurrentCallDetails(localStorage.getItem("callUniqueId"),localStorage.getItem("callType"), localStorage.getItem("callStatus"),localStorage.getItem("callDetails") , localStorage.getItem("callDispositionStatus"))
+  }
   return (
     <Formik initialValues={initialValue}>
       {() => (
@@ -113,7 +117,7 @@ export default function DispositionForm() {
             </Grid>
           </Grid>
           <br />
-          <Button color="primary" variant="contained">
+          <Button color="primary" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
         </Form>
