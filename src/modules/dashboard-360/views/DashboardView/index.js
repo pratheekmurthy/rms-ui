@@ -51,7 +51,6 @@ import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
 const useStyles = makeStyles(theme => {
-  console.log(theme);
   return {
     root: {
       backgroundColor: theme.palette.background.dark,
@@ -126,7 +125,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         );
         setLoadingDetails(false);
       } catch (err) {
-        console.log(err.response, 'error');
+        console.log(err.response);
       }
     }
     get();
