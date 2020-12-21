@@ -108,10 +108,20 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
-
   const [expanded, setExpanded] = React.useState('panel1');
-
   const [showCreateTicket, setShowCreateTicket] = useState(false);
+  const [currentCall, setCurrentCall] = useState({
+    callUniqueId: localStorage.getItem("callUniqueId"),
+    callType: localStorage.getItem("callType"),
+    callStatus: localStorage.getItem("callStatus"),
+    callDetails: localStorage.getItem("callDetails"),
+    callDispositionStatus: localStorage.getItem("callDispositionStatus")
+
+  });
+  const [agent, setAgent] = useState({
+    AgentId: "1234",
+    AgentSipId: "9999"
+  })
 
   function setCurrentCallDetails(callUniqueId, callType, callStatus, callDetails, callDispositionStatus) {
     localStorage.setItem('callUniqueId', callUniqueId);
@@ -128,20 +138,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
     })
   }
-  const [currentCall, setCurrentCall] = useState({
-    callUniqueId: localStorage.getItem("callUniqueId"),
-    callType: localStorage.getItem("callType"),
-    callStatus: localStorage.getItem("callStatus"),
-    callDetails: localStorage.getItem("callDetails"),
-    callDispositionStatus: localStorage.getItem("callDispositionStatus")
 
-  });
-  const [agent, setAgent] = useState({
-    AgentId: "1234",
-    AgentSipId: "9999"
-  })
   useEffect(() => {
-    console.log("currentCall", currentCall)
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
@@ -167,6 +165,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         if (data.CallerID2 === agent.AgentSipId && data.Bridgestate === "Link") {
           setCurrentCallDetails(data.Uniqueid2, "Inbound", "connected", data, "NotDisposed")
           get();
+
         }
       }
 
@@ -184,7 +183,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     setLoadingDetails(false);
 
   }, [currentCall.callDispositionStatus]);
- 
+
 
 
   return !loadingDetails ? (
@@ -350,7 +349,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           </DialogActions>
         </Dialog>
       ) : (
-       
+
           ''
         )}
     </div>

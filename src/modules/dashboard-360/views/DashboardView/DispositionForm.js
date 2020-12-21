@@ -52,7 +52,6 @@ export default function DispositionForm(props) {
                     labelId: 'category-label'
                   }}
                   label="Select a category"
-                  data={["red", "blue"]}
                 />
               </FormControl>
             </Grid>
