@@ -77,7 +77,6 @@ export default function CreateSurvey(props) {
   };
 
   useEffect(() => {
-    console.log(props);
     if (!isPost) {
       (async function getSurveyDetails() {
         try {
@@ -98,7 +97,6 @@ export default function CreateSurvey(props) {
   }, [match]);
 
   function addQuestionEvent(e) {
-    console.log(e);
     if (e.chooseQuestion) {
       if (
         !questions.map(q => q.questionId).includes(e.chooseQuestion.questionId)
@@ -107,7 +105,6 @@ export default function CreateSurvey(props) {
         setAutoCompleteKey(Math.random());
         arr.push(e.chooseQuestion);
         setQuestions(arr);
-        console.log('resetting', arr.length);
         formRef.current.setFieldValue('chooseQuestion', '');
         formRef.current.setTouched({ chooseQuestion: false });
       } else {
@@ -123,7 +120,6 @@ export default function CreateSurvey(props) {
   }
 
   function deleteQuestionFromList(id) {
-    console.log(id, 'id');
     setQuestions(questions.filter(q => q.questionId !== id));
   }
 
@@ -152,7 +148,6 @@ export default function CreateSurvey(props) {
   }
 
   async function saveSurvey() {
-    console.log(isPost, match);
     try {
       const res = await Axios[isPost ? 'post' : 'patch'](
         isPost ? '/survey' : `/survey/${match.params.surveyId}`,
@@ -162,7 +157,6 @@ export default function CreateSurvey(props) {
           state: 'draft'
         }
       );
-      console.log(res);
       history.push({
         pathname: '/surveys/home',
         state: {
