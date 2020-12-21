@@ -12,6 +12,8 @@ function RouteSwitch({ routes, redirectPath, isRoot, setCrumb }) {
     routes.map(route => setCrumb({ key: route.path, value: route.crumb }));
   }, []);
 
+  console.log(routes, 'gy');
+
   return (
     <Switch>
       {isRoot && (

@@ -48,6 +48,9 @@ class Home extends Component {
                 <Link to="/surveys/new">Create New Survey</Link>
               </Button>
               <Button>
+                <Link to="/surveys/questions">View Questions</Link>
+              </Button>
+              <Button>
                 <Link to="/surveys/questions/new">Add New Questions</Link>
               </Button>
             </ButtonGroup>
