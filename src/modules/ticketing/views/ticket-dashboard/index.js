@@ -21,7 +21,7 @@ import {
   Tooltip
 } from '@material-ui/core';
 import OfflineBoltIcon from '@material-ui/icons/OfflineBolt';
-import { purple, orange, green } from '@material-ui/core/colors';
+import { purple, orange, green, grey } from '@material-ui/core/colors';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
@@ -110,45 +110,20 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     fontWeight: 600
   },
-  modal: {
-    alignItems: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  hide: {
-    display: 'none'
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
   drawerHeader: {
     display: 'flex',
     alignItems: 'center',
     width: '100%',
     padding: theme.spacing(1, 1)
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    marginLeft: -drawerWidth
-  },
-  contentShift: {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    }),
-    marginLeft: 0
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1
+  rounded: {
+    color: '#fff',
+    backgroundColor: '#303030',
+    float: 'right',
+    marginBottom: 15,
+    marginRight: 10,
+    height: 30,
+    width: 30
   }
 }));
 
@@ -299,6 +274,7 @@ export default function TicketDashboard() {
 
   const [open, setOpen] = React.useState(false);
   const [isEditable, makeEditable] = React.useState(false);
+  const [filter, openFilter] = React.useState(false);
 
   function getTicketList() {
     return (
@@ -348,25 +324,17 @@ export default function TicketDashboard() {
     makeEditable(false);
   };
 
-  const theme = useTheme();
-  const [openDrawer, setOpenDrawer] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpenDrawer(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpenDrawer(false);
+  const configureFilter = () => {
+    if (filter) {
+      openFilter(false);
+    } else {
+      openFilter(true);
+    }
   };
 
   return (
     <div className={classes.root}>
-      <Box
-        component="div"
-        display="flex"
-        flexDirection="row"
-        className={classes.appBar}
-      >
+      <Box component="span">
         <Button
           variant="outlined"
           color="primary"
@@ -377,59 +345,26 @@ export default function TicketDashboard() {
         >
           Create Ticket
         </Button>
-        <Button
+        <Tooltip title="Filter">
+          <Avatar variant="rounded" className={classes.rounded}>
+            <FilterListIcon onClick={configureFilter} />
+          </Avatar>
+        </Tooltip>
+        {/* <Button
           variant="outlined"
           color="primary"
           size="small"
           style={{ marginBottom: 15, marginLeft: 10 }}
           startIcon={<FilterListIcon />}
-          onClick={handleDrawerOpen}
-        >
-          Filter
-        </Button>
+          onClick={configureFilter}
+        ></Button> */}
       </Box>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={openDrawer}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <FilterListIcon />
-          <Typography
-            variant="h4"
-            color="textPrimary"
-            style={{ marginLeft: 10 }}
-          >
-            Filter
-          </Typography>
-          <div style={{ marginLeft: '64%' }}>
-            <IconButton onClick={handleDrawerClose}>
-              {theme.direction === 'ltr' ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </div>
-        </div>
-        <Divider />
-        <FilterTicket />
-        <Divider />
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          width="50"
-          style={{ margin: 12 }}
-          onClick={handleDrawerClose}
-        >
-          Save
-        </Button>
-      </Drawer>
+      {(() => {
+        if (filter) {
+          return <FilterTicket />;
+        }
+      })()}
+
       <Dialog
         open={open}
         fullWidth
@@ -831,9 +766,12 @@ export default function TicketDashboard() {
                   return (
                     <div className={classes.boxDiv}>
                       <Button
-                        variant="outlined"
-                        color="primary"
+                        variant="contained"
                         size="small"
+                        color="primary"
+                        style={{
+                          float: 'right'
+                        }}
                         onClick={makeEditableFalse}
                       >
                         Save
