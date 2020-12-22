@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { setDistributorOrders } from 'src/modules/dashboard-360/redux/action';
 import { orderColumns } from 'src/modules/dashboard-360/utils/columns-config';
 import PropTypes from 'prop-types';
-import ErrorAlert from 'src/components/ErrorAlert';
+import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
@@ -82,7 +82,7 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
   showLoader ? (
     <MainLoader />
   ) : (
-    <ErrorAlert style={{ margin: 20 }} />
+    <CommonAlert style={{ margin: 20 }} />
   );
 }
 

@@ -4,7 +4,7 @@
   "licence": "MIT",
   "version": "1.0.0",
   "private": false,
-  "proxy": "http://localhost:3000/",
+  "proxy": "http://localhost:3001/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -33,6 +33,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/styles": "^4.10.0",
+    "awesome-debounce-promise": "^2.1.0",
     "apexcharts": "^3.23.0",
     "axios": "^0.21.0",
     "chart.js": "^2.9.3",
@@ -60,7 +61,6 @@
     "redux-dynamic-modules": "^5.2.3",
     "redux-observable": "^1.2.0",
     "redux-thunk": "^2.3.0",
-    "socket.io-client": "^3.0.4",
     "uuid": "^8.3.0",
     "yup": "^0.29.3"
   },

@@ -1,7 +1,7 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { makeStyles, ThemeProvider } from '@material-ui/core';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { Grid, makeStyles, ThemeProvider } from '@material-ui/core';
 import GlobalStyles from 'src/modules/dashboard-360/components/GlobalStyles';
 import 'src/modules/dashboard-360/mixins/chartjs';
 import theme from 'src/modules/dashboard-360/theme';
@@ -65,7 +65,6 @@ function ContainerComp({ isLoggedIn, classes }) {
   const filteredRoutes = routes.filter(
     route => route.requiresAuth === isLoggedIn
   );
-  console.log(filteredRoutes, 'route', routes);
   return isLoggedIn ? (
     <>
       <TopBar />

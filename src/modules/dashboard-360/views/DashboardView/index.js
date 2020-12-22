@@ -35,10 +35,9 @@ import {
   orderColumns
 } from 'src/modules/dashboard-360/utils/columns-config';
 
+import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
-import ErrorAlert from 'src/components/ErrorAlert';
 import { connect } from 'react-redux';
-import SearchBar from 'material-ui-search-bar';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 import CallIcon from '@material-ui/icons/Call';
@@ -56,7 +55,6 @@ import socketIOClient from "socket.io-client";
 const SOCKETENDPOINT = "http://192.168.3.45:42002/";
 
 const useStyles = makeStyles(theme => {
-  console.log(theme);
   return {
     root: {
       backgroundColor: theme.palette.background.dark,
@@ -156,7 +154,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         );
         setLoadingDetails(false);
       } catch (err) {
-        console.log(err.response, 'error');
+        console.log(err.response);
       }
     }
     const socket = socketIOClient(SOCKETENDPOINT);
@@ -258,18 +256,17 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   }}
                 />
               ) : (
-                  <ErrorAlert text="Unable to get dealer details" />
-                )}
-              {currentCall.callDispositionStatus === "NotDisposed" ?
-                <Box mt={2}>
-                  <Card>
-                    <CardHeader title="Disposition Details" />
-                    <Divider />
-                    <CardContent>
-                      <DispositionForm setCurrentCallDetails={setCurrentCallDetails} />
-                    </CardContent>
-                  </Card>
-                </Box> : null}
+                <CommonAlert text="Unable to get dealer details" />
+              )}
+              <Box mt={2}>
+                <Card>
+                  <CardHeader title="Disposition Details" />
+                  <Divider />
+                  <CardContent>
+                    <DispositionForm />
+                  </CardContent>
+                </Card>
+              </Box>
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -282,8 +279,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                    <ErrorAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
               <br />
               <Card>
@@ -298,8 +295,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                    <ErrorAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
             </Grid>
           </Grid>
