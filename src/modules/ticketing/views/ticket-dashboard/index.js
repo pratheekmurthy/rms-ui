@@ -13,7 +13,7 @@ import {
   Button,
   Avatar,
   TextField,
-  Drawer,
+  Link,
   Dialog,
   DialogActions,
   DialogContent,
@@ -30,6 +30,7 @@ import CreateTicket from '../create-ticket';
 import FilterTicket from '../filter-ticket';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
 
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -344,6 +345,15 @@ export default function TicketDashboard() {
           onClick={handleOpen}
         >
           Create Ticket
+        </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          size="small"
+          style={{ marginBottom: 15, marginLeft: 10 }}
+          startIcon={<EqualizerIcon />}
+        >
+          <Link to="/ticket-report">Report</Link>
         </Button>
         <Tooltip title="Filter">
           <Avatar variant="rounded" className={classes.rounded}>
