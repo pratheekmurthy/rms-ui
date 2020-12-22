@@ -43,7 +43,7 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
             setSingleOrderDetails(res.data.data);
           }
         } catch (error) {
-          console.log(error);
+        
         } finally {
           setShowLoader(false);
         }

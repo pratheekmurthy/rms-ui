@@ -100,18 +100,18 @@ const CheckboxInput = ({ submit }) => {
     const obj = { ...initialValuesObj };
     obj['label' + count] = '';
     obj['value' + count] = '';
-    // console.log(initialValuesObj, count);
+
     setCount(count + 1);
     setValues(obj);
   };
-  
+
   return (
     <>
       <Formik
         initialValues={initialValuesObj}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
+
           setSubmitValues({ values });
           resetForm();
         }}

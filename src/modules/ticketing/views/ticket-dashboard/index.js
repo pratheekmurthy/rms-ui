@@ -37,7 +37,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 const drawerWidth = 350;
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     margin: 15
@@ -208,7 +208,7 @@ export default function TicketDashboard() {
     }
   ];
   const [type, setTicketType] = React.useState('complaint');
-  const handleTicketTypeChange = (event) => {
+  const handleTicketTypeChange = event => {
     setTicketType(event.target.value);
   };
 
@@ -227,7 +227,7 @@ export default function TicketDashboard() {
     }
   ];
   const [priority, setPriority] = React.useState('medium');
-  const handlePriorityChange = (event) => {
+  const handlePriorityChange = event => {
     setPriority(event.target.value);
   };
 
@@ -246,7 +246,7 @@ export default function TicketDashboard() {
     }
   ];
   const [category, setCategory] = React.useState('delay');
-  const handleCategoryChange = (event) => {
+  const handleCategoryChange = event => {
     setCategory(event.target.value);
   };
 
@@ -269,7 +269,7 @@ export default function TicketDashboard() {
     }
   ];
   const [status, setStatus] = React.useState('wip');
-  const handleStatusChange = (event) => {
+  const handleStatusChange = event => {
     setStatus(event.target.value);
   };
 
@@ -280,7 +280,7 @@ export default function TicketDashboard() {
   function getTicketList() {
     return (
       <List className={classes.listRow}>
-        {ticketListData.map((ticket) => (
+        {ticketListData.map(ticket => (
           <>
             <ListItem alignItems="flex-start" className={classes.listItemClass}>
               <ListItemText>
@@ -526,7 +526,7 @@ export default function TicketDashboard() {
                                 native: true
                               }}
                             >
-                              {ticketTypes.map((option) => (
+                              {ticketTypes.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -576,7 +576,7 @@ export default function TicketDashboard() {
                                 native: true
                               }}
                             >
-                              {priorityList.map((option) => (
+                              {priorityList.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -628,7 +628,7 @@ export default function TicketDashboard() {
                                 native: true
                               }}
                             >
-                              {categoryList.map((option) => (
+                              {categoryList.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -677,7 +677,7 @@ export default function TicketDashboard() {
                                 native: true
                               }}
                             >
-                              {statusList.map((option) => (
+                              {statusList.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
