@@ -243,8 +243,11 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   };
-useEffect(() => {
-  if (!props.ticket) {
+
+  useEffect(() => {
+    const distid = localStorage.getItem('search');
+    setDistributorId(distid);
+
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var charactersLength = characters.length;
@@ -255,87 +258,58 @@ useEffect(() => {
     let date = newDate.getDate().toString();
     let month = (newDate.getMonth() + 1).toString();
     let year = newDate.getFullYear().toString();
-    setTicketNumber('TKT' + year + month + date + result);
-    setCreatedTime(new Date().toDateString());
-  } else {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(
-        config.APIS_URL + '/tickets/' + props.ticket._id
-      );
-      const tkt = (await response.json()).data[0];
-      if (!unmounted) {
-        setTicketNumber(tkt.ticketNumber);
-        setCreatedTime(tkt.createdTime);
-        setUpdatedTime(new Date().toDateString());
-        setDistributorName(tkt.distributorName);
-        setDistributorId(tkt.distributorId);
-        setDistributorEmail(tkt.distributorEmail);
-        setDistributorMobile(tkt.distributorMobile);
-        setCreatedByName(tkt.createdByName);
-        setCreatedById(tkt.createdById);
-        setUpdatedByName(tkt.createdByName);
-        setUpdatedById(tkt.createdById);
-        setTicketSubject(tkt.ticketSubject);
-        setTicketDescription(tkt.ticketDescription);
-        setRemarks(tkt.remarks);
 
-        setTicketType({
-          value: tkt.ticketTypeId,
-          label: tkt.ticketType
-        });
-        setMedia({ value: tkt.mediaId, label: tkt.media });
-        setCategory({ value: tkt.categoryId, label: tkt.category });
-        setSubCategory({
-          value: tkt.subCategoryId,
-          label: tkt.subCategory
-        });
-        getSubCategories(tkt.categoryId);
-        setSubCategoryItem({
-          value: tkt.subCategoryItemId,
-          label: tkt.subCategoryItem
-        });
-        getSubCategoryItems(tkt.categoryId, tkt.subCategoryId);
-        setDepartment({
-          value: tkt.departmentId,
-          label: tkt.department
-        });
-        setTeam({ value: tkt.teamId, label: tkt.team });
-        setPriority({
-          value: tkt.priorityId,
-          label: tkt.priority,
-          sla: tkt.sla
-        });
-        setStatus({
-          value: tkt.statusId,
-          label: tkt.status,
-          slaOnHold: tkt.slaOnHold
-        });
-        setExecutive({
-          value: tkt.executiveId,
-          label: tkt.executive,
-          executiveEmail: tkt.executiveEmail,
-          executiveMobile: tkt.executiveMobile
-        });
-      }
+   
+    getCategory();
+    if (props.ticketNumber !== '') {
+      setTicketNumber(props.ticketNumber);
+       setTicketDescription(props.comments);
+      setCreatedTime(props.createdTime);
+      setTicketDescription(props.ticketDescription);
+      setRemarks(props.remarks);
+      setCategory(props.category);
+      setSubCategory({
+        label: props.subCategory.label,
+        value: props.subCategory.value
+      });
+      setSubCategoryItems({
+        label: props.subCategoryItem.label,
+        value: props.subCategoryItem.value
+      });
+      setPriority({
+        label: props.priority.label,
+        value: props.priority.value
+      });
+      setTicketSubject(props.ticketSubject);
+      setMedia({
+        label: props.media.label,
+        value: props.media.value
+      });
+      setDistributorEmail(props.distributorEmail);
+      setDistributorId(props.distributorId);
+      setDistributorMobile(props.distributorMobile);
+      setDistributorName(props.distributorName);
+      setTicketType({
+        ticketType: props.ticketType.label,
+        ticketTypeId: props.ticketType.value
+      });
+      setStatus({
+        value: props.status.value,
+        label: props.status.label,
+        slaOnHold: props.status.slaOnHold
+      });
+
+      alert(JSON.stringify(props.category));
+    }else{
+       setTicketNumber('TKT' + year + month + date + result);
+    setCreatedTime(new Date().toDateString());
+    props.setTicketNumber('TKT' + year + month + date + result);
+    props.setCreatedTime(new Date().toDateString());
+
     }
-    getItems();
-    async function getHistoryItems() {
-      const response = await fetch(
-        config.APIS_URL + '/ticketHistory/' + props.ticket._id
-      );
-      const tktHistory = (await response.json()).data;
-      if (!unmounted) {
-        setTicketHistory(tktHistory);
-      }
-    }
-    getHistoryItems();
-    return () => {
-      unmounted = true;
-    };
-  }
-}, []);
- 
+
+    getDistributorByIdd(distid);
+  }, []);
 
   useEffect(() => {
     let unmounted = false;
@@ -363,7 +337,7 @@ useEffect(() => {
       unmounted = true;
     };
   }, []);
-useEffect(() => {},[props.ticketNumber])
+// useEffect(() => {},[props.ticketNumber])
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -412,11 +386,11 @@ useEffect(() => {},[props.ticketNumber])
         setLoading(false);
         localStorage.getItem('setCategory');
 
-        const cat = localStorage.getItem('setCategory');
-        const value = JSON.parse(cat);
-        if (value.category) {
-          setCategory(value.category);
-        } else {
+        // const cat = localStorage.getItem('setCategory');
+        // const value = JSON.parse(cat);
+        // if (value.category) {
+        //   setCategory(value.category);
+        // } else {
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -425,13 +399,49 @@ useEffect(() => {},[props.ticketNumber])
             : setCategory({});
         }
       }
-    }
+    // }
     getItems();
     return () => {
       unmounted = true;
     };
   };
 
+  // const getSubCategories =(categoryId) => {
+  //   let unmounted = false;
+  //   async function getItems() {
+  //     const response = await fetch(
+  //       config.APIS_URL + '/subcategories/' + categoryId
+  //     );
+  //     const body = await response.json();
+  //     if (!unmounted) {
+  //       setSubCategories(
+  //         body.data.map(({ _id, subCategory }) => ({
+  //           label: subCategory,
+  //           value: _id
+  //         }))
+  //       );
+  //       setLoading(false);
+  //       localStorage.getItem('setCategory');
+
+  //       const cat = localStorage.getItem('setSubCategory');
+  //       const value = JSON.parse(cat);
+  //       if (value.subCategory) {
+  //         setSubCategory(value.subCategory);
+  //       } else {
+  //         body.data[0]
+  //           ? setSubCategory({
+  //               label: body.data[0].subCategory,
+  //               value: body.data[0]._id
+  //             })
+  //           : setSubCategory({});
+  //       }
+  //     }
+  //   }
+  //   getItems();
+  //   return () => {
+  //     unmounted = true;
+  //   };
+  // };
 
   useEffect(() => {
     let unmounted = false;
@@ -455,12 +465,12 @@ useEffect(() => {},[props.ticketNumber])
         setLoading(false);
         localStorage.getItem('setSubCategoryItem');
 
-        const cat = localStorage.getItem('setSubCategoryItem');
-        const value = JSON.parse(cat);
+        // const cat = localStorage.getItem('setSubCategoryItem');
+        // const value = JSON.parse(cat);
 
-        if (value.subCategoryItem) {
-          setSubCategoryItem(value.subCategoryItem);
-        } else {
+        // if (value.subCategoryItem) {
+        //   setSubCategoryItem(value.subCategoryItem);
+        // } else {
           body.data[0]
             ? setSubCategoryItem({
                 label: body.data[0].subCategoryItem,
@@ -469,12 +479,12 @@ useEffect(() => {},[props.ticketNumber])
             : setSubCategoryItem({});
         }
       }
-    }
+    // }
     getItems();
     return () => {
       unmounted = true;
     };
-  }, [category, subCategory.value]);
+  }, [category.value, subCategory.value]);
 
   useEffect(() => {
     let unmounted = false;

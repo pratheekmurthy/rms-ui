@@ -41,7 +41,7 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Timeline from './timeline';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
- 
+
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -134,6 +134,12 @@ const useStyles = makeStyles(theme => ({
   drawerPaper: {
     top: 62
   },
+  drawerHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    padding: theme.spacing(1, 1)
+  },
   modal: {
     alignItems: 'center',
     width: '100%',
@@ -188,7 +194,7 @@ export default function TicketDashboard() {
     value: '',
     label: ''
   });
-  
+
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState({ value: '', label: '' });
   const [subCategories, setSubCategories] = useState([]);
@@ -230,9 +236,9 @@ export default function TicketDashboard() {
     executiveEmail: '',
     executiveMobile: ''
   });
-const theme = useTheme();
+  const theme = useTheme();
   const [loading, setLoading] = useState(true);
-   const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
   const [createdTime, setCreatedTime] = useState();
   const [state, setState] = React.useState({
     top: false,
@@ -240,9 +246,9 @@ const theme = useTheme();
     bottom: false,
     right: false
   });
- const handleDrawerClose = () => {
-   setOpenDrawer(false);
- };
+  const handleDrawerClose = () => {
+    setOpenDrawer(false);
+  };
   const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === 'keydown' &&
@@ -262,7 +268,7 @@ const theme = useTheme();
         setApiTickets(repos.data);
         console.log('tickets', repos.data);
         setTickets(repos.data);
-         setviewTickets(repos.data[0]);
+        setviewTickets(repos.data[0]);
       });
   }, []);
   useEffect(() => {
@@ -396,7 +402,7 @@ const theme = useTheme();
                       </Avatar>
                       <span
                         className={classes.ticketMargin}
-                        onClick={()=> viewTicket(ticket)}
+                        onClick={() => viewTicket(ticket)}
                       >
                         {ticket.ticketNumber}
                       </span>
@@ -511,8 +517,7 @@ const theme = useTheme();
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        <center>
-          {' '}
+        <center>  
           <h3>Filter By</h3>
         </center>
         <Divider />
@@ -687,6 +692,38 @@ const theme = useTheme();
       >
         Resolved(0)
       </Button>
+
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Closed',
+            label: 'Closed'
+          });
+        }}
+      >
+        Closed(0)
+      </Button>
+      <Button
+        variant="outlined"
+        color="primary"
+        size="small"
+        startIcon={<FilterListIcon />}
+        style={{ marginBottom: 15 }}
+        onClick={() => {
+          setStatus({
+            value: 'Work In Progress',
+            label: 'Work In Progress'
+          });
+        }}
+        color="secondary"
+      >
+        Escalation(0)
+      </Button>
       {['right'].map(anchor => (
         <React.Fragment key={anchor}>
           <Button
@@ -742,51 +779,8 @@ const theme = useTheme();
               Save
             </Button>
           </Drawer>
-          {/* <Drawer
-            anchor={anchor}
-            open={state[anchor]}
-            onClose={toggleDrawer(anchor, false)}
-            className={classes.drawer}
-            classes={{
-              paper: classes.drawerPaper
-            }}
-          >
-            {list(anchor)}
-          </Drawer> */}
         </React.Fragment>
       ))}
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'Closed',
-            label: 'Closed'
-          });
-        }}
-      >
-        Closed(0)
-      </Button>
-      <Button
-        variant="outlined"
-        color="primary"
-        size="small"
-        startIcon={<FilterListIcon />}
-        style={{ marginBottom: 15 }}
-        onClick={() => {
-          setStatus({
-            value: 'Work In Progress',
-            label: 'Work In Progress'
-          });
-        }}
-        color="secondary"
-      >
-        Escalation(0)
-      </Button>
-
       <Dialog
         open={open}
         fullWidth
