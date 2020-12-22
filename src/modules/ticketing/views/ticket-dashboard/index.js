@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import clsx from 'clsx';
@@ -12,7 +12,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import HistoryIcon from '@material-ui/icons/History';
-
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
 import {
   Grid,
   Typography,
@@ -33,10 +34,14 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
+import FilterTicket from '../filter-ticket';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 
 import FilterListIcon from '@material-ui/icons/FilterList';
 import Timeline from './timeline';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+ 
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -154,6 +159,7 @@ export default function TicketDashboard() {
 
   const [open, setOpen] = React.useState(false);
   const [opentimeline, setOpentimeline] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
   const [fullWidth, setFullWidth] = React.useState(true);
   const [maxWidth, setMaxWidth] = React.useState('sm');
   const [tickets, setTickets] = useState([]);
@@ -182,6 +188,7 @@ export default function TicketDashboard() {
     value: '',
     label: ''
   });
+  
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState({ value: '', label: '' });
   const [subCategories, setSubCategories] = useState([]);
@@ -223,8 +230,9 @@ export default function TicketDashboard() {
     executiveEmail: '',
     executiveMobile: ''
   });
-
+const theme = useTheme();
   const [loading, setLoading] = useState(true);
+   const [openDrawer, setOpenDrawer] = React.useState(false);
   const [createdTime, setCreatedTime] = useState();
   const [state, setState] = React.useState({
     top: false,
@@ -232,7 +240,9 @@ export default function TicketDashboard() {
     bottom: false,
     right: false
   });
-
+ const handleDrawerClose = () => {
+   setOpenDrawer(false);
+ };
   const toggleDrawer = (anchor, open) => event => {
     if (
       event.type === 'keydown' &&
@@ -250,9 +260,11 @@ export default function TicketDashboard() {
       .then(res => res.json())
       .then(repos => {
         setApiTickets(repos.data);
+        console.log('tickets', repos.data);
         setTickets(repos.data);
+         setviewTickets(repos.data[0]);
       });
-  }, [apiTickets]);
+  }, []);
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -278,9 +290,76 @@ export default function TicketDashboard() {
       unmounted = true;
     };
   }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/departments');
+      const body = await response.json();
+      if (!unmounted) {
+        //  if (!viewtkt) {
+        body.data[0]
+          ? setDepartment({
+              label: body.data[0].department,
+              value: body.data[0]._id
+            })
+          : setDepartment({});
+        //  }
 
+        setDepartments(
+          body.data.map(({ _id, department }) => ({
+            label: department,
+            value: _id
+          }))
+        );
+        setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
   const viewTicket = item => {
     setviewTickets(item);
+    setTicketNumber(item.ticketNumber);
+    setCreatedTime(item.createdTime);
+    setTicketDescription(item.ticketDescription);
+    setRemarks(item.ticketRemarks);
+    setTicketSubject(item.ticketSubject);
+    setCategory({
+      label: item.category,
+      value: item.categoryId
+    });
+    setSubCategory({
+      label: item.subCategory,
+      value: item.subCategoryId
+    });
+    setSubCategoryItems({
+      label: item.subCategoryItem,
+      value: item.subCategoryItemId
+    });
+    setPriority({
+      label: item.priority,
+      value: item.priorityId
+    });
+    setMedia({
+      label: item.media,
+      value: item.mediaId
+    });
+    setDistributorEmail(item.distributorEmail);
+    setDistributorId(item.distributorId);
+    setDistributorMobile(item.distributorMobile);
+    setDistributorName(item.distributorName);
+    setTicketType({
+      label: item.ticketType,
+      value: item.ticketTypeId
+    });
+    // setStatus({
+    //   value: item.statusId,
+    //   label: item.status,
+    //   slaOnHold: item.slaOnHold
+    // });
+    console.log('item', item);
     let unmounted = false;
     async function getHistoryItems() {
       const response = await fetch(
@@ -317,7 +396,7 @@ export default function TicketDashboard() {
                       </Avatar>
                       <span
                         className={classes.ticketMargin}
-                        onClick={e => viewTicket(ticket)}
+                        onClick={()=> viewTicket(ticket)}
                       >
                         {ticket.ticketNumber}
                       </span>
@@ -339,10 +418,12 @@ export default function TicketDashboard() {
       </List>
     );
   }
-
+  const handleDrawerOpen = () => {
+    setOpenDrawer(true);
+  };
   const addRow = () => {
     const viewtkt = JSON.parse(localStorage.getItem('viewtkt'));
-    setOpen(false);
+
     const apiUrl = config.APIS_URL + '/tickets';
     var apiParam = {
       method: viewtkt ? 'PUT' : 'POST',
@@ -385,7 +466,16 @@ export default function TicketDashboard() {
         executiveMobile: executive.executiveMobile
       }
     };
+    fetch(apiUrl, apiParam)
+      .then(res => res.json())
+      .then(repos => {
+        console.log('api res', repos);
 
+        if (repos.status === 200) {
+          setOpen(false);
+        }
+      });
+    console.log('apiParam', apiParam);
     if (viewtkt) {
       apiParam.headers = {
         ...apiParam.headers,
@@ -402,7 +492,12 @@ export default function TicketDashboard() {
   const handleTimelineClose = () => {
     setOpentimeline(false);
   };
-
+  const handleEditOpen = () => {
+    setOpenEdit(true);
+  };
+  const handleEditClose = () => {
+    setOpenEdit(false);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -469,6 +564,36 @@ export default function TicketDashboard() {
             />
           </ListItem>
         ))}
+        {['Inbox'].map((text, index) => (
+          <ListItem button key={text}>
+            <TextField
+              id="outlined-size-small"
+              select
+              size="large"
+              label="Department"
+              SelectProps={{
+                native: true
+              }}
+              // style={{ width: '31%' }}
+              variant="outlined"
+              value={department.value}
+              onChange={e => {
+                setDepartment({
+                  value: e.target.value,
+                  label: departments.filter(
+                    department => department.value === e.target.value
+                  )[0].label
+                });
+              }}
+            >
+              {departments.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </TextField>
+          </ListItem>
+        ))}
       </List>
       <Divider />
     </div>
@@ -529,7 +654,6 @@ export default function TicketDashboard() {
             label: 'Open'
           });
         }}
-        color="Green"
       >
         Open(5)
       </Button>
@@ -571,11 +695,54 @@ export default function TicketDashboard() {
             size="small"
             startIcon={<FilterListIcon />}
             style={{ marginBottom: 15, float: 'right' }}
-            onClick={toggleDrawer(anchor, true)}
+            onClick={handleDrawerOpen}
+            // onClick={toggleDrawer(anchor, true)}
           >
             Filter
           </Button>
           <Drawer
+            className={classes.drawer}
+            variant="persistent"
+            anchor="left"
+            open={openDrawer}
+            classes={{
+              paper: classes.drawerPaper
+            }}
+          >
+            <div className={classes.drawerHeader}>
+              <FilterListIcon />
+              <Typography
+                variant="h4"
+                color="textPrimary"
+                style={{ marginLeft: 10 }}
+              >
+                Filter
+              </Typography>
+              <div style={{ marginLeft: '64%' }}>
+                <IconButton onClick={handleDrawerClose}>
+                  {theme.direction === 'ltr' ? (
+                    <ChevronLeftIcon />
+                  ) : (
+                    <ChevronRightIcon />
+                  )}
+                </IconButton>
+              </div>
+            </div>
+            <Divider />
+            <FilterTicket />
+            <Divider />
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              width="50"
+              style={{ margin: 12 }}
+              onClick={handleDrawerClose}
+            >
+              Save
+            </Button>
+          </Drawer>
+          {/* <Drawer
             anchor={anchor}
             open={state[anchor]}
             onClose={toggleDrawer(anchor, false)}
@@ -585,7 +752,7 @@ export default function TicketDashboard() {
             }}
           >
             {list(anchor)}
-          </Drawer>
+          </Drawer> */}
         </React.Fragment>
       ))}
       <Button
@@ -800,6 +967,163 @@ export default function TicketDashboard() {
           </Button>
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={openEdit}
+        fullWidth
+        maxWidth="md"
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{'Edit Ticket'}</DialogTitle>
+        <DialogContent dividers>
+          <CreateTicket
+            ticketNumber={ticketNumber}
+            setTicketNumber={tks => {
+              setTicketNumber(tks);
+            }}
+            distributorName={distributorName}
+            setDistributorName={disname => {
+              setDistributorName(disname);
+            }}
+            distributorId={distributorId}
+            setDistributorId={disid => {
+              setDistributorId(disid);
+            }}
+            distributorEmail={distributorEmail}
+            setDistributorEmail={disemail => {
+              setDistributorEmail(disemail);
+            }}
+            distributorMobile={distributorMobile}
+            setDistributorMobile={dismob => {
+              setDistributorMobile(dismob);
+            }}
+            createdByName={createdByName}
+            setCreatedByName={crename => {
+              setCreatedByName(crename);
+            }}
+            createdById={createdById}
+            setCreatedById={creid => {
+              setCreatedById(creid);
+            }}
+            ticketSubject={ticketSubject}
+            setTicketSubject={tktsub => {
+              setTicketSubject(tktsub);
+            }}
+            ticketDescription={ticketDescription}
+            setTicketDescription={tktdisp => {
+              setTicketDescription(tktdisp);
+            }}
+            remarks={remarks}
+            setRemarks={rks => {
+              setRemarks(rks);
+            }}
+            ticketTypes={ticketTypes}
+            setTicketTypes={tkstyps => {
+              setTicketTypes(tkstyps);
+            }}
+            ticketType={ticketType}
+            setTicketType={tkstyp => {
+              setTicketType(tkstyp);
+            }}
+            medium={medium}
+            setMedium={mdm => {
+              setMedium(mdm);
+            }}
+            media={media}
+            setMedia={media => {
+              setMedia(media);
+            }}
+            categories={categories}
+            setCategories={catgs => {
+              setCategories(catgs);
+            }}
+            category={category}
+            setCategory={cat => {
+              setCategory(cat);
+            }}
+            subCategories={subCategories}
+            setSubCategories={subcats => {
+              setSubCategories(subcats);
+            }}
+            subCategory={subCategory}
+            setSubCategory={subcat => {
+              setSubCategory(subcat);
+            }}
+            subCategoryItems={subCategoryItems}
+            setSubCategoryItems={subcatitems => {
+              setSubCategoryItems(subcatitems);
+            }}
+            subCategoryItem={subCategoryItem}
+            setSubCategoryItem={subcatitem => {
+              setSubCategoryItem(subcatitem);
+            }}
+            departments={departments}
+            setDepartments={deps => {
+              setDepartments(deps);
+            }}
+            department={department}
+            setDepartment={dept => {
+              setDepartment(dept);
+            }}
+            teams={teams}
+            setTeams={tms => {
+              setTeams(tms);
+            }}
+            team={team}
+            setTeam={tm => {
+              setTeam(tm);
+            }}
+            priorities={priorities}
+            setPriorities={prts => {
+              setPriorities(prts);
+            }}
+            priority={priority}
+            setPriority={prt => {
+              setPriority(prt);
+            }}
+            statuses={statuses}
+            setStatuses={stses => {
+              setStatuses(stses);
+            }}
+            status={status}
+            setStatus={sts => {
+              setStatus(sts);
+            }}
+            executives={executives}
+            setExecutives={exts => {
+              setExecutives(exts);
+            }}
+            executive={executive}
+            setExecutive={ext => {
+              setExecutive(ext);
+            }}
+            createdTime={createdTime}
+            setCreatedTime={cretime => {
+              setCreatedTime(cretime);
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleEditClose}
+            color="primary"
+            size="small"
+            variant="outlined"
+            autoFocus
+          >
+            Update
+          </Button>
+          <Button
+            onClick={handleEditClose}
+            color="primary"
+            size="small"
+            variant="outlined"
+            autoFocus
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Grid container spacing={1}>
         <Grid item sm={12} md={3}>
           <Paper
@@ -836,6 +1160,12 @@ export default function TicketDashboard() {
                   <Typography variant="h3" color="textPrimary">
                     {viewticket.ticketSubject}
                   </Typography>
+                  {/* <Tooltip title="Edit">
+                    <EditIcon
+                      onClick={configureEditable}
+                      style={{ marginTop: 25, cursor: 'pointer' }}
+                    />
+                  </Tooltip> */}
                 </Box>
               </Box>
               <div display="flex" flexDirection="row">
@@ -848,15 +1178,7 @@ export default function TicketDashboard() {
                 >
                   Attach
                 </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className={classes.button}
-                  startIcon={<LinkIcon />}
-                >
-                  Link issue
-                </Button>
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -867,7 +1189,18 @@ export default function TicketDashboard() {
                 >
                   History
                 </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  className={classes.button}
+                  startIcon={<EditIcon />}
+                  onClick={handleEditOpen}
+                >
+                  Edit
+                </Button>
               </div>
+
               <div className={classes.boxDiv}>
                 <Typography
                   variant="body1"
@@ -881,7 +1214,7 @@ export default function TicketDashboard() {
                   <Grid container spacing={0}>
                     <Grid container item xs={12} spacing={1}>
                       <React.Fragment>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           <Box
                             display="flex"
                             flexDirection="row"
@@ -892,7 +1225,7 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '35%'
+                                width: '40%'
                               }}
                             >
                               Type :
@@ -912,7 +1245,7 @@ export default function TicketDashboard() {
                             </Box>
                           </Box>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           <Box
                             display="flex"
                             flexDirection="row"
@@ -923,7 +1256,7 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '35%'
+                                width: '40%'
                               }}
                             >
                               Priority :
@@ -933,6 +1266,13 @@ export default function TicketDashboard() {
                               flexDirection="row"
                               className={classes.valueClass}
                             >
+                              <Typography
+                                variant="body1"
+                                className={classes.ticketMargin}
+                                component="span"
+                              >
+                                {viewticket.priority}
+                              </Typography>
                               {viewticket.priority === 'Medium' ? (
                                 <ArrowUpwardIcon
                                   style={{ color: purple[500] }}
@@ -954,21 +1294,10 @@ export default function TicketDashboard() {
                               ) : (
                                 <></>
                               )}
-                              <Typography
-                                variant="body1"
-                                className={classes.ticketMargin}
-                                component="span"
-                              >
-                                {viewticket.priority}
-                              </Typography>
                             </Box>
                           </Box>
                         </Grid>
-                      </React.Fragment>
-                    </Grid>
-                    <Grid container item xs={12} spacing={1}>
-                      <React.Fragment>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           <Box
                             display="flex"
                             flexDirection="row"
@@ -979,38 +1308,7 @@ export default function TicketDashboard() {
                               style={{
                                 fontWeight: '500',
                                 float: 'left',
-                                width: '35%'
-                              }}
-                            >
-                              Category :
-                            </Typography>
-                            <Box
-                              display="flex"
-                              flexDirection="row"
-                              className={classes.valueClass}
-                            >
-                              <Typography
-                                variant="body1"
-                                className={classes.ticketMargin}
-                                component="span"
-                              >
-                                {viewticket.category}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                          <Box
-                            display="flex"
-                            flexDirection="row"
-                            alignItems="center"
-                          >
-                            <Typography
-                              variant="body1"
-                              style={{
-                                fontWeight: '500',
-                                float: 'left',
-                                width: '35%'
+                                width: '40%'
                               }}
                             >
                               Status :
@@ -1030,6 +1328,111 @@ export default function TicketDashboard() {
                             </Box>
                           </Box>
                         </Grid>
+                      </React.Fragment>
+                    </Grid>
+                    <Grid container item xs={12} spacing={1}>
+                      <React.Fragment>
+                        <Grid item xs={4}>
+                          <Box
+                            display="flex"
+                            flexDirection="row"
+                            alignItems="center"
+                          >
+                            <Typography
+                              variant="body1"
+                              style={{
+                                fontWeight: '500',
+                                float: 'left',
+                                width: '40%'
+                              }}
+                            >
+                              Category :
+                            </Typography>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              className={classes.valueClass}
+                            >
+                              <Typography
+                                variant="body1"
+                                className={classes.ticketMargin}
+                                component="span"
+                              >
+                                {viewticket.category}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        </Grid>
+                        {viewticket.subCategory !== '' ? (
+                          <Grid item xs={4}>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              alignItems="center"
+                            >
+                              <Typography
+                                variant="body1"
+                                style={{
+                                  fontWeight: '500',
+                                  float: 'left',
+                                  width: '40%'
+                                }}
+                              >
+                                Sub-Category :
+                              </Typography>
+                              <Box
+                                display="flex"
+                                flexDirection="row"
+                                className={classes.valueClass}
+                              >
+                                <Typography
+                                  variant="body1"
+                                  className={classes.ticketMargin}
+                                  component="span"
+                                >
+                                  {viewticket.subCategory}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Grid>
+                        ) : (
+                          <></>
+                        )}
+                        {viewticket.subCategoryItem !== '' ? (
+                          <Grid item xs={4}>
+                            <Box
+                              display="flex"
+                              flexDirection="row"
+                              alignItems="center"
+                            >
+                              <Typography
+                                variant="body1"
+                                style={{
+                                  fontWeight: '500',
+                                  float: 'left',
+                                  width: '40%'
+                                }}
+                              >
+                                Sub-Category Item :
+                              </Typography>
+                              <Box
+                                display="flex"
+                                flexDirection="row"
+                                className={classes.valueClass}
+                              >
+                                <Typography
+                                  variant="body1"
+                                  className={classes.ticketMargin}
+                                  component="span"
+                                >
+                                  {viewticket.subCategoryItem}
+                                </Typography>
+                              </Box>
+                            </Box>
+                          </Grid>
+                        ) : (
+                          <> </>
+                        )}
                       </React.Fragment>
                     </Grid>
                   </Grid>
@@ -1193,7 +1596,9 @@ export default function TicketDashboard() {
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  ></Typography>
+                  >
+                    {viewticket.assignedExecutive}
+                  </Typography>
                 </Box>
               </Box>
               <Box
@@ -1214,7 +1619,9 @@ export default function TicketDashboard() {
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  ></Typography>
+                  >
+                    {viewticket.createdByName}
+                  </Typography>
                 </Box>
               </Box>
             </div>

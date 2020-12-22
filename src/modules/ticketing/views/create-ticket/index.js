@@ -55,7 +55,10 @@ export default function CreateTicket(props) {
     label: ''
   });
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({ value: '', label: '' });
+  const [category, setCategory] = useState({
+    value: '',
+    label: ''
+  });
   const [subCategories, setSubCategories] = useState([]);
   const [subCategory, setSubCategory] = useState({
     value: '',
@@ -99,6 +102,43 @@ export default function CreateTicket(props) {
   const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
   const [file, setFile] = useState('');
+  const [updatedByName, setUpdatedByName] = useState('');
+  const [updatedById, setUpdatedById] = useState('');
+    const [updatedTime, setUpdatedTime] = useState();
+     const [ticketHistory, setTicketHistory] = useState([]);
+     useEffect(() => {
+       let unmounted = false;
+       async function getItems() {
+         const response = await fetch(config.APIS_URL + '/categories');
+         const body = await response.json();
+         if (!unmounted) {
+           if (!props.ticket) {
+             body.data[0]
+               ? setCategory({
+                   label: body.data[0].category,
+                   value: body.data[0]._id
+                 })
+               : setCategory({});
+           } else {
+             setCategory({
+               label: props.ticket.category,
+               value: props.ticket.categoryId
+             });
+           }
+           setCategories(
+             body.data.map(({ _id, category }) => ({
+               label: category,
+               value: _id
+             }))
+           );
+           setLoading(false);
+         }
+       }
+       getItems();
+       return () => {
+         unmounted = true;
+       };
+     }, []);
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -146,11 +186,65 @@ export default function CreateTicket(props) {
       {file.path} - {file.size} bytes
     </li>
   ));
+  const getSubCategories = cat => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/subcategories/' + cat);
+      const body = await response.json();
+      if (!unmounted) {
+        if (!props.ticket) {
+          body.data[0]
+            ? setSubCategory({
+                label: body.data[0].subCategory,
+                value: body.data[0]._id
+              })
+            : setSubCategory({});
+        }
+        setSubCategories(
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
+        );
+        setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
 
-  useEffect(() => {
-    const distid = localStorage.getItem('search');
-    setDistributorId(distid);
-
+  const getSubCategoryItems = (cat, sct) => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct
+      );
+      const body = await response.json();
+      if (!unmounted) {
+        setSubCategoryItems(
+          body.data.map(({ _id, subCategoryItem }) => ({
+            label: subCategoryItem,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        body.data[0]
+          ? setSubCategoryItem({
+              label: body.data[0].subCategoryItem,
+              value: body.data[0]._id
+            })
+          : setSubCategoryItem({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
+useEffect(() => {
+  if (!props.ticket) {
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var charactersLength = characters.length;
@@ -161,16 +255,87 @@ export default function CreateTicket(props) {
     let date = newDate.getDate().toString();
     let month = (newDate.getMonth() + 1).toString();
     let year = newDate.getFullYear().toString();
-
     setTicketNumber('TKT' + year + month + date + result);
     setCreatedTime(new Date().toDateString());
-    props.setTicketNumber('TKT' + year + month + date + result);
-    props.setCreatedTime(new Date().toDateString());
+  } else {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/tickets/' + props.ticket._id
+      );
+      const tkt = (await response.json()).data[0];
+      if (!unmounted) {
+        setTicketNumber(tkt.ticketNumber);
+        setCreatedTime(tkt.createdTime);
+        setUpdatedTime(new Date().toDateString());
+        setDistributorName(tkt.distributorName);
+        setDistributorId(tkt.distributorId);
+        setDistributorEmail(tkt.distributorEmail);
+        setDistributorMobile(tkt.distributorMobile);
+        setCreatedByName(tkt.createdByName);
+        setCreatedById(tkt.createdById);
+        setUpdatedByName(tkt.createdByName);
+        setUpdatedById(tkt.createdById);
+        setTicketSubject(tkt.ticketSubject);
+        setTicketDescription(tkt.ticketDescription);
+        setRemarks(tkt.remarks);
 
-    setTicketDescription(props.comments);
-
-    getDistributorByIdd(distid);
-  }, []);
+        setTicketType({
+          value: tkt.ticketTypeId,
+          label: tkt.ticketType
+        });
+        setMedia({ value: tkt.mediaId, label: tkt.media });
+        setCategory({ value: tkt.categoryId, label: tkt.category });
+        setSubCategory({
+          value: tkt.subCategoryId,
+          label: tkt.subCategory
+        });
+        getSubCategories(tkt.categoryId);
+        setSubCategoryItem({
+          value: tkt.subCategoryItemId,
+          label: tkt.subCategoryItem
+        });
+        getSubCategoryItems(tkt.categoryId, tkt.subCategoryId);
+        setDepartment({
+          value: tkt.departmentId,
+          label: tkt.department
+        });
+        setTeam({ value: tkt.teamId, label: tkt.team });
+        setPriority({
+          value: tkt.priorityId,
+          label: tkt.priority,
+          sla: tkt.sla
+        });
+        setStatus({
+          value: tkt.statusId,
+          label: tkt.status,
+          slaOnHold: tkt.slaOnHold
+        });
+        setExecutive({
+          value: tkt.executiveId,
+          label: tkt.executive,
+          executiveEmail: tkt.executiveEmail,
+          executiveMobile: tkt.executiveMobile
+        });
+      }
+    }
+    getItems();
+    async function getHistoryItems() {
+      const response = await fetch(
+        config.APIS_URL + '/ticketHistory/' + props.ticket._id
+      );
+      const tktHistory = (await response.json()).data;
+      if (!unmounted) {
+        setTicketHistory(tktHistory);
+      }
+    }
+    getHistoryItems();
+    return () => {
+      unmounted = true;
+    };
+  }
+}, []);
+ 
 
   useEffect(() => {
     let unmounted = false;
@@ -198,7 +363,7 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, []);
-
+useEffect(() => {},[props.ticketNumber])
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -230,18 +395,20 @@ export default function CreateTicket(props) {
     };
   }, []);
 
-  useEffect(() => {
+  const getCategory=() => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/categories');
       const body = await response.json();
       if (!unmounted) {
+       
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
             value: _id
           }))
         );
+        
         setLoading(false);
         localStorage.getItem('setCategory');
 
@@ -263,44 +430,8 @@ export default function CreateTicket(props) {
     return () => {
       unmounted = true;
     };
-  }, []);
+  };
 
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(
-        config.APIS_URL + '/subcategories/' + category.value
-      );
-      const body = await response.json();
-      if (!unmounted) {
-        setSubCategories(
-          body.data.map(({ _id, subCategory }) => ({
-            label: subCategory,
-            value: _id
-          }))
-        );
-        setLoading(false);
-        localStorage.getItem('setCategory');
-
-        const cat = localStorage.getItem('setSubCategory');
-        const value = JSON.parse(cat);
-        if (value.subCategory) {
-          setSubCategory(value.subCategory);
-        } else {
-          body.data[0]
-            ? setSubCategory({
-                label: body.data[0].subCategory,
-                value: body.data[0]._id
-              })
-            : setSubCategory({});
-        }
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, [category.value]);
 
   useEffect(() => {
     let unmounted = false;
@@ -343,7 +474,7 @@ export default function CreateTicket(props) {
     return () => {
       unmounted = true;
     };
-  }, [category.value, subCategory.value]);
+  }, [category, subCategory.value]);
 
   useEffect(() => {
     let unmounted = false;
@@ -518,6 +649,17 @@ export default function CreateTicket(props) {
               ? JSON.parse(repos.data).data[0].distributor_name || ''
               : ''
           );
+          props.setDistributorId(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].distributor_id || ''
+              : ''
+          );
+
+          props.setDistributorName(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].distributor_name || ''
+              : ''
+          );
           props.setDistributorName(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].distributor_name || ''
@@ -535,6 +677,11 @@ export default function CreateTicket(props) {
           );
 
           setDistributorEmail(
+            JSON.parse(repos.data).data
+              ? JSON.parse(repos.data).data[0].email_id || ''
+              : ''
+          );
+          props.setDistributorEmail(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].email_id || ''
               : ''
@@ -706,6 +853,95 @@ export default function CreateTicket(props) {
               </option>
             ))}
           </TextField>
+
+          <TextField
+            id="priorities"
+            select
+            value={priority.value}
+            disabled={loading}
+            size="small"
+            label="Priority"
+            SelectProps={{
+              native: true
+            }}
+            variant="outlined"
+            style={{ width: '31%' }}
+            onChange={e => {
+              setPriority({
+                value: e.target.value,
+                label: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].label,
+                sla: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].sla
+              });
+              props.setPriority({
+                value: e.target.value,
+                label: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].label,
+                sla: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].sla
+              });
+            }}
+          >
+            {priorities.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          <TextField
+            id="sm"
+            select
+            size="small"
+            label="Status"
+            SelectProps={{
+              native: true
+            }}
+            style={{ width: '31%' }}
+            variant="outlined"
+            value={status.value}
+            onChange={e => {
+              setStatus({
+                value: e.target.value,
+                label: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].label,
+                slaOnHold: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].slaOnHold
+              });
+              props.setStatus({
+                value: e.target.value,
+                label: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].label,
+                slaOnHold: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].slaOnHold
+              });
+            }}
+          >
+            {statuses.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          <br />
+
+          <TextField
+            id="sm"
+            size="small"
+            label="Ticket Created Time"
+            variant="outlined"
+            style={{ width: '31%' }}
+            value={createdTime}
+          ></TextField>
+
           <TextField
             id="category"
             select
@@ -716,7 +952,7 @@ export default function CreateTicket(props) {
             }}
             variant="outlined"
             style={{ width: '31.4%' }}
-            value={category.value}
+            defaultValue={category.value || ''}
             onChange={e => {
               setCategory({
                 value: e.target.value,
@@ -730,6 +966,7 @@ export default function CreateTicket(props) {
                   category => category.value === e.target.value
                 )[0].label
               });
+              getSubCategories(e.target.value)
             }}
           >
             {' '}
@@ -749,7 +986,7 @@ export default function CreateTicket(props) {
                 native: true
               }}
               variant="outlined"
-              style={{ width: '31.4%' }}
+              style={{ width: '31%' }}
               value={subCategory.value}
               onChange={e => {
                 setSubCategory({
@@ -813,93 +1050,6 @@ export default function CreateTicket(props) {
           ) : (
             <></>
           )}
-          <TextField
-            id="priorities"
-            select
-            value={priority.value}
-            disabled={loading}
-            size="small"
-            label="Priority"
-            SelectProps={{
-              native: true
-            }}
-            variant="outlined"
-            style={{ width: '31%' }}
-            onChange={e => {
-              setPriority({
-                value: e.target.value,
-                label: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].label,
-                sla: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].sla
-              });
-              props.setPriority({
-                value: e.target.value,
-                label: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].label,
-                sla: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].sla
-              });
-            }}
-          >
-            {priorities.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          <br />
-          <TextField
-            id="sm"
-            select
-            size="small"
-            label="Status"
-            SelectProps={{
-              native: true
-            }}
-            style={{ width: '31%' }}
-            variant="outlined"
-            value={status.value}
-            onChange={e => {
-              setStatus({
-                value: e.target.value,
-                label: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].label,
-                slaOnHold: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].slaOnHold
-              });
-              props.setStatus({
-                value: e.target.value,
-                label: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].label,
-                slaOnHold: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].slaOnHold
-              });
-            }}
-          >
-            {statuses.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          <TextField
-            id="sm"
-            size="small"
-            label="Ticket Created Time"
-            variant="outlined"
-            style={{ width: '32%' }}
-            value={createdTime}
-          ></TextField>
-
           <br />
           <TextField
             error={ticketDescription === ''}
@@ -985,7 +1135,7 @@ export default function CreateTicket(props) {
             }}
             style={{ width: '31%' }}
             variant="outlined"
-            value={media.value}
+            value={media.value || ''}
             onChange={e => {
               setMedia({
                 value: e.target.value,
