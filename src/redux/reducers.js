@@ -6,7 +6,7 @@ import {
   SET_URL_MATCH_FOUND
 } from './constants';
 
-const logInInitialState = false;
+const logInInitialState = true;
 const accountTypeInitialState = '';
 
 export const logInState = (state = logInInitialState, action) => {

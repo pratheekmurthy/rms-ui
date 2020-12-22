@@ -104,41 +104,41 @@ export default function CreateTicket(props) {
   const [file, setFile] = useState('');
   const [updatedByName, setUpdatedByName] = useState('');
   const [updatedById, setUpdatedById] = useState('');
-    const [updatedTime, setUpdatedTime] = useState();
-     const [ticketHistory, setTicketHistory] = useState([]);
-     useEffect(() => {
-       let unmounted = false;
-       async function getItems() {
-         const response = await fetch(config.APIS_URL + '/categories');
-         const body = await response.json();
-         if (!unmounted) {
-           if (!props.ticket) {
-             body.data[0]
-               ? setCategory({
-                   label: body.data[0].category,
-                   value: body.data[0]._id
-                 })
-               : setCategory({});
-           } else {
-             setCategory({
-               label: props.ticket.category,
-               value: props.ticket.categoryId
-             });
-           }
-           setCategories(
-             body.data.map(({ _id, category }) => ({
-               label: category,
-               value: _id
-             }))
-           );
-           setLoading(false);
-         }
-       }
-       getItems();
-       return () => {
-         unmounted = true;
-       };
-     }, []);
+  const [updatedTime, setUpdatedTime] = useState();
+  const [ticketHistory, setTicketHistory] = useState([]);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/categories');
+      const body = await response.json();
+      if (!unmounted) {
+        if (!props.ticket) {
+          body.data[0]
+            ? setCategory({
+                label: body.data[0].category,
+                value: body.data[0]._id
+              })
+            : setCategory({});
+        } else {
+          setCategory({
+            label: props.ticket.category,
+            value: props.ticket.categoryId
+          });
+        }
+        setCategories(
+          body.data.map(({ _id, category }) => ({
+            label: category,
+            value: _id
+          }))
+        );
+        setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -259,11 +259,10 @@ export default function CreateTicket(props) {
     let month = (newDate.getMonth() + 1).toString();
     let year = newDate.getFullYear().toString();
 
-   
     getCategory();
     if (props.ticketNumber !== '') {
       setTicketNumber(props.ticketNumber);
-       setTicketDescription(props.comments);
+      setTicketDescription(props.comments);
       setCreatedTime(props.createdTime);
       setTicketDescription(props.ticketDescription);
       setRemarks(props.remarks);
@@ -300,12 +299,11 @@ export default function CreateTicket(props) {
       });
 
       alert(JSON.stringify(props.category));
-    }else{
-       setTicketNumber('TKT' + year + month + date + result);
-    setCreatedTime(new Date().toDateString());
-    props.setTicketNumber('TKT' + year + month + date + result);
-    props.setCreatedTime(new Date().toDateString());
-
+    } else {
+      setTicketNumber('TKT' + year + month + date + result);
+      setCreatedTime(new Date().toDateString());
+      props.setTicketNumber('TKT' + year + month + date + result);
+      props.setCreatedTime(new Date().toDateString());
     }
 
     getDistributorByIdd(distid);
@@ -337,7 +335,7 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, []);
-// useEffect(() => {},[props.ticketNumber])
+  // useEffect(() => {},[props.ticketNumber])
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -369,20 +367,19 @@ export default function CreateTicket(props) {
     };
   }, []);
 
-  const getCategory=() => {
+  const getCategory = () => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/categories');
       const body = await response.json();
       if (!unmounted) {
-       
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
             value: _id
           }))
         );
-        
+
         setLoading(false);
         localStorage.getItem('setCategory');
 
@@ -391,14 +388,14 @@ export default function CreateTicket(props) {
         // if (value.category) {
         //   setCategory(value.category);
         // } else {
-          body.data[0]
-            ? setCategory({
-                label: body.data[0].category,
-                value: body.data[0]._id
-              })
-            : setCategory({});
-        }
+        body.data[0]
+          ? setCategory({
+              label: body.data[0].category,
+              value: body.data[0]._id
+            })
+          : setCategory({});
       }
+    }
     // }
     getItems();
     return () => {
@@ -471,14 +468,14 @@ export default function CreateTicket(props) {
         // if (value.subCategoryItem) {
         //   setSubCategoryItem(value.subCategoryItem);
         // } else {
-          body.data[0]
-            ? setSubCategoryItem({
-                label: body.data[0].subCategoryItem,
-                value: body.data[0]._id
-              })
-            : setSubCategoryItem({});
-        }
+        body.data[0]
+          ? setSubCategoryItem({
+              label: body.data[0].subCategoryItem,
+              value: body.data[0]._id
+            })
+          : setSubCategoryItem({});
       }
+    }
     // }
     getItems();
     return () => {
@@ -976,7 +973,7 @@ export default function CreateTicket(props) {
                   category => category.value === e.target.value
                 )[0].label
               });
-              getSubCategories(e.target.value)
+              getSubCategories(e.target.value);
             }}
           >
             {' '}

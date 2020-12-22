@@ -128,9 +128,13 @@ const FormFormik = () => {
   };
 
   function postQuestions() {
-    Axios.post('/questions', input)
-      .then(res => {})
-      .catch(err => {});
+    Axios.post('/survey/questions', input)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(input);
+      });
   }
 
   const handleDelete = data => {

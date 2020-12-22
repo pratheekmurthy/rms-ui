@@ -1,14 +1,24 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField } from '@material-ui/core';
+import { Paper, Typography, TextField, Box } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: 330
+      width: 150
     }
+  },
+  paper: {
+    padding: theme.spacing(1),
+    marginBottom: 15
+  },
+  alignCenter: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    justifyContent: 'flex-start'
   }
 }));
 
@@ -16,122 +26,133 @@ export default function FilterTicket() {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <TextField
-        id="outlined-search"
-        label="Ticket Number"
-        type="search"
-        variant="outlined"
-        size="small"
-      />
-      <br />
-      <TextField
-        id="outlined-search"
-        label="Ticket Subject"
-        type="search"
-        variant="outlined"
-        size="small"
-      />
-      <br />
-      <TextField
-        id="outlined-search"
-        label="Ticket Description"
-        type="search"
-        variant="outlined"
-        size="small"
-      />
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Ticket Type"
-        variant="outlined"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Category"
-        variant="outlined"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        variant="outlined"
-        label="Priority"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Status"
-        size="small"
-        variant="outlined"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Source Media"
-        variant="outlined"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="outlined-search"
-        label="Distributor Name"
-        type="search"
-        variant="outlined"
-        size="small"
-      />
-      <br />
-      <TextField
-        id="outlined-search"
-        label="Distributor Id"
-        type="search"
-        variant="outlined"
-        size="small"
-      />
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Created On"
-        variant="outlined"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
-      <br />
-      <TextField
-        id="standard-select-currency-native"
-        select
-        label="Due On"
-        variant="outlined"
-        size="small"
-        SelectProps={{
-          native: true
-        }}
-      ></TextField>
+      <Paper className={classes.paper}>
+        <Box component="div" className={classes.alignCenter}>
+          <Typography variant="h6" style={{ marginRight: 10, marginLeft: 5 }}>
+            Filter :
+          </Typography>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Ticket No."
+            size="small"
+            InputLabelProps={{
+              shrink: true
+            }}
+            SelectProps={{
+              native: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Ticket Type"
+            size="small"
+            InputLabelProps={{
+              shrink: true
+            }}
+            SelectProps={{
+              native: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Category"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Priority"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Status"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Source Media"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Distributor Name"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>{' '}
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Distributor Id"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Created On"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Due On"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+          ></TextField>
+        </Box>
+      </Paper>
     </div>
   );
 }
