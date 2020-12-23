@@ -35,7 +35,9 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-
+import Timeline from './timeline';
+import HistoryIcon from '@material-ui/icons/History';
+  
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
   root: {
@@ -125,68 +127,92 @@ const useStyles = makeStyles(theme => ({
     marginRight: 10,
     height: 30,
     width: 30
+  },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+    backgroundColor: purple[700]
   }
 }));
 
 export default function TicketDashboard() {
   const classes = useStyles();
+  const [opentimeline, setOpentimeline] = React.useState(false);
+  const handleTimelineOpen = () => {
+    setOpentimeline(true);
+  };
+  const handleTimelineClose = () => {
+    setOpentimeline(false);
+  };
   const ticketListData = [
     {
+      status: 'New',
       id: 'IV-10202',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'Closed',
       id: 'IV-10222',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'Resolved',
       id: 'IV-10122',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10732',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'Open',
       id: 'IV-10312',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-12302',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10232',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10122',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10732',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10312',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-12302',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
     },
     {
+      status: 'New',
       id: 'IV-10232',
       title:
         'This captures all user stories and tasks related to the Cloud Deployment Framework.'
@@ -286,7 +312,42 @@ export default function TicketDashboard() {
               <ListItemText>
                 <div className={classes.textBold}>
                   <ListItemIcon>
-                    <OfflineBoltIcon style={{ color: purple[500] }} />
+                    {ticket.status === 'New' ? (
+                      <Avatar className={classes.small}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )}
+                    {ticket.status === 'Open' ? (
+                      <Avatar className={classes.small}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )}
+                    {ticket.status === 'Work In Progress' ? (
+                      <Avatar className={classes.small}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )}
+                    {ticket.status === 'Resolved' ? (
+                      <Avatar className={classes.small}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )}
+                    {ticket.status === 'Closed' ? (
+                      <Avatar className={classes.small}>
+                        {ticket.status.substring(0, 1)}
+                      </Avatar>
+                    ) : (
+                      <></>
+                    )}
+                    {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
                     <span className={classes.ticketMargin}>{ticket.id}</span>
                   </ListItemIcon>
                 </div>
@@ -428,6 +489,7 @@ export default function TicketDashboard() {
             style={{ maxHeight: 720, overflow: 'auto' }}
           >
             <Box component="div" overflow="auto">
+              <h3>All</h3>
               {getTicketList()}
             </Box>
           </Paper>
@@ -483,10 +545,36 @@ export default function TicketDashboard() {
                   color="primary"
                   size="small"
                   className={classes.button}
-                  startIcon={<LinkIcon />}
+                  startIcon={<HistoryIcon />}
+                  onClick={handleTimelineOpen}
                 >
-                  Link issue
+                  History
                 </Button>
+                <Dialog
+                  open={opentimeline}
+                  fullWidth
+                  maxWidth="md"
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    {'Timeline'}
+                  </DialogTitle>
+                  <DialogContent dividers>
+                    <Timeline />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={handleTimelineClose}
+                      color="primary"
+                      size="small"
+                      variant="outlined"
+                      autoFocus
+                    >
+                      Cancel
+                    </Button>
+                  </DialogActions>
+                </Dialog>
               </Box>
               <div className={classes.boxDiv}>
                 <Typography
@@ -738,32 +826,33 @@ export default function TicketDashboard() {
                   />
                 )}
               </div>
-              <div component="div" className={classes.boxDiv}>
+              <div className={classes.boxDiv}>
                 <Typography
                   variant="body1"
                   color="textPrimary"
+                  fontWeight="fontWeightMedium"
                   className={classes.detailTitle}
                 >
-                  Attachments
+                  Comments
                 </Typography>
                 {isEditable ? (
                   <TextField
                     id="outlined-textarea"
-                    defaultValue="Drop files to attach, or browse"
+                    placeholder="Add a description..."
+                    defaultValue="Issues are resolved"
                     rows={5}
-                    rowsMax={20}
-                    multiline
                     fullWidth
+                    multiline
                     variant="outlined"
                   />
                 ) : (
                   <TextField
                     id="outlined-textarea"
-                    defaultValue="Drop files to attach, or browse"
+                    placeholder="Add a comment..."
+                    defaultValue="Issues are resolved"
                     rows={5}
-                    rowsMax={20}
-                    multiline
                     fullWidth
+                    multiline
                     variant="outlined"
                     InputProps={{
                       readOnly: true
