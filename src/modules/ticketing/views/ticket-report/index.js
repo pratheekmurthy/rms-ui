@@ -86,7 +86,7 @@ export default function TicketReport() {
           value={day}
           onChange={handleDayChange}
           variant="outlined"
-          label="Days"
+          label="Duration"
           SelectProps={{
             native: true
           }}

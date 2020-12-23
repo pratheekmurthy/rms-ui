@@ -143,9 +143,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
-            <InputIcon />
-          </IconButton>
+          
           <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton>
