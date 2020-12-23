@@ -27,18 +27,6 @@ const TextInput = ({ submit }) => {
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
-          // let name = values.name;
-          // let label = values.label;
-          // if (name && label !== "") {
-          //   setAllData({
-          //     questionType: "text",
-          //     questionName: values.name,
-          //     label: values.label,
-          //   });
-          //   submit(allData);
-          // }
-
           handleInputs();
           resetForm();
         }}

@@ -26,7 +26,6 @@ const RatingInput = ({ submit }) => {
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
 
           handleInputs();
           resetForm();

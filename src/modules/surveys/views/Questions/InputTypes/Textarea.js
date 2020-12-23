@@ -29,7 +29,6 @@ const TextareaInput = ({ submit }) => {
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
 
           handleInputs();
           resetForm();

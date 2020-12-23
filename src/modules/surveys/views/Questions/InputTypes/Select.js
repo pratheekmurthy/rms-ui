@@ -108,7 +108,6 @@ const SelectInput = ({ submit }) => {
         initialValues={initialValuesObj}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          // console.log(values);
           setSubmitValues({ values });
           resetForm();
         }}

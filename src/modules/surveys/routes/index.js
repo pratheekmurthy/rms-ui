@@ -17,6 +17,12 @@ export default [
     crumb: 'Create Survey'
   },
   {
+    path: '/:surveyId/view',
+    key: 'viewSurvey',
+    component: CreateSurvey,
+    crumb: 'View Survey'
+  },
+  {
     path: '/questions',
     exact: true,
     key: 'questions',

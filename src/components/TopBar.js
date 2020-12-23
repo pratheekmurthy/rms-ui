@@ -127,6 +127,16 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/campaign/dashboard" className="color-white">
               Campaign
+             </Link>
+          </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/ticketing/setup" className="color-white">
+              Setup
+            </Link>
+          </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/ticketing/charts" className="color-white">
+              Charts
             </Link>
           </Typography>
           <IconButton color="inherit">
