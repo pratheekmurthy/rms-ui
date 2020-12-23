@@ -4,7 +4,8 @@
   "licence": "MIT",
   "version": "1.0.0",
   "private": false,
-  "proxy": "http://localhost:3001/",
+  "proxy": "http://14.98.23.204:3001/",
+
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -32,6 +33,7 @@
     "@material-ui/data-grid": "^4.0.0-alpha.11",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
+    "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.10.0",
     "apexcharts": "^3.23.0",
     "awesome-debounce-promise": "^2.1.0",
