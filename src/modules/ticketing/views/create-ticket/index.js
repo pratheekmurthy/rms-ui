@@ -260,11 +260,9 @@ export default function CreateTicket(props) {
     let year = newDate.getFullYear().toString();
 
     getCategory();
-    
-      setTicketNumber('TKT' + year + month + date + result);
-      setCreatedTime(new Date().toDateString());
-   
-    
+
+    setTicketNumber('TKT' + year + month + date + result);
+    setCreatedTime(new Date().toDateString());
 
     getDistributorByIdd(distid);
   }, []);
@@ -616,7 +614,7 @@ export default function CreateTicket(props) {
               ? JSON.parse(repos.data).data[0].distributor_name || ''
               : ''
           );
-        
+
           setDistributorMobile(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].mob_no || ''
@@ -628,7 +626,6 @@ export default function CreateTicket(props) {
               ? JSON.parse(repos.data).data[0].email_id || ''
               : ''
           );
-         
         });
     }
     getItems();
@@ -782,7 +779,6 @@ export default function CreateTicket(props) {
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
-            
             }}
           >
             {ticketTypes.map(({ label, value }) => (
@@ -814,7 +810,6 @@ export default function CreateTicket(props) {
                   priority => priority.value === e.target.value
                 )[0].sla
               });
-             
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -844,7 +839,6 @@ export default function CreateTicket(props) {
                   status => status.value === e.target.value
                 )[0].slaOnHold
               });
-            
             }}
           >
             {statuses.map(({ label, value }) => (
@@ -882,7 +876,7 @@ export default function CreateTicket(props) {
                   category => category.value === e.target.value
                 )[0].label
               });
-             
+
               getSubCategories(e.target.value);
             }}
           >
@@ -912,7 +906,6 @@ export default function CreateTicket(props) {
                     subCategory => subCategory.value === e.target.value
                   )[0].label
                 });
-             
               }}
             >
               {' '}
@@ -944,7 +937,6 @@ export default function CreateTicket(props) {
                     subCategoryItem => subCategoryItem.value === e.target.value
                   )[0].label
                 });
-               
               }}
             >
               {' '}
@@ -1055,7 +1047,6 @@ export default function CreateTicket(props) {
                   media => media.value === e.target.value
                 )[0].idLabel
               });
-            
             }}
           >
             {medium.map(({ label, value }) => (
@@ -1108,7 +1099,6 @@ export default function CreateTicket(props) {
                   department => department.value === e.target.value
                 )[0].label
               });
-             
             }}
           >
             {departments.map(({ label, value }) => (
@@ -1131,7 +1121,6 @@ export default function CreateTicket(props) {
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
-            
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1162,7 +1151,6 @@ export default function CreateTicket(props) {
                   executive => executive.value === e.target.value
                 )[0].executiveMobile
               });
-             
             }}
           >
             {executives.map(({ label, value }) => (
@@ -1189,16 +1177,17 @@ export default function CreateTicket(props) {
 
           <TextField
             id="SoftCopyFile"
-            label="Drop a file"
-            multiline
-            size="small"
-            rows={5}
+            type="file"
+            multiple={false}
             variant="outlined"
-            style={{ width: '48%' }}
+            style={{ width: '31.4%' }}
             onChange={e => {
               handleChange('file', e);
             }}
           />
+          <Button onClick={UploadFile} className="primary" color="secondary">
+            Upload
+          </Button>
         </div>
       </form>
     </div>
