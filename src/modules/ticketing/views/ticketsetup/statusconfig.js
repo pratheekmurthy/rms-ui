@@ -38,6 +38,8 @@ function StatusConfig() {
   const [newRow, setNewRow] = useState({
     status: '',
     slahold: false,
+    closed: false,
+    color: '',
     active: true
   });
   const [apiStatuses, setApiStatuses] = useState([]);
@@ -46,6 +48,8 @@ function StatusConfig() {
   const [updatedRow, setUpdatedRow] = useState({
     status: '',
     slahold: false,
+    closed: false,
+    color: '',
     active: false
   });
 
@@ -81,6 +85,8 @@ function StatusConfig() {
         headers: {
           status: newRow.status,
           slahold: newRow.slahold,
+          closed: newRow.closed,
+          color: newRow.color,
           active: newRow.active
         }
       };
@@ -88,7 +94,13 @@ function StatusConfig() {
         .then(res => res.json())
         .then(repos => {
           setApiStatuses([]);
-          setNewRow({ status: '', slahold: false, active: true });
+          setNewRow({
+            status: '',
+            slahold: false,
+            closed: false,
+            color: '',
+            active: true
+          });
         });
     }
   };
@@ -114,6 +126,8 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: event.target.value,
       slahold: updatedRow.slahold,
+      closed: updatedRow.closed,
+      color: updatedRow.color,
       active: updatedRow.active
     });
   };
@@ -123,6 +137,30 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: updatedRow.status,
       slahold: event.target.checked,
+      closed: updatedRow.closed,
+      color: updatedRow.color,
+      active: updatedRow.active
+    });
+  };
+
+  const handleColorChange = (index, event) => {
+    setUpdatedRow({
+      id: statuses[index]._id,
+      status: updatedRow.status,
+      slahold: updatedRow.slahold,
+      closed: event.target.value,
+      color: updatedRow.color,
+      active: updatedRow.active
+    });
+  };
+
+  const handleClosedChange = (index, event) => {
+    setUpdatedRow({
+      id: statuses[index]._id,
+      status: updatedRow.status,
+      slahold: updatedRow.slahold,
+      closed: event.target.checked,
+      color: updatedRow.color,
       active: updatedRow.active
     });
   };
@@ -132,6 +170,8 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: updatedRow.status,
       slahold: updatedRow.slahold,
+      closed: updatedRow.closed,
+      color: updatedRow.color,
       active: event.target.checked
     });
   };
@@ -144,6 +184,8 @@ function StatusConfig() {
           <TableCell>Sl. No.</TableCell>
           <TableCell>Status</TableCell>
           <TableCell style={{ textAlign: 'center' }}>SLA on Hold</TableCell>
+          <TableCell style={{ textAlign: 'center' }}>Closed</TableCell>
+          <TableCell>Color</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -158,6 +200,8 @@ function StatusConfig() {
                 setNewRow({
                   status: e.target.value,
                   slahold: newRow.slahold,
+                  closed: newRow.closed,
+                  color: newRow.color,
                   active: newRow.active
                 })
               }
@@ -172,10 +216,45 @@ function StatusConfig() {
                 setNewRow({
                   status: newRow.status,
                   slahold: e.target.checked,
+                  closed: newRow.closed,
+                  color: newRow.color,
                   active: newRow.active
                 })
               }
               inputProps={{ 'aria-label': 'primary checkbox' }}
+            />
+          </TableCell>
+          <TableCell>
+            <Checkbox
+              checked={newRow.closed}
+              onChange={e =>
+                setNewRow({
+                  status: newRow.status,
+                  slahold: newRow.slahold,
+                  closed: e.target.checked,
+                  color: newRow.color,
+                  active: newRow.active
+                })
+              }
+              inputProps={{ 'aria-label': 'primary checkbox' }}
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              label="Status"
+              id="outlined-size-small"
+              value={newRow.color}
+              onChange={e =>
+                setNewRow({
+                  status: newRow.closed,
+                  slahold: newRow.slahold,
+                  closed: newRow.closed,
+                  color: e.target.value,
+                  active: newRow.active
+                })
+              }
+              variant="outlined"
+              size="small"
             />
           </TableCell>
           <TableCell>
@@ -185,6 +264,8 @@ function StatusConfig() {
                 setNewRow({
                   status: newRow.status,
                   slahold: newRow.slahold,
+                  closed: newRow.closed,
+                  color: newRow.color,
                   active: e.target.checked
                 })
               }
@@ -227,6 +308,28 @@ function StatusConfig() {
                   onChange={e => handleSlaHoldChange(idx, e)}
                   inputProps={{ 'aria-label': 'primary checkbox' }}
                 />
+              </TableCell>
+              <TableCell style={{ textAlign: 'center' }}>
+                <Checkbox
+                  defaultChecked={item.closed}
+                  disabled={isEditing === idx ? false : true}
+                  onChange={e => handleClosedChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="Color"
+                    id="outlined-size-small"
+                    defaultValue={item.color}
+                    onChange={e => handleColorChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.color
+                )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>
                 <Checkbox
