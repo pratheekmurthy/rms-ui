@@ -1,5 +1,5 @@
 import { DataGrid } from '@material-ui/data-grid';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, ButtonGroup, Box, Button } from '@material-ui/core';
 import Axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -34,9 +34,8 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ViewQuestions = () => {
+const ViewQuestions = props => {
   const classes = useStyles();
-
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -54,20 +53,46 @@ const ViewQuestions = () => {
       }
     })();
   }, []);
+
   return (
     <div className={classes.div}>
+      <Box marginBottom={2}>
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button>
+            <Link to="/surveys/questions/new">Add New Questions</Link>
+          </Button>
+          <Button>
+            <Link to="/surveys/edit">Edit Questions</Link>
+          </Button>
+        </ButtonGroup>
+      </Box>
       {!loading ? (
         error ? (
           <CommonAlert />
         ) : (
-          <DataGrid
-            columns={colConfig}
-            rows={questions.map(q => ({ ...q, id: q.questionId }))}
-            style={{ width: '100%' }}
-            className={classes.root}
-            autoHeight="true"
-            pageSize={5}
-          />
+          <div>
+            {props.location.state && (
+              <>
+                <CommonAlert
+                  variant="success"
+                  text={
+                    props.location.state === 'create'
+                      ? 'Question Created Successfully'
+                      : 'Question Updated Successfully'
+                  }
+                />
+                <br />
+              </>
+            )}
+            <DataGrid
+              columns={colConfig}
+              rows={questions.map(q => ({ ...q, id: q.questionId }))}
+              style={{ width: '100%' }}
+              className={classes.root}
+              autoHeight="true"
+              pageSize={5}
+            />
+          </div>
         )
       ) : (
         <Spinner />

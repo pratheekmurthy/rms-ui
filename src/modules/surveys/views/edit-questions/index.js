@@ -14,7 +14,9 @@ import {
   Tooltip,
   ListItem,
   ListItemText,
-  IconButton
+  IconButton,
+  ButtonGroup,
+  Link
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import Page from 'src/components/Page';
@@ -49,22 +51,19 @@ const EditQuestions = props => {
     })();
   }, []);
 
-  const [newData, setNewData] = useState([]);
+  // const [newData, setNewData] = useState([]);
 
   const updateSurvey = data => {
-    console.log('New updated data : ', data);
-    setNewData(data);
+    // console.log('New updated data : ', data);
+    const newData = { ...data };
+    setQuestions(newData);
   };
-
-  useEffect(() => {
-    console.log('newData : ', newData);
-  }, [newData]);
 
   async function saveQuestion() {
     try {
       const res = await Axios['patch'](
         `/survey/question/${props.match.params.questionId}`,
-        newData
+        questions
       );
       props.history.push({
         pathname: '/surveys/questions',
@@ -86,7 +85,7 @@ const EditQuestions = props => {
                 <Divider />
                 <CardContent>
                   <UpdateQuestions
-                    updateData={[questions]}
+                    updateData={questions}
                     newUpdatedValue={updateSurvey}
                   />
                 </CardContent>
