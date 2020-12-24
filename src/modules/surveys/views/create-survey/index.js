@@ -149,11 +149,12 @@ export default function CreateSurvey(props) {
 
   async function saveSurvey() {
     try {
-      const res = await Axios[isPost ? 'post' : 'patch'](
+      console.log(questions, surveyDetails);
+      await Axios[isPost ? 'post' : 'patch'](
         isPost ? '/survey' : `/survey/${match.params.surveyId}`,
         {
-          questions,
           ...surveyDetails,
+          questions,
           state: 'draft'
         }
       );
