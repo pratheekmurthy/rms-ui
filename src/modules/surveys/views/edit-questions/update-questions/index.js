@@ -13,26 +13,27 @@ import {
   MenuItem,
   Grid
 } from '@material-ui/core';
+import TextareaInput from '../../Questions/InputTypes/Textarea';
 
 const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
   console.log('UpdateData : ', updateData);
   const obj = {};
 
-  !!updateData &&
-    updateData.map(input => {
-      switch (input.questionType) {
-        case 'rating':
-          return (obj[input.questionName] = '');
-        case 'textarea':
-          return (obj[input.questionName] = '');
-        case 'text':
-          return (obj[input.questionName] = '');
-        case 'radio':
-          return (obj[input.questionName] = '');
-        default:
-          return true;
-      }
-    });
+  // !!updateData &&
+  //   updateData.map(input => {
+  //     switch (input.questionType) {
+  //       case 'rating':
+  //         return (obj[input.questionName] = '');
+  //       case 'textarea':
+  //         return (obj[input.questionName] = '');
+  //       case 'text':
+  //         return (obj[input.questionName] = '');
+  //       case 'radio':
+  //         return (obj[input.questionName] = '');
+  //       default:
+  //         return true;
+  //     }
+  //   });
 
   // const [options, setOptions] = useState([]);
 
@@ -44,27 +45,27 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
   //   console.log('Options : ', options);
   // }, [options]);
 
-  const handleSubmit = values => {
-    if (values.rating) {
-      updateData[0].label = values.rating;
-    }
-    if (values.textarea) {
-      updateData[0].label = values.textarea;
-      if (values.rows) {
-        updateData[0].additionalConfig.rows = values.rows;
-      }
-    }
-    if (values.rows) {
-      updateData[0].additionalConfig.rows = values.rows;
-    }
-    if (values.text) {
-      updateData[0].label = values.text;
-    }
-    if (values.radio) {
-      updateData[0].label = values.radio;
-    }
-    updateData.forEach(data => newUpdatedValue(data));
-  };
+  // const handleSubmit = values => {
+  //   if (values.rating) {
+  //     updateData[0].label = values.rating;
+  //   }
+  //   if (values.textarea) {
+  //     updateData[0].label = values.textarea;
+  //     if (values.rows) {
+  //       updateData[0].additionalConfig.rows = values.rows;
+  //     }
+  //   }
+  //   if (values.rows) {
+  //     updateData[0].additionalConfig.rows = values.rows;
+  //   }
+  //   if (values.text) {
+  //     updateData[0].label = values.text;
+  //   }
+  //   if (values.radio) {
+  //     updateData[0].label = values.radio;
+  //   }
+  //   updateData.forEach(data => newUpdatedValue(data));
+  // };
 
   return (
     <div>
@@ -73,7 +74,7 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
           console.log('values', values);
-          handleSubmit(values);
+          // handleSubmit(values);
           resetForm();
         }}
       >
@@ -104,49 +105,11 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
                   );
                 case 'textarea':
                   return (
-                    <div key={data.questionId}>
-                      <Grid
-                        container
-                        direction="row"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                        spacing={6}
-                      >
-                        <Grid item xs={4}>
-                          <Field
-                            component={TextField}
-                            color="primary"
-                            name={data.questionType}
-                            id={data.questionName}
-                            autoComplete="off"
-                            defaultValue={data.label}
-                            type="text"
-                            label="Enter new label"
-                          />
-                        </Grid>
-
-                        <Grid item xs={4}>
-                          <Field
-                            component={TextField}
-                            name="rows"
-                            id="rows"
-                            type="number"
-                            label="Rows"
-                            defaultValue={data.additionalConfig.rows}
-                            autoComplete="off"
-                            InputLabelProps={{
-                              shrink: true
-                            }}
-                            size="small"
-                          />
-                        </Grid>
-                      </Grid>
-                      <br />
-                      <br />
-                      <Button variant="contained" color="primary" type="submit">
-                        Save
-                      </Button>
-                    </div>
+                    <TextareaInput
+                      isEdit
+                      question={updateData[0]}
+                      submit={newUpdatedValue}
+                    />
                   );
                 case 'text':
                   return (

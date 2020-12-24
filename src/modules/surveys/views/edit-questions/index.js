@@ -37,9 +37,9 @@ const EditQuestions = props => {
       try {
         // const res = await Axios.get('/survey/questions'+ props.match.params.questionId);
         const res = await Axios.get('/survey/questions');
-        setQuestions(
+        setQuestions([
           res.data.find(q => q.questionId === props.match.params.questionId)
-        );
+        ]);
       } catch (Err) {
         // console.log(Err);
         setError(Err);
@@ -53,18 +53,14 @@ const EditQuestions = props => {
 
   const updateSurvey = data => {
     console.log('New updated data : ', data);
-    setNewData(data);
+    setQuestions([data]);
   };
-
-  useEffect(() => {
-    console.log('newData : ', newData);
-  }, [newData]);
 
   async function saveQuestion() {
     try {
       const res = await Axios['patch'](
         `/survey/question/${props.match.params.questionId}`,
-        newData
+        questions[0]
       );
       props.history.push({
         pathname: '/surveys/questions',
@@ -86,7 +82,7 @@ const EditQuestions = props => {
                 <Divider />
                 <CardContent>
                   <UpdateQuestions
-                    updateData={[questions]}
+                    updateData={questions}
                     newUpdatedValue={updateSurvey}
                   />
                 </CardContent>
@@ -111,7 +107,7 @@ const EditQuestions = props => {
                 <CardContent>
                   {test ? (
                     <>
-                      <GenerateForm inputs={[questions]} />
+                      <GenerateForm inputs={questions} />
                     </>
                   ) : null}
                 </CardContent>
