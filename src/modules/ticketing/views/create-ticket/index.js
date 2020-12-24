@@ -245,8 +245,8 @@ export default function CreateTicket(props) {
   };
 
   useEffect(() => {
-    const distid = localStorage.getItem('search');
-    setDistributorId(distid);
+    // const distid = localStorage.getItem('search');
+    // setDistributorId(distid);
 
     var result = '';
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -263,8 +263,9 @@ export default function CreateTicket(props) {
 
     setTicketNumber('TKT' + year + month + date + result);
     setCreatedTime(new Date().toDateString());
-
-    getDistributorByIdd(distid);
+ props.setTicketNumber('TKT' + year + month + date + result);
+ props.setCreatedTime(new Date().toDateString());
+    // getDistributorByIdd(distid);
   }, []);
 
   useEffect(() => {
@@ -608,24 +609,43 @@ export default function CreateTicket(props) {
               ? JSON.parse(repos.data).data[0].distributor_id || ''
               : ''
           );
-
+ props.setDistributorId(
+   JSON.parse(repos.data).data
+     ? JSON.parse(repos.data).data[0].distributor_id || ''
+     : ''
+ );
           setDistributorName(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].distributor_name || ''
               : ''
           );
+           props.setDistributorName(
+             JSON.parse(repos.data).data
+               ? JSON.parse(repos.data).data[0].distributor_name || ''
+               : ''
+           );
 
           setDistributorMobile(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].mob_no || ''
               : ''
           );
+            props.setDistributorMobile(
+              JSON.parse(repos.data).data
+                ? JSON.parse(repos.data).data[0].mob_no || ''
+                : ''
+            );
 
           setDistributorEmail(
             JSON.parse(repos.data).data
               ? JSON.parse(repos.data).data[0].email_id || ''
               : ''
           );
+           props.setDistributorEmail(
+             JSON.parse(repos.data).data
+               ? JSON.parse(repos.data).data[0].email_id || ''
+               : ''
+           );
         });
     }
     getItems();
@@ -746,109 +766,6 @@ export default function CreateTicket(props) {
             size="small"
             style={{ width: '32%' }}
           />
-          <br />
-          <TextField
-            error={ticketSubject === ''}
-            id="title"
-            label="Subject"
-            variant="outlined"
-            size="small"
-            style={{ width: '98%' }}
-            value={ticketSubject}
-            onChange={e => {
-              handleChange('ticketSubject', e);
-            }}
-          />
-          <br />
-          <TextField
-            id="type"
-            select
-            name="type"
-            size="small"
-            label="Ticket Type"
-            SelectProps={{
-              native: true
-            }}
-            variant="outlined"
-            style={{ width: '32%' }}
-            value={ticketType.value || ''}
-            onChange={e => {
-              setTicketType({
-                value: e.target.value,
-                label: ticketTypes.filter(
-                  ticketType => ticketType.value === e.target.value
-                )[0].label
-              });
-            }}
-          >
-            {ticketTypes.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-
-          <TextField
-            id="priorities"
-            select
-            value={priority.value}
-            disabled={loading}
-            size="small"
-            label="Priority"
-            SelectProps={{
-              native: true
-            }}
-            variant="outlined"
-            style={{ width: '31%' }}
-            onChange={e => {
-              setPriority({
-                value: e.target.value,
-                label: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].label,
-                sla: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].sla
-              });
-            }}
-          >
-            {priorities.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          <TextField
-            id="sm"
-            select
-            size="small"
-            label="Status"
-            SelectProps={{
-              native: true
-            }}
-            style={{ width: '31%' }}
-            variant="outlined"
-            value={status.value}
-            onChange={e => {
-              setStatus({
-                value: e.target.value,
-                label: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].label,
-                slaOnHold: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].slaOnHold
-              });
-            }}
-          >
-            {statuses.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          <br />
-
           <TextField
             id="sm"
             size="small"
@@ -857,113 +774,6 @@ export default function CreateTicket(props) {
             style={{ width: '31%' }}
             value={createdTime}
           ></TextField>
-
-          <TextField
-            id="category"
-            select
-            size="small"
-            label="Category"
-            SelectProps={{
-              native: true
-            }}
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            value={category.value || ''}
-            onChange={e => {
-              setCategory({
-                value: e.target.value,
-                label: categories.filter(
-                  category => category.value === e.target.value
-                )[0].label
-              });
-
-              getSubCategories(e.target.value);
-            }}
-          >
-            {' '}
-            {categories.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          {subCategories.length > 0 ? (
-            <TextField
-              id="subcategories"
-              select
-              size="small"
-              label="Sub categories"
-              SelectProps={{
-                native: true
-              }}
-              variant="outlined"
-              style={{ width: '31%' }}
-              value={subCategory.value}
-              onChange={e => {
-                setSubCategory({
-                  value: e.target.value,
-                  label: subCategories.filter(
-                    subCategory => subCategory.value === e.target.value
-                  )[0].label
-                });
-              }}
-            >
-              {' '}
-              {subCategories.map(({ label, value }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </TextField>
-          ) : (
-            <></>
-          )}
-          {subCategoryItems.length > 1 ? (
-            <TextField
-              id="subcategoryitems"
-              select
-              size="small"
-              label="Sub categories Items"
-              SelectProps={{
-                native: true
-              }}
-              variant="outlined"
-              style={{ width: '31.4%' }}
-              value={subCategoryItem.value}
-              onChange={e => {
-                setSubCategoryItem({
-                  value: e.target.value,
-                  label: subCategoryItems.filter(
-                    subCategoryItem => subCategoryItem.value === e.target.value
-                  )[0].label
-                });
-              }}
-            >
-              {' '}
-              {subCategoryItems.map(({ label, value }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </TextField>
-          ) : (
-            <></>
-          )}
-          <br />
-          <TextField
-            error={ticketDescription === ''}
-            id="dn"
-            label="Description"
-            multiline
-            rows={5}
-            size="small"
-            variant="outlined"
-            style={{ width: '98%' }}
-            value={ticketDescription}
-            onChange={e => {
-              handleChange('ticketDescription', e);
-            }}
-          />
           <br />
           <TextField
             error={distributorId === ''}
@@ -1024,6 +834,287 @@ export default function CreateTicket(props) {
             }}
           />
           <br />
+
+          <TextField
+            id="type"
+            select
+            name="type"
+            size="small"
+            label="Ticket Type"
+            SelectProps={{
+              native: true
+            }}
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={ticketType.value || ''}
+            onChange={e => {
+              setTicketType({
+                value: e.target.value,
+                label: ticketTypes.filter(
+                  ticketType => ticketType.value === e.target.value
+                )[0].label
+              });
+              props.setTicketType({
+                value: e.target.value,
+                label: ticketTypes.filter(
+                  ticketType => ticketType.value === e.target.value
+                )[0].label
+              });
+            }}
+          >
+            {ticketTypes.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+
+          <TextField
+            id="priorities"
+            select
+            value={priority.value}
+            disabled={loading}
+            size="small"
+            label="Priority"
+            SelectProps={{
+              native: true
+            }}
+            variant="outlined"
+            style={{ width: '31%' }}
+            onChange={e => {
+              setPriority({
+                value: e.target.value,
+                label: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].label,
+                sla: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].sla
+              });
+              props.setPriority({
+                value: e.target.value,
+                label: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].label,
+                sla: priorities.filter(
+                  priority => priority.value === e.target.value
+                )[0].sla
+              });
+            }}
+          >
+            {priorities.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          <TextField
+            id="sm"
+            select
+            size="small"
+            label="Status"
+            SelectProps={{
+              native: true
+            }}
+            style={{ width: '31%' }}
+            variant="outlined"
+            value={status.value}
+            onChange={e => {
+              setStatus({
+                value: e.target.value,
+                label: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].label,
+                slaOnHold: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].slaOnHold
+              });
+              props.setStatus({
+                value: e.target.value,
+                label: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].label,
+                slaOnHold: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].slaOnHold
+              });
+            }}
+          >
+            {statuses.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          <br />
+
+          <TextField
+            id="category"
+            select
+            size="small"
+            label="Category"
+            SelectProps={{
+              native: true
+            }}
+            variant="outlined"
+            style={{ width: '31.4%' }}
+            value={category.value || ''}
+            onChange={e => {
+              setCategory({
+                value: e.target.value,
+                label: categories.filter(
+                  category => category.value === e.target.value
+                )[0].label
+              });
+
+              props.setCategory({
+                value: e.target.value,
+                label: categories.filter(
+                  category => category.value === e.target.value
+                )[0].label
+              });
+              getSubCategories(e.target.value);
+            }}
+          >
+            {' '}
+            {categories.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          {subCategories.length > 0 ? (
+            <TextField
+              id="subcategories"
+              select
+              size="small"
+              label="Sub categories"
+              SelectProps={{
+                native: true
+              }}
+              variant="outlined"
+              style={{ width: '31%' }}
+              value={subCategory.value}
+              onChange={e => {
+                setSubCategory({
+                  value: e.target.value,
+                  label: subCategories.filter(
+                    subCategory => subCategory.value === e.target.value
+                  )[0].label
+                });
+                props.setSubCategory({
+                  value: e.target.value,
+                  label: subCategories.filter(
+                    subCategory => subCategory.value === e.target.value
+                  )[0].label
+                });
+              }}
+            >
+              {' '}
+              {subCategories.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </TextField>
+          ) : (
+            <></>
+          )}
+          {subCategoryItems.length > 1 ? (
+            <TextField
+              id="subcategoryitems"
+              select
+              size="small"
+              label="Sub categories Items"
+              SelectProps={{
+                native: true
+              }}
+              variant="outlined"
+              style={{ width: '31.4%' }}
+              value={subCategoryItem.value}
+              onChange={e => {
+                setSubCategoryItem({
+                  value: e.target.value,
+                  label: subCategoryItems.filter(
+                    subCategoryItem => subCategoryItem.value === e.target.value
+                  )[0].label
+                });
+                props.setSubCategoryItem({
+                  value: e.target.value,
+                  label: subCategoryItems.filter(
+                    subCategoryItem => subCategoryItem.value === e.target.value
+                  )[0].label
+                });
+              }}
+            >
+              {' '}
+              {subCategoryItems.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </TextField>
+          ) : (
+            <></>
+          )}
+          <br />
+          <TextField
+            error={ticketSubject === ''}
+            id="title"
+            label="Subject"
+            variant="outlined"
+            size="small"
+            style={{ width: '98%' }}
+            value={ticketSubject}
+            onChange={e => {
+              handleChange('ticketSubject', e);
+            }}
+          />
+          <br />
+          <TextField
+            error={ticketDescription === ''}
+            id="dn"
+            label="Description"
+            multiline
+            rows={5}
+            size="small"
+            variant="outlined"
+            style={{ width: '98%' }}
+            value={ticketDescription}
+            onChange={e => {
+              handleChange('ticketDescription', e);
+            }}
+          />
+          <br />
+          <TextField
+            error={remarks === ''}
+            id="remark"
+            label="Remarks"
+            multiline
+            size="small"
+            rows={5}
+            variant="outlined"
+            style={{ width: '48%' }}
+            onChange={e => {
+              handleChange('remarks', e);
+            }}
+            value={remarks}
+          />
+
+          <TextField
+            id="SoftCopyFile"
+            type="file"
+            multiple={false}
+            variant="outlined"
+            style={{ width: '31.4%' }}
+            onChange={e => {
+              handleChange('file', e);
+            }}
+          />
+          <Button onClick={UploadFile} className="primary" color="secondary">
+            Upload
+          </Button>
+          <br/>
           <TextField
             id="sm"
             select
@@ -1037,6 +1128,17 @@ export default function CreateTicket(props) {
             value={media.value || ''}
             onChange={e => {
               setMedia({
+                value: e.target.value,
+                label: medium.filter(media => media.value === e.target.value)[0]
+                  .label,
+                nameLabel: medium.filter(
+                  media => media.value === e.target.value
+                )[0].nameLabel,
+                idLabel: medium.filter(
+                  media => media.value === e.target.value
+                )[0].idLabel
+              });
+              props.setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]
                   .label,
@@ -1099,6 +1201,12 @@ export default function CreateTicket(props) {
                   department => department.value === e.target.value
                 )[0].label
               });
+              props.setDepartment({
+                value: e.target.value,
+                label: departments.filter(
+                  department => department.value === e.target.value
+                )[0].label
+              });
             }}
           >
             {departments.map(({ label, value }) => (
@@ -1117,6 +1225,11 @@ export default function CreateTicket(props) {
             value={team.value}
             onChange={e => {
               setTeam({
+                value: e.target.value,
+                label: teams.filter(team => team.value === e.target.value)[0]
+                  .label
+              });
+              props.setTeam({
                 value: e.target.value,
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
@@ -1151,6 +1264,18 @@ export default function CreateTicket(props) {
                   executive => executive.value === e.target.value
                 )[0].executiveMobile
               });
+              props.setExecutive({
+                value: e.target.value,
+                label: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].label,
+                executiveEmail: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].executiveEmail,
+                executiveMobile: executives.filter(
+                  executive => executive.value === e.target.value
+                )[0].executiveMobile
+              });
             }}
           >
             {executives.map(({ label, value }) => (
@@ -1160,34 +1285,6 @@ export default function CreateTicket(props) {
             ))}
           </TextField>
           <br />
-          <TextField
-            error={remarks === ''}
-            id="remark"
-            label="Remarks"
-            multiline
-            size="small"
-            rows={5}
-            variant="outlined"
-            style={{ width: '48%' }}
-            onChange={e => {
-              handleChange('remarks', e);
-            }}
-            value={remarks}
-          />
-
-          <TextField
-            id="SoftCopyFile"
-            type="file"
-            multiple={false}
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            onChange={e => {
-              handleChange('file', e);
-            }}
-          />
-          <Button onClick={UploadFile} className="primary" color="secondary">
-            Upload
-          </Button>
         </div>
       </form>
     </div>

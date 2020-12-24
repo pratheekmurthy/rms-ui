@@ -1,5 +1,7 @@
 import React from 'react';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import config from '../../views/config.json';
 import {
   Paper,
   Grid,
@@ -31,13 +33,10 @@ import FilterTicket from '../filter-ticket';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import EqualizerIcon from '@material-ui/icons/Equalizer';
-
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Timeline from './timeline';
 import HistoryIcon from '@material-ui/icons/History';
-  
+import { blue, teal, lime } from '@material-ui/core/colors';
+
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
   root: {
@@ -135,107 +134,84 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function TicketDashboard() {
+export default function TicketDashboard(props) {
   const classes = useStyles();
+  const [apiTickets, setApiTickets] = useState([]);
+  const [viewticket, setviewTickets] = useState({});
   const [opentimeline, setOpentimeline] = React.useState(false);
+  const [ticketNumber, setTicketNumber] = useState('');
+  const [distributorName, setDistributorName] = useState('');
+  const [filterDistributorName, setFilterDistributorName] = useState('');
+  const [distributorId, setDistributorId] = useState('');
+  const [distributorEmail, setDistributorEmail] = useState('');
+  const [distributorMobile, setDistributorMobile] = useState('');
+  const [createdByName, setCreatedByName] = useState('');
+  const [createdById, setCreatedById] = useState('');
+  const [ticketSubject, setTicketSubject] = useState('');
+  const [ticketDescription, setTicketDescription] = useState('');
+  const [remarks, setRemarks] = useState('');
+  const [ticketTypes, setTicketTypes] = useState({ value: '', label: '' });
+  const [createdTime, setCreatedTime] = useState();
+   const [ticketType, setTicketType] = useState({ value: '', label: '' });
+  // const [ticketType, setTicketType] = useState({
+  //   ticketTypeId: '',
+  //   ticketType: ''
+  // });
+  
+  const [ticketHistory, setTicketHistory] = useState([]);
+  const [medium, setMedium] = useState([]);
+  const [media, setMedia] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategory, setSubCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategoryItems, setSubCategoryItems] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    value: '',
+    label: ''
+  });
+  const [categories, setCategories] = useState([]);
+
+  const [subCategories, setSubCategories] = useState([]);
+
+  const [departments, setDepartments] = useState([]);
+  const [department, setDepartment] = useState({
+    value: '',
+    label: ''
+  });
+  const [priorities, setPriorities] = useState([]);
+  const [priority, setPriority] = useState({
+    value: '',
+    label: '',
+    sla: 0
+  });
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState({
+    value: '',
+    label: ''
+  });
+  const [executives, setExecutives] = useState([]);
+  const [executive, setExecutive] = useState({
+    value: '',
+    label: '',
+    executiveEmail: '',
+    executiveMobile: ''
+  });
+  const [statuses, setStatuses] = useState([]);
+  const [loading, setLoading] = useState(true);
   const handleTimelineOpen = () => {
     setOpentimeline(true);
   };
   const handleTimelineClose = () => {
     setOpentimeline(false);
   };
-  const ticketListData = [
-    {
-      status: 'New',
-      id: 'IV-10202',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'Closed',
-      id: 'IV-10222',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'Resolved',
-      id: 'IV-10122',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10732',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'Open',
-      id: 'IV-10312',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-12302',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10232',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10122',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10732',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10312',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-12302',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    },
-    {
-      status: 'New',
-      id: 'IV-10232',
-      title:
-        'This captures all user stories and tasks related to the Cloud Deployment Framework.'
-    }
-  ];
 
-  const ticketTypes = [
-    {
-      value: 'complaint',
-      label: 'Complaint'
-    },
-    {
-      value: 'request',
-      label: 'Request'
-    },
-    {
-      value: 'info',
-      label: 'Information'
-    }
-  ];
-  const [type, setTicketType] = React.useState('complaint');
+  const [type, setTickettype] = React.useState({});
   const handleTicketTypeChange = event => {
-    setTicketType(event.target.value);
+    setTicketTypes(ticketTypes);
   };
 
   const priorityList = [
@@ -252,7 +228,7 @@ export default function TicketDashboard() {
       label: 'High'
     }
   ];
-  const [priority, setPriority] = React.useState('medium');
+
   const handlePriorityChange = event => {
     setPriority(event.target.value);
   };
@@ -271,9 +247,9 @@ export default function TicketDashboard() {
       label: 'Replacement'
     }
   ];
-  const [category, setCategory] = React.useState('delay');
+  const [category, setCategory] = React.useState({});
   const handleCategoryChange = event => {
-    setCategory(event.target.value);
+    setCategory(category);
   };
 
   const statusList = [
@@ -294,79 +270,350 @@ export default function TicketDashboard() {
       label: 'Closed'
     }
   ];
-  const [status, setStatus] = React.useState('wip');
+  const [status, setStatus] = React.useState({});
   const handleStatusChange = event => {
-    setStatus(event.target.value);
+    setStatus(status);
   };
 
   const [open, setOpen] = React.useState(false);
   const [isEditable, makeEditable] = React.useState(false);
   const [filter, openFilter] = React.useState(false);
+  const [tickets, setTickets] = useState([]);
 
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/tickets');
+      const body = await response.json();
+      if (!unmounted) {
+        setApiTickets(body.data);
+        console.log('tickets', body.data);
+        setTickets(body.data);
+        setviewTickets(body.data[0]);
+
+        //  setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  
+  const viewTicket = item => {
+    console.log('item', item);
+    setviewTickets(item);
+    setTicketNumber(item.ticketNumber);
+    setCreatedTime(item.createdTime);
+    setTicketDescription(item.ticketDescription);
+    setRemarks(item.ticketRemarks);
+    setTicketSubject(item.ticketSubject);
+    setCategory({
+      label: item.category,
+      value: item.categoryId
+    });
+    setSubCategory({
+      label: item.subCategory,
+      value: item.subCategoryId
+    });
+    setSubCategoryItems({
+      label: item.subCategoryItem,
+      value: item.subCategoryItemId
+    });
+    setPriority({
+      label: item.priority,
+      value: item.priorityId
+    });
+    setMedia({
+      label: item.media,
+      value: item.mediaId
+    });
+    setDistributorEmail(item.distributorEmail);
+    setDistributorId(item.distributorId);
+    setDistributorMobile(item.distributorMobile);
+    setDistributorName(item.distributorName);
+    setTicketType({
+      label: item.ticketType,
+      value: item.ticketTypeId
+    });
+
+    console.log('item', item);
+    let unmounted = false;
+    async function getHistoryItems() {
+      const response = await fetch(
+        config.APIS_URL + '/ticketHistory/' + item._id
+      );
+      const tktHistory = (await response.json()).data;
+
+      if (!unmounted) {
+        setTicketHistory(tktHistory);
+      }
+    }
+    getHistoryItems();
+  };
   function getTicketList() {
     return (
       <List className={classes.listRow}>
-        {ticketListData.map(ticket => (
-          <>
-            <ListItem alignItems="flex-start" className={classes.listItemClass}>
-              <ListItemText>
-                <div className={classes.textBold}>
-                  <ListItemIcon>
-                    {ticket.status === 'New' ? (
-                      <Avatar className={classes.small}>
+        {tickets
+          .filter(tkt =>
+            status.label === 'All'
+              ? tkt.status === tkt.status
+              : tkt.status === status.label
+          )
+          .filter(tkt =>
+            category.label === 'All'
+              ? tkt.category === tkt.category
+              : tkt.category === category.label
+          )
+          .filter(tkt =>
+            media.label === 'All'
+              ? tkt.media === tkt.media
+              : tkt.media === media.label
+          )
+          .filter(tkt =>
+            ticketType.label === 'All'
+              ? tkt.ticketType === tkt.ticketType
+              : tkt.ticketType === ticketType.label
+          )
+          .filter(tkt =>
+            priority.label === 'All'
+              ? tkt.priority === tkt.priority
+              : tkt.priority === priority.label
+          )
+          .map(ticket => (
+            <>
+              <ListItem
+                alignItems="flex-start"
+                className={classes.listItemClass}
+              >
+                <ListItemText>
+                  <div className={classes.textBold}>
+                    <ListItemIcon>
+                      <Avatar
+                        className={classes.small}
+                        style={{ backgroundColor: purple[700] }}
+                      >
                         {ticket.status.substring(0, 1)}
                       </Avatar>
-                    ) : (
-                      <></>
-                    )}
-                    {ticket.status === 'Open' ? (
-                      <Avatar className={classes.small}>
-                        {ticket.status.substring(0, 1)}
-                      </Avatar>
-                    ) : (
-                      <></>
-                    )}
-                    {ticket.status === 'Work In Progress' ? (
-                      <Avatar className={classes.small}>
-                        {ticket.status.substring(0, 1)}
-                      </Avatar>
-                    ) : (
-                      <></>
-                    )}
-                    {ticket.status === 'Resolved' ? (
-                      <Avatar className={classes.small}>
-                        {ticket.status.substring(0, 1)}
-                      </Avatar>
-                    ) : (
-                      <></>
-                    )}
-                    {ticket.status === 'Closed' ? (
-                      <Avatar className={classes.small}>
-                        {ticket.status.substring(0, 1)}
-                      </Avatar>
-                    ) : (
-                      <></>
-                    )}
-                    {/* <OfflineBoltIcon style={{ color: purple[500] }} /> */}
-                    <span className={classes.ticketMargin}>{ticket.id}</span>
-                  </ListItemIcon>
-                </div>
-                <Typography
-                  variant="body2"
-                  color="textPrimary"
-                  style={{ textOverflow: 'ellipsis' }}
-                  noWrap
-                >
-                  {ticket.title}
-                </Typography>
-              </ListItemText>
-            </ListItem>
-            <Divider light />
-          </>
-        ))}
+
+                      <span
+                        className={classes.ticketMargin}
+                        onClick={() => viewTicket(ticket)}
+                      >
+                        {ticket.ticketNumber}
+                      </span>
+                    </ListItemIcon>
+                  </div>
+                  <Typography
+                    variant="body2"
+                    color="textPrimary"
+                    style={{ textOverflow: 'ellipsis' }}
+                  >
+                    {ticket.ticketSubject}
+                  </Typography>
+                </ListItemText>
+              </ListItem>
+              <Divider light />
+            </>
+          ))}
       </List>
     );
   }
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/categories');
+      const body = await response.json();
+      if (!unmounted) {
+        setCategories(
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, category }) => ({
+            label: category,
+            value: _id
+          }))
+        );
+        setLoading(false);
+
+        setCategory({
+          label: 'All',
+          value: ''
+        });
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/priorities');
+      const body = await response.json();
+      if (!unmounted) {
+        setPriorities(
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, priority }) => ({
+            label: priority,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        setPriority({
+          label: 'All',
+          value: ''
+        });
+     
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/tickettypes');
+      const body = await response.json();
+      if (!unmounted) {
+        setTicketTypes(
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, ticketType }) => ({
+            label: ticketType,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        setTicketType({
+          label: 'All',
+          value: ''
+        });
+        
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/medium');
+      const body = await response.json();
+      if (!unmounted) {
+        setMedium(
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, media }) => ({
+            label: media,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        setMedia({
+          label: 'All',
+          value: ''
+        });
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/statuses');
+      const body = await response.json();
+      if (!unmounted) {
+        setStatuses([
+          ...[{ label: 'All', value: '' }],
+          ...body.data.map(({ _id, status }) => ({
+            label: status,
+            value: _id
+          }))
+        ]);
+        setLoading(false);
+        setStatus({
+          label: 'All',
+          value: ''
+        });
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
+  const addRow = () => {
+    const viewtkt = JSON.parse(localStorage.getItem('viewtkt'));
+
+    const apiUrl = config.APIS_URL + '/tickets';
+    var apiParam = {
+      method: viewtkt ? 'PUT' : 'POST',
+      headers: {
+        ticketNumber,
+        createdTime,
+        distributorName,
+        distributorId,
+        distributorEmail,
+        distributorMobile,
+        createdByName,
+        createdById,
+        ticketSubject,
+        ticketDescription,
+        remarks,
+        ticketTypeId: ticketType.value,
+        ticketType: ticketType.label,
+        mediaId: media.value,
+        media: media.label,
+        categoryId: category.value,
+        category: category.label,
+        subCategoryId: subCategory.value,
+        subCategory: subCategory.label,
+        subCategoryItemId: subCategoryItem.value,
+        subCategoryItem: subCategoryItem.label,
+        departmentId: department.value,
+        department: department.label,
+        teamId: team.value,
+        team: team.label,
+        priorityId: priority.value,
+        priority: priority.label,
+        sla: priority.sla,
+        elapsedSLA: 0,
+        statusId: status.value,
+        status: status.label,
+        slaOnHold: status.slaOnHold,
+        executiveId: executive.value,
+        executive: executive.label,
+        executiveEmail: executive.executiveEmail,
+        executiveMobile: executive.executiveMobile
+      }
+    };
+
+    fetch(apiUrl, apiParam)
+      .then(res => res.json())
+      .then(repos => {
+        console.log('api res', repos);
+
+        if (repos.status === 200) {
+          setOpen(false);
+        }
+      });
+    console.log('apiParam', apiParam);
+    if (viewtkt) {
+      apiParam.headers = {
+        ...apiParam.headers,
+        ticketid: viewtkt._id
+      };
+    }
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -432,7 +679,70 @@ export default function TicketDashboard() {
       </Box>
       {(() => {
         if (filter) {
-          return <FilterTicket />;
+          return (
+            <FilterTicket
+              ticketNumber={ticketNumber}
+              setTicketNumber={tks => {
+                setTicketNumber(tks);
+              }}
+              ticketTypes={ticketTypes}
+              setTicketTypes={tkstyps => {
+                setTicketTypes(tkstyps);
+              }}
+              ticketType={ticketType}
+              setTicketType={tkstyp => {
+                setTicketType(tkstyp);
+              }}
+              medium={medium}
+              setMedium={mdm => {
+                setMedium(mdm);
+              }}
+              media={media}
+              setMedia={media => {
+                setMedia(media);
+              }}
+              categories={categories}
+              setCategories={catgs => {
+                setCategories(catgs);
+              }}
+              category={category}
+              setCategory={cat => {
+                setCategory(cat);
+              }}
+              subCategories={subCategories}
+              setSubCategories={subcats => {
+                setSubCategories(subcats);
+              }}
+              subCategory={subCategory}
+              setSubCategory={subcat => {
+                setSubCategory(subcat);
+              }}
+              subCategoryItems={subCategoryItems}
+              setSubCategoryItems={subcatitems => {
+                setSubCategoryItems(subcatitems);
+              }}
+              subCategoryItem={subCategoryItem}
+              setSubCategoryItem={subcatitem => {
+                setSubCategoryItem(subcatitem);
+              }}
+              priorities={priorities}
+              setPriorities={prts => {
+                setPriorities(prts);
+              }}
+              priority={priority}
+              setPriority={prt => {
+                setPriority(prt);
+              }}
+              statuses={statuses}
+              setStatuses={stses => {
+                setStatuses(stses);
+              }}
+              status={status}
+              setStatus={sts => {
+                setStatus(sts);
+              }}
+            />
+          );
         }
       })()}
 
@@ -456,11 +766,136 @@ export default function TicketDashboard() {
           </Box>
         </DialogTitle>
         <DialogContent dividers>
-          <CreateTicket />
+          <CreateTicket
+            ticketNumber={ticketNumber}
+            setTicketNumber={tks => {
+              setTicketNumber(tks);
+            }}
+            distributorName={distributorName}
+            setDistributorName={disname => {
+              setDistributorName(disname);
+            }}
+            distributorId={distributorId}
+            setDistributorId={disid => {
+              setDistributorId(disid);
+            }}
+            distributorEmail={distributorEmail}
+            setDistributorEmail={disemail => {
+              setDistributorEmail(disemail);
+            }}
+            distributorMobile={distributorMobile}
+            setDistributorMobile={dismob => {
+              setDistributorMobile(dismob);
+            }}
+            createdByName={createdByName}
+            setCreatedByName={crename => {
+              setCreatedByName(crename);
+            }}
+            createdById={createdById}
+            setCreatedById={creid => {
+              setCreatedById(creid);
+            }}
+            ticketSubject={ticketSubject}
+            setTicketSubject={tktsub => {
+              setTicketSubject(tktsub);
+            }}
+            ticketDescription={ticketDescription}
+            setTicketDescription={tktdisp => {
+              setTicketDescription(tktdisp);
+            }}
+            remarks={remarks}
+            setRemarks={rks => {
+              setRemarks(rks);
+            }}
+            ticketTypes={ticketTypes}
+            setTicketTypes={tkstyps => {
+              setTicketTypes(tkstyps);
+            }}
+            ticketType={ticketType}
+            setTicketType={tkstyp => {
+              setTicketType(tkstyp);
+            }}
+            medium={medium}
+            setMedium={mdm => {
+              setMedium(mdm);
+            }}
+            media={media}
+            setMedia={media => {
+              setMedia(media);
+            }}
+            categories={categories}
+            setCategories={catgs => {
+              setCategories(catgs);
+            }}
+            category={category}
+            setCategory={cat => {
+              setCategory(cat);
+            }}
+            subCategories={subCategories}
+            setSubCategories={subcats => {
+              setSubCategories(subcats);
+            }}
+            subCategory={subCategory}
+            setSubCategory={subcat => {
+              setSubCategory(subcat);
+            }}
+            subCategoryItems={subCategoryItems}
+            setSubCategoryItems={subcatitems => {
+              setSubCategoryItems(subcatitems);
+            }}
+            subCategoryItem={subCategoryItem}
+            setSubCategoryItem={subcatitem => {
+              setSubCategoryItem(subcatitem);
+            }}
+            departments={departments}
+            setDepartments={deps => {
+              setDepartments(deps);
+            }}
+            department={department}
+            setDepartment={dept => {
+              setDepartment(dept);
+            }}
+            teams={teams}
+            setTeams={tms => {
+              setTeams(tms);
+            }}
+            team={team}
+            setTeam={tm => {
+              setTeam(tm);
+            }}
+            priorities={priorities}
+            setPriorities={prts => {
+              setPriorities(prts);
+            }}
+            priority={priority}
+            setPriority={prt => {
+              setPriority(prt);
+            }}
+            statuses={statuses}
+            setStatuses={stses => {
+              setStatuses(stses);
+            }}
+            status={status}
+            setStatus={sts => {
+              setStatus(sts);
+            }}
+            executives={executives}
+            setExecutives={exts => {
+              setExecutives(exts);
+            }}
+            executive={executive}
+            setExecutive={ext => {
+              setExecutive(ext);
+            }}
+            createdTime={createdTime}
+            setCreatedTime={cretime => {
+              setCreatedTime(cretime);
+            }}
+          />
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={handleClose}
+            onClick={addRow}
             color="primary"
             variant="contained"
             size="small"
@@ -488,10 +923,14 @@ export default function TicketDashboard() {
             className={classes.paper}
             style={{ maxHeight: 720, overflow: 'auto' }}
           >
-            <Box component="div" overflow="auto">
-              <h3>All</h3>
-              {getTicketList()}
-            </Box>
+            {tickets.length > 0 ? (
+              <Box component="div" overflow="auto">
+                <h3>All</h3>
+                {getTicketList()}
+              </Box>
+            ) : (
+              <></>
+            )}
           </Paper>
         </Grid>
 
@@ -516,11 +955,10 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                 >
                   <Typography variant="body1" className={classes.textBold}>
-                    IV-38648
+                    {viewticket.ticketNumber}
                   </Typography>
                   <Typography variant="h3" color="textPrimary">
-                    This captures all user stories and tasks related to the
-                    Cloud Deployment Framework.
+                    {viewticket.ticketSubject}
                   </Typography>
                 </Box>
                 <Tooltip title="Edit">
@@ -632,7 +1070,7 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Complaint
+                                {viewticket.ticketType}
                               </Typography>
                             </Box>
                           )}
@@ -682,7 +1120,7 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Medium
+                                {viewticket.priority}
                               </Typography>
                             </Box>
                           )}
@@ -733,7 +1171,7 @@ export default function TicketDashboard() {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                Delayed dispatch
+                                {viewticket.category}
                               </Typography>
                             </Box>
                           )}
@@ -782,7 +1220,7 @@ export default function TicketDashboard() {
                                 variant="body1"
                                 className={classes.ticketMargin}
                               >
-                                Work in Progress
+                                {viewticket.status}
                               </Typography>
                             </Box>
                           )}
@@ -805,7 +1243,7 @@ export default function TicketDashboard() {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a description..."
-                    defaultValue="Distributor has not received the incentive for the week 12."
+                    value={viewticket.ticketDescription}
                     rows={5}
                     fullWidth
                     multiline
@@ -815,7 +1253,7 @@ export default function TicketDashboard() {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a description..."
-                    defaultValue="The distributor has not received the incentive for week 12."
+                    value={viewticket.ticketDescription}
                     rows={5}
                     fullWidth
                     multiline
@@ -838,8 +1276,8 @@ export default function TicketDashboard() {
                 {isEditable ? (
                   <TextField
                     id="outlined-textarea"
-                    placeholder="Add a description..."
-                    defaultValue="Issues are resolved"
+                    placeholder="Add a comment..."
+                    value={viewticket.remarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -849,7 +1287,7 @@ export default function TicketDashboard() {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a comment..."
-                    defaultValue="Issues are resolved"
+                    value={viewticket.remarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -902,13 +1340,12 @@ export default function TicketDashboard() {
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <Avatar className={classes.green}>SA</Avatar>
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
                   >
-                    Sandra Adams
+                    {viewticket.distributorName}
                   </Typography>
                 </Box>
               </Box>
@@ -931,7 +1368,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    SA26744
+                    {viewticket.distributorId}
                   </Typography>
                 </Box>
               </Box>
@@ -941,21 +1378,18 @@ export default function TicketDashboard() {
                 className={classes.belowMargin}
               >
                 <Typography variant="h5" className={classes.labelClass}>
-                  Source
+                  Escalation
                 </Typography>
                 <Box
                   display="flex"
                   flexDirection="row"
                   className={classes.valueClass}
                 >
-                  <Avatar className={classes.green}>AS</Avatar>
                   <Typography
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
-                  >
-                    Adams Sandra
-                  </Typography>
+                  ></Typography>
                 </Box>
               </Box>
               <Box
@@ -977,7 +1411,7 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    SA23344
+                    {viewticket.mediaId}
                   </Typography>
                 </Box>
               </Box>
@@ -1000,7 +1434,53 @@ export default function TicketDashboard() {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    Whatsapp
+                    {viewticket.media}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Assigned To
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    {viewticket.assignedExecutive}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Created By
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    {viewticket.createdByName}
                   </Typography>
                 </Box>
               </Box>
@@ -1020,9 +1500,7 @@ export default function TicketDashboard() {
                   variant="body1"
                   className={classes.ticketMargin}
                   component="span"
-                >
-                  20/12/2020
-                </Typography>
+                ></Typography>
               </Box>
 
               <Box
@@ -1039,7 +1517,9 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  12/12/2020, 9:40 AM
+                  {new Date(viewticket.createdAt).toLocaleString(undefined, {
+                    timeZone: 'Asia/Kolkata'
+                  })}
                 </Typography>
               </Box>
 
@@ -1057,8 +1537,15 @@ export default function TicketDashboard() {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  12/12/2020, 12:40 PM
+                  {new Date(viewticket.updatedAt).toLocaleString(undefined, {
+                    timeZone: 'Asia/Kolkata'
+                  })}
                 </Typography>
+                <Typography
+                  variant="body1"
+                  className={classes.ticketMargin}
+                  component="span"
+                ></Typography>
               </Box>
             </div>
           </Paper>

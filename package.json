@@ -5,7 +5,6 @@
   "version": "1.0.0",
   "private": false,
   "proxy": "http://14.98.23.204:3001/",
-
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -47,6 +46,7 @@
     "lodash": "^4.17.19",
     "material-ui-nested-menu-item": "^1.0.2",
     "material-ui-search-bar": "^1.0.0",
+    "materialui-daterange-picker": "^1.1.92",
     "moment": "^2.27.0",
     "nprogress": "^0.2.0",
     "prop-types": "^15.7.2",
