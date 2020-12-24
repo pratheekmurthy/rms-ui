@@ -3,7 +3,8 @@ import {
   accountType,
   activatedRoute,
   crumbs,
-  urlMatchFound
+  urlMatchFound,
+  userData
 } from './reducers';
 
 export default function getWeatherModule() {
@@ -16,7 +17,8 @@ export default function getWeatherModule() {
       accountType,
       activatedRoute,
       crumbs,
-      urlMatchFound
+      urlMatchFound,
+      userData
     }
     // This module uses redux-saga middleware
     // This property will be be used by the SagaExtension
