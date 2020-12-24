@@ -224,7 +224,10 @@ const FormFormik = () => {
                 {!!input.length &&
                   input.map((data, index) => (
                     <div>
-                      <ListItem key={index} style={{ marginTop: '-1%' }}>
+                      <ListItem
+                        key={index}
+                        style={{ marginTop: '-1%', marginLeft: '-4%' }}
+                      >
                         <IconButton
                           aria-label="delete"
                           color="secondary"
@@ -236,7 +239,7 @@ const FormFormik = () => {
                         </IconButton>
                         <ListItemText
                           primary={data.label}
-                          style={{ marginLeft: '5%' }}
+                          style={{ marginLeft: '1%' }}
                         />
                       </ListItem>
                     </div>

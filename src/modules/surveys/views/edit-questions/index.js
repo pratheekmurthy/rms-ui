@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardContent,
   Divider,
+  Tooltip,
   ListItem,
   ListItemText,
   IconButton
@@ -18,48 +19,61 @@ import {
 import EditIcon from '@material-ui/icons/Edit';
 import Page from 'src/components/Page';
 import UpdateQuestions from './update-questions';
-
-const sampleInputData = [
-  {
-    label: 'Rating',
-    questionName: 'rating',
-    questionType: 'rating'
-  },
-  {
-    additionalConfig: {
-      rows: '3'
-    },
-    label: 'Textarea',
-    questionName: 'textarea',
-    questionType: 'textarea'
-  }
-];
+import Axios from 'axios';
+import SaveIcon from '@material-ui/icons/Save';
 
 const test = true;
 
-const EditQuestions = () => {
-  const [dummyData, setDummyData] = useState([
-    {
-      label: 'Rating',
-      questionName: 'rating',
-      questionType: 'rating'
-    },
-    {
-      additionalConfig: {
-        rows: '3'
-      },
-      label: 'Textarea',
-      questionName: 'textarea',
-      questionType: 'textarea'
-    }
-  ]);
-  const [targetData, setTargetData] = useState([]);
+const EditQuestions = props => {
+  // console.log(props);
 
-  const handleEdit = data => {
-    setTargetData([data]);
+  const [targetData, setTargetData] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  // console.log(questions);
+  useEffect(() => {
+    (async function getQuestions() {
+      try {
+        // const res = await Axios.get('/survey/questions'+ props.match.params.questionId);
+        const res = await Axios.get('/survey/questions');
+        setQuestions(
+          res.data.find(q => q.questionId === props.match.params.questionId)
+        );
+      } catch (Err) {
+        // console.log(Err);
+        setError(Err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  const [newData, setNewData] = useState([]);
+
+  const updateSurvey = data => {
+    console.log('New updated data : ', data);
+    setNewData(data);
   };
 
-  console.log('targetData : ', targetData);
+  useEffect(() => {
+    console.log('newData : ', newData);
+  }, [newData]);
+
+  async function saveQuestion() {
+    try {
+      const res = await Axios['patch'](
+        `/survey/question/${props.match.params.questionId}`,
+        newData
+      );
+      props.history.push({
+        pathname: '/surveys/questions',
+        state: 'update'
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div>
@@ -68,43 +82,38 @@ const EditQuestions = () => {
           <Grid container spacing={1}>
             <Grid xs={12} lg={6} item>
               <Card style={{ width: '100%' }}>
-                <CardHeader title="Edit Survey" />
+                <CardHeader title="Edit Question" />
                 <Divider />
                 <CardContent>
-                  {test ? (
-                    <>
-                      <GenerateForm inputs={dummyData} />
-                    </>
-                  ) : null}
-                  {!!dummyData.length &&
-                    dummyData.map((data, index) => (
-                      <div>
-                        <ListItem key={index} style={{ marginTop: '-1%' }}>
-                          <IconButton
-                            aria-label="edit"
-                            color="primary"
-                            onClick={() => {
-                              handleEdit(data);
-                            }}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <ListItemText
-                            primary={data.label}
-                            style={{ marginLeft: '5%' }}
-                          />
-                        </ListItem>
-                      </div>
-                    ))}
+                  <UpdateQuestions
+                    updateData={[questions]}
+                    newUpdatedValue={updateSurvey}
+                  />
                 </CardContent>
               </Card>
             </Grid>
             <Grid xs={12} lg={6} item>
               <Card style={{ width: '100%' }}>
-                <CardHeader title="Update" />
+                <CardHeader
+                  title="Preview"
+                  action={
+                    <Tooltip title="Save Question">
+                      <IconButton
+                        aria-label="Save Question"
+                        onClick={saveQuestion}
+                      >
+                        <SaveIcon color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  }
+                />
                 <Divider />
                 <CardContent>
-                  {targetData && <UpdateQuestions updateData={targetData} />}
+                  {test ? (
+                    <>
+                      <GenerateForm inputs={[questions]} />
+                    </>
+                  ) : null}
                 </CardContent>
               </Card>
             </Grid>

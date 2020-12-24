@@ -1,82 +1,77 @@
 import { DataGrid } from '@material-ui/data-grid';
-import React from 'react';
+import { makeStyles } from '@material-ui/core';
+import Axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import CommonAlert from 'src/components/CommonAlert';
+import Spinner from 'src/components/Spinner';
 
-const arrayOfQuestions = [
+const colConfig = [
   {
-    id: 1,
-    questionType: 'rating',
-    questionName: 'rating',
-    label: 'rating'
+    field: 'questionId',
+    headerName: 'Question Id',
+    flex: 1,
+    renderCell: rowData => (
+      <Link to={`/surveys/questions/${rowData.row.questionId}/view`}>
+        {rowData.row.questionId}
+      </Link>
+    )
   },
+  { field: 'label', headerName: 'Question Title', flex: 1 },
   {
-    id: 2,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
-  },
-  {
-    id: 3,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
-  },
-  {
-    id: 4,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
-  },
-  {
-    id: 5,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
-  },
-  {
-    id: 6,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
-  },
-  {
-    id: 7,
-    questionType: 'textarea',
-    questionName: 'textarea',
-    label: 'textarea',
-    additionalConfig: {
-      rows: 3
-    }
+    field: 'questionType',
+    headerName: 'Type',
+    flex: 1
   }
 ];
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    backgroundColor: theme.palette.background.paper
+  },
+  div: {
+    margin: '0.5rem 1rem 0 1rem'
+  }
+}));
+
 const ViewQuestions = () => {
+  const classes = useStyles();
+
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    (async function getQuestions() {
+      try {
+        const res = await Axios.get('/survey/questions');
+        setQuestions(res.data);
+      } catch (Err) {
+        console.log(Err);
+        setError(Err);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
   return (
-    <div style={{ height: '50%', width: '100%' }}>
-      <DataGrid
-        columns={[{ field: 'id' }, { field: 'name' }]}
-        rows={arrayOfQuestions.map((question, index) => ({
-          ...question,
-          id: question.id,
-          name: question.questionName
-        }))}
-        onCellClick={() => <Link to={`/surveys/edit`}>{'Deepak'}</Link>}
-      />
+    <div className={classes.div}>
+      {!loading ? (
+        error ? (
+          <CommonAlert />
+        ) : (
+          <DataGrid
+            columns={colConfig}
+            rows={questions.map(q => ({ ...q, id: q.questionId }))}
+            style={{ width: '100%' }}
+            className={classes.root}
+            autoHeight="true"
+            pageSize={5}
+          />
+        )
+      ) : (
+        <Spinner />
+      )}
     </div>
   );
 };

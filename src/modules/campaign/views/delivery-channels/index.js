@@ -89,9 +89,7 @@ const rows = [
     20000,
     '29 Aug 2020; 20:00Hrs',
     'for Kerala Region'
-  ),
-  createData('', '', '', '', '', ''),
-  createData('', '', '', '', '', '')
+  )
 ];
 
 const DeliveryChannels = () => {
@@ -106,7 +104,7 @@ const DeliveryChannels = () => {
       <Page title="questions">
         <Box style={{ margin: '0.5rem 1rem 0 1rem' }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} lg={6}>
               <Paper className={classes.root}>
                 <AppBar position="static">
                   <Tabs
@@ -162,7 +160,7 @@ const DeliveryChannels = () => {
                 </TabPanel>
               </Paper>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} lg={6}>
               <Paper className={classes.root}>
                 <AppBar position="static">
                   <Tabs

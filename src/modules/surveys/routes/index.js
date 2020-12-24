@@ -37,7 +37,7 @@ export default [
     crumb: 'Create Question'
   },
   {
-    path: '/edit',
+    path: '/questions/:questionId/view',
     key: 'editQuestions',
     component: EditQuestions,
     crumb: 'Edit Question'

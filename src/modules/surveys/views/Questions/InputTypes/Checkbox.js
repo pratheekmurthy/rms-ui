@@ -193,8 +193,6 @@ const CheckboxInput = ({ submit }) => {
                 </Grid>
                 <Grid item xs={4}>
                   {isSubmitting}
-                  {/* <br />
-            <br /> */}
                   <Button
                     variant="contained"
                     color="inherit"
