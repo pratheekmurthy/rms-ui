@@ -138,7 +138,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
               })}
               onSubmit={values => {
                 // navigate('/app/dashboard', { replace: true });
-                console.log(values);
                 authenticate(values);
               }}
             >

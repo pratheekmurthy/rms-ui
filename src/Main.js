@@ -44,7 +44,6 @@ function Main({
       ),
     [isLoggedIn]
   );
-  console.log(isLoggedIn);
   return loading ? (
     <MainLoader />
   ) : isLoggedIn ? (

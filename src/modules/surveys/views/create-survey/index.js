@@ -149,7 +149,6 @@ export default function CreateSurvey(props) {
 
   async function saveSurvey() {
     try {
-      console.log(questions, surveyDetails);
       await Axios[isPost ? 'post' : 'patch'](
         isPost ? '/survey' : `/survey/${match.params.surveyId}`,
         {
