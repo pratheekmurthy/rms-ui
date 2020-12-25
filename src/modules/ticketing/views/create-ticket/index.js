@@ -26,6 +26,11 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
+  },
+  searchIcon: {
+    cursor: 'pointer',
+    marginRight:10,
+    marginTop:15  
   }
 }));
 
@@ -751,18 +756,60 @@ export default function CreateTicket(props) {
           />
           <br />
           <TextField
-            error={ticketSubject === ''}
-            id="title"
-            label="Subject"
-            variant="outlined"
+            error={distributorId === ''}
+            id="dn"
             size="small"
-            style={{ width: '98%' }}
-            value={ticketSubject}
+            label="Distributor Id"
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={distributorId}
             onChange={e => {
-              handleChange('ticketSubject', e);
+              handleChange('distributorId', e);
+            }}
+          />
+            <SearchIcon color="primary" onClick={() => getDistributorByIdd(distributorId)} className={classes.searchIcon}/>
+  
+          <TextField
+            error={distributorName === ''}
+            id="dn"
+            size="small"
+            label="Distributor Name"
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={distributorName}
+            onChange={e => {
+              handleChange('distributorName', e);
+            }}
+          />
+          <TextField
+            error={distributorMobile === ''}
+            id="dn"
+            size="small"
+            label="Distributor Mobile"
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={distributorMobile}
+            onChange={e => {
+              handleChange('distributorMobile', e);
+            }}
+          />
+            <SearchIcon color="primary" onClick={getDistributorByMobile} className={classes.searchIcon}/>
+          
+
+          <TextField
+            error={distributorEmail === ''}
+            id="dn"
+            size="small"
+            label="Distributor Email"
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={distributorEmail}
+            onChange={e => {
+              handleChange('distributorEmail', e);
             }}
           />
           <br />
+      
           <TextField
             id="type"
             select
@@ -860,7 +907,7 @@ export default function CreateTicket(props) {
             size="small"
             label="Ticket Created Time"
             variant="outlined"
-            style={{ width: '31%' }}
+            style={{ width: '32%' }}
             value={createdTime}
           ></TextField>
 
@@ -873,7 +920,7 @@ export default function CreateTicket(props) {
               native: true
             }}
             variant="outlined"
-            style={{ width: '31.4%' }}
+            style={{ width: '31%' }}
             value={category.value || ''}
             onChange={e => {
               setCategory({
@@ -959,6 +1006,19 @@ export default function CreateTicket(props) {
           )}
           <br />
           <TextField
+            error={ticketSubject === ''}
+            id="title"
+            label="Subject"
+            variant="outlined"
+            size="small"
+            style={{ width: '98%' }}
+            value={ticketSubject}
+            onChange={e => {
+              handleChange('ticketSubject', e);
+            }}
+          />
+          <br />
+          <TextField
             error={ticketDescription === ''}
             id="dn"
             label="Description"
@@ -974,64 +1034,33 @@ export default function CreateTicket(props) {
           />
           <br />
           <TextField
-            error={distributorId === ''}
-            id="dn"
+            error={remarks === ''}
+            id="remark"
+            label="Remarks"
+            multiline
             size="small"
-            label="Distributor Id"
+            rows={5}
             variant="outlined"
-            style={{ width: '32%' }}
-            value={distributorId}
+            style={{ width: '48%' }}
             onChange={e => {
-              handleChange('distributorId', e);
+              handleChange('remarks', e);
             }}
+            value={remarks}
           />
-          <Button
-            className="btn btn-primary"
-            onClick={() => getDistributorByIdd(distributorId)}
-          >
-            <SearchIcon color="primary" />
-          </Button>
-          <TextField
-            error={distributorName === ''}
-            id="dn"
-            size="small"
-            label="Distributor Name"
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            value={distributorName}
-            onChange={e => {
-              handleChange('distributorName', e);
-            }}
-          />
-          <TextField
-            error={distributorMobile === ''}
-            id="dn"
-            size="small"
-            label="Distributor Mobile"
-            variant="outlined"
-            style={{ width: '32%' }}
-            value={distributorMobile}
-            onChange={e => {
-              handleChange('distributorMobile', e);
-            }}
-          />
-          <Button className="btn btn-primary" onClick={getDistributorByMobile}>
-            <SearchIcon color="primary" />
-          </Button>
 
           <TextField
-            error={distributorEmail === ''}
-            id="dn"
+            id="SoftCopyFile"
+            label="Drop a file"
+            multiline
             size="small"
-            label="Distributor Email"
+            rows={5}
             variant="outlined"
-            style={{ width: '31%' }}
-            value={distributorEmail}
+            style={{ width: '48%' }}
             onChange={e => {
-              handleChange('distributorEmail', e);
+              handleChange('file', e);
             }}
           />
-          <br />
+       
           <TextField
             id="sm"
             select
@@ -1172,33 +1201,7 @@ export default function CreateTicket(props) {
             ))}
           </TextField>
           <br />
-          <TextField
-            error={remarks === ''}
-            id="remark"
-            label="Remarks"
-            multiline
-            size="small"
-            rows={5}
-            variant="outlined"
-            style={{ width: '48%' }}
-            onChange={e => {
-              handleChange('remarks', e);
-            }}
-            value={remarks}
-          />
-
-          <TextField
-            id="SoftCopyFile"
-            label="Drop a file"
-            multiline
-            size="small"
-            rows={5}
-            variant="outlined"
-            style={{ width: '48%' }}
-            onChange={e => {
-              handleChange('file', e);
-            }}
-          />
+          
         </div>
       </form>
     </div>
