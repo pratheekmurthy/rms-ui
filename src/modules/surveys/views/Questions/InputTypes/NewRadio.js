@@ -6,8 +6,7 @@ import * as Yup from 'yup';
 import AddIcon from '@material-ui/icons/Add';
 
 const RadioInput = ({ submit, isEdit, question }) => {
-  const [inputsData] = useState(isEdit ? question : {});
-  console.log('Question : ', question);
+  const [inputsData, setInputsData] = useState(isEdit ? question : {});
   const [initState, setinitState] = useState(null);
   const [options, setOptions] = useState([]);
   useEffect(() => {
@@ -25,59 +24,14 @@ const RadioInput = ({ submit, isEdit, question }) => {
     }
   }, []);
 
-  const [count, setCount] = useState(0);
-  const [submitValues, setSubmitValues] = useState({});
   const addOptions = () => {
     const optionsArrayCopy = [...options];
-
     optionsArrayCopy.push({
-      name: '',
+      value: '',
       label: ''
     });
 
     setOptions(optionsArrayCopy);
-
-    // return new Array(count).fill().map((_, val) => (
-    // <div key={val}>
-    //   <Grid
-    //     container
-    //     direction="column"
-    //     justify="center"
-    //     alignItems="flex-start"
-    //   >
-    //     <Grid
-    //       container
-    //       direction="row"
-    //       justify="flex-start"
-    //       alignItems="flex-start"
-    //       spacing={10}
-    //     >
-    //       <Grid item xs={5}>
-    //         <Field
-    //           component={TextField}
-    //           name={'value' + val}
-    //           id={'value' + val}
-    //           type="text"
-    //           label="Radio Value"
-    //           autoComplete="off"
-    //           defaultValue={isEdit ? question.options[count - 1].value : null}
-    //         />
-    //       </Grid>
-    //       <Grid item xs={4}>
-    //         <Field
-    //           component={TextField}
-    //           name={'label' + val}
-    //           id={'label' + val}
-    //           type="text"
-    //           label="label"
-    //           autoComplete="off"
-    //           defaultValue={isEdit ? question.options[count - 1].label : null}
-    //         />
-    //       </Grid>
-    //     </Grid>
-    //   </Grid>
-    // </div>
-    // ));
   };
 
   // useEffect(() => {
@@ -127,35 +81,31 @@ const RadioInput = ({ submit, isEdit, question }) => {
   //   ({ label0: 'Male', value0: 'm' }, { label1: 'value1' })
   // ];
 
-  useEffect(() => {
-    if (submitValues.values) {
-      console.log('submitValues : ', submitValues);
-      inputsData.questionType = 'radio';
-      inputsData.questionName = submitValues.values.name;
-      inputsData.label = submitValues.values.label;
-      const optionsLocal = { ...submitValues.values };
-      console.log('options : ', options);
-      delete optionsLocal.name;
-      delete optionsLocal.label;
-      const demoArray = [];
+  // useEffect(() => {
+  //   if (submitValues.values) {
+  //     console.log('submitValues : ', submitValues);
+  //     inputsData.questionType = 'radio';
+  //     inputsData.questionName = submitValues.values.name;
+  //     inputsData.label = submitValues.values.label;
+  //     const optionsLocal = { ...submitValues.values };
+  //     console.log('options : ', options);
+  //     delete optionsLocal.name;
+  //     delete optionsLocal.label;
+  //     const demoArray = [];
 
-      const lengthOfOptions = Object.keys(optionsLocal).length / 2;
-      for (let i = 0; i < lengthOfOptions; i++) {
-        demoArray.push({
-          label: optionsLocal['label' + i],
-          value: optionsLocal['value' + i]
-        });
-      }
+  //     const lengthOfOptions = Object.keys(optionsLocal).length / 2;
+  //     for (let i = 0; i < lengthOfOptions; i++) {
+  //       demoArray.push({
+  //         label: optionsLocal['label' + i],
+  //         value: optionsLocal['value' + i]
+  //       });
+  //     }
 
-      inputsData.options = demoArray;
-      console.log(demoArray);
-      submit(inputsData);
-    }
-  }, [submitValues]);
-
-  useEffect(() => {
-    console.log(options);
-  }, [options]);
+  //     inputsData.options = demoArray;
+  //     console.log(demoArray);
+  //     submit(inputsData);
+  //   }
+  // }, [submitValues]);
 
   const validateForm = () => {
     const initialValidation = {
@@ -173,8 +123,27 @@ const RadioInput = ({ submit, isEdit, question }) => {
     return Yup.object(initialValidation);
   };
 
-  const handleOnChange = e => {
-    console.log(e.target.value);
+  const setOptionsArray = (index, type, value) => {
+    const localOptions = [...options];
+    if (!localOptions[index]) {
+      localOptions[index] = {};
+    }
+    localOptions[index][type] = value;
+    setOptions(localOptions);
+  };
+
+  useEffect(() => {
+    console.log('options : ', options);
+  }, [options]);
+
+  const setFinalQuestionObj = values => {
+    let localInputsData = { ...inputsData };
+    localInputsData.questionType = 'radio';
+    localInputsData.questionName = values.name;
+    localInputsData.label = values.label;
+    localInputsData.options = options;
+    setInputsData(localInputsData);
+    submit(localInputsData);
   };
 
   return (
@@ -183,17 +152,14 @@ const RadioInput = ({ submit, isEdit, question }) => {
         <Formik
           initialValues={initState}
           onSubmit={(values, { setSubmitting, resetForm }) => {
+            console.log('Values : ', values);
             setSubmitting(false);
-            setSubmitValues({ values });
+            setFinalQuestionObj(values);
             if (!isEdit) {
+              setOptions([]);
               resetForm();
             }
           }}
-          // validationSchema={Yup.object({
-          //   name: Yup.string().required('Please enter name'),
-          //   label: Yup.string().required('Label required'),
-
-          // })}
           validationSchema={validateForm}
         >
           {({ submitForm, isSubmitting }) => (
@@ -252,11 +218,10 @@ const RadioInput = ({ submit, isEdit, question }) => {
                       <Grid item xs={5}>
                         <Field
                           component={TextField}
-                          // name={'value' + index}
-                          // id={'value' + index}
-                          name="demoName"
+                          name={'value' + index}
+                          id={'value' + index}
                           onBlur={e =>
-                            setOptions(index, 'value', e.target.value)
+                            setOptionsArray(index, 'value', e.target.value)
                           }
                           type="text"
                           label="Radio Value"
@@ -267,10 +232,11 @@ const RadioInput = ({ submit, isEdit, question }) => {
                       <Grid item xs={4}>
                         <Field
                           component={TextField}
-                          // name={'label' + index}
-                          // id={'label' + index}
-                          name="demoLabel"
-                          onBlur={e => setOptions}
+                          name={'label' + index}
+                          id={'label' + index}
+                          onBlur={e =>
+                            setOptionsArray(index, 'label', e.target.value)
+                          }
                           type="text"
                           label="label"
                           autoComplete="off"
