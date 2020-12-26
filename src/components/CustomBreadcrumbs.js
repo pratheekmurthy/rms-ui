@@ -1,11 +1,12 @@
 import { Box, Breadcrumbs, Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 
 function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
   const [breadCrumbLinks, setbreadCrumbLinks] = useState([]);
+  const match = useRouteMatch();
   useEffect(() => {
     if (urlMatchFound) {
       setbreadCrumbLinks(crumbs.get(activatedRoute));
@@ -26,7 +27,18 @@ function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
               .map((route, index) => {
                 newLink += route + '/';
                 return breadCrumbLinks[index] ? (
-                  <Link to={newLink} key={newLink}>
+                  <Link
+                    to={
+                      index === breadCrumbLinks.length - 1
+                        ? '/' +
+                          window.location.href
+                            .split('/')
+                            .splice(3)
+                            .join('/')
+                        : newLink
+                    }
+                    key={newLink}
+                  >
                     {breadCrumbLinks[index]}
                   </Link>
                 ) : (

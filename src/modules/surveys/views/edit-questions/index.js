@@ -50,7 +50,7 @@ const EditQuestions = props => {
     try {
       const res = await Axios['patch'](
         `/survey/question/${props.match.params.questionId}`,
-        questions
+        questions[0]
       );
       props.history.push({
         pathname: '/surveys/questions',

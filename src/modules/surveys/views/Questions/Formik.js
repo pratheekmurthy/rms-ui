@@ -23,13 +23,13 @@ import CheckboxInput from './InputTypes/Checkbox';
 import RatingInput from './InputTypes/Rating';
 import TextInput from './InputTypes/Text';
 import TextareaInput from './InputTypes/Textarea';
-// import RadioInput from './InputTypes/Radio';
+// import MultiOptionsInput from './InputTypes/MultiOptions';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
-import Radio from './InputTypes/Radio';
+import MultiOptions from './InputTypes/MultiOptions';
 
 const drawerWidth = '45%';
 
@@ -94,11 +94,11 @@ const FormFormik = props => {
       case 'text':
         return <TextInput submit={onAddData} />;
       case 'checkbox':
-        return <CheckboxInput submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="checkbox" />;
       case 'radio':
-        return <Radio submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="radio" />;
       case 'select':
-        return <SelectInput submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="select" />;
       default:
         return null;
     }
@@ -264,7 +264,7 @@ const FormFormik = props => {
 
           <Grid xs={12} lg={7} item>
             <Card style={{ width: '100%' }}>
-              <CardHeader title="Survey Preview" />
+              <CardHeader title="Questions Preview" />
               <Divider />
               <CardContent>
                 <>

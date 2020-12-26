@@ -3,7 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import TextareaInput from '../../Questions/InputTypes/Textarea';
 import RatingInput from '../../Questions/InputTypes/Rating';
 import TextInput from '../../Questions/InputTypes/Text';
-import Radio from '../../Questions/InputTypes/Radio';
+import MultiOptions from '../../Questions/InputTypes/MultiOptions';
 
 const UpdateQuestions = ({ updateData: [prevData], newUpdatedValue }) => {
   const initialValue = {};
@@ -17,7 +17,9 @@ const UpdateQuestions = ({ updateData: [prevData], newUpdatedValue }) => {
     rating: RatingInput,
     textarea: TextareaInput,
     text: TextInput,
-    radio: Radio
+    radio: MultiOptions,
+    select: MultiOptions,
+    checkbox: MultiOptions
   };
   const renderQuestion = prevData => {
     if (prevData.questionType) {
@@ -27,7 +29,8 @@ const UpdateQuestions = ({ updateData: [prevData], newUpdatedValue }) => {
           {React.createElement(comp, {
             question: prevData,
             submit: handleSubmit,
-            isEdit: true
+            isEdit: true,
+            questionType: prevData.questionType
           })}
         </div>
       );
@@ -54,7 +57,7 @@ const UpdateQuestions = ({ updateData: [prevData], newUpdatedValue }) => {
     //   case 'radio':
     //     return (
     //       <div key={updateData.questionId}>
-    //         <Radio isEdit question={updateData} submit={handleSubmit} />
+    //         <MultiOptions isEdit question={updateData} submit={handleSubmit} />
     //       </div>
     //     );
     //   default:

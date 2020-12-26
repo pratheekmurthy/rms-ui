@@ -1,11 +1,19 @@
-import { Button, Fade, Grid, IconButton, Tooltip } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Fade,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography
+} from '@material-ui/core';
 import { Field, FieldArray, Form, Formik } from 'formik';
 import { TextField } from 'formik-material-ui';
 import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
-function Radio({ submit, isEdit, question }) {
+function MultiOptions({ submit, isEdit, question, questionType }) {
   const [inputsData, setInputsData] = useState(isEdit ? question : {});
   const [initState, setinitState] = useState(null);
   //   const [options, setOptions] = useState([]);
@@ -35,7 +43,7 @@ function Radio({ submit, isEdit, question }) {
 
   const setFinalQuestionObj = values => {
     const localInputsData = { ...inputsData };
-    localInputsData.questionType = 'radio';
+    localInputsData.questionType = questionType;
     localInputsData.questionName = values.name;
     localInputsData.label = values.label;
     localInputsData.options = values.options;
@@ -56,11 +64,11 @@ function Radio({ submit, isEdit, question }) {
           }}
           validationSchema={Yup.object().shape({
             name: Yup.string().required('Please provide an element name'),
-            label: Yup.string().required('Radio Label is required'),
+            label: Yup.string().required('Question Label is required'),
             options: Yup.array().of(
               Yup.object().shape({
-                label: Yup.string().required('Label is required'),
-                value: Yup.string().required('Value is required')
+                label: Yup.string().required('Option Label is required'),
+                value: Yup.string().required('Option Value is required')
               })
             )
           })}
@@ -86,7 +94,7 @@ function Radio({ submit, isEdit, question }) {
                       name="name"
                       id="name"
                       type="text"
-                      label="Radio Name"
+                      label="Element Name"
                       autoComplete="off"
                       disabled={isEdit}
                     />
@@ -97,12 +105,15 @@ function Radio({ submit, isEdit, question }) {
                       name="label"
                       id="label"
                       type="text"
-                      label="label"
+                      label="Question Label"
                       autoComplete="off"
                     />
                   </Grid>
                 </Grid>
               </Grid>
+              <Box paddingY={2}>
+                <Typography variant="h5">Options</Typography>
+              </Box>
               <FieldArray
                 name="options"
                 render={arrayHelpers => {
@@ -130,7 +141,7 @@ function Radio({ submit, isEdit, question }) {
                                       id={'value' + index}
                                       name={`options.${index}.value`}
                                       type="text"
-                                      label="Radio Value"
+                                      label="Option Value"
                                       autoComplete="off"
                                     />
                                   </Grid>
@@ -140,7 +151,7 @@ function Radio({ submit, isEdit, question }) {
                                       name={`options.${index}.label`}
                                       id={'label' + index}
                                       type="text"
-                                      label="label"
+                                      label="Option Label"
                                       autoComplete="off"
                                     />
                                   </Grid>
@@ -204,4 +215,4 @@ function Radio({ submit, isEdit, question }) {
   );
 }
 
-export default Radio;
+export default MultiOptions;
