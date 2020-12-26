@@ -29,7 +29,6 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
             submit: handleSubmit,
             isEdit: true
           })}
-          {/* <comp/> */}
         </div>
       );
     }

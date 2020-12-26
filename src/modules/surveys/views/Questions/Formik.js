@@ -269,7 +269,7 @@ const FormFormik = props => {
               <CardContent>
                 {test ? (
                   <>
-                    <GenerateForm inputs={input} />
+                    <GenerateForm input={input} />
                   </>
                 ) : null}
                 <Button
