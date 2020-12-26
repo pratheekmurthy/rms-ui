@@ -136,10 +136,12 @@ const useStyles = makeStyles(theme => ({
 
 export default function TicketDashboard(props) {
   const classes = useStyles();
+  const [ticket, setTicket] = useState({});
+  const [clickChild, setClickChild] = useState();
   const [apiTickets, setApiTickets] = useState([]);
   const [viewticket, setviewTickets] = useState({});
   const [opentimeline, setOpentimeline] = React.useState(false);
-  const [ticketNumber, setTicketNumber] = useState('');
+  //const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [filterDistributorName, setFilterDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
@@ -152,12 +154,12 @@ export default function TicketDashboard(props) {
   const [remarks, setRemarks] = useState('');
   const [ticketTypes, setTicketTypes] = useState({ value: '', label: '' });
   const [createdTime, setCreatedTime] = useState();
-   const [ticketType, setTicketType] = useState({ value: '', label: '' });
+  const [ticketType, setTicketType] = useState({ value: '', label: '' });
   // const [ticketType, setTicketType] = useState({
   //   ticketTypeId: '',
   //   ticketType: ''
   // });
-  
+
   const [ticketHistory, setTicketHistory] = useState([]);
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({
@@ -280,7 +282,6 @@ export default function TicketDashboard(props) {
   const [filter, openFilter] = React.useState(false);
   const [tickets, setTickets] = useState([]);
 
-
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -300,11 +301,11 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
-  
+
   const viewTicket = item => {
     console.log('item', item);
     setviewTickets(item);
-    setTicketNumber(item.ticketNumber);
+    //setTicketNumber(item.ticketNumber);
     setCreatedTime(item.createdTime);
     setTicketDescription(item.ticketDescription);
     setRemarks(item.ticketRemarks);
@@ -464,7 +465,6 @@ export default function TicketDashboard(props) {
           label: 'All',
           value: ''
         });
-     
       }
     }
     getItems();
@@ -491,7 +491,6 @@ export default function TicketDashboard(props) {
           label: 'All',
           value: ''
         });
-        
       }
     }
     getItems();
@@ -550,7 +549,7 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
-
+  /* 
   const addRow = () => {
     const viewtkt = JSON.parse(localStorage.getItem('viewtkt'));
 
@@ -613,7 +612,7 @@ export default function TicketDashboard(props) {
         ticketid: viewtkt._id
       };
     }
-  };
+  }; */
 
   const handleClose = () => {
     setOpen(false);
@@ -640,7 +639,7 @@ export default function TicketDashboard(props) {
       openFilter(true);
     }
   };
-
+  var createTicket = () => {};
   return (
     <div className={classes.root}>
       <Box component="span">
@@ -681,10 +680,10 @@ export default function TicketDashboard(props) {
         if (filter) {
           return (
             <FilterTicket
-              ticketNumber={ticketNumber}
-              setTicketNumber={tks => {
+              //ticketNumber={ticketNumber}
+              /*  setTicketNumber={tks => {
                 setTicketNumber(tks);
-              }}
+              }} */
               ticketTypes={ticketTypes}
               setTicketTypes={tkstyps => {
                 setTicketTypes(tkstyps);
@@ -767,6 +766,11 @@ export default function TicketDashboard(props) {
         </DialogTitle>
         <DialogContent dividers>
           <CreateTicket
+            setClick={click => (createTicket = click)}
+            setOpen={open => setOpen(open)}
+            ticket={ticket}
+          />
+          {/*    <CreateTicket
             ticketNumber={ticketNumber}
             setTicketNumber={tks => {
               setTicketNumber(tks);
@@ -891,11 +895,11 @@ export default function TicketDashboard(props) {
             setCreatedTime={cretime => {
               setCreatedTime(cretime);
             }}
-          />
+          /> */}
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={addRow}
+            onClick={() => createTicket()}
             color="primary"
             variant="contained"
             size="small"

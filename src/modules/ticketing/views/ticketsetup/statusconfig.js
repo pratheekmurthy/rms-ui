@@ -148,8 +148,8 @@ function StatusConfig() {
       id: statuses[index]._id,
       status: updatedRow.status,
       slahold: updatedRow.slahold,
-      closed: event.target.value,
-      color: updatedRow.color,
+      closed: updatedRow.closed,
+      color: event.target.value,
       active: updatedRow.active
     });
   };

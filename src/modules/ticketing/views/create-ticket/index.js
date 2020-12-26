@@ -6,6 +6,7 @@ import config from '../../views/config.json';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { useDropzone } from 'react-dropzone';
+import { add } from 'lodash';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,7 +33,7 @@ const useStyles = makeStyles(theme => ({
 export default function CreateTicket(props) {
   const classes = useStyles();
   //new code
-  const [ticketNumber, setTicketNumber] = useState('');
+  /* const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
   const [distributorEmail, setDistributorEmail] = useState('');
@@ -105,7 +106,264 @@ export default function CreateTicket(props) {
   const [updatedByName, setUpdatedByName] = useState('');
   const [updatedById, setUpdatedById] = useState('');
   const [updatedTime, setUpdatedTime] = useState();
+  const [ticketHistory, setTicketHistory] = useState([]); */
+  const [ticketNumber, setTicketNumber] = useState('');
   const [ticketHistory, setTicketHistory] = useState([]);
+  const [distributorName, setDistributorName] = useState('');
+  const [distributorId, setDistributorId] = useState('');
+  const [distributorEmail, setDistributorEmail] = useState('');
+  const [distributorMobile, setDistributorMobile] = useState('');
+  const [createdByName, setCreatedByName] = useState('');
+  const [createdById, setCreatedById] = useState('');
+  const [updatedByName, setUpdatedByName] = useState('');
+  const [updatedById, setUpdatedById] = useState('');
+  const [ticketSubject, setTicketSubject] = useState('');
+  const [ticketDescription, setTicketDescription] = useState('');
+  const [remarks, setRemarks] = useState('');
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [ticketType, setTicketType] = useState({
+    ticketTypeId: '',
+    ticketType: ''
+  });
+  const [medium, setMedium] = useState([]);
+  const [media, setMedia] = useState({ value: '', label: '' });
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState({ value: '', label: '' });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategoryItems, setSubCategoryItems] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    value: '',
+    label: ''
+  });
+  const [departments, setDepartments] = useState([]);
+  const [department, setDepartment] = useState({
+    value: '',
+    label: ''
+  });
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState({ value: '', label: '' });
+  const [priorities, setPriorities] = useState([]);
+  const [priority, setPriority] = useState({
+    value: '',
+    label: '',
+    sla: 0
+  });
+  const [statuses, setStatuses] = useState([]);
+  const [status, setStatus] = useState({
+    value: '',
+    label: '',
+    slaOnHold: false
+  });
+  const [executives, setExecutives] = useState([]);
+  const [executive, setExecutive] = useState({
+    value: '',
+    label: '',
+    executiveEmail: '',
+    executiveMobile: ''
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [createdTime, setCreatedTime] = useState();
+  const [updatedTime, setUpdatedTime] = useState();
+  const [file, setFile] = useState('');
+
+  const handleChange = (ctrl, e) => {
+    switch (ctrl) {
+      case 'ticketNumber':
+        return setTicketNumber(e.target.value);
+      case 'distributorName':
+        return setDistributorName(e.target.value);
+      case 'distributorId':
+        return setDistributorId(e.target.value);
+      case 'distributorEmail':
+        return setDistributorEmail(e.target.value);
+      case 'distributorMobile':
+        return setDistributorMobile(e.target.value);
+      case 'createdByName':
+        return setCreatedByName(e.target.value);
+      case 'createdById':
+        return setCreatedById(e.target.value);
+      case 'ticketSubject':
+        alert(e.target.value);
+        return setTicketSubject(e.target.value);
+      case 'ticketDescription':
+        return setTicketDescription(e.target.value);
+      case 'remarks':
+        return setRemarks(e.target.value);
+      case 'file':
+        return setFile(e.target.files[0]);
+      default:
+        return;
+    }
+
+    // const file = e.target.files[0]; // accesing file
+    // console.log(file);
+    // setFile(file); // storing file
+  };
+
+  useEffect(() => {
+    if (!props.ticketNumber) {
+      var result = '';
+      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      var charactersLength = characters.length;
+      for (var i = 0; i < 5; i++) {
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
+      }
+      let newDate = new Date();
+      let date = newDate.getDate().toString();
+      let month = (newDate.getMonth() + 1).toString();
+      let year = newDate.getFullYear().toString();
+      setTicketNumber('TKT' + year + month + date + result);
+      setCreatedTime(new Date().toDateString());
+    } else {
+      let unmounted = false;
+      async function getItems() {
+        const response = await fetch(
+          config.APIS_URL + '/tickets/' + props.ticket._id
+        );
+        const tkt = (await response.json()).data[0];
+        if (!unmounted) {
+          setTicketNumber(tkt.ticketNumber);
+          setCreatedTime(tkt.createdTime);
+          setUpdatedTime(new Date().toDateString());
+          setDistributorName(tkt.distributorName);
+          setDistributorId(tkt.distributorId);
+          setDistributorEmail(tkt.distributorEmail);
+          setDistributorMobile(tkt.distributorMobile);
+          setCreatedByName(tkt.createdByName);
+          setCreatedById(tkt.createdById);
+          setUpdatedByName(tkt.createdByName);
+          setUpdatedById(tkt.createdById);
+          setTicketSubject(tkt.ticketSubject);
+          setTicketDescription(tkt.ticketDescription);
+          setRemarks(tkt.remarks);
+
+          setTicketType({
+            value: tkt.ticketTypeId,
+            label: tkt.ticketType
+          });
+          setMedia({ value: tkt.mediaId, label: tkt.media });
+          setCategory({ value: tkt.categoryId, label: tkt.category });
+          setSubCategory({
+            value: tkt.subCategoryId,
+            label: tkt.subCategory
+          });
+          getSubCategories(tkt.categoryId);
+          setSubCategoryItem({
+            value: tkt.subCategoryItemId,
+            label: tkt.subCategoryItem
+          });
+          getSubCategoryItems(tkt.categoryId, tkt.subCategoryId);
+          setDepartment({
+            value: tkt.departmentId,
+            label: tkt.department
+          });
+          setTeam({ value: tkt.teamId, label: tkt.team });
+          setPriority({
+            value: tkt.priorityId,
+            label: tkt.priority,
+            sla: tkt.sla
+          });
+          setStatus({
+            value: tkt.statusId,
+            label: tkt.status,
+            slaOnHold: tkt.slaOnHold
+          });
+          setExecutive({
+            value: tkt.executiveId,
+            label: tkt.executive,
+            executiveEmail: tkt.executiveEmail,
+            executiveMobile: tkt.executiveMobile
+          });
+        }
+      }
+      getItems();
+      async function getHistoryItems() {
+        const response = await fetch(
+          config.APIS_URL + '/ticketHistory/' + props.ticket._id
+        );
+        const tktHistory = (await response.json()).data;
+        if (!unmounted) {
+          setTicketHistory(tktHistory);
+        }
+      }
+      getHistoryItems();
+      return () => {
+        unmounted = true;
+      };
+    }
+
+    props.setClick(createTicket);
+  }, []);
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/tickettypes');
+      const body = await response.json();
+      if (!unmounted) {
+        setTicketTypes(
+          body.data.map(({ _id, ticketType }) => ({
+            label: ticketType,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        if (!props.ticket) {
+          body.data[0]
+            ? setTicketType({
+                label: body.data[0].ticketType,
+                value: body.data[0]._id
+              })
+            : setTicketType({});
+        }
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/medium');
+      const body = await response.json();
+      if (!unmounted) {
+        setMedium(
+          body.data.map(({ _id, media, nameLabel, idLabel }) => ({
+            label: media,
+            value: _id,
+            nameLabel: nameLabel,
+            idLabel: idLabel
+          }))
+        );
+        setLoading(false);
+        if (!props.ticket) {
+          body.data[0]
+            ? setMedia({
+                label: body.data[0].media,
+                value: body.data[0]._id,
+                nameLabel: body.data[0].nameLabel,
+                idLabel: body.data[0].idLabel
+              })
+            : setMedia({});
+        }
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -139,53 +397,7 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, []);
-  const handleChange = (ctrl, e) => {
-    switch (ctrl) {
-      case 'ticketNumber':
-        props.setTicketNumber(e.target.value);
-        return setTicketNumber(e.target.value);
-      case 'distributorName':
-        props.setDistributorName(e.target.value);
-        return setDistributorName(e.target.value);
-      case 'distributorId':
-        props.setDistributorId(e.target.value);
-        return setDistributorId(e.target.value);
-      case 'distributorEmail':
-        props.setDistributorEmail(e.target.value);
-        return setDistributorEmail(e.target.value);
-      case 'distributorMobile':
-        props.setDistributorMobile(e.target.value);
-        return setDistributorMobile(e.target.value);
-      case 'createdByName':
-        props.setCreatedByName(e.target.value);
-        return setCreatedByName(e.target.value);
-      case 'createdById':
-        props.setCreatedById(e.target.value);
-        return setCreatedById(e.target.value);
-      case 'ticketSubject':
-        props.setTicketSubject(e.target.value);
-        return setTicketSubject(e.target.value);
-      case 'ticketDescription':
-        props.setTicketDescription(e.target.value);
-        return setTicketDescription(e.target.value);
 
-      case 'remarks':
-        props.setRemarks(e.target.value);
-        return setRemarks(e.target.value);
-
-      case 'file':
-        return setFile(e.target.files[0]);
-      default:
-        return;
-    }
-  };
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  const files = acceptedFiles.map(file => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
   const getSubCategories = cat => {
     let unmounted = false;
     async function getItems() {
@@ -245,204 +457,6 @@ export default function CreateTicket(props) {
   };
 
   useEffect(() => {
-    // const distid = localStorage.getItem('search');
-    // setDistributorId(distid);
-
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    var charactersLength = characters.length;
-    for (var i = 0; i < 5; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    let newDate = new Date();
-    let date = newDate.getDate().toString();
-    let month = (newDate.getMonth() + 1).toString();
-    let year = newDate.getFullYear().toString();
-
-    getCategory();
-
-    setTicketNumber('TKT' + year + month + date + result);
-    setCreatedTime(new Date().toDateString());
- props.setTicketNumber('TKT' + year + month + date + result);
- props.setCreatedTime(new Date().toDateString());
-    // getDistributorByIdd(distid);
-  }, []);
-
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(config.APIS_URL + '/tickettypes');
-      const body = await response.json();
-      if (!unmounted) {
-        setTicketTypes(
-          body.data.map(({ _id, ticketType }) => ({
-            label: ticketType,
-            value: _id
-          }))
-        );
-        setLoading(false);
-        body.data[0]
-          ? setTicketType({
-              label: body.data[0].ticketType,
-              value: body.data[0]._id
-            })
-          : setTicketType({});
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-  // useEffect(() => {},[props.ticketNumber])
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(config.APIS_URL + '/medium');
-      const body = await response.json();
-      if (!unmounted) {
-        setMedium(
-          body.data.map(({ _id, media, nameLabel, idLabel }) => ({
-            label: media,
-            value: _id,
-            nameLabel: nameLabel,
-            idLabel: idLabel
-          }))
-        );
-        setLoading(false);
-        body.data[0]
-          ? setMedia({
-              label: body.data[0].media,
-              value: body.data[0]._id,
-              nameLabel: body.data[0].nameLabel,
-              idLabel: body.data[0].idLabel
-            })
-          : setMedia({});
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-
-  const getCategory = () => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(config.APIS_URL + '/categories');
-      const body = await response.json();
-      if (!unmounted) {
-        setCategories(
-          body.data.map(({ _id, category }) => ({
-            label: category,
-            value: _id
-          }))
-        );
-
-        setLoading(false);
-        localStorage.getItem('setCategory');
-
-        // const cat = localStorage.getItem('setCategory');
-        // const value = JSON.parse(cat);
-        // if (value.category) {
-        //   setCategory(value.category);
-        // } else {
-        body.data[0]
-          ? setCategory({
-              label: body.data[0].category,
-              value: body.data[0]._id
-            })
-          : setCategory({});
-      }
-    }
-    // }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  };
-
-  // const getSubCategories =(categoryId) => {
-  //   let unmounted = false;
-  //   async function getItems() {
-  //     const response = await fetch(
-  //       config.APIS_URL + '/subcategories/' + categoryId
-  //     );
-  //     const body = await response.json();
-  //     if (!unmounted) {
-  //       setSubCategories(
-  //         body.data.map(({ _id, subCategory }) => ({
-  //           label: subCategory,
-  //           value: _id
-  //         }))
-  //       );
-  //       setLoading(false);
-  //       localStorage.getItem('setCategory');
-
-  //       const cat = localStorage.getItem('setSubCategory');
-  //       const value = JSON.parse(cat);
-  //       if (value.subCategory) {
-  //         setSubCategory(value.subCategory);
-  //       } else {
-  //         body.data[0]
-  //           ? setSubCategory({
-  //               label: body.data[0].subCategory,
-  //               value: body.data[0]._id
-  //             })
-  //           : setSubCategory({});
-  //       }
-  //     }
-  //   }
-  //   getItems();
-  //   return () => {
-  //     unmounted = true;
-  //   };
-  // };
-
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(
-        config.APIS_URL +
-          '/subcategoryitems/' +
-          category.value +
-          '/' +
-          subCategory.value
-      );
-      const body = await response.json();
-
-      if (!unmounted) {
-        setSubCategoryItems(
-          body.data.map(({ _id, subCategoryItem }) => ({
-            label: subCategoryItem,
-            value: _id
-          }))
-        );
-        setLoading(false);
-        localStorage.getItem('setSubCategoryItem');
-
-        // const cat = localStorage.getItem('setSubCategoryItem');
-        // const value = JSON.parse(cat);
-
-        // if (value.subCategoryItem) {
-        //   setSubCategoryItem(value.subCategoryItem);
-        // } else {
-        body.data[0]
-          ? setSubCategoryItem({
-              label: body.data[0].subCategoryItem,
-              value: body.data[0]._id
-            })
-          : setSubCategoryItem({});
-      }
-    }
-    // }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, [category.value, subCategory.value]);
-
-  useEffect(() => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/priorities');
@@ -456,13 +470,15 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setPriority({
-              label: body.data[0].priority,
-              value: body.data[0]._id,
-              sla: body.data[0].sla
-            })
-          : setPriority({});
+        if (!props.ticket) {
+          body.data[0]
+            ? setPriority({
+                label: body.data[0].priority,
+                value: body.data[0]._id,
+                sla: body.data[0].sla
+              })
+            : setPriority({});
+        }
       }
     }
     getItems();
@@ -485,13 +501,15 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setStatus({
-              label: body.data[0].status,
-              value: body.data[0]._id,
-              slaOnHold: body.data[0].slahold
-            })
-          : setStatus({});
+        if (!props.ticket) {
+          body.data[0]
+            ? setStatus({
+                label: body.data[0].status,
+                value: body.data[0]._id,
+                slaOnHold: body.data[0].slahold
+              })
+            : setStatus({});
+        }
       }
     }
     getItems();
@@ -499,13 +517,25 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, []);
-
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/departments');
       const body = await response.json();
       if (!unmounted) {
+        if (!props.ticket) {
+          body.data[0]
+            ? setDepartment({
+                label: body.data[0].department,
+                value: body.data[0]._id
+              })
+            : setDepartment({});
+        } else {
+          setDepartment({
+            label: props.ticket.assignedDepartment,
+            value: props.ticket.assignedDepartmentId
+          });
+        }
         setDepartments(
           body.data.map(({ _id, department }) => ({
             label: department,
@@ -513,13 +543,6 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-
-        body.data[0]
-          ? setDepartment({
-              label: body.data[0].department,
-              value: body.data[0]._id
-            })
-          : setDepartment({});
       }
     }
     getItems();
@@ -536,6 +559,19 @@ export default function CreateTicket(props) {
       );
       const body = await response.json();
       if (!unmounted) {
+        if (!props.ticket) {
+          body.data[0]
+            ? setTeam({
+                label: body.data[0].team,
+                value: body.data[0]._id
+              })
+            : setTeam({});
+        } else {
+          setTeam({
+            label: props.ticket.assignedTeam,
+            value: props.ticket.assignedTeamId
+          });
+        }
         setTeams(
           body.data.map(({ _id, team }) => ({
             label: team,
@@ -543,20 +579,13 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-
-        body.data[0]
-          ? setTeam({
-              label: body.data[0].team,
-              value: body.data[0]._id
-            })
-          : setTeam({});
       }
     }
     getItems();
     return () => {
       unmounted = true;
     };
-  }, [department.value]);
+  }, [department]);
 
   useEffect(() => {
     let unmounted = false;
@@ -566,26 +595,34 @@ export default function CreateTicket(props) {
       );
       const body = await response.json();
       if (!unmounted) {
+        if (!props.ticket) {
+          body.data[0]
+            ? setExecutive({
+                label: body.data[0].executiveName,
+                value: body.data[0]._id,
+                executiveEmail: body.data[0].executiveEmail,
+                executiveMobile: body.data[0].executiveMobile
+              })
+            : setExecutive({});
+        } else {
+          setExecutive({
+            label: props.ticket.assignedExecutiveName,
+            value: props.ticket.assignedExecutiveId,
+            executiveEmail: props.ticket.assignedExecutiveEmail,
+            executiveMobile: props.ticket.assignedExecutiveMobile
+          });
+        }
         setExecutives(
           body.data.map(
             ({ _id, executiveName, executiveEmail, executiveMobile }) => ({
               label: executiveName,
               value: _id,
-              executiveEmail,
-              executiveMobile
+              executiveEmail: executiveEmail,
+              executiveMobile: executiveMobile
             })
           )
         );
         setLoading(false);
-
-        body.data[0]
-          ? setExecutive({
-              label: body.data[0].executiveName,
-              value: body.data[0]._id,
-              executiveEmail: body.data[0].executiveEmail,
-              executiveMobile: body.data[0].executiveMobile
-            })
-          : setExecutive({});
       }
     }
     getItems();
@@ -594,63 +631,39 @@ export default function CreateTicket(props) {
     };
   }, [team]);
 
-  const getDistributorByIdd = distid => {
-    async function getItems() {
-      const apiUrl = config.APIS_URL + '/boapi/distributorbyid';
-      var apiParam = {
-        method: 'POST',
-        headers: { distid: distid, key: 'uZpsyVk4yc' }
-      };
-      fetch(apiUrl, apiParam)
-        .then(res => res.json())
-        .then(repos => {
-          setDistributorId(
-            JSON.parse(repos.data).data
-              ? JSON.parse(repos.data).data[0].distributor_id || ''
-              : ''
-          );
- props.setDistributorId(
-   JSON.parse(repos.data).data
-     ? JSON.parse(repos.data).data[0].distributor_id || ''
-     : ''
- );
-          setDistributorName(
-            JSON.parse(repos.data).data
-              ? JSON.parse(repos.data).data[0].distributor_name || ''
-              : ''
-          );
-           props.setDistributorName(
-             JSON.parse(repos.data).data
-               ? JSON.parse(repos.data).data[0].distributor_name || ''
-               : ''
-           );
+  useEffect(() => {}, [media, distributorId, distributorMobile]);
 
-          setDistributorMobile(
-            JSON.parse(repos.data).data
-              ? JSON.parse(repos.data).data[0].mob_no || ''
-              : ''
-          );
-            props.setDistributorMobile(
-              JSON.parse(repos.data).data
-                ? JSON.parse(repos.data).data[0].mob_no || ''
-                : ''
-            );
-
-          setDistributorEmail(
-            JSON.parse(repos.data).data
-              ? JSON.parse(repos.data).data[0].email_id || ''
-              : ''
-          );
-           props.setDistributorEmail(
-             JSON.parse(repos.data).data
-               ? JSON.parse(repos.data).data[0].email_id || ''
-               : ''
-           );
-        });
-    }
-    getItems();
+  const getDistributorById = () => {
+    const apiUrl = config.APIS_URL + '/boapi/distributorbyid';
+    var apiParam = {
+      method: 'POST',
+      headers: { distid: distributorId, key: 'uZpsyVk4yc' }
+    };
+    fetch(apiUrl, apiParam)
+      .then(res => res.json())
+      .then(repos => {
+        setDistributorId(
+          JSON.parse(repos.data).data
+            ? JSON.parse(repos.data).data[0].distributor_id || ''
+            : ''
+        );
+        setDistributorName(
+          JSON.parse(repos.data).data
+            ? JSON.parse(repos.data).data[0].distributor_name || ''
+            : ''
+        );
+        setDistributorMobile(
+          JSON.parse(repos.data).data
+            ? JSON.parse(repos.data).data[0].mob_no || ''
+            : ''
+        );
+        setDistributorEmail(
+          JSON.parse(repos.data).data
+            ? JSON.parse(repos.data).data[0].email_id || ''
+            : ''
+        );
+      });
   };
-
   const getDistributorByMobile = () => {
     const apiUrl = config.APIS_URL + '/boapi/distributorbymobile';
     var apiParam = {
@@ -682,19 +695,29 @@ export default function CreateTicket(props) {
         );
       });
   };
-  const addRow = e => {
+
+  const createTicket = () => {
+    setTicketNumber('Adeeb');
+    addRow();
+  };
+
+  const addRow = () => {
+    alert(ticketNumber);
     const apiUrl = config.APIS_URL + '/tickets';
+    //method: props.ticket ? 'PUT' : 'POST',
     var apiParam = {
-      method: 'POST',
       headers: {
         ticketNumber,
         createdTime,
+        updatedTime,
         distributorName,
         distributorId,
         distributorEmail,
         distributorMobile,
         createdByName,
         createdById,
+        updatedByName,
+        updatedById,
         ticketSubject,
         ticketDescription,
         remarks,
@@ -725,14 +748,18 @@ export default function CreateTicket(props) {
         executiveMobile: executive.executiveMobile
       }
     };
-
-    fetch(apiUrl, apiParam)
+    if (props.ticket) {
+      apiParam.headers = {
+        ...apiParam.headers,
+        ticketid: props.ticket._id
+      };
+    }
+    alert(JSON.stringify(apiParam.headers));
+    /* fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
-        if (repos.status === 200) {
-          props.setOpen(false);
-        }
-      });
+        alert(JSON.stringify(repos));
+      }); */
   };
 
   const UploadFile = e => {
@@ -789,7 +816,7 @@ export default function CreateTicket(props) {
           />
           <Button
             className="btn btn-primary"
-            onClick={() => getDistributorByIdd(distributorId)}
+            onClick={() => getDistributorById(distributorId)}
           >
             <SearchIcon color="primary" />
           </Button>
@@ -854,12 +881,12 @@ export default function CreateTicket(props) {
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
-              props.setTicketType({
+              /*  props.setTicketType({
                 value: e.target.value,
                 label: ticketTypes.filter(
                   ticketType => ticketType.value === e.target.value
                 )[0].label
-              });
+              }); */
             }}
           >
             {ticketTypes.map(({ label, value }) => (
@@ -891,7 +918,7 @@ export default function CreateTicket(props) {
                   priority => priority.value === e.target.value
                 )[0].sla
               });
-              props.setPriority({
+              /* props.setPriority({
                 value: e.target.value,
                 label: priorities.filter(
                   priority => priority.value === e.target.value
@@ -899,7 +926,7 @@ export default function CreateTicket(props) {
                 sla: priorities.filter(
                   priority => priority.value === e.target.value
                 )[0].sla
-              });
+              }); */
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -929,7 +956,7 @@ export default function CreateTicket(props) {
                   status => status.value === e.target.value
                 )[0].slaOnHold
               });
-              props.setStatus({
+              /*  props.setStatus({
                 value: e.target.value,
                 label: statuses.filter(
                   status => status.value === e.target.value
@@ -937,7 +964,7 @@ export default function CreateTicket(props) {
                 slaOnHold: statuses.filter(
                   status => status.value === e.target.value
                 )[0].slaOnHold
-              });
+              }); */
             }}
           >
             {statuses.map(({ label, value }) => (
@@ -967,12 +994,12 @@ export default function CreateTicket(props) {
                 )[0].label
               });
 
-              props.setCategory({
+              /* props.setCategory({
                 value: e.target.value,
                 label: categories.filter(
                   category => category.value === e.target.value
                 )[0].label
-              });
+              }); */
               getSubCategories(e.target.value);
             }}
           >
@@ -1002,12 +1029,12 @@ export default function CreateTicket(props) {
                     subCategory => subCategory.value === e.target.value
                   )[0].label
                 });
-                props.setSubCategory({
+                /* props.setSubCategory({
                   value: e.target.value,
                   label: subCategories.filter(
                     subCategory => subCategory.value === e.target.value
                   )[0].label
-                });
+                }); */
               }}
             >
               {' '}
@@ -1039,12 +1066,12 @@ export default function CreateTicket(props) {
                     subCategoryItem => subCategoryItem.value === e.target.value
                   )[0].label
                 });
-                props.setSubCategoryItem({
+                /* props.setSubCategoryItem({
                   value: e.target.value,
                   label: subCategoryItems.filter(
                     subCategoryItem => subCategoryItem.value === e.target.value
                   )[0].label
-                });
+                }); */
               }}
             >
               {' '}
@@ -1065,7 +1092,7 @@ export default function CreateTicket(props) {
             variant="outlined"
             size="small"
             style={{ width: '98%' }}
-            value={ticketSubject}
+            defaultValue={ticketSubject}
             onChange={e => {
               handleChange('ticketSubject', e);
             }}
@@ -1114,7 +1141,7 @@ export default function CreateTicket(props) {
           <Button onClick={UploadFile} className="primary" color="secondary">
             Upload
           </Button>
-          <br/>
+          <br />
           <TextField
             id="sm"
             select
@@ -1138,7 +1165,7 @@ export default function CreateTicket(props) {
                   media => media.value === e.target.value
                 )[0].idLabel
               });
-              props.setMedia({
+              /* props.setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]
                   .label,
@@ -1148,7 +1175,7 @@ export default function CreateTicket(props) {
                 idLabel: medium.filter(
                   media => media.value === e.target.value
                 )[0].idLabel
-              });
+              }); */
             }}
           >
             {medium.map(({ label, value }) => (
@@ -1201,12 +1228,12 @@ export default function CreateTicket(props) {
                   department => department.value === e.target.value
                 )[0].label
               });
-              props.setDepartment({
+              /* props.setDepartment({
                 value: e.target.value,
                 label: departments.filter(
                   department => department.value === e.target.value
                 )[0].label
-              });
+              }); */
             }}
           >
             {departments.map(({ label, value }) => (
@@ -1229,11 +1256,11 @@ export default function CreateTicket(props) {
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
-              props.setTeam({
+              /* props.setTeam({
                 value: e.target.value,
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
-              });
+              }); */
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1264,7 +1291,7 @@ export default function CreateTicket(props) {
                   executive => executive.value === e.target.value
                 )[0].executiveMobile
               });
-              props.setExecutive({
+              /*  props.setExecutive({
                 value: e.target.value,
                 label: executives.filter(
                   executive => executive.value === e.target.value
@@ -1275,7 +1302,7 @@ export default function CreateTicket(props) {
                 executiveMobile: executives.filter(
                   executive => executive.value === e.target.value
                 )[0].executiveMobile
-              });
+              }); */
             }}
           >
             {executives.map(({ label, value }) => (
