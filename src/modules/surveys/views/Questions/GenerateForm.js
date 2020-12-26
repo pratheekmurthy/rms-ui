@@ -35,8 +35,7 @@ const GenerateForm = ({ input }) => {
   };
   const renderQuestion = isSubmitting => {
     if (input) {
-      console.log(input);
-      input.map(question => {
+      return input.map(question => {
         switch (question.questionType) {
           case 'rating':
             return (
@@ -48,6 +47,7 @@ const GenerateForm = ({ input }) => {
                 />
               </span>
             );
+            break;
           case 'text':
             return (
               <div key={question.questionName + '1'}>
@@ -63,6 +63,7 @@ const GenerateForm = ({ input }) => {
                 <br />
               </div>
             );
+            break;
           case 'textarea':
             return (
               <div key={question.questionName}>
@@ -82,6 +83,7 @@ const GenerateForm = ({ input }) => {
                 <br />
               </div>
             );
+            break;
           case 'checkbox':
             return (
               <div key={question.name}>
@@ -100,8 +102,8 @@ const GenerateForm = ({ input }) => {
                 ))}
               </div>
             );
+            break;
           case 'radio':
-            console.log('hi');
             return (
               <>
                 <Field component={RadioGroup} name={question.questionName}>
@@ -119,6 +121,7 @@ const GenerateForm = ({ input }) => {
                 </Field>
               </>
             );
+            break;
           case 'select':
             return (
               <>
@@ -143,6 +146,7 @@ const GenerateForm = ({ input }) => {
                 <br />
               </>
             );
+            break;
           default:
             return null;
         }
