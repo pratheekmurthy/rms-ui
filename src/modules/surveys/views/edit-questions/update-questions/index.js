@@ -1,201 +1,82 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { CheckboxWithLabel, TextField } from 'formik-material-ui';
-import {
-  Button,
-  RadioGroup,
-  FormControlLabel,
-  makeStyles,
-  withStyles,
-  Radio,
-  Typography,
-  FormControl,
-  MenuItem,
-  Grid
-} from '@material-ui/core';
 import TextareaInput from '../../Questions/InputTypes/Textarea';
+import RatingInput from '../../Questions/InputTypes/Rating';
+import TextInput from '../../Questions/InputTypes/Text';
+import RadioInput from '../../Questions/InputTypes/NewRadio';
 
 const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
-  console.log('UpdateData : ', updateData);
-  const obj = {};
+  const initialValue = {};
 
-  // !!updateData &&
-  //   updateData.map(input => {
-  //     switch (input.questionType) {
-  //       case 'rating':
-  //         return (obj[input.questionName] = '');
-  //       case 'textarea':
-  //         return (obj[input.questionName] = '');
-  //       case 'text':
-  //         return (obj[input.questionName] = '');
-  //       case 'radio':
-  //         return (obj[input.questionName] = '');
-  //       default:
-  //         return true;
-  //     }
-  //   });
+  const handleSubmit = values => {
+    const localUpdateData = { ...updateData, ...values };
+    newUpdatedValue(localUpdateData);
+  };
 
-  // const [options, setOptions] = useState([]);
-
-  // useEffect(() => {
-  //   setOptions(updateData[0].options);
-  // }, [updateData]);
-
-  // useEffect(() => {
-  //   console.log('Options : ', options);
-  // }, [options]);
-
-  // const handleSubmit = values => {
-  //   if (values.rating) {
-  //     updateData[0].label = values.rating;
-  //   }
-  //   if (values.textarea) {
-  //     updateData[0].label = values.textarea;
-  //     if (values.rows) {
-  //       updateData[0].additionalConfig.rows = values.rows;
-  //     }
-  //   }
-  //   if (values.rows) {
-  //     updateData[0].additionalConfig.rows = values.rows;
-  //   }
-  //   if (values.text) {
-  //     updateData[0].label = values.text;
-  //   }
-  //   if (values.radio) {
-  //     updateData[0].label = values.radio;
-  //   }
-  //   updateData.forEach(data => newUpdatedValue(data));
-  // };
+  const componentMap = {
+    rating: RatingInput,
+    textarea: TextareaInput,
+    text: TextInput,
+    radio: RadioInput
+  };
+  const renderQuestion = updateData => {
+    if (updateData.questionType) {
+      const comp = componentMap[updateData.questionType];
+      return (
+        <div key={updateData.questionId}>
+          {React.createElement(comp, {
+            question: updateData,
+            submit: handleSubmit,
+            isEdit: true
+          })}
+          {/* <comp/> */}
+        </div>
+      );
+    }
+    // switch (updateData.questionType) {
+    //   case 'rating':
+    //     return (
+    //       <div key={updateData.questionId}>
+    //         <RatingInput isEdit question={updateData} submit={handleSubmit} />
+    //       </div>
+    //     );
+    //   case 'textarea':
+    //     return (
+    //       <div key={updateData.questionId}>
+    //         <TextareaInput isEdit question={updateData} submit={handleSubmit} />
+    //       </div>
+    //     );
+    //   case 'text':
+    //     return (
+    //       <div key={updateData.questionId}>
+    //         <TextInput isEdit question={updateData} submit={handleSubmit} />
+    //       </div>
+    //     );
+    //   case 'radio':
+    //     return (
+    //       <div key={updateData.questionId}>
+    //         <RadioInput isEdit question={updateData} submit={handleSubmit} />
+    //       </div>
+    //     );
+    //   default:
+    //     return true;
+    // }
+  };
 
   return (
     <div>
       <Formik
-        initialValues={obj}
+        initialValues={initialValue}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
-          console.log('values', values);
-          // handleSubmit(values);
+          handleSubmit(values);
           resetForm();
         }}
       >
         {({ submitForm, isSubmitting }) => (
           <Form>
             <br />
-            {updateData.map(data => {
-              switch (data.questionType) {
-                case 'rating':
-                  return (
-                    <div key={data.questionId}>
-                      <Field
-                        component={TextField}
-                        color="primary"
-                        name={data.questionType}
-                        id={data.questionName}
-                        autoComplete="off"
-                        type="text"
-                        label="Enter new label"
-                        defaultValue={data.label}
-                      />
-                      <br />
-                      <br />
-                      <Button variant="contained" color="primary" type="submit">
-                        Save
-                      </Button>
-                    </div>
-                  );
-                case 'textarea':
-                  return (
-                    <TextareaInput
-                      isEdit
-                      question={updateData[0]}
-                      submit={newUpdatedValue}
-                    />
-                  );
-                case 'text':
-                  return (
-                    <div key={data.questionId}>
-                      <Field
-                        component={TextField}
-                        color="primary"
-                        name={data.questionType}
-                        id={data.questionName}
-                        defaultValue={data.label}
-                        type="text"
-                        label="Enter new label"
-                        autoComplete="off"
-                      />
-                      <br />
-                      <br />
-                      <Button variant="contained" color="primary" type="submit">
-                        Save
-                      </Button>
-                    </div>
-                  );
-                case 'radio':
-                  return (
-                    <div key={data.questionId}>
-                      <Field
-                        component={TextField}
-                        color="primary"
-                        name={data.questionType}
-                        id={data.questionName}
-                        autoComplete="off"
-                        type="text"
-                        label="Enter new label"
-                        defaultValue={data.label}
-                      />
-                      <br />
-                      <br />
-                      {!!updateData &&
-                        updateData[0].options.map((option, index) => (
-                          <div key={Math.random()}>
-                            <Grid
-                              container
-                              direction="row"
-                              justify="flex-start"
-                              alignItems="flex-start"
-                              spacing={6}
-                            >
-                              <Grid item xs={4}>
-                                <Field
-                                  component={TextField}
-                                  color="primary"
-                                  name={option.label}
-                                  id={option.label}
-                                  autoComplete="off"
-                                  defaultValue={option.label}
-                                  type="text"
-                                  label="Enter new label"
-                                />
-                              </Grid>
-
-                              <Grid item xs={4}>
-                                <Field
-                                  component={TextField}
-                                  color="primary"
-                                  name={option.value}
-                                  id={option.value}
-                                  autoComplete="off"
-                                  // defaultValue={option.value}
-                                  type="text"
-                                  label="Enter new value"
-                                />
-                              </Grid>
-                            </Grid>
-                          </div>
-                        ))}
-
-                      <br />
-                      <br />
-                      <Button variant="contained" color="primary" type="submit">
-                        Save
-                      </Button>
-                    </div>
-                  );
-                default:
-                  return true;
-              }
-            })}
+            {renderQuestion(updateData)}
             {isSubmitting}
           </Form>
         )}

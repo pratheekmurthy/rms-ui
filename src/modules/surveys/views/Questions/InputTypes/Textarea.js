@@ -6,9 +6,7 @@ import * as Yup from 'yup';
 
 const TextareaInput = ({ submit, isEdit, question }) => {
   const [inputsData] = useState(isEdit ? question : {});
-
   const [initState, setinitState] = useState(null);
-
   useEffect(() => {
     if (isEdit) {
       setinitState({
@@ -111,7 +109,7 @@ const TextareaInput = ({ submit, isEdit, question }) => {
                 <br />
                 <Button
                   variant="contained"
-                  color="inherit"
+                  color={isEdit ? 'primary' : 'inherit'}
                   onClick={submitForm}
                 >
                   {isEdit ? 'Update' : 'Add Data'}

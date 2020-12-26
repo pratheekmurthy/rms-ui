@@ -11,7 +11,8 @@ import {
   Divider,
   ListItem,
   ListItemText,
-  IconButton
+  IconButton,
+  ButtonGroup
 } from '@material-ui/core';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
@@ -22,11 +23,13 @@ import CheckboxInput from './InputTypes/Checkbox';
 import RatingInput from './InputTypes/Rating';
 import TextInput from './InputTypes/Text';
 import TextareaInput from './InputTypes/Textarea';
-import RadioInput from './InputTypes/Radio';
+// import RadioInput from './InputTypes/Radio';
+import RadioInput from './InputTypes/NewRadio';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = '45%';
 
@@ -62,7 +65,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const FormFormik = () => {
+const FormFormik = props => {
   const formRef = useRef();
 
   const classes = useStyles();
@@ -77,34 +80,8 @@ const FormFormik = () => {
       setInputValue(e.target.value);
     }
   };
-
-  // const handleText = () => {
-  //   let name = document.getElementById('textName').value;
-  //   let label =
-  //     inputValue === 'rating'
-  //       ? inputValue
-  //       : inputValue === 'radio'
-  //       ? name.split(';')
-  //       : name;
-  //   if (name && label !== '') {
-  //     setTextList([
-  //       ...textList,
-  //       {
-  //         name: name,
-  //         label: label,
-  //         type: inputValue,
-  //         row: document.getElementById('textNum')
-  //           ? document.getElementById('textNum').value
-  //           : null
-  //       }
-  //     ]);
-  //   }
-  //   if (formRef.current) {
-  //     formRef.current.handleSubmit();
-  //   }
-  // };
-
   const onAddData = data => {
+    console.log('Formik data : ', data);
     setInput([...input, data]);
   };
 
@@ -127,15 +104,42 @@ const FormFormik = () => {
     }
   };
 
-  function postQuestions() {
-    Axios.post('/survey/questions', input)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(input);
+  // function postQuestions() {
+  //   Axios.post('/survey/questions', input)
+  //     .then(res => {
+  //       console.log(res);
+  //     })
+  //     .catch(err => {
+  //       console.log(input);
+  //     });
+  // }
+
+  async function postQuestions() {
+    try {
+      const res = await Axios['post']('/survey/questions', input);
+      props.history.push({
+        pathname: '/surveys/questions',
+        state: 'create'
       });
+    } catch (err) {
+      console.log(err);
+    }
   }
+
+  // async function saveQuestion() {
+  //   try {
+  //     const res = await Axios['patch'](
+  //       `/survey/question/${props.match.params.questionId}`,
+  //       questions
+  //     );
+  //     props.history.push({
+  //       pathname: '/surveys/questions',
+  //       state: 'update'
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   const handleDelete = data => {
     let filterInput = input.filter(currentObj => currentObj !== data);
@@ -144,6 +148,16 @@ const FormFormik = () => {
 
   return (
     <Page title="questions">
+      <Box margin="0.5rem 0 0 1rem">
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button>
+            <Link to="/surveys/questions">View Questions</Link>
+          </Button>
+          <Button>
+            <Link to="/surveys/edit">Edit Questions</Link>
+          </Button>
+        </ButtonGroup>
+      </Box>
       <Box margin="1rem">
         <Grid container spacing={2}>
           <Grid xs={12} lg={5} item>

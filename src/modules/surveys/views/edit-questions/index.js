@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import GenerateForm from '../Questions/GenerateForm';
 import {
-  Button,
-  MenuItem,
-  FormControl,
-  makeStyles,
   Grid,
   Box,
   Card,
@@ -12,11 +8,8 @@ import {
   CardContent,
   Divider,
   Tooltip,
-  ListItem,
-  ListItemText,
   IconButton
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import Page from 'src/components/Page';
 import UpdateQuestions from './update-questions';
 import Axios from 'axios';
@@ -25,17 +18,14 @@ import SaveIcon from '@material-ui/icons/Save';
 const test = true;
 
 const EditQuestions = props => {
-  // console.log(props);
-
-  const [targetData, setTargetData] = useState([]);
+  const [] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  // console.log(questions);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState('');
+
   useEffect(() => {
     (async function getQuestions() {
       try {
-        // const res = await Axios.get('/survey/questions'+ props.match.params.questionId);
         const res = await Axios.get('/survey/questions');
         setQuestions([
           res.data.find(q => q.questionId === props.match.params.questionId)
@@ -49,19 +39,16 @@ const EditQuestions = props => {
     })();
   }, []);
 
-  const [newData, setNewData] = useState([]);
+  // const [newData, setNewData] = useState([]);
 
   const updateSurvey = data => {
+    const newData = { ...data };
     console.log('New updated data : ', data);
-    setQuestions([data]);
+    setQuestions(newData);
   };
 
   async function saveQuestion() {
     try {
-      const res = await Axios['patch'](
-        `/survey/question/${props.match.params.questionId}`,
-        questions[0]
-      );
       props.history.push({
         pathname: '/surveys/questions',
         state: 'update'
@@ -107,7 +94,7 @@ const EditQuestions = props => {
                 <CardContent>
                   {test ? (
                     <>
-                      <GenerateForm inputs={questions} />
+                      <GenerateForm input={questions} />
                     </>
                   ) : null}
                 </CardContent>

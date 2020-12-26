@@ -44,7 +44,7 @@ class Home extends Component {
       this.setState(prevState => ({
         ...prevState,
         loading: false,
-        surveys: res.data
+        surveys: res.data.surveyList
       }));
     } catch (err) {
       this.setState(prevState => ({
@@ -77,12 +77,12 @@ class Home extends Component {
               <Button>
                 <Link to="/surveys/questions">View Questions</Link>
               </Button>
-              <Button>
+              {/* <Button>
                 <Link to="/surveys/questions/new">Add New Questions</Link>
               </Button>
               <Button>
                 <Link to="/surveys/edit">Edit Questions</Link>
-              </Button>
+              </Button> */}
             </ButtonGroup>
           </Box>
           <Grid container spacing={3}>
