@@ -80,33 +80,6 @@ const FormFormik = props => {
       setInputValue(e.target.value);
     }
   };
-
-  // const handleText = () => {
-  //   let name = document.getElementById('textName').value;
-  //   let label =
-  //     inputValue === 'rating'
-  //       ? inputValue
-  //       : inputValue === 'radio'
-  //       ? name.split(';')
-  //       : name;
-  //   if (name && label !== '') {
-  //     setTextList([
-  //       ...textList,
-  //       {
-  //         name: name,
-  //         label: label,
-  //         type: inputValue,
-  //         row: document.getElementById('textNum')
-  //           ? document.getElementById('textNum').value
-  //           : null
-  //       }
-  //     ]);
-  //   }
-  //   if (formRef.current) {
-  //     formRef.current.handleSubmit();
-  //   }
-  // };
-
   const onAddData = data => {
     console.log('Formik data : ', data);
     setInput([...input, data]);
