@@ -281,7 +281,15 @@ export default function TicketDashboard(props) {
   const [isEditable, makeEditable] = React.useState(false);
   const [filter, openFilter] = React.useState(false);
   const [tickets, setTickets] = useState([]);
+ const [openEdit, setOpenEdit] = React.useState(false);
 
+ const handleClickOpenEdit = () => {
+   setOpenEdit(true);
+ };
+
+ const handleCloseEdit = () => {
+   setOpenEdit(false);
+ };
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -393,7 +401,7 @@ export default function TicketDashboard(props) {
                     <ListItemIcon>
                       <Avatar
                         className={classes.small}
-                        style={{ backgroundColor: purple[700] }}
+                        style={{ backgroundColor: ticket.color|| purple[700] }}
                       >
                         {ticket.status.substring(0, 1)}
                       </Avatar>
@@ -913,7 +921,7 @@ export default function TicketDashboard(props) {
             variant="outlined"
             autoFocus
           >
-            Cancel
+            Close
           </Button>
         </DialogActions>
       </Dialog>
@@ -965,12 +973,59 @@ export default function TicketDashboard(props) {
                     {viewticket.ticketSubject}
                   </Typography>
                 </Box>
-                <Tooltip title="Edit">
-                  <EditIcon
-                    onClick={configureEditable}
-                    style={{ marginTop: 25, cursor: 'pointer' }}
-                  />
-                </Tooltip>
+                {/* <Tooltip title="Edit"> */}
+                <Button onClick={handleClickOpenEdit}>
+                  <EditIcon style={{ marginTop: 25, cursor: 'pointer' }} />
+                </Button>
+                {/* dialog */}
+                <Dialog
+                  open={openEdit}
+                  fullWidth
+                  maxWidth="md"
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                  <DialogTitle id="alert-dialog-title">
+                    <Box component="span" className={classes.drawerHeader}>
+                      <EditIcon />
+                      <Typography
+                        variant="h4"
+                        color="textPrimary"
+                        style={{ marginLeft: 10 }}
+                      >
+                        Edit Ticket
+                      </Typography>
+                    </Box>
+                  </DialogTitle>
+                  <DialogContent dividers>
+                    <CreateTicket
+                      setClick={click => (createTicket = click)}
+                      setOpen={open => setOpenEdit(open)}
+                      ticket_id={viewticket._id}
+                    />
+                   
+                  </DialogContent>
+                  <DialogActions>
+                    <Button
+                      onClick={() => createTicket()}
+                      color="primary"
+                      variant="contained"
+                      size="small"
+                    >
+                      Create
+                    </Button>
+                    <Button
+                      onClick={handleCloseEdit}
+                      color="primary"
+                      size="small"
+                      variant="outlined"
+                      autoFocus
+                    >
+                      Close
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+                {/* </Tooltip> */}
               </Box>
               <Box component="div" display="flex" flexDirection="row">
                 <Button

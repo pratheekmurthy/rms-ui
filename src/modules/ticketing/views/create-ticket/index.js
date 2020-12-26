@@ -156,7 +156,9 @@ export default function CreateTicket(props) {
   const [status, setStatus] = useState({
     value: '',
     label: '',
-    slaOnHold: false
+    slaOnHold: false,
+    closed:false,
+    color:'green'
   });
   const [executives, setExecutives] = useState([]);
   const [executive, setExecutive] = useState({
@@ -172,41 +174,56 @@ export default function CreateTicket(props) {
   const [file, setFile] = useState('');
 
   const handleChange = (ctrl, e) => {
+    
     switch (ctrl) {
       case 'ticketNumber':
-        return setTicketNumber(e.target.value);
+         setTicketNumber(e.target.value);
+        return props.setClick(createTicket); 
       case 'distributorName':
-        return setDistributorName(e.target.value);
+        setDistributorName(e.target.value);
+        return props.setClick(createTicket);
       case 'distributorId':
-        return setDistributorId(e.target.value);
+        setDistributorId(e.target.value);
+        return props.setClick(createTicket);
       case 'distributorEmail':
-        return setDistributorEmail(e.target.value);
+        setDistributorEmail(e.target.value);
+        return props.setClick(createTicket);
       case 'distributorMobile':
-        return setDistributorMobile(e.target.value);
+        setDistributorMobile(e.target.value);
+        return props.setClick(createTicket);
       case 'createdByName':
-        return setCreatedByName(e.target.value);
+        setCreatedByName(e.target.value);
+        return props.setClick(createTicket);
       case 'createdById':
-        return setCreatedById(e.target.value);
+        setCreatedById(e.target.value);
+        return props.setClick(createTicket);
       case 'ticketSubject':
-        alert(e.target.value);
-        return setTicketSubject(e.target.value);
+        
+        setTicketSubject(e.target.value);
+        return props.setClick(createTicket);
       case 'ticketDescription':
-        return setTicketDescription(e.target.value);
+        setTicketDescription(e.target.value);
+        return props.setClick(createTicket);
       case 'remarks':
-        return setRemarks(e.target.value);
+        setRemarks(e.target.value);
+        return props.setClick(createTicket);
       case 'file':
-        return setFile(e.target.files[0]);
+        setFile(e.target.files[0]);
+        return props.setClick(createTicket);
       default:
-        return;
+        return props.setClick(createTicket);
+     
     }
-
+ 
     // const file = e.target.files[0]; // accesing file
     // console.log(file);
     // setFile(file); // storing file
   };
 
   useEffect(() => {
-    if (!props.ticketNumber) {
+  //  alert(JSON.stringify(props))
+    if (!props.ticket_id) {
+     
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var charactersLength = characters.length;
@@ -220,14 +237,20 @@ export default function CreateTicket(props) {
       let month = (newDate.getMonth() + 1).toString();
       let year = newDate.getFullYear().toString();
       setTicketNumber('TKT' + year + month + date + result);
+      
       setCreatedTime(new Date().toDateString());
+       setUpdatedTime(new Date().toDateString());
+      props.setClick(createTicket);
     } else {
+     
       let unmounted = false;
       async function getItems() {
         const response = await fetch(
-          config.APIS_URL + '/tickets/' + props.ticket._id
+          config.APIS_URL + '/tickets/' + props.ticket_id
         );
         const tkt = (await response.json()).data[0];
+        console.log("else ", tkt)
+        // alert(JSON.stringify(tkt))
         if (!unmounted) {
           setTicketNumber(tkt.ticketNumber);
           setCreatedTime(tkt.createdTime);
@@ -242,23 +265,25 @@ export default function CreateTicket(props) {
           setUpdatedById(tkt.createdById);
           setTicketSubject(tkt.ticketSubject);
           setTicketDescription(tkt.ticketDescription);
-          setRemarks(tkt.remarks);
+          setRemarks(tkt.ticketRemarks);
 
           setTicketType({
             value: tkt.ticketTypeId,
             label: tkt.ticketType
           });
           setMedia({ value: tkt.mediaId, label: tkt.media });
+           getSubCategories(tkt.categoryId);
           setCategory({ value: tkt.categoryId, label: tkt.category });
           setSubCategory({
             value: tkt.subCategoryId,
             label: tkt.subCategory
           });
-          getSubCategories(tkt.categoryId);
+         
           setSubCategoryItem({
             value: tkt.subCategoryItemId,
             label: tkt.subCategoryItem
           });
+         
           getSubCategoryItems(tkt.categoryId, tkt.subCategoryId);
           setDepartment({
             value: tkt.departmentId,
@@ -273,7 +298,9 @@ export default function CreateTicket(props) {
           setStatus({
             value: tkt.statusId,
             label: tkt.status,
-            slaOnHold: tkt.slaOnHold
+            slaOnHold: tkt.slaOnHold,
+            closed:tkt.closed,
+            color:tkt.color
           });
           setExecutive({
             value: tkt.executiveId,
@@ -281,12 +308,14 @@ export default function CreateTicket(props) {
             executiveEmail: tkt.executiveEmail,
             executiveMobile: tkt.executiveMobile
           });
+          props.setClick(createTicket);
+          
         }
       }
       getItems();
       async function getHistoryItems() {
         const response = await fetch(
-          config.APIS_URL + '/ticketHistory/' + props.ticket._id
+          config.APIS_URL + '/ticketHistory/' + props.ticket_id
         );
         const tktHistory = (await response.json()).data;
         if (!unmounted) {
@@ -370,7 +399,9 @@ export default function CreateTicket(props) {
       const response = await fetch(config.APIS_URL + '/categories');
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket) {
+        // alert(JSON.stringify(props))
+        if (!props.ticket_id) {
+          // alert("if")
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -378,9 +409,10 @@ export default function CreateTicket(props) {
               })
             : setCategory({});
         } else {
+          // alert("else", category)
           setCategory({
-            label: props.ticket.category,
-            value: props.ticket.categoryId
+            label: category.label,
+            value: category.value
           });
         }
         setCategories(
@@ -434,6 +466,8 @@ export default function CreateTicket(props) {
         config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct
       );
       const body = await response.json();
+
+      
       if (!unmounted) {
         setSubCategoryItems(
           body.data.map(({ _id, subCategoryItem }) => ({
@@ -441,6 +475,7 @@ export default function CreateTicket(props) {
             value: _id
           }))
         );
+       
         setLoading(false);
         body.data[0]
           ? setSubCategoryItem({
@@ -494,11 +529,15 @@ export default function CreateTicket(props) {
       const body = await response.json();
       if (!unmounted) {
         setStatuses(
-          body.data.map(({ _id, status, slahold }) => ({
-            label: status,
-            value: _id,
-            slaOnHold: slahold
-          }))
+          body.data.map(
+            ({ _id, status, slahold,  closed, color }) => ({
+              label: status,
+              value: _id,
+              slaOnHold: slahold,
+              closed: closed,
+              color: color
+            })
+          )
         );
         setLoading(false);
         if (!props.ticket) {
@@ -506,7 +545,9 @@ export default function CreateTicket(props) {
             ? setStatus({
                 label: body.data[0].status,
                 value: body.data[0]._id,
-                slaOnHold: body.data[0].slahold
+                slaOnHold: body.data[0].slahold,
+                closed: body.data[0].closed,
+                color: body.data[0].color
               })
             : setStatus({});
         }
@@ -586,7 +627,9 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, [department]);
-
+useEffect(()=>{
+  props.setClick(createTicket)
+},[executive])
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -604,6 +647,7 @@ export default function CreateTicket(props) {
                 executiveMobile: body.data[0].executiveMobile
               })
             : setExecutive({});
+            props.setClick(createTicket)
         } else {
           setExecutive({
             label: props.ticket.assignedExecutiveName,
@@ -697,15 +741,20 @@ export default function CreateTicket(props) {
   };
 
   const createTicket = () => {
-    setTicketNumber('Adeeb');
-    addRow();
+    // alert(ticketSubject);
+    // setTicketNumber('Adeeb');
+    var result= addRow();
+    // alert(result)
+    props.setOpen(result);
+    
   };
 
-  const addRow = () => {
-    alert(ticketNumber);
+  const addRow = async () => {
+  
     const apiUrl = config.APIS_URL + '/tickets';
-    //method: props.ticket ? 'PUT' : 'POST',
+    
     var apiParam = {
+      method: props.ticket_id ? 'PUT' : 'POST',
       headers: {
         ticketNumber,
         createdTime,
@@ -742,6 +791,8 @@ export default function CreateTicket(props) {
         statusId: status.value,
         status: status.label,
         slaOnHold: status.slaOnHold,
+        closed:status.closed,
+        color:status.color,
         executiveId: executive.value,
         executive: executive.label,
         executiveEmail: executive.executiveEmail,
@@ -754,12 +805,22 @@ export default function CreateTicket(props) {
         ticketid: props.ticket._id
       };
     }
-    alert(JSON.stringify(apiParam.headers));
-    /* fetch(apiUrl, apiParam)
+    // console.log(apiParam.headers);
+    // alert(JSON.stringify(apiParam.headers));
+    await fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
         alert(JSON.stringify(repos));
-      }); */
+        //  alert(repos.status);
+        if(JSON.stringify(repos.status) === "200"){
+         
+        return true;
+        }
+        else{
+          return false;
+        }
+      }); 
+     
   };
 
   const UploadFile = e => {
@@ -954,7 +1015,13 @@ export default function CreateTicket(props) {
                 )[0].label,
                 slaOnHold: statuses.filter(
                   status => status.value === e.target.value
-                )[0].slaOnHold
+                )[0].slaOnHold,
+                 closed: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].closed,
+                 color: statuses.filter(
+                  status => status.value === e.target.value
+                )[0].color
               });
               /*  props.setStatus({
                 value: e.target.value,
@@ -985,7 +1052,7 @@ export default function CreateTicket(props) {
             }}
             variant="outlined"
             style={{ width: '31.4%' }}
-            value={category.value || ''}
+            value={category.value }
             onChange={e => {
               setCategory({
                 value: e.target.value,
@@ -1029,6 +1096,7 @@ export default function CreateTicket(props) {
                     subCategory => subCategory.value === e.target.value
                   )[0].label
                 });
+                 getSubCategoryItems(category.value,e.target.value,)
                 /* props.setSubCategory({
                   value: e.target.value,
                   label: subCategories.filter(
@@ -1047,7 +1115,7 @@ export default function CreateTicket(props) {
           ) : (
             <></>
           )}
-          {subCategoryItems.length > 1 ? (
+          {subCategoryItems.length > 0 ? (
             <TextField
               id="subcategoryitems"
               select
@@ -1081,9 +1149,9 @@ export default function CreateTicket(props) {
                 </option>
               ))}
             </TextField>
-          ) : (
+           ) : (
             <></>
-          )}
+          )} 
           <br />
           <TextField
             error={ticketSubject === ''}
@@ -1092,7 +1160,7 @@ export default function CreateTicket(props) {
             variant="outlined"
             size="small"
             style={{ width: '98%' }}
-            defaultValue={ticketSubject}
+            value={ticketSubject}
             onChange={e => {
               handleChange('ticketSubject', e);
             }}
@@ -1228,6 +1296,7 @@ export default function CreateTicket(props) {
                   department => department.value === e.target.value
                 )[0].label
               });
+              props.setClick(createTicket);
               /* props.setDepartment({
                 value: e.target.value,
                 label: departments.filter(
@@ -1256,6 +1325,7 @@ export default function CreateTicket(props) {
                 label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
+              props.setClick(createTicket);
               /* props.setTeam({
                 value: e.target.value,
                 label: teams.filter(team => team.value === e.target.value)[0]
@@ -1291,6 +1361,8 @@ export default function CreateTicket(props) {
                   executive => executive.value === e.target.value
                 )[0].executiveMobile
               });
+             
+              props.setClick(createTicket);
               /*  props.setExecutive({
                 value: e.target.value,
                 label: executives.filter(
