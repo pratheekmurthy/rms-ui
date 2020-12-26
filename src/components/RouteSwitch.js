@@ -9,10 +9,7 @@ function RouteSwitch({ routes, redirectPath, isRoot, setCrumb }) {
   const location = useLocation();
 
   useEffect(() => {
-    routes.map(
-      route =>
-        !console.log(route) && setCrumb({ key: route.path, value: route.crumb })
-    );
+    routes.map(route => setCrumb({ key: route.path, value: route.crumb }));
   }, []);
 
   return (
