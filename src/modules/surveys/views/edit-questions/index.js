@@ -94,7 +94,7 @@ const EditQuestions = props => {
                 <CardContent>
                   {test ? (
                     <>
-                      <GenerateForm input={questions} />
+                      <GenerateForm input={[questions]} />
                     </>
                   ) : null}
                 </CardContent>
