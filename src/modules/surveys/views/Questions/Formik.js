@@ -267,11 +267,10 @@ const FormFormik = props => {
               <CardHeader title="Survey Preview" />
               <Divider />
               <CardContent>
-                {test ? (
-                  <>
-                    <GenerateForm input={input} />
-                  </>
-                ) : null}
+                <>
+                  <GenerateForm input={input} />
+                </>
+
                 <Button
                   variant="contained"
                   color="primary"

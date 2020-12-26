@@ -46,9 +46,12 @@ const EditQuestions = props => {
     console.log('New updated data : ', data);
     setQuestions(newData);
   };
-
   async function saveQuestion() {
     try {
+      const res = await Axios['patch'](
+        `/survey/question/${props.match.params.questionId}`,
+        questions
+      );
       props.history.push({
         pathname: '/surveys/questions',
         state: 'update'
@@ -92,11 +95,7 @@ const EditQuestions = props => {
                 />
                 <Divider />
                 <CardContent>
-                  {test ? (
-                    <>
-                      <GenerateForm input={[questions]} />
-                    </>
-                  ) : null}
+                  <GenerateForm input={[questions]} />
                 </CardContent>
               </Card>
             </Grid>
