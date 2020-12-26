@@ -44,7 +44,7 @@ class Home extends Component {
       this.setState(prevState => ({
         ...prevState,
         loading: false,
-        surveys: res.data.surveyList
+        surveys: res.data
       }));
     } catch (err) {
       this.setState(prevState => ({

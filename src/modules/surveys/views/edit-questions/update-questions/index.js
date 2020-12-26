@@ -3,13 +3,13 @@ import { Formik, Form, Field } from 'formik';
 import TextareaInput from '../../Questions/InputTypes/Textarea';
 import RatingInput from '../../Questions/InputTypes/Rating';
 import TextInput from '../../Questions/InputTypes/Text';
-import RadioInput from '../../Questions/InputTypes/NewRadio';
+import Radio from '../../Questions/InputTypes/Radio';
 
-const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
+const UpdateQuestions = ({ updateData: [prevData], newUpdatedValue }) => {
   const initialValue = {};
-
   const handleSubmit = values => {
-    const localUpdateData = { ...updateData, ...values };
+    const localUpdateData = { ...prevData, ...values };
+    console.log(localUpdateData);
     newUpdatedValue(localUpdateData);
   };
 
@@ -17,15 +17,15 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
     rating: RatingInput,
     textarea: TextareaInput,
     text: TextInput,
-    radio: RadioInput
+    radio: Radio
   };
-  const renderQuestion = updateData => {
-    if (updateData.questionType) {
-      const comp = componentMap[updateData.questionType];
+  const renderQuestion = prevData => {
+    if (prevData.questionType) {
+      const comp = componentMap[prevData.questionType];
       return (
-        <div key={updateData.questionId}>
+        <div key={prevData.questionId}>
           {React.createElement(comp, {
-            question: updateData,
+            question: prevData,
             submit: handleSubmit,
             isEdit: true
           })}
@@ -54,7 +54,7 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
     //   case 'radio':
     //     return (
     //       <div key={updateData.questionId}>
-    //         <RadioInput isEdit question={updateData} submit={handleSubmit} />
+    //         <Radio isEdit question={updateData} submit={handleSubmit} />
     //       </div>
     //     );
     //   default:
@@ -64,7 +64,7 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
 
   return (
     <div>
-      <Formik
+      {/* <Formik
         initialValues={initialValue}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setSubmitting(false);
@@ -74,12 +74,12 @@ const UpdateQuestions = ({ updateData, newUpdatedValue }) => {
       >
         {({ submitForm, isSubmitting }) => (
           <Form>
-            <br />
-            {renderQuestion(updateData)}
-            {isSubmitting}
+            <br /> */}
+      {renderQuestion(prevData)}
+      {/* {isSubmitting}
           </Form>
         )}
-      </Formik>
+      </Formik> */}
     </div>
   );
 };

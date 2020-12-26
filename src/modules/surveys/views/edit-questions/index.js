@@ -44,7 +44,7 @@ const EditQuestions = props => {
   const updateSurvey = data => {
     const newData = { ...data };
     console.log('New updated data : ', data);
-    setQuestions(newData);
+    setQuestions([newData]);
   };
   async function saveQuestion() {
     try {
@@ -71,10 +71,12 @@ const EditQuestions = props => {
                 <CardHeader title="Edit Question" />
                 <Divider />
                 <CardContent>
-                  <UpdateQuestions
-                    updateData={questions}
-                    newUpdatedValue={updateSurvey}
-                  />
+                  {!!questions[0] && (
+                    <UpdateQuestions
+                      updateData={questions}
+                      newUpdatedValue={updateSurvey}
+                    />
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -95,7 +97,7 @@ const EditQuestions = props => {
                 />
                 <Divider />
                 <CardContent>
-                  <GenerateForm input={[questions]} />
+                  <GenerateForm input={questions} />
                 </CardContent>
               </Card>
             </Grid>

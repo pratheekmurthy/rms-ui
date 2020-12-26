@@ -24,12 +24,12 @@ import RatingInput from './InputTypes/Rating';
 import TextInput from './InputTypes/Text';
 import TextareaInput from './InputTypes/Textarea';
 // import RadioInput from './InputTypes/Radio';
-import RadioInput from './InputTypes/NewRadio';
 import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
+import Radio from './InputTypes/Radio';
 
 const drawerWidth = '45%';
 
@@ -96,7 +96,7 @@ const FormFormik = props => {
       case 'checkbox':
         return <CheckboxInput submit={onAddData} />;
       case 'radio':
-        return <RadioInput submit={onAddData} />;
+        return <Radio submit={onAddData} />;
       case 'select':
         return <SelectInput submit={onAddData} />;
       default:
@@ -148,7 +148,7 @@ const FormFormik = props => {
 
   return (
     <Page title="questions">
-      <Box margin="0.5rem 0 0 1rem">
+      {/* <Box margin="0.5rem 0 0 1rem">
         <ButtonGroup color="primary" aria-label="outlined primary button group">
           <Button>
             <Link to="/surveys/questions">View Questions</Link>
@@ -157,7 +157,7 @@ const FormFormik = props => {
             <Link to="/surveys/edit">Edit Questions</Link>
           </Button>
         </ButtonGroup>
-      </Box>
+      </Box> */}
       <Box margin="1rem">
         <Grid container spacing={2}>
           <Grid xs={12} lg={5} item>

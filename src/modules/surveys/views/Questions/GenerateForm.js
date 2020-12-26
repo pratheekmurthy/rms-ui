@@ -27,13 +27,13 @@ const useStyles = makeStyles(() => ({
 const GenerateForm = ({ input }) => {
   const classes = useStyles();
   const obj = {};
-  console.log(input);
 
   let [ratingValue, setRatingValue] = useState(0);
   const getRatingValue = data => {
     setRatingValue(data);
   };
   const renderQuestion = isSubmitting => {
+    console.log(input, 'input');
     if (input) {
       return input.map(question => {
         switch (question.questionType) {
@@ -47,7 +47,6 @@ const GenerateForm = ({ input }) => {
                 />
               </span>
             );
-            break;
           case 'text':
             return (
               <div key={question.questionName + '1'}>
@@ -63,7 +62,6 @@ const GenerateForm = ({ input }) => {
                 <br />
               </div>
             );
-            break;
           case 'textarea':
             return (
               <div key={question.questionName}>
@@ -83,7 +81,6 @@ const GenerateForm = ({ input }) => {
                 <br />
               </div>
             );
-            break;
           case 'checkbox':
             return (
               <div key={question.name}>
@@ -102,7 +99,6 @@ const GenerateForm = ({ input }) => {
                 ))}
               </div>
             );
-            break;
           case 'radio':
             return (
               <>
@@ -121,7 +117,6 @@ const GenerateForm = ({ input }) => {
                 </Field>
               </>
             );
-            break;
           case 'select':
             return (
               <>
@@ -146,7 +141,6 @@ const GenerateForm = ({ input }) => {
                 <br />
               </>
             );
-            break;
           default:
             return null;
         }
