@@ -39,7 +39,7 @@ const GenerateForm = ({ input }) => {
         switch (question.questionType) {
           case 'rating':
             return (
-              <span key={1}>
+              <span key={'rating' + question.questionName}>
                 <RatingComponent
                   label={question.label}
                   value={getRatingValue}
@@ -49,7 +49,7 @@ const GenerateForm = ({ input }) => {
             );
           case 'text':
             return (
-              <div key={question.questionName + '1'}>
+              <div key={'text' + question.questionName + '1'}>
                 <Field
                   component={TextField}
                   color="primary"
@@ -64,7 +64,7 @@ const GenerateForm = ({ input }) => {
             );
           case 'textarea':
             return (
-              <div key={question.questionName}>
+              <div key={'textarea' + question.questionName}>
                 <Field
                   component={TextField}
                   color="primary"
@@ -83,44 +83,65 @@ const GenerateForm = ({ input }) => {
             );
           case 'checkbox':
             return (
-              <div key={question.name}>
+              <div key={'checkbox' + question.name}>
                 <Typography>{question.label}</Typography>
-                {question.options.map((option, index) => (
-                  <div key={index}>
-                    <Field
-                      component={CheckboxWithLabel}
-                      type="checkbox"
-                      name={option.value}
-                      color="primary"
-                      defaultValue={false}
-                      Label={{ label: option.label }}
-                    />
-                  </div>
-                ))}
+                <Grid
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-start"
+                >
+                  {question.options.map((option, index) => (
+                    <Grid item key={'option' + option.value}>
+                      <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        name={option.value}
+                        color="primary"
+                        defaultValue={false}
+                        Label={{ label: option.label }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </div>
             );
           case 'radio':
             return (
               <>
-                <Field component={RadioGroup} name={question.questionName}>
+                <Field
+                  component={RadioGroup}
+                  name={question.questionName}
+                  key={'radio' + question.name}
+                >
                   <Typography>{question.label}</Typography>
-                  {question.options.map((option, index) => (
-                    <div key={index}>
-                      <FormControlLabel
-                        value={option.value}
-                        control={<Radio disabled={isSubmitting} />}
-                        label={option.label}
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                  ))}
+                  <Grid
+                    container
+                    direction="row"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                  >
+                    {question.options.map((option, index) => (
+                      <Grid item key={'option' + option.value}>
+                        <FormControlLabel
+                          value={option.value}
+                          control={<Radio disabled={isSubmitting} />}
+                          label={option.label}
+                          disabled={isSubmitting}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
                 </Field>
               </>
             );
           case 'select':
             return (
               <>
-                <FormControl className={classes.formControl}>
+                <FormControl
+                  className={classes.formControl}
+                  key={'select' + question.name}
+                >
                   <Field
                     component={TextField}
                     type="text"
@@ -132,9 +153,7 @@ const GenerateForm = ({ input }) => {
                     size="medium"
                   >
                     {question.options.map((option, index) => (
-                      <div key={index}>
-                        <MenuItem value={option.value}>{option.label}</MenuItem>
-                      </div>
+                      <MenuItem value={option.value}>{option.label}</MenuItem>
                     ))}
                   </Field>
                 </FormControl>
