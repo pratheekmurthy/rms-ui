@@ -219,7 +219,9 @@ export default function CreateTicket(props) {
     // console.log(file);
     // setFile(file); // storing file
   };
-
+useEffect(()=>{
+   props.setClick(createTicket);
+},[ticketNumber,distributorName])
   useEffect(() => {
   //  alert(JSON.stringify(props))
     if (!props.ticket_id) {
@@ -272,8 +274,11 @@ export default function CreateTicket(props) {
             label: tkt.ticketType
           });
           setMedia({ value: tkt.mediaId, label: tkt.media });
-           getSubCategories(tkt.categoryId);
-          setCategory({ value: tkt.categoryId, label: tkt.category });
+         
+         await setCategory({ value: tkt.categoryId, label: tkt.category });
+            getSubCategories(tkt.categoryId);
+          // alert(JSON.stringify(tkt))
+          // alert(JSON.stringify(category));
           setSubCategory({
             value: tkt.subCategoryId,
             label: tkt.subCategory
@@ -286,10 +291,10 @@ export default function CreateTicket(props) {
          
           getSubCategoryItems(tkt.categoryId, tkt.subCategoryId);
           setDepartment({
-            value: tkt.departmentId,
-            label: tkt.department
+            value: tkt.assignedDepartmentId,
+            label: tkt.assignedDepartment
           });
-          setTeam({ value: tkt.teamId, label: tkt.team });
+          setTeam({ value: tkt.assignedTeamId, label: tkt.assignedTeam });
           setPriority({
             value: tkt.priorityId,
             label: tkt.priority,
@@ -303,26 +308,28 @@ export default function CreateTicket(props) {
             color:tkt.color
           });
           setExecutive({
-            value: tkt.executiveId,
-            label: tkt.executive,
-            executiveEmail: tkt.executiveEmail,
-            executiveMobile: tkt.executiveMobile
+            value: tkt.assignedExecutiveId,
+            label: tkt.assignedExecutive,
+            executiveEmail: tkt.assignedExecutiveEmail,
+            executiveMobile: tkt.assignedExecutiveMobile
           });
-          props.setClick(createTicket);
+          
           
         }
       }
       getItems();
-      async function getHistoryItems() {
-        const response = await fetch(
-          config.APIS_URL + '/ticketHistory/' + props.ticket_id
-        );
-        const tktHistory = (await response.json()).data;
-        if (!unmounted) {
-          setTicketHistory(tktHistory);
-        }
-      }
-      getHistoryItems();
+      // async function getHistoryItems() {
+      //   const response = await fetch(
+      //     config.APIS_URL + '/ticketHistory/' + props.ticket_id
+      //   );
+      //   const tktHistory = (await response.json()).data;
+       
+      //   if (!unmounted) {
+      //     setTicketHistory(tktHistory);
+      //   }
+      // }
+      // getHistoryItems();
+      props.setClick(createTicket);
       return () => {
         unmounted = true;
       };
@@ -344,7 +351,7 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setTicketType({
                 label: body.data[0].ticketType,
@@ -375,7 +382,7 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setMedia({
                 label: body.data[0].media,
@@ -408,13 +415,14 @@ export default function CreateTicket(props) {
                 value: body.data[0]._id
               })
             : setCategory({});
-        } else {
-          // alert("else", category)
-          setCategory({
-            label: category.label,
-            value: category.value
-          });
         }
+        //  else {
+        //   alert("useeffect", category)
+        //   setCategory({
+        //     label: category.label,
+        //     value: category.value
+        //   });
+        // }
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
@@ -436,7 +444,13 @@ export default function CreateTicket(props) {
       const response = await fetch(config.APIS_URL + '/subcategories/' + cat);
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket) {
+        setSubCategories(
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
+        );
+        if (!props.ticket_id) {
           body.data[0]
             ? setSubCategory({
                 label: body.data[0].subCategory,
@@ -444,12 +458,6 @@ export default function CreateTicket(props) {
               })
             : setSubCategory({});
         }
-        setSubCategories(
-          body.data.map(({ _id, subCategory }) => ({
-            label: subCategory,
-            value: _id
-          }))
-        );
         setLoading(false);
       }
     }
@@ -458,7 +466,6 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   };
-
   const getSubCategoryItems = (cat, sct) => {
     let unmounted = false;
     async function getItems() {
@@ -477,12 +484,14 @@ export default function CreateTicket(props) {
         );
        
         setLoading(false);
+        if (!props.ticket_id) {
         body.data[0]
           ? setSubCategoryItem({
               label: body.data[0].subCategoryItem,
               value: body.data[0]._id
             })
           : setSubCategoryItem({});
+        }
       }
     }
     getItems();
@@ -505,7 +514,7 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setPriority({
                 label: body.data[0].priority,
@@ -540,7 +549,7 @@ export default function CreateTicket(props) {
           )
         );
         setLoading(false);
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setStatus({
                 label: body.data[0].status,
@@ -564,19 +573,20 @@ export default function CreateTicket(props) {
       const response = await fetch(config.APIS_URL + '/departments');
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket) {
-          body.data[0]
-            ? setDepartment({
-                label: body.data[0].department,
-                value: body.data[0]._id
-              })
-            : setDepartment({});
-        } else {
-          setDepartment({
-            label: props.ticket.assignedDepartment,
-            value: props.ticket.assignedDepartmentId
-          });
-        }
+         if (!props.ticket_id) {
+           body.data[0]
+             ? setDepartment({
+                 label: body.data[0].department,
+                 value: body.data[0]._id
+               })
+             : setDepartment({});
+         } 
+        // else {
+        //   setDepartment({
+        //     label: props.ticket.assignedDepartment,
+        //     value: props.ticket.assignedDepartmentId
+        //   });
+        // }
         setDepartments(
           body.data.map(({ _id, department }) => ({
             label: department,
@@ -600,19 +610,20 @@ export default function CreateTicket(props) {
       );
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setTeam({
                 label: body.data[0].team,
                 value: body.data[0]._id
               })
             : setTeam({});
-        } else {
-          setTeam({
-            label: props.ticket.assignedTeam,
-            value: props.ticket.assignedTeamId
-          });
         }
+        //  else {
+        //   setTeam({
+        //     label: props.ticket.assignedTeam,
+        //     value: props.ticket.assignedTeamId
+        //   });
+        // }
         setTeams(
           body.data.map(({ _id, team }) => ({
             label: team,
@@ -638,7 +649,7 @@ useEffect(()=>{
       );
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket) {
+        if (!props.ticket_id) {
           body.data[0]
             ? setExecutive({
                 label: body.data[0].executiveName,
@@ -647,15 +658,16 @@ useEffect(()=>{
                 executiveMobile: body.data[0].executiveMobile
               })
             : setExecutive({});
-            props.setClick(createTicket)
-        } else {
-          setExecutive({
-            label: props.ticket.assignedExecutiveName,
-            value: props.ticket.assignedExecutiveId,
-            executiveEmail: props.ticket.assignedExecutiveEmail,
-            executiveMobile: props.ticket.assignedExecutiveMobile
-          });
-        }
+          props.setClick(createTicket);
+        } 
+        // else {
+        //   setExecutive({
+        //     label: props.ticket.assignedExecutiveName,
+        //     value: props.ticket.assignedExecutiveId,
+        //     executiveEmail: props.ticket.assignedExecutiveEmail,
+        //     executiveMobile: props.ticket.assignedExecutiveMobile
+        //   });
+        // }
         setExecutives(
           body.data.map(
             ({ _id, executiveName, executiveEmail, executiveMobile }) => ({
@@ -746,9 +758,8 @@ useEffect(()=>{
     var result= addRow();
     // alert(result)
     props.setOpen(result);
-    
+    //  props.setOpenEdit(result);
   };
-
   const addRow = async () => {
   
     const apiUrl = config.APIS_URL + '/tickets';
@@ -799,19 +810,19 @@ useEffect(()=>{
         executiveMobile: executive.executiveMobile
       }
     };
-    if (props.ticket) {
+    if (props.ticket_id) {
       apiParam.headers = {
         ...apiParam.headers,
-        ticketid: props.ticket._id
+        ticketid: props.ticket_id
       };
     }
     // console.log(apiParam.headers);
-    // alert(JSON.stringify(apiParam.headers));
+    // alert(JSON.stringify(apiParam));
     await fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
         alert(JSON.stringify(repos));
-        //  alert(repos.status);
+    
         if(JSON.stringify(repos.status) === "200"){
          
         return true;
@@ -942,6 +953,7 @@ useEffect(()=>{
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
+              
               /*  props.setTicketType({
                 value: e.target.value,
                 label: ticketTypes.filter(
@@ -979,6 +991,7 @@ useEffect(()=>{
                   priority => priority.value === e.target.value
                 )[0].sla
               });
+              props.setClick(createTicket);
               /* props.setPriority({
                 value: e.target.value,
                 label: priorities.filter(
@@ -1023,6 +1036,7 @@ useEffect(()=>{
                   status => status.value === e.target.value
                 )[0].color
               });
+              props.setClick(createTicket);
               /*  props.setStatus({
                 value: e.target.value,
                 label: statuses.filter(
@@ -1060,7 +1074,7 @@ useEffect(()=>{
                   category => category.value === e.target.value
                 )[0].label
               });
-
+               props.setClick(createTicket);
               /* props.setCategory({
                 value: e.target.value,
                 label: categories.filter(
@@ -1097,6 +1111,7 @@ useEffect(()=>{
                   )[0].label
                 });
                  getSubCategoryItems(category.value,e.target.value,)
+                 props.setClick(createTicket);
                 /* props.setSubCategory({
                   value: e.target.value,
                   label: subCategories.filter(
@@ -1134,6 +1149,7 @@ useEffect(()=>{
                     subCategoryItem => subCategoryItem.value === e.target.value
                   )[0].label
                 });
+                props.setClick(createTicket);
                 /* props.setSubCategoryItem({
                   value: e.target.value,
                   label: subCategoryItems.filter(
@@ -1233,6 +1249,7 @@ useEffect(()=>{
                   media => media.value === e.target.value
                 )[0].idLabel
               });
+              props.setClick(createTicket);
               /* props.setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]

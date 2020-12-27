@@ -354,7 +354,7 @@ export default function TicketDashboard(props) {
         config.APIS_URL + '/ticketHistory/' + item._id
       );
       const tktHistory = (await response.json()).data;
-
+ console.log('history', tktHistory);
       if (!unmounted) {
         setTicketHistory(tktHistory);
       }
@@ -1003,7 +1003,6 @@ export default function TicketDashboard(props) {
                       setOpen={open => setOpenEdit(open)}
                       ticket_id={viewticket._id}
                     />
-                   
                   </DialogContent>
                   <DialogActions>
                     <Button
@@ -1012,7 +1011,7 @@ export default function TicketDashboard(props) {
                       variant="contained"
                       size="small"
                     >
-                      Create
+                      Update
                     </Button>
                     <Button
                       onClick={handleCloseEdit}
