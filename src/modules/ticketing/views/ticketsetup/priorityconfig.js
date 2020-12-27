@@ -51,10 +51,10 @@ function PriorityConfig() {
   });
 
   const updateRow = () => {
-    const val1 = JSON.stringify(updatedRow.priority);
-    const val2 = JSON.stringify(updatedRow.sla);
+    const val1 = updatedRow.priority;
+    const val2 = updatedRow.sla;
 
-    if (val1.length === 2 || val2.length === 2) {
+    if (!val1 || !val2) {
       alert('Please enter value');
     } else {
       setIsEditing(-1);
@@ -171,9 +171,9 @@ function PriorityConfig() {
       .then(res => res.json())
       .then(repos => {
         setApiPriorities(repos.data);
-        setPriorities(apiPriorities);
+        setPriorities(repos.data);
       });
-  }, [subCategory]);
+  }, [subCategory.value, isEditing]);
 
   useEffect(() => {
     setUpdatedRow(isEditing === '-1' ? {} : priorities[isEditing]);
@@ -268,7 +268,7 @@ function PriorityConfig() {
             onChange={e => {
               setSubCategory({
                 value: e.target.value,
-                text: subCategories.filter(
+                label: subCategories.filter(
                   subCategory => subCategory.value === e.target.value
                 )[0].label
               });
@@ -361,63 +361,62 @@ function PriorityConfig() {
             </Button>
           </TableCell>
         </TableRow>
-        {priorities ||
-          [].map((item, idx) => {
-            return (
-              <TableRow key={idx}>
-                <TableCell>{idx + 1}</TableCell>
-                <TableCell>
-                  {isEditing === idx ? (
-                    <TextField
-                      label="Priority"
-                      id="outlined-size-small"
-                      defaultValue={item.priority}
-                      onChange={e => handlePriorityChange(idx, e)}
-                      variant="outlined"
-                      size="small"
-                    />
-                  ) : (
-                    item.priority
-                  )}
-                </TableCell>
-                <TableCell>
-                  {isEditing === idx ? (
-                    <TextField
-                      label="SLA"
-                      id="outlined-size-small"
-                      type="number"
-                      defaultValue={item.sla}
-                      onChange={e => handleSLAChange(idx, e)}
-                      variant="outlined"
-                      size="small"
-                    />
-                  ) : (
-                    item.sla
-                  )}
-                </TableCell>
-                <TableCell style={{ textAlign: 'center' }}>
-                  <Checkbox
-                    defaultChecked={item.active}
-                    disabled={isEditing === idx ? false : true}
-                    onChange={e => handleActiveChange(idx, e)}
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
+        {priorities.map((item, idx) => {
+          return (
+            <TableRow key={idx}>
+              <TableCell>{idx + 1}</TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="Priority"
+                    id="outlined-size-small"
+                    defaultValue={item.priority}
+                    onChange={e => handlePriorityChange(idx, e)}
+                    variant="outlined"
+                    size="small"
                   />
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={e =>
-                      isEditing === idx ? updateRow(item) : setIsEditing(idx)
-                    }
-                    className="SmallButton"
-                  >
-                    {isEditing === idx ? 'Update' : 'Edit'}
-                  </Button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+                ) : (
+                  item.priority
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="SLA"
+                    id="outlined-size-small"
+                    type="number"
+                    defaultValue={item.sla}
+                    onChange={e => handleSLAChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.sla
+                )}
+              </TableCell>
+              <TableCell style={{ textAlign: 'center' }}>
+                <Checkbox
+                  defaultChecked={item.active}
+                  disabled={isEditing === idx ? false : true}
+                  onChange={e => handleActiveChange(idx, e)}
+                  inputProps={{ 'aria-label': 'primary checkbox' }}
+                />
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={e =>
+                    isEditing === idx ? updateRow(item) : setIsEditing(idx)
+                  }
+                  className="SmallButton"
+                >
+                  {isEditing === idx ? 'Update' : 'Edit'}
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </Table>
     </div>
   );
