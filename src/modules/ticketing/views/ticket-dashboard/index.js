@@ -1469,7 +1469,30 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.mediaId}
+                    {viewticket.idLabel}
+                  </Typography>
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                className={classes.belowMargin}
+              >
+                <Typography variant="h5" className={classes.labelClass}>
+                  Source Name
+                </Typography>
+                <Box
+                  display="flex"
+                  flexDirection="row"
+                  className={classes.valueClass}
+                >
+                  <Typography
+                    variant="body1"
+                    className={classes.avatarValue}
+                    component="span"
+                  >
+                    {viewticket.nameLabel}
                   </Typography>
                 </Box>
               </Box>
