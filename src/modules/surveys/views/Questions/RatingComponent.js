@@ -1,31 +1,13 @@
-import React, { useState } from "react";
-import { Box, Grid, Typography } from "@material-ui/core";
-import { Rating } from "@material-ui/lab";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import React, { useState } from 'react';
+import { Box, Grid, Typography } from '@material-ui/core';
+import { Rating } from '@material-ui/lab';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
-const RatingComponent = ({ label, name, value }) => {
-  const handleChange = (e) => {
-    let ratingValue = e.target.value;
-    // value(ratingValue);
-  };
+const RatingComponent = ({ label, name }) => {
   return (
     <>
-      {/* <Box component="fieldset" mb={3} borderColor="transparent">
-        <Typography component="legend" style={{ marginLeft: "10px" }}>
-          {label}
-        </Typography>
-        <Rating
-          name="customized-empty"
-          defaultValue={0}
-          emptyIcon={<StarBorderIcon fontSize="inherit" />}
-          onChange={(e) => {
-            value(e.target.value);
-          }}
-        />
-      </Box> */}
-
       <Box component="fieldset" mb={3} borderColor="transparent">
-        <Typography component="legend" style={{ marginLeft: "10px" }}>
+        <Typography component="legend" style={{ marginLeft: '10px' }}>
           {label}
         </Typography>
         <Rating
@@ -33,7 +15,7 @@ const RatingComponent = ({ label, name, value }) => {
           id="rating"
           precision={0.5}
           emptyIcon={<StarBorderIcon fontSize="inherit" />}
-          onChange={handleChange}
+          style={{ marginLeft: '1%' }}
         />
       </Box>
     </>

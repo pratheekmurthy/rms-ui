@@ -5,6 +5,7 @@ import {
   makeStyles,
   Grid,
   Box,
+  List,
   Card,
   CardHeader,
   CardContent,
@@ -12,6 +13,7 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  ListItemSecondaryAction,
   ButtonGroup
 } from '@material-ui/core';
 import { Formik, Form, Field } from 'formik';
@@ -62,6 +64,18 @@ const useStyles = makeStyles(theme => ({
   cardActions: {
     height: '70%',
     flexGrow: 1
+  },
+  container: {
+    width: 400,
+    position: 'relative'
+  },
+  listItem: {
+    paddingRight: theme.spacing(5)
+  },
+  cardcontent: {
+    '&:last-child': {
+      paddingBottom: 0
+    }
   }
 }));
 
@@ -104,16 +118,6 @@ const FormFormik = props => {
     }
   };
 
-  // function postQuestions() {
-  //   Axios.post('/survey/questions', input)
-  //     .then(res => {
-  //       console.log(res);
-  //     })
-  //     .catch(err => {
-  //       console.log(input);
-  //     });
-  // }
-
   async function postQuestions() {
     try {
       const res = await Axios['post']('/survey/questions', input);
@@ -125,21 +129,6 @@ const FormFormik = props => {
       console.log(err);
     }
   }
-
-  // async function saveQuestion() {
-  //   try {
-  //     const res = await Axios['patch'](
-  //       `/survey/question/${props.match.params.questionId}`,
-  //       questions
-  //     );
-  //     props.history.push({
-  //       pathname: '/surveys/questions',
-  //       state: 'update'
-  //     });
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
 
   const handleDelete = data => {
     let filterInput = input.filter(currentObj => currentObj !== data);
@@ -164,7 +153,7 @@ const FormFormik = props => {
             <Card style={{ width: '100%' }}>
               <CardHeader title="Feedback Designer" />
               <Divider />
-              <CardContent>
+              <CardContent className={classes.cardcontent}>
                 <Formik
                   innerRef={formRef}
                   initialValues={{
@@ -235,29 +224,31 @@ const FormFormik = props => {
                   )}
                 </Formik>
                 {inputValue && handleInputs(inputValue)}
-                {!!input.length &&
-                  input.map((data, index) => (
-                    <div>
-                      <ListItem
-                        key={index}
-                        style={{ marginTop: '-1%', marginLeft: '-4%' }}
-                      >
-                        <IconButton
-                          aria-label="delete"
-                          color="secondary"
-                          onClick={() => {
-                            handleDelete(data);
+                <List component="nav" aria-label="main mailbox folders">
+                  {!!input.length &&
+                    input.map((data, index) => (
+                      <div>
+                        <ListItem
+                          key={index}
+                          classes={{
+                            container: classes.container,
+                            root: classes.listItem
                           }}
                         >
-                          <DeleteIcon />
-                        </IconButton>
-                        <ListItemText
-                          primary={data.label}
-                          style={{ marginLeft: '1%' }}
-                        />
-                      </ListItem>
-                    </div>
-                  ))}
+                          <ListItemText primary={data.label} />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              aria-label="delete"
+                              onClick={() => handleDelete(data)}
+                            >
+                              <DeleteIcon color="secondary" />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      </div>
+                    ))}
+                </List>
               </CardContent>
             </Card>
           </Grid>
@@ -270,19 +261,20 @@ const FormFormik = props => {
                 <>
                   <GenerateForm input={input} />
                 </>
-
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="button"
-                  onClick={() => {
-                    if (input.length !== 0) {
-                      postQuestions();
-                    }
-                  }}
-                >
-                  Save questions
-                </Button>
+                {!!input.length && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                    onClick={() => {
+                      if (input.length !== 0) {
+                        postQuestions();
+                      }
+                    }}
+                  >
+                    Save Questions
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </Grid>

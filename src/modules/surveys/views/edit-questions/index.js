@@ -8,14 +8,15 @@ import {
   CardContent,
   Divider,
   Tooltip,
-  IconButton
+  IconButton,
+  Button,
+  ButtonGroup
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import UpdateQuestions from './update-questions';
 import Axios from 'axios';
 import SaveIcon from '@material-ui/icons/Save';
-
-const test = true;
+import { Link } from 'react-router-dom';
 
 const EditQuestions = props => {
   const [] = useState([]);
@@ -65,6 +66,19 @@ const EditQuestions = props => {
     <div>
       <Page title="questions">
         <Box margin="1rem">
+          <Box marginBottom={2}>
+            <ButtonGroup
+              color="primary"
+              aria-label="outlined primary button group"
+            >
+              <Button>
+                <Link to="/surveys/questions/new">Add New Questions</Link>
+              </Button>
+              <Button>
+                <Link to="/surveys/questions">View Questions</Link>
+              </Button>
+            </ButtonGroup>
+          </Box>
           <Grid container spacing={1}>
             <Grid xs={12} lg={6} item>
               <Card style={{ width: '100%' }}>

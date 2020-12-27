@@ -90,7 +90,7 @@ const TextInput = ({ submit, isEdit, question }) => {
                   color={isEdit ? 'primary' : 'inherit'}
                   onClick={submitForm}
                 >
-                  {isEdit ? 'Update' : 'Add Data'}
+                  {isEdit ? 'Update' : 'Add Question'}
                 </Button>
               </Grid>
             </Form>
