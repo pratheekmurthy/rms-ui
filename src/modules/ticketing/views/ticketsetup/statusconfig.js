@@ -246,7 +246,7 @@ function StatusConfig() {
               value={newRow.color}
               onChange={e =>
                 setNewRow({
-                  status: newRow.closed,
+                  status: newRow.status,
                   slahold: newRow.slahold,
                   closed: newRow.closed,
                   color: e.target.value,
