@@ -215,6 +215,7 @@ export default function CreateSurvey(props) {
                             label="Enter Survey Title"
                             variant="outlined"
                             disabled={false}
+                            autoComplete="off"
                           />
                           <br />
                           <br />

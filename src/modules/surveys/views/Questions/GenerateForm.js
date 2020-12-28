@@ -27,13 +27,7 @@ const useStyles = makeStyles(() => ({
 const GenerateForm = ({ input }) => {
   const classes = useStyles();
   const obj = {};
-
-  let [ratingValue, setRatingValue] = useState(0);
-  const getRatingValue = data => {
-    setRatingValue(data);
-  };
   const renderQuestion = isSubmitting => {
-    console.log(input, 'input');
     if (input) {
       return input.map(question => {
         switch (question.questionType) {
@@ -42,7 +36,6 @@ const GenerateForm = ({ input }) => {
               <span key={'rating' + question.questionName}>
                 <RatingComponent
                   label={question.label}
-                  value={getRatingValue}
                   name={question.questionName}
                 />
               </span>
@@ -85,36 +78,7 @@ const GenerateForm = ({ input }) => {
             return (
               <div key={'checkbox' + question.name}>
                 <Typography>{question.label}</Typography>
-                <Grid
-                  container
-                  direction="row"
-                  justify="flex-start"
-                  alignItems="flex-start"
-                >
-                  {question.options.map((option, index) => (
-                    <Grid item key={'option' + option.value}>
-                      <Field
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name={option.value}
-                        color="primary"
-                        defaultValue={false}
-                        Label={{ label: option.label }}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              </div>
-            );
-          case 'radio':
-            return (
-              <>
-                <Field
-                  component={RadioGroup}
-                  name={question.questionName}
-                  key={'radio' + question.name}
-                >
-                  <Typography>{question.label}</Typography>
+                {question.additionalConfig.displayType === 'inline' ? (
                   <Grid
                     container
                     direction="row"
@@ -123,21 +87,91 @@ const GenerateForm = ({ input }) => {
                   >
                     {question.options.map((option, index) => (
                       <Grid item key={'option' + option.value}>
-                        <FormControlLabel
-                          value={option.value}
-                          control={<Radio disabled={isSubmitting} />}
-                          label={option.label}
-                          disabled={isSubmitting}
+                        <Field
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          name={option.value}
+                          color="primary"
+                          defaultValue={false}
+                          Label={{ label: option.label }}
                         />
                       </Grid>
                     ))}
                   </Grid>
-                </Field>
-              </>
+                ) : (
+                  <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    alignItems="flex-start"
+                  >
+                    {question.options.map((option, index) => (
+                      <Grid item key={'option' + option.value}>
+                        <Field
+                          component={CheckboxWithLabel}
+                          type="checkbox"
+                          name={option.value}
+                          color="primary"
+                          defaultValue={false}
+                          Label={{ label: option.label }}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
+              </div>
+            );
+          case 'radio':
+            return (
+              <div key={'radio' + question.name}>
+                {question.additionalConfig.displayType === 'inline' ? (
+                  <Field
+                    component={RadioGroup}
+                    name={question.questionName}
+                    key={'radio' + question.name}
+                  >
+                    <Typography>{question.label}</Typography>
+                    <Grid
+                      container
+                      direction="row"
+                      justify="flex-start"
+                      alignItems="flex-start"
+                    >
+                      {question.options.map((option, index) => (
+                        <Grid item key={'option' + option.value}>
+                          <FormControlLabel
+                            value={option.value}
+                            control={<Radio disabled={isSubmitting} />}
+                            label={option.label}
+                            disabled={isSubmitting}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Field>
+                ) : (
+                  <Field
+                    component={RadioGroup}
+                    name={question.questionName}
+                    key={'radio' + question.name}
+                  >
+                    <Typography>{question.label}</Typography>
+                    {question.options.map((option, index) => (
+                      <FormControlLabel
+                        value={option.value}
+                        control={<Radio disabled={isSubmitting} />}
+                        label={option.label}
+                        disabled={isSubmitting}
+                      />
+                    ))}
+                  </Field>
+                )}
+                <br />
+              </div>
             );
           case 'select':
             return (
-              <>
+              <div key={'select' + question.name}>
                 <FormControl
                   className={classes.formControl}
                   key={'select' + question.name}
@@ -158,7 +192,8 @@ const GenerateForm = ({ input }) => {
                   </Field>
                 </FormControl>
                 <br />
-              </>
+                <br />
+              </div>
             );
           default:
             return null;
@@ -168,7 +203,7 @@ const GenerateForm = ({ input }) => {
   };
   return (
     <>
-      <div>
+      <div key={input + 'generateForm'}>
         <Formik
           initialValues={obj}
           onSubmit={(values, { setSubmitting }) => {

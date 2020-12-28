@@ -13,24 +13,19 @@ import {
   ListItem,
   ListItemText,
   IconButton,
-  ListItemSecondaryAction,
-  ButtonGroup
+  ListItemSecondaryAction
 } from '@material-ui/core';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import GenerateForm from './GenerateForm';
-import CheckboxInput from './InputTypes/Checkbox';
 import RatingInput from './InputTypes/Rating';
 import TextInput from './InputTypes/Text';
 import TextareaInput from './InputTypes/Textarea';
-// import MultiOptionsInput from './InputTypes/MultiOptions';
-import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Link } from 'react-router-dom';
 import MultiOptions from './InputTypes/MultiOptions';
 
 const drawerWidth = '45%';
@@ -120,7 +115,7 @@ const FormFormik = props => {
 
   async function postQuestions() {
     try {
-      const res = await Axios['post']('/survey/questions', input);
+      await Axios['post']('/survey/questions', input);
       props.history.push({
         pathname: '/surveys/questions',
         state: 'create'
@@ -149,7 +144,7 @@ const FormFormik = props => {
       </Box> */}
       <Box margin="1rem">
         <Grid container spacing={2}>
-          <Grid xs={12} lg={5} item>
+          <Grid xs={12} lg={6} item>
             <Card style={{ width: '100%' }}>
               <CardHeader title="Feedback Designer" />
               <Divider />
@@ -227,7 +222,7 @@ const FormFormik = props => {
                 <List component="nav" aria-label="main mailbox folders">
                   {!!input.length &&
                     input.map((data, index) => (
-                      <div>
+                      <div key={input + 'formik'}>
                         <ListItem
                           key={index}
                           classes={{
@@ -253,7 +248,7 @@ const FormFormik = props => {
             </Card>
           </Grid>
 
-          <Grid xs={12} lg={7} item>
+          <Grid xs={12} lg={6} item>
             <Card style={{ width: '100%' }}>
               <CardHeader title="Questions Preview" />
               <Divider />

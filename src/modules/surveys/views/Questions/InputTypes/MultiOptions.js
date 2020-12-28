@@ -1,11 +1,13 @@
 import {
-  Box,
   Button,
   Fade,
   Grid,
   IconButton,
   Tooltip,
-  Typography
+  Typography,
+  MenuItem,
+  FormControl,
+  makeStyles
 } from '@material-ui/core';
 import { Field, FieldArray, Form, Formik } from 'formik';
 import { TextField } from 'formik-material-ui';
@@ -13,7 +15,14 @@ import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
+const useStyles = makeStyles({
+  formControl: {
+    minWidth: 140
+  }
+});
+
 function MultiOptions({ submit, isEdit, question, questionType }) {
+  const classes = useStyles();
   const [inputsData, setInputsData] = useState(isEdit ? question : {});
   const [initState, setinitState] = useState(null);
   useEffect(() => {
@@ -21,12 +30,14 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
       setinitState({
         name: question.questionName,
         label: question.label,
+        displayType: question.additionalConfig.displayType,
         options: question.options
       });
     } else {
       setinitState({
         name: '',
         label: '',
+        displayType: 'inline',
         options: []
       });
     }
@@ -37,10 +48,12 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
     localInputsData.questionType = questionType;
     localInputsData.questionName = values.name;
     localInputsData.label = values.label;
+    localInputsData.additionalConfig = { displayType: values.displayType };
     localInputsData.options = values.options;
     setInputsData(localInputsData);
     submit(localInputsData);
   };
+
   return (
     !!initState && (
       <>
@@ -48,14 +61,22 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
           initialValues={initState}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             setSubmitting(false);
-            setFinalQuestionObj(values);
-            if (!isEdit) {
-              resetForm();
+            console.log(values);
+            if (values.options.length > 0) {
+              setFinalQuestionObj(values);
+              if (!isEdit) {
+                resetForm();
+              }
+            } else {
+              alert('Atleast one options required!');
             }
           }}
           validationSchema={Yup.object().shape({
             name: Yup.string().required('Please provide an element name'),
             label: Yup.string().required('Question Label is required'),
+            displayType: Yup.string()
+              .oneOf(['inline', 'block'], 'Unknown item')
+              .required('Required'),
             options: Yup.array().of(
               Yup.object().shape({
                 label: Yup.string().required('Option Label is required'),
@@ -64,7 +85,7 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
             )
           })}
         >
-          {({ isSubmitting, values }) => (
+          {({ values }) => (
             <Form>
               <Grid
                 container
@@ -77,9 +98,9 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                   direction="row"
                   justify="flex-start"
                   alignItems="flex-start"
-                  spacing={10}
+                  spacing={6}
                 >
-                  <Grid item xs={5}>
+                  <Grid item xs={4}>
                     <Field
                       component={TextField}
                       name="name"
@@ -100,11 +121,25 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                       autoComplete="off"
                     />
                   </Grid>
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl}>
+                      <Field
+                        component={TextField}
+                        type="text"
+                        name="displayType"
+                        id="displayType"
+                        select={true}
+                        label="Display Type"
+                        variant="outlined"
+                        size="medium"
+                      >
+                        <MenuItem value="inline">Inline</MenuItem>
+                        <MenuItem value="block">Block</MenuItem>
+                      </Field>
+                    </FormControl>
+                  </Grid>
                 </Grid>
               </Grid>
-              {/* <Box paddingY={2}>
-                <Typography variant="h5">Options</Typography>
-              </Box> */}
               <FieldArray
                 name="options"
                 render={arrayHelpers => {
@@ -124,9 +159,9 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                                   direction="row"
                                   justify="flex-start"
                                   alignItems="flex-start"
-                                  spacing={10}
+                                  spacing={5}
                                 >
-                                  <Grid item xs={5}>
+                                  <Grid item xs={4}>
                                     <Field
                                       component={TextField}
                                       id={'value' + index}
@@ -136,7 +171,7 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                                       autoComplete="off"
                                     />
                                   </Grid>
-                                  <Grid item xs={4}>
+                                  <Grid item xs={5}>
                                     <Field
                                       component={TextField}
                                       name={`options.${index}.label`}
@@ -163,10 +198,11 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                           direction="row"
                           justify="flex-start"
                           alignItems="flex-start"
-                          spacing={10}
+                          spacing={6}
                         >
-                          <Grid item xs={5} style={{ paddingLeft: '15%' }}>
+                          <Grid item xs={4} style={{ paddingLeft: '12.5%' }}>
                             <Tooltip
+                              id="iconButton"
                               TransitionComponent={Fade}
                               TransitionProps={{ timeout: 600 }}
                               title="Add Options"
@@ -185,12 +221,13 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                               </IconButton>
                             </Tooltip>
                           </Grid>
-                          <Grid item xs={5}>
+                          <Grid item xs={4} style={{ paddingLeft: '5%' }}>
                             <Button
                               type="submit"
                               variant="contained"
                               color={isEdit ? 'primary' : 'inherit'}
                               size="small"
+                              style={{ paddingRight: '-15%' }}
                             >
                               <Typography variant="button">
                                 {isEdit ? 'Update' : 'Add Question'}
