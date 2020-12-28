@@ -5,8 +5,7 @@ import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import { useDropzone } from 'react-dropzone';
-import { add } from 'lodash';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,81 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function CreateTicket(props) {
   const classes = useStyles();
-  //new code
-  /* const [ticketNumber, setTicketNumber] = useState('');
-  const [distributorName, setDistributorName] = useState('');
-  const [distributorId, setDistributorId] = useState('');
-  const [distributorEmail, setDistributorEmail] = useState('');
-  const [distributorMobile, setDistributorMobile] = useState('');
-  const [createdByName, setCreatedByName] = useState('');
-  const [createdById, setCreatedById] = useState('');
-  const [ticketSubject, setTicketSubject] = useState('');
-  const [ticketDescription, setTicketDescription] = useState('');
-  const [remarks, setRemarks] = useState('');
-  const [viewtkt, setViewtkt] = useState({});
-  const [ticketTypes, setTicketTypes] = useState([]);
-  const [ticketType, setTicketType] = useState({
-    ticketTypeId: '',
-    ticketType: ''
-  });
-  const [open, setOpen] = React.useState(true);
-  const [medium, setMedium] = useState([]);
-  const [media, setMedia] = useState({
-    value: '',
-    label: ''
-  });
-  const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({
-    value: '',
-    label: ''
-  });
-  const [subCategories, setSubCategories] = useState([]);
-  const [subCategory, setSubCategory] = useState({
-    value: '',
-    label: ''
-  });
-  const [subCategoryItems, setSubCategoryItems] = useState([]);
-  const [subCategoryItem, setSubCategoryItem] = useState({
-    value: '',
-    label: ''
-  });
-  const [departments, setDepartments] = useState([]);
-  const [department, setDepartment] = useState({
-    value: '',
-    label: ''
-  });
-  const [teams, setTeams] = useState([]);
-  const [team, setTeam] = useState({
-    value: '',
-    label: ''
-  });
-  const [priorities, setPriorities] = useState([]);
-  const [priority, setPriority] = useState({
-    value: '',
-    label: '',
-    sla: 0
-  });
-  const [statuses, setStatuses] = useState([]);
-  const [status, setStatus] = useState({
-    value: '',
-    label: '',
-    slaOnHold: false
-  });
-  const [executives, setExecutives] = useState([]);
-  const [executive, setExecutive] = useState({
-    value: '',
-    label: '',
-    executiveEmail: '',
-    executiveMobile: ''
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [createdTime, setCreatedTime] = useState();
-  const [file, setFile] = useState('');
-  const [updatedByName, setUpdatedByName] = useState('');
-  const [updatedById, setUpdatedById] = useState('');
-  const [updatedTime, setUpdatedTime] = useState();
-  const [ticketHistory, setTicketHistory] = useState([]); */
+ 
   const [ticketNumber, setTicketNumber] = useState('');
   const [ticketHistory, setTicketHistory] = useState([]);
   const [distributorName, setDistributorName] = useState('');
@@ -215,15 +140,12 @@ export default function CreateTicket(props) {
      
     }
  
-    // const file = e.target.files[0]; // accesing file
-    // console.log(file);
-    // setFile(file); // storing file
   };
-useEffect(()=>{
-   props.setClick(createTicket);
-},[ticketNumber,distributorName])
+useEffect(() => {
+  props.setClick(createTicket);
+}, [ticketNumber, distributorName, status, category, priority, ticketType, department,executive,team,subCategory]);
   useEffect(() => {
-  //  alert(JSON.stringify(props))
+
     if (!props.ticket_id) {
      
       var result = '';
@@ -274,11 +196,10 @@ useEffect(()=>{
             label: tkt.ticketType
           });
           setMedia({ value: tkt.mediaId, label: tkt.media });
-         
-         await setCategory({ value: tkt.categoryId, label: tkt.category });
+        
+         setCategory({ value: tkt.categoryId, label: tkt.category });
             getSubCategories(tkt.categoryId);
-          // alert(JSON.stringify(tkt))
-          // alert(JSON.stringify(category));
+        
           setSubCategory({
             value: tkt.subCategoryId,
             label: tkt.subCategory
@@ -318,17 +239,7 @@ useEffect(()=>{
         }
       }
       getItems();
-      // async function getHistoryItems() {
-      //   const response = await fetch(
-      //     config.APIS_URL + '/ticketHistory/' + props.ticket_id
-      //   );
-      //   const tktHistory = (await response.json()).data;
-       
-      //   if (!unmounted) {
-      //     setTicketHistory(tktHistory);
-      //   }
-      // }
-      // getHistoryItems();
+    
       props.setClick(createTicket);
       return () => {
         unmounted = true;
@@ -405,10 +316,12 @@ useEffect(()=>{
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/categories');
       const body = await response.json();
+
       if (!unmounted) {
-        // alert(JSON.stringify(props))
+        
+       
         if (!props.ticket_id) {
-          // alert("if")
+         
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -416,13 +329,7 @@ useEffect(()=>{
               })
             : setCategory({});
         }
-        //  else {
-        //   alert("useeffect", category)
-        //   setCategory({
-        //     label: category.label,
-        //     value: category.value
-        //   });
-        // }
+      
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
@@ -500,37 +407,39 @@ useEffect(()=>{
     };
   };
 
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(config.APIS_URL + '/priorities');
-      const body = await response.json();
-      if (!unmounted) {
-        setPriorities(
-          body.data.map(({ _id, priority, sla }) => ({
-            label: priority,
-            value: _id,
-            sla
-          }))
-        );
-        setLoading(false);
-        if (!props.ticket_id) {
-          body.data[0]
-            ? setPriority({
-                label: body.data[0].priority,
-                value: body.data[0]._id,
-                sla: body.data[0].sla
-              })
-            : setPriority({});
-        }
+  
+useEffect(() => {
+  let unmounted = false;
+  async function getItems() {
+    const response = await fetch(
+      config.APIS_URL + '/priorities/' + subCategory.value
+    );
+    const body = await response.json();
+    if (!unmounted) {
+      setPriorities(
+        body.data.map(({ _id, priority, sla }) => ({
+          label: priority,
+          value: _id,
+          sla
+        }))
+      );
+      setLoading(false);
+      if (!props.ticket_id) {
+        body.data[0]
+          ? setPriority({
+              label: body.data[0].priority,
+              value: body.data[0]._id,
+              sla: body.data[0].sla
+            })
+          : setPriority({});
       }
     }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-
+  }
+  getItems();
+  return () => {
+    unmounted = true;
+  };
+}, [subCategory,category]);
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -581,12 +490,7 @@ useEffect(()=>{
                })
              : setDepartment({});
          } 
-        // else {
-        //   setDepartment({
-        //     label: props.ticket.assignedDepartment,
-        //     value: props.ticket.assignedDepartmentId
-        //   });
-        // }
+      
         setDepartments(
           body.data.map(({ _id, department }) => ({
             label: department,
@@ -618,12 +522,7 @@ useEffect(()=>{
               })
             : setTeam({});
         }
-        //  else {
-        //   setTeam({
-        //     label: props.ticket.assignedTeam,
-        //     value: props.ticket.assignedTeamId
-        //   });
-        // }
+       
         setTeams(
           body.data.map(({ _id, team }) => ({
             label: team,
@@ -660,14 +559,7 @@ useEffect(()=>{
             : setExecutive({});
           props.setClick(createTicket);
         } 
-        // else {
-        //   setExecutive({
-        //     label: props.ticket.assignedExecutiveName,
-        //     value: props.ticket.assignedExecutiveId,
-        //     executiveEmail: props.ticket.assignedExecutiveEmail,
-        //     executiveMobile: props.ticket.assignedExecutiveMobile
-        //   });
-        // }
+      
         setExecutives(
           body.data.map(
             ({ _id, executiveName, executiveEmail, executiveMobile }) => ({
@@ -753,12 +645,11 @@ useEffect(()=>{
   };
 
   const createTicket = () => {
-    // alert(ticketSubject);
-    // setTicketNumber('Adeeb');
+  
     var result= addRow();
-    // alert(result)
+ 
     props.setOpen(result);
-    //  props.setOpenEdit(result);
+  
   };
   const addRow = async () => {
   
@@ -816,8 +707,8 @@ useEffect(()=>{
         ticketid: props.ticket_id
       };
     }
-    // console.log(apiParam.headers);
-    // alert(JSON.stringify(apiParam));
+  
+   
     await fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
@@ -953,13 +844,8 @@ useEffect(()=>{
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
-              
-              /*  props.setTicketType({
-                value: e.target.value,
-                label: ticketTypes.filter(
-                  ticketType => ticketType.value === e.target.value
-                )[0].label
-              }); */
+                props.setClick(createTicket);
+             
             }}
           >
             {ticketTypes.map(({ label, value }) => (
@@ -992,15 +878,7 @@ useEffect(()=>{
                 )[0].sla
               });
               props.setClick(createTicket);
-              /* props.setPriority({
-                value: e.target.value,
-                label: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].label,
-                sla: priorities.filter(
-                  priority => priority.value === e.target.value
-                )[0].sla
-              }); */
+             
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -1037,15 +915,7 @@ useEffect(()=>{
                 )[0].color
               });
               props.setClick(createTicket);
-              /*  props.setStatus({
-                value: e.target.value,
-                label: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].label,
-                slaOnHold: statuses.filter(
-                  status => status.value === e.target.value
-                )[0].slaOnHold
-              }); */
+           
             }}
           >
             {statuses.map(({ label, value }) => (
@@ -1075,12 +945,7 @@ useEffect(()=>{
                 )[0].label
               });
                props.setClick(createTicket);
-              /* props.setCategory({
-                value: e.target.value,
-                label: categories.filter(
-                  category => category.value === e.target.value
-                )[0].label
-              }); */
+            
               getSubCategories(e.target.value);
             }}
           >
@@ -1110,14 +975,10 @@ useEffect(()=>{
                     subCategory => subCategory.value === e.target.value
                   )[0].label
                 });
+                props.setClick(createTicket);
                  getSubCategoryItems(category.value,e.target.value,)
-                 props.setClick(createTicket);
-                /* props.setSubCategory({
-                  value: e.target.value,
-                  label: subCategories.filter(
-                    subCategory => subCategory.value === e.target.value
-                  )[0].label
-                }); */
+                 
+             
               }}
             >
               {' '}
@@ -1150,12 +1011,7 @@ useEffect(()=>{
                   )[0].label
                 });
                 props.setClick(createTicket);
-                /* props.setSubCategoryItem({
-                  value: e.target.value,
-                  label: subCategoryItems.filter(
-                    subCategoryItem => subCategoryItem.value === e.target.value
-                  )[0].label
-                }); */
+               
               }}
             >
               {' '}
@@ -1250,17 +1106,7 @@ useEffect(()=>{
                 )[0].idLabel
               });
               props.setClick(createTicket);
-              /* props.setMedia({
-                value: e.target.value,
-                label: medium.filter(media => media.value === e.target.value)[0]
-                  .label,
-                nameLabel: medium.filter(
-                  media => media.value === e.target.value
-                )[0].nameLabel,
-                idLabel: medium.filter(
-                  media => media.value === e.target.value
-                )[0].idLabel
-              }); */
+           
             }}
           >
             {medium.map(({ label, value }) => (
@@ -1314,12 +1160,7 @@ useEffect(()=>{
                 )[0].label
               });
               props.setClick(createTicket);
-              /* props.setDepartment({
-                value: e.target.value,
-                label: departments.filter(
-                  department => department.value === e.target.value
-                )[0].label
-              }); */
+           
             }}
           >
             {departments.map(({ label, value }) => (
@@ -1343,11 +1184,7 @@ useEffect(()=>{
                   .label
               });
               props.setClick(createTicket);
-              /* props.setTeam({
-                value: e.target.value,
-                label: teams.filter(team => team.value === e.target.value)[0]
-                  .label
-              }); */
+             
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1380,18 +1217,7 @@ useEffect(()=>{
               });
              
               props.setClick(createTicket);
-              /*  props.setExecutive({
-                value: e.target.value,
-                label: executives.filter(
-                  executive => executive.value === e.target.value
-                )[0].label,
-                executiveEmail: executives.filter(
-                  executive => executive.value === e.target.value
-                )[0].executiveEmail,
-                executiveMobile: executives.filter(
-                  executive => executive.value === e.target.value
-                )[0].executiveMobile
-              }); */
+             
             }}
           >
             {executives.map(({ label, value }) => (

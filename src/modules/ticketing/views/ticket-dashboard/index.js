@@ -141,7 +141,7 @@ export default function TicketDashboard(props) {
   const [apiTickets, setApiTickets] = useState([]);
   const [viewticket, setviewTickets] = useState({});
   const [opentimeline, setOpentimeline] = React.useState(false);
-  //const [ticketNumber, setTicketNumber] = useState('');
+  const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [filterDistributorName, setFilterDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
@@ -281,15 +281,15 @@ export default function TicketDashboard(props) {
   const [isEditable, makeEditable] = React.useState(false);
   const [filter, openFilter] = React.useState(false);
   const [tickets, setTickets] = useState([]);
- const [openEdit, setOpenEdit] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
 
- const handleClickOpenEdit = () => {
-   setOpenEdit(true);
- };
+  const handleClickOpenEdit = () => {
+    setOpenEdit(true);
+  };
 
- const handleCloseEdit = () => {
-   setOpenEdit(false);
- };
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -351,10 +351,10 @@ export default function TicketDashboard(props) {
     let unmounted = false;
     async function getHistoryItems() {
       const response = await fetch(
-        config.APIS_URL + '/ticketHistory/' + item._id
+        config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
- console.log('history', tktHistory);
+      console.log('history', tktHistory);
       if (!unmounted) {
         setTicketHistory(tktHistory);
       }
@@ -365,6 +365,7 @@ export default function TicketDashboard(props) {
     return (
       <List className={classes.listRow}>
         {tickets
+          .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
           .filter(tkt =>
             status.label === 'All'
               ? tkt.status === tkt.status
@@ -401,7 +402,7 @@ export default function TicketDashboard(props) {
                     <ListItemIcon>
                       <Avatar
                         className={classes.small}
-                        style={{ backgroundColor: ticket.color|| purple[700] }}
+                        style={{ backgroundColor: ticket.color || purple[700] }}
                       >
                         {ticket.status.substring(0, 1)}
                       </Avatar>
@@ -557,70 +558,7 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
-  /* 
-  const addRow = () => {
-    const viewtkt = JSON.parse(localStorage.getItem('viewtkt'));
-
-    const apiUrl = config.APIS_URL + '/tickets';
-    var apiParam = {
-      method: viewtkt ? 'PUT' : 'POST',
-      headers: {
-        ticketNumber,
-        createdTime,
-        distributorName,
-        distributorId,
-        distributorEmail,
-        distributorMobile,
-        createdByName,
-        createdById,
-        ticketSubject,
-        ticketDescription,
-        remarks,
-        ticketTypeId: ticketType.value,
-        ticketType: ticketType.label,
-        mediaId: media.value,
-        media: media.label,
-        categoryId: category.value,
-        category: category.label,
-        subCategoryId: subCategory.value,
-        subCategory: subCategory.label,
-        subCategoryItemId: subCategoryItem.value,
-        subCategoryItem: subCategoryItem.label,
-        departmentId: department.value,
-        department: department.label,
-        teamId: team.value,
-        team: team.label,
-        priorityId: priority.value,
-        priority: priority.label,
-        sla: priority.sla,
-        elapsedSLA: 0,
-        statusId: status.value,
-        status: status.label,
-        slaOnHold: status.slaOnHold,
-        executiveId: executive.value,
-        executive: executive.label,
-        executiveEmail: executive.executiveEmail,
-        executiveMobile: executive.executiveMobile
-      }
-    };
-
-    fetch(apiUrl, apiParam)
-      .then(res => res.json())
-      .then(repos => {
-        console.log('api res', repos);
-
-        if (repos.status === 200) {
-          setOpen(false);
-        }
-      });
-    console.log('apiParam', apiParam);
-    if (viewtkt) {
-      apiParam.headers = {
-        ...apiParam.headers,
-        ticketid: viewtkt._id
-      };
-    }
-  }; */
+ 
 
   const handleClose = () => {
     setOpen(false);
@@ -675,23 +613,16 @@ export default function TicketDashboard(props) {
             <FilterListIcon onClick={configureFilter} />
           </Avatar>
         </Tooltip>
-        {/* <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          style={{ marginBottom: 15, marginLeft: 10 }}
-          startIcon={<FilterListIcon />}
-          onClick={configureFilter}
-        ></Button> */}
+      
       </Box>
       {(() => {
         if (filter) {
           return (
             <FilterTicket
-              //ticketNumber={ticketNumber}
-              /*  setTicketNumber={tks => {
+              ticketNumber={ticketNumber}
+               setTicketNumber={tks => {
                 setTicketNumber(tks);
-              }} */
+              }} 
               ticketTypes={ticketTypes}
               setTicketTypes={tkstyps => {
                 setTicketTypes(tkstyps);
@@ -778,132 +709,7 @@ export default function TicketDashboard(props) {
             setOpen={open => setOpen(open)}
             ticket={ticket}
           />
-          {/*    <CreateTicket
-            ticketNumber={ticketNumber}
-            setTicketNumber={tks => {
-              setTicketNumber(tks);
-            }}
-            distributorName={distributorName}
-            setDistributorName={disname => {
-              setDistributorName(disname);
-            }}
-            distributorId={distributorId}
-            setDistributorId={disid => {
-              setDistributorId(disid);
-            }}
-            distributorEmail={distributorEmail}
-            setDistributorEmail={disemail => {
-              setDistributorEmail(disemail);
-            }}
-            distributorMobile={distributorMobile}
-            setDistributorMobile={dismob => {
-              setDistributorMobile(dismob);
-            }}
-            createdByName={createdByName}
-            setCreatedByName={crename => {
-              setCreatedByName(crename);
-            }}
-            createdById={createdById}
-            setCreatedById={creid => {
-              setCreatedById(creid);
-            }}
-            ticketSubject={ticketSubject}
-            setTicketSubject={tktsub => {
-              setTicketSubject(tktsub);
-            }}
-            ticketDescription={ticketDescription}
-            setTicketDescription={tktdisp => {
-              setTicketDescription(tktdisp);
-            }}
-            remarks={remarks}
-            setRemarks={rks => {
-              setRemarks(rks);
-            }}
-            ticketTypes={ticketTypes}
-            setTicketTypes={tkstyps => {
-              setTicketTypes(tkstyps);
-            }}
-            ticketType={ticketType}
-            setTicketType={tkstyp => {
-              setTicketType(tkstyp);
-            }}
-            medium={medium}
-            setMedium={mdm => {
-              setMedium(mdm);
-            }}
-            media={media}
-            setMedia={media => {
-              setMedia(media);
-            }}
-            categories={categories}
-            setCategories={catgs => {
-              setCategories(catgs);
-            }}
-            category={category}
-            setCategory={cat => {
-              setCategory(cat);
-            }}
-            subCategories={subCategories}
-            setSubCategories={subcats => {
-              setSubCategories(subcats);
-            }}
-            subCategory={subCategory}
-            setSubCategory={subcat => {
-              setSubCategory(subcat);
-            }}
-            subCategoryItems={subCategoryItems}
-            setSubCategoryItems={subcatitems => {
-              setSubCategoryItems(subcatitems);
-            }}
-            subCategoryItem={subCategoryItem}
-            setSubCategoryItem={subcatitem => {
-              setSubCategoryItem(subcatitem);
-            }}
-            departments={departments}
-            setDepartments={deps => {
-              setDepartments(deps);
-            }}
-            department={department}
-            setDepartment={dept => {
-              setDepartment(dept);
-            }}
-            teams={teams}
-            setTeams={tms => {
-              setTeams(tms);
-            }}
-            team={team}
-            setTeam={tm => {
-              setTeam(tm);
-            }}
-            priorities={priorities}
-            setPriorities={prts => {
-              setPriorities(prts);
-            }}
-            priority={priority}
-            setPriority={prt => {
-              setPriority(prt);
-            }}
-            statuses={statuses}
-            setStatuses={stses => {
-              setStatuses(stses);
-            }}
-            status={status}
-            setStatus={sts => {
-              setStatus(sts);
-            }}
-            executives={executives}
-            setExecutives={exts => {
-              setExecutives(exts);
-            }}
-            executive={executive}
-            setExecutive={ext => {
-              setExecutive(ext);
-            }}
-            createdTime={createdTime}
-            setCreatedTime={cretime => {
-              setCreatedTime(cretime);
-            }}
-          /> */}
+        
         </DialogContent>
         <DialogActions>
           <Button
@@ -975,7 +781,13 @@ export default function TicketDashboard(props) {
                 </Box>
                 {/* <Tooltip title="Edit"> */}
                 <Button onClick={handleClickOpenEdit}>
-                  <EditIcon style={{ marginTop: 25, cursor: 'pointer' }} />
+                  <EditIcon
+                    style={{
+                      marginTop: 25,
+                      cursor: 'pointer',
+                      float: 'right'
+                    }}
+                  />
                 </Button>
                 {/* dialog */}
                 <Dialog
@@ -1057,7 +869,7 @@ export default function TicketDashboard(props) {
                     {'Timeline'}
                   </DialogTitle>
                   <DialogContent dividers>
-                    <Timeline />
+                    <Timeline setTicketHistory={ticketHistory} />
                   </DialogContent>
                   <DialogActions>
                     <Button
@@ -1067,7 +879,7 @@ export default function TicketDashboard(props) {
                       variant="outlined"
                       autoFocus
                     >
-                      Cancel
+                      Close
                     </Button>
                   </DialogActions>
                 </Dialog>
@@ -1345,7 +1157,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a comment..."
-                    value={viewticket.remarks}
+                    value={viewticket.ticketRemarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -1469,7 +1281,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.idLabel}
+                    {/* {viewticket.idLabel} */}
                   </Typography>
                 </Box>
               </Box>
@@ -1492,7 +1304,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.nameLabel}
+                    {/* {viewticket.nameLabel} */}
                   </Typography>
                 </Box>
               </Box>
