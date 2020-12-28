@@ -28,26 +28,11 @@ import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MultiOptions from './InputTypes/MultiOptions';
 
-const drawerWidth = '45%';
-
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexGrow: 1
   },
-  appBar: {
-    width: `calc(100% - ${drawerWidth})`,
-    marginLeft: drawerWidth
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
@@ -79,10 +64,7 @@ const FormFormik = props => {
 
   const classes = useStyles();
   const [inputValue, setInputValue] = useState('');
-  const [textList, setTextList] = useState([]);
   const [input, setInput] = useState([]);
-
-  let test = true;
 
   const handleClick = e => {
     if (e.target.value !== undefined) {
@@ -247,7 +229,6 @@ const FormFormik = props => {
               </CardContent>
             </Card>
           </Grid>
-
           <Grid xs={12} lg={6} item>
             <Card style={{ width: '100%' }}>
               <CardHeader title="Questions Preview" />

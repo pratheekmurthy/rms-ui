@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik, Form, Field } from 'formik';
 import { CheckboxWithLabel, TextField } from 'formik-material-ui';
 import {
@@ -6,14 +6,15 @@ import {
   RadioGroup,
   FormControlLabel,
   makeStyles,
-  withStyles,
   Radio,
   Typography,
   FormControl,
   MenuItem,
-  Grid
+  Grid,
+  FormHelperText
 } from '@material-ui/core';
-import RatingComponent from './RatingComponent';
+import { Rating } from '@material-ui/lab';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -34,9 +35,12 @@ const GenerateForm = ({ input }) => {
           case 'rating':
             return (
               <span key={'rating' + question.questionName}>
-                <RatingComponent
-                  label={question.label}
+                <Typography component="legend">{question.label}</Typography>
+                <Rating
                   name={question.questionName}
+                  id="rating"
+                  precision={0.5}
+                  emptyIcon={<StarBorderIcon fontSize="inherit" />}
                 />
               </span>
             );
@@ -50,6 +54,7 @@ const GenerateForm = ({ input }) => {
                   id={question.questionName}
                   type="text"
                   label={question.label}
+                  autoComplete="off"
                 />
                 <br />
                 <br />
@@ -92,7 +97,6 @@ const GenerateForm = ({ input }) => {
                           type="checkbox"
                           name={option.value}
                           color="primary"
-                          defaultValue={false}
                           Label={{ label: option.label }}
                         />
                       </Grid>
@@ -112,7 +116,6 @@ const GenerateForm = ({ input }) => {
                           type="checkbox"
                           name={option.value}
                           color="primary"
-                          defaultValue={false}
                           Label={{ label: option.label }}
                         />
                       </Grid>
@@ -166,12 +169,12 @@ const GenerateForm = ({ input }) => {
                     ))}
                   </Field>
                 )}
-                <br />
               </div>
             );
           case 'select':
             return (
               <div key={'select' + question.name}>
+                <Typography>{question.label}</Typography>
                 <FormControl
                   className={classes.formControl}
                   key={'select' + question.name}
@@ -182,7 +185,7 @@ const GenerateForm = ({ input }) => {
                     name={question.questionName}
                     id={question.questionName}
                     select={true}
-                    label={question.label}
+                    placeholder="Select"
                     variant="outlined"
                     size="medium"
                   >
@@ -203,12 +206,13 @@ const GenerateForm = ({ input }) => {
   };
   return (
     <>
-      <div key={input + 'generateForm'}>
+      <div key={input + input.length + 'generateForm'}>
         <Formik
           initialValues={obj}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(false);
           }}
+          key={input + input.questionName + 'formik'}
         >
           {({ submitForm, isSubmitting }) => (
             <Form>

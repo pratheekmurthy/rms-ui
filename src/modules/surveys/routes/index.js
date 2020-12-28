@@ -3,6 +3,7 @@ import home from '../views/home';
 import FormFormik from '../views/Questions/Formik';
 import ViewQuestions from '../views/view-questions';
 import EditQuestions from '../views/edit-questions';
+import EndUserForm from '../views/end-user-form';
 
 export default [
   {
@@ -41,5 +42,12 @@ export default [
     key: 'editQuestions',
     component: EditQuestions,
     crumb: 'Edit Question'
+  },
+  {
+    path: '/form',
+    exact: true,
+    key: 'endUserForm',
+    component: EndUserForm,
+    crumb: 'View Form'
   }
 ];

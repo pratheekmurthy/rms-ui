@@ -26,20 +26,36 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
   const [inputsData, setInputsData] = useState(isEdit ? question : {});
   const [initState, setinitState] = useState(null);
   useEffect(() => {
-    if (isEdit) {
-      setinitState({
-        name: question.questionName,
-        label: question.label,
-        displayType: question.additionalConfig.displayType,
-        options: question.options
-      });
+    if (questionType === 'select') {
+      if (isEdit) {
+        setinitState({
+          name: question.questionName,
+          label: question.label,
+          options: question.options
+        });
+      } else {
+        setinitState({
+          name: '',
+          label: '',
+          options: []
+        });
+      }
     } else {
-      setinitState({
-        name: '',
-        label: '',
-        displayType: 'inline',
-        options: []
-      });
+      if (isEdit) {
+        setinitState({
+          name: question.questionName,
+          label: question.label,
+          displayType: question.additionalConfig.displayType,
+          options: question.options
+        });
+      } else {
+        setinitState({
+          name: '',
+          label: '',
+          displayType: 'inline',
+          options: []
+        });
+      }
     }
   }, []);
 
@@ -48,7 +64,8 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
     localInputsData.questionType = questionType;
     localInputsData.questionName = values.name;
     localInputsData.label = values.label;
-    localInputsData.additionalConfig = { displayType: values.displayType };
+    localInputsData.questionType !== 'select' &&
+      (localInputsData.additionalConfig = { displayType: values.displayType });
     localInputsData.options = values.options;
     setInputsData(localInputsData);
     submit(localInputsData);
@@ -121,23 +138,25 @@ function MultiOptions({ submit, isEdit, question, questionType }) {
                       autoComplete="off"
                     />
                   </Grid>
-                  <Grid item xs={4}>
-                    <FormControl className={classes.formControl}>
-                      <Field
-                        component={TextField}
-                        type="text"
-                        name="displayType"
-                        id="displayType"
-                        select={true}
-                        label="Display Type"
-                        variant="outlined"
-                        size="medium"
-                      >
-                        <MenuItem value="inline">Inline</MenuItem>
-                        <MenuItem value="block">Block</MenuItem>
-                      </Field>
-                    </FormControl>
-                  </Grid>
+                  {questionType !== 'select' && (
+                    <Grid item xs={4}>
+                      <FormControl className={classes.formControl}>
+                        <Field
+                          component={TextField}
+                          type="text"
+                          name="displayType"
+                          id="displayType"
+                          select={true}
+                          label="Display Type"
+                          variant="outlined"
+                          size="medium"
+                        >
+                          <MenuItem value="inline">Inline</MenuItem>
+                          <MenuItem value="block">Block</MenuItem>
+                        </Field>
+                      </FormControl>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
               <FieldArray
