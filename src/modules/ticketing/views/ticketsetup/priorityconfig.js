@@ -8,6 +8,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 function PriorityConfig() {
   const useStyles = makeStyles(theme => ({
@@ -27,6 +31,11 @@ function PriorityConfig() {
   }));
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
+  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState({});
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState({});
 
   const handleChange = event => {
     setChecked(event.target.checked);
@@ -42,10 +51,10 @@ function PriorityConfig() {
   });
 
   const updateRow = () => {
-    const val1 = JSON.stringify(updatedRow.priority);
-    const val2 = JSON.stringify(updatedRow.sla);
+    const val1 = updatedRow.priority;
+    const val2 = updatedRow.sla;
 
-    if (val1.length === 2 || val2.length === 2) {
+    if (!val1 || !val2) {
       alert('Please enter value');
     } else {
       setIsEditing(-1);
@@ -62,6 +71,63 @@ function PriorityConfig() {
     }
   };
 
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/categories');
+      const body = await response.json();
+      if (!unmounted) {
+        setCategories(
+          body.data.map(({ _id, category }) => ({
+            label: category,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        body.data[0]
+          ? setCategory({
+              label: body.data[0].category,
+              value: body.data[0]._id
+            })
+          : setCategory({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/subcategories/' + category.value
+      );
+      const body = await response.json();
+
+      if (!unmounted) {
+        setSubCategories(
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        body.data[0]
+          ? setSubCategory({
+              label: body.data[0].subCategory,
+              value: body.data[0]._id
+            })
+          : setSubCategory({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, [category.value]);
+
   const addRow = e => {
     const val1 = JSON.stringify(newRow.priority);
     const val2 = JSON.stringify(newRow.sla);
@@ -74,6 +140,10 @@ function PriorityConfig() {
         method: 'POST',
         headers: {
           priority: newRow.priority,
+          categoryid: category.value,
+          category: category.label,
+          subCategoryId: subCategory.value,
+          subCategory: subCategory.label,
           sla: newRow.sla,
           active: newRow.active
         }
@@ -82,20 +152,28 @@ function PriorityConfig() {
         .then(res => res.json())
         .then(repos => {
           setApiPriorities([]);
-          setNewRow({ priority: '', sla: '', active: true });
+          setNewRow({
+            priority: '',
+            categoryid: '',
+            category: '',
+            subCategoryId: '',
+            subCategory: '',
+            sla: '',
+            active: true
+          });
         });
     }
   };
 
   useEffect(() => {
-    const apiUrl = config.APIS_URL + '/priorities';
+    const apiUrl = config.APIS_URL + '/priorities/' + subCategory.value;
     fetch(apiUrl)
       .then(res => res.json())
       .then(repos => {
         setApiPriorities(repos.data);
-        setPriorities(apiPriorities);
+        setPriorities(repos.data);
       });
-  }, [apiPriorities]);
+  }, [subCategory.value, isEditing]);
 
   useEffect(() => {
     setUpdatedRow(isEditing === '-1' ? {} : priorities[isEditing]);
@@ -107,6 +185,10 @@ function PriorityConfig() {
     setUpdatedRow({
       id: priorities[index]._id,
       priority: event.target.value,
+      categoryId: category.value,
+      category: category.label,
+      subCategoryId: subCategory.value,
+      subCategory: subCategory.label,
       sla: updatedRow.sla,
       active: updatedRow.active
     });
@@ -116,6 +198,10 @@ function PriorityConfig() {
     setUpdatedRow({
       id: priorities[index]._id,
       priority: updatedRow.priority,
+      categoryId: category.value,
+      category: category.label,
+      subCategoryId: subCategory.value,
+      subCategory: subCategory.label,
       sla: event.target.value,
       active: updatedRow.active
     });
@@ -125,6 +211,10 @@ function PriorityConfig() {
     setUpdatedRow({
       id: priorities[index]._id,
       priority: updatedRow.priority,
+      categoryId: category.value,
+      category: category.label,
+      subCategoryId: subCategory.value,
+      subCategory: subCategory.label,
       sla: updatedRow.sla,
       active: event.target.checked
     });
@@ -133,6 +223,65 @@ function PriorityConfig() {
   return (
     <div>
       <div className="SectionHeader">Priorities</div>
+      <FormControl variant="outlined" className={classes.formControl}>
+        <div className="SectionHeader">
+          of Category{' '}
+          <InputLabel htmlFor="outlined-age-native-simple"></InputLabel>
+          <Select
+            native
+            disabled={loading}
+            label="categories"
+            inputProps={{
+              name: 'categories',
+              id: 'categories'
+            }}
+            value={category.value}
+            onChange={e => {
+              setCategory({
+                value: e.target.value,
+                label: categories.filter(
+                  category => category.value === e.target.value
+                )[0].label
+              });
+            }}
+          >
+            {categories.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>{' '}
+          &amp; SubCategory{' '}
+          {/* <FormControl variant="outlined" className={classes.formControl}> */}
+          <InputLabel htmlFor="outlined-age-native-simple">
+            {/* subCategories */}
+          </InputLabel>
+          <Select
+            native
+            disabled={loading}
+            label="subCategories"
+            inputProps={{
+              name: 'subCategories',
+              id: 'subCategories'
+            }}
+            value={subCategory.value}
+            onChange={e => {
+              setSubCategory({
+                value: e.target.value,
+                label: subCategories.filter(
+                  subCategory => subCategory.value === e.target.value
+                )[0].label
+              });
+            }}
+          >
+            {subCategories.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </FormControl>
       <Table className={classes.table} aria-label="simple table">
         <TableRow>
           <TableCell>Sl. No.</TableCell>
@@ -151,6 +300,10 @@ function PriorityConfig() {
               onChange={e =>
                 setNewRow({
                   priority: e.target.value,
+                  categoryId: category.value,
+                  category: category.label,
+                  subCategoryId: subCategory.value,
+                  subCategory: subCategory.label,
                   sla: newRow.sla,
                   active: newRow.active
                 })
@@ -168,6 +321,10 @@ function PriorityConfig() {
               onChange={e =>
                 setNewRow({
                   priority: newRow.priority,
+                  categoryId: category.value,
+                  category: category.label,
+                  subCategoryId: subCategory.value,
+                  subCategory: subCategory.label,
                   sla: e.target.value,
                   active: newRow.active
                 })
@@ -181,6 +338,10 @@ function PriorityConfig() {
               onChange={e =>
                 setNewRow({
                   priority: newRow.priority,
+                  categoryId: category.value,
+                  category: category.label,
+                  subCategoryId: subCategory.value,
+                  subCategory: subCategory.label,
                   sla: newRow.sla,
                   active: e.target.checked
                 })

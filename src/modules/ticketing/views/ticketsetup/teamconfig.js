@@ -145,6 +145,32 @@ function TeamConfig() {
       deptid: department.value,
       dept: department.label,
       team: event.target.value,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: updatedRow.escalationMobile,
+      active: updatedRow.active
+    });
+  };
+
+  const handleEmailChange = (index, event) => {
+    setUpdatedRow({
+      id: teams[index]._id,
+      deptid: department.value,
+      dept: department.label,
+      team: updatedRow.team,
+      escalationEmail: event.target.value,
+      escalationMobile: updatedRow.escalationMobile,
+      active: updatedRow.active
+    });
+  };
+
+  const handleMobileChange = (index, event) => {
+    setUpdatedRow({
+      id: teams[index]._id,
+      deptid: department.value,
+      dept: department.label,
+      team: updatedRow.team,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: event.target.value,
       active: updatedRow.active
     });
   };
@@ -155,6 +181,8 @@ function TeamConfig() {
       deptid: department.value,
       dept: department.label,
       team: updatedRow.team,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: updatedRow.escalationMobile,
       active: event.target.checked
     });
   };
@@ -195,6 +223,8 @@ function TeamConfig() {
         <TableRow>
           <TableCell>Sl. No.</TableCell>
           <TableCell>Team</TableCell>
+          <TableCell>Escalation eMail</TableCell>
+          <TableCell>Escalation Mobile</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -213,10 +243,46 @@ function TeamConfig() {
             />
           </TableCell>
           <TableCell>
+            <TextField
+              label="eMail"
+              id="outlined-size-small"
+              value={newRow.escalationEmail}
+              onChange={e =>
+                setNewRow({
+                  team: newRow.team,
+                  escalationEmail: e.target.value,
+                  escalationMobile: newRow.escalationMobile,
+                  active: newRow.active
+                })
+              }
+              variant="outlined"
+              size="small"
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              label="Mobile"
+              id="outlined-size-small"
+              value={newRow.escalationMobile}
+              onChange={e =>
+                setNewRow({
+                  team: newRow.team,
+                  escalationEmail: newRow.escalationEmail,
+                  escalationMobile: e.target.value,
+                  active: newRow.active
+                })
+              }
+              variant="outlined"
+              size="small"
+            />
+          </TableCell>
+          <TableCell>
             <Checkbox
               onChange={e =>
                 setNewRow({
                   team: newRow.team,
+                  escalationEmail: newRow.escalationEmail,
+                  escalationMobile: newRow.escalationMobile,
                   active: e.target.checked
                 })
               }
@@ -251,6 +317,34 @@ function TeamConfig() {
                   />
                 ) : (
                   item.team
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="eMail"
+                    id="outlined-size-small"
+                    defaultValue={item.escalationEmail}
+                    onChange={e => handleEmailChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.escalationEmail
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="Mobile"
+                    id="outlined-size-small"
+                    efaultValue={item.escalationMobile}
+                    onChange={e => handleMobileChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.escalationMobile
                 )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>

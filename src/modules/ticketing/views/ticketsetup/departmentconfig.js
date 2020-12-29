@@ -58,6 +58,8 @@ function DepartmentConfig() {
         method: 'POST',
         headers: {
           department: newRow.department,
+          escalationemail: newRow.escalationEmail,
+          escalationmobile: newRow.escalationMobile,
           active: newRow.active
         }
       };
@@ -90,6 +92,27 @@ function DepartmentConfig() {
     setUpdatedRow({
       id: departments[index]._id,
       department: event.target.value,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: updatedRow.escalationMobile,
+      active: updatedRow.active
+    });
+  };
+  const handleEmailChange = (index, event) => {
+    setUpdatedRow({
+      id: departments[index]._id,
+      department: updatedRow.department,
+      escalationEmail: event.target.value,
+      escalationMobile: updatedRow.escalationMobile,
+      active: updatedRow.active
+    });
+  };
+
+  const handleMobileChange = (index, event) => {
+    setUpdatedRow({
+      id: departments[index]._id,
+      department: updatedRow.department,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: event.target.value,
       active: updatedRow.active
     });
   };
@@ -98,6 +121,8 @@ function DepartmentConfig() {
     setUpdatedRow({
       id: departments[index]._id,
       department: updatedRow.department,
+      escalationEmail: updatedRow.escalationEmail,
+      escalationMobile: updatedRow.escalationMobile,
       active: event.target.checked
     });
   };
@@ -109,6 +134,8 @@ function DepartmentConfig() {
         <TableRow>
           <TableCell>Sl. No.</TableCell>
           <TableCell>Department</TableCell>
+          <TableCell>Escalation eMail</TableCell>
+          <TableCell>Escalation Mobile</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -121,6 +148,40 @@ function DepartmentConfig() {
               value={newRow.department}
               onChange={e =>
                 setNewRow({ department: e.target.value, active: newRow.active })
+              }
+              variant="outlined"
+              size="small"
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              label="eMail"
+              id="outlined-size-small"
+              value={newRow.escalationEmail}
+              onChange={e =>
+                setNewRow({
+                  department: newRow.department,
+                  escalationEmail: e.target.value,
+                  escalationMobile: newRow.escalationMobile,
+                  active: newRow.active
+                })
+              }
+              variant="outlined"
+              size="small"
+            />
+          </TableCell>
+          <TableCell>
+            <TextField
+              label="Mobile"
+              id="outlined-size-small"
+              value={newRow.escalationMobile}
+              onChange={e =>
+                setNewRow({
+                  executive: newRow.executive,
+                  escalationEmail: newRow.escalationEmail,
+                  escalationMobile: e.target.value,
+                  active: newRow.active
+                })
               }
               variant="outlined"
               size="small"
@@ -165,6 +226,34 @@ function DepartmentConfig() {
                   />
                 ) : (
                   item.department
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="eMail"
+                    id="outlined-size-small"
+                    defaultValue={item.escalationEmail}
+                    onChange={e => handleEmailChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.escalationEmail
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <TextField
+                    label="Mobile"
+                    id="outlined-size-small"
+                    defaultValue={item.escalationMobile}
+                    onChange={e => handleMobileChange(idx, e)}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  item.escalationMobile
                 )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>
