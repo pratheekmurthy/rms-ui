@@ -26,6 +26,11 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
+  },
+  searchIcon: {
+    cursor: 'pointer',
+    marginRight:10,
+    marginTop:15  
   }
 }));
 
@@ -763,19 +768,28 @@ useEffect(() => {
               handleChange('distributorId', e);
             }}
           />
+<<<<<<< HEAD
           <Button
             className="btn btn-primary"
             onClick={() => getDistributorById(distributorId)}
           >
             <SearchIcon color="primary" />
           </Button>
+=======
+            <SearchIcon color="primary" onClick={() => getDistributorByIdd(distributorId)} className={classes.searchIcon}/>
+  
+>>>>>>> main
           <TextField
             error={distributorName === ''}
             id="dn"
             size="small"
             label="Distributor Name"
             variant="outlined"
+<<<<<<< HEAD
             style={{ width: '31.4%' }}
+=======
+            style={{ width: '32%' }}
+>>>>>>> main
             value={distributorName}
             onChange={e => {
               handleChange('distributorName', e);
@@ -793,9 +807,14 @@ useEffect(() => {
               handleChange('distributorMobile', e);
             }}
           />
+<<<<<<< HEAD
           <Button className="btn btn-primary" onClick={getDistributorByMobile}>
             <SearchIcon color="primary" />
           </Button>
+=======
+            <SearchIcon color="primary" onClick={getDistributorByMobile} className={classes.searchIcon}/>
+          
+>>>>>>> main
 
           <TextField
             error={distributorEmail === ''}
@@ -803,14 +822,22 @@ useEffect(() => {
             size="small"
             label="Distributor Email"
             variant="outlined"
+<<<<<<< HEAD
             style={{ width: '31%' }}
+=======
+            style={{ width: '32%' }}
+>>>>>>> main
             value={distributorEmail}
             onChange={e => {
               handleChange('distributorEmail', e);
             }}
           />
           <br />
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> main
           <TextField
             id="type"
             select
@@ -913,6 +940,18 @@ useEffect(() => {
           <br />
 
           <TextField
+<<<<<<< HEAD
+=======
+            id="sm"
+            size="small"
+            label="Ticket Created Time"
+            variant="outlined"
+            style={{ width: '32%' }}
+            value={createdTime}
+          ></TextField>
+
+          <TextField
+>>>>>>> main
             id="category"
             select
             size="small"
@@ -921,8 +960,13 @@ useEffect(() => {
               native: true
             }}
             variant="outlined"
+<<<<<<< HEAD
             style={{ width: '31.4%' }}
             value={category.value}
+=======
+            style={{ width: '31%' }}
+            value={category.value || ''}
+>>>>>>> main
             onChange={e => {
               setCategory({
                 value: e.target.value,
@@ -1050,6 +1094,7 @@ useEffect(() => {
             style={{ width: '48%' }}
             onChange={e => {
               handleChange('remarks', e);
+<<<<<<< HEAD
             }}
             value={remarks}
           />
@@ -1062,12 +1107,32 @@ useEffect(() => {
             style={{ width: '31.4%' }}
             onChange={e => {
               handleChange('file', e);
+=======
+>>>>>>> main
             }}
+            value={remarks}
           />
+<<<<<<< HEAD
           <Button onClick={UploadFile} className="primary" color="secondary">
             Upload
           </Button>
           <br />
+=======
+
+          <TextField
+            id="SoftCopyFile"
+            label="Drop a file"
+            multiline
+            size="small"
+            rows={5}
+            variant="outlined"
+            style={{ width: '48%' }}
+            onChange={e => {
+              handleChange('file', e);
+            }}
+          />
+       
+>>>>>>> main
           <TextField
             id="sm"
             select
@@ -1213,6 +1278,10 @@ useEffect(() => {
             ))}
           </TextField>
           <br />
+<<<<<<< HEAD
+=======
+          
+>>>>>>> main
         </div>
       </form>
     </div>

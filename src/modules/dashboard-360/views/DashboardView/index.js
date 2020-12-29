@@ -218,7 +218,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
-        console.log('response', response);
         setRootData(
           response.map(res =>
             res.status === 'fulfilled' ? res.value.data : {}
