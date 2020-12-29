@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { CheckboxWithLabel, TextField } from 'formik-material-ui';
+import { CheckboxWithLabel, TextField, RadioGroup } from 'formik-material-ui';
 import {
   Button,
-  RadioGroup,
   FormControlLabel,
   makeStyles,
   Radio,
   Typography,
   FormControl,
   MenuItem,
-  Grid,
-  Divider
+  Grid
 } from '@material-ui/core';
 import { Rating } from '@material-ui/lab';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import * as Yup from 'yup';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -32,32 +31,19 @@ const useStyles = makeStyles(() => ({
 const FormGenerate = ({ inputType }) => {
   console.log('inputType : ', inputType);
   const classes = useStyles();
-  const [initState, setinitState] = useState(null);
-  // useEffect(() => {
-  //   inputType.forEach((input, index) => {
-  //     switch (input.questionType) {
-  //       case 'rating': {
-  //        return setinitState({...initState,})
-  //       }
-  //       case 'text':{
-  //         return ()
-  //       }
-  //       case 'text':{
-  //         return ()
-  //       }case 'text':{
-  //         return ()
-  //       }case 'text':{
-  //         return ()
-  //       }case 'text':{
-  //         return ()
-  //       }
-  //      default:{
-  //        return input.questionType
-  //      }
-  //     }
-  //   });
-  // }, []);
-  const obj = {};
+  const initialState = {};
+  let initialValidation = {};
+  inputType &&
+    inputType.forEach(question => (initialState[question.questionName] = ''));
+
+  inputType &&
+    inputType.forEach(
+      question =>
+        (initialValidation[question.questionName] = Yup.string().required(
+          'Required'
+        ))
+    );
+
   const renderQuestion = isSubmitting => {
     if (inputType) {
       return inputType.map(question => {
@@ -129,45 +115,30 @@ const FormGenerate = ({ inputType }) => {
                 <Typography variant="h6" className={classes.typography}>
                   {question.label}
                 </Typography>
-                {question.additionalConfig.displayType === 'inline' ? (
-                  <Grid
-                    container
-                    direction="row"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                  >
-                    {question.options.map((option, index) => (
-                      <Grid item key={'option' + option.value}>
-                        <Field
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          name={option.value}
-                          color="secondary"
-                          Label={{ label: option.label }}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                ) : (
-                  <Grid
-                    container
-                    direction="column"
-                    justify="flex-start"
-                    alignItems="flex-start"
-                  >
-                    {question.options.map((option, index) => (
-                      <Grid item key={'option' + option.value}>
-                        <Field
-                          component={CheckboxWithLabel}
-                          type="checkbox"
-                          name={option.value}
-                          color="secondary"
-                          Label={{ label: option.label }}
-                        />
-                      </Grid>
-                    ))}
-                  </Grid>
-                )}
+
+                <Grid
+                  container
+                  direction={
+                    question.additionalConfig.displayType === 'inline'
+                      ? 'row'
+                      : 'column'
+                  }
+                  justify="flex-start"
+                  alignItems="flex-start"
+                >
+                  {question.options.map((option, index) => (
+                    <Grid item key={'option' + option.value}>
+                      <Field
+                        component={CheckboxWithLabel}
+                        type="checkbox"
+                        name={question.questionName}
+                        value={option.value}
+                        color="secondary"
+                        Label={{ label: option.label }}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
               </div>
             );
           case 'radio':
@@ -255,34 +226,37 @@ const FormGenerate = ({ inputType }) => {
   };
   return (
     <>
-      <div key={inputType + inputType.length + 'generateForm'}>
-        <Formik
-          initialValues={{ gender: '' }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-            console.log('values : ', values);
-          }}
-          key={inputType + inputType.questionName + 'formik'}
-        >
-          {({ values, submitForm, isSubmitting }) => (
-            <Form>
-              <br />
-              {renderQuestion(isSubmitting)}
-              {isSubmitting}
-              <br />
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                size="large"
-                style={{ width: '100%' }}
-              >
-                Submit
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
+      {inputType && (
+        <div key={inputType + 'generateForm'}>
+          <Formik
+            initialValues={initialState}
+            onSubmit={(values, { setSubmitting }) => {
+              setSubmitting(false);
+              console.log('values : ', values);
+            }}
+            key={inputType + 'formik'}
+            validationSchema={Yup.object(initialValidation)}
+          >
+            {({ values, submitForm, isSubmitting }) => (
+              <Form>
+                <br />
+                {renderQuestion(isSubmitting)}
+                {isSubmitting}
+                <br />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  size="large"
+                  style={{ width: '100%' }}
+                >
+                  Submit
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      )}
     </>
   );
 };

@@ -44,7 +44,7 @@ export default [
     crumb: 'Edit Question'
   },
   {
-    path: '/form',
+    path: '/:surveyId/form',
     exact: true,
     key: 'endUserForm',
     component: EndUserForm,
