@@ -173,8 +173,8 @@ useEffect(() => {
           config.APIS_URL + '/tickets/' + props.ticket_id
         );
         const tkt = (await response.json()).data[0];
-        console.log('else ', tkt);
-        // alert(JSON.stringify(tkt))
+       
+       
         if (!unmounted) {
           setTicketNumber(tkt.ticketNumber);
           setCreatedTime(tkt.createdTime);
@@ -706,7 +706,7 @@ useEffect(() => {
     await fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
-        alert(JSON.stringify(repos));
+       
 
         if (JSON.stringify(repos.status) === '200') {
           return true;

@@ -11,7 +11,7 @@ import {
 import CategoryBarChart from './category-bar-chart';
 import StatusPieChart from './status-pie-chart';
 import TicketTypePieChart from './ticketType-pie-chart';
-import PriorityPieChart from './priority-pie-chart';
+import DepartmentPieChart from './department-pie-chart';
 import SubCategoryBarChart from './subCategory-bar-chart';
 import SourceMediaPieChart from './sourceMedia-pie-chart';
 import TicketNumber from './ticketNumber-bar-chart';
@@ -122,10 +122,10 @@ export default function TicketReport() {
         <Grid item xs>
           <Paper className={classes.paper}>
             <Typography variant="h6" className={classes.belowMargin}>
-              Priority
+              Department
             </Typography>
             <Divider />
-            <PriorityPieChart />
+            <DepartmentPieChart />
           </Paper>
         </Grid>
         <Grid item xs>
@@ -148,7 +148,7 @@ export default function TicketReport() {
         </Grid>
       </Grid>
       <Grid container spacing={2} className={classes.gridClass}>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <Paper className={classes.paper}>
             <Typography variant="h6" className={classes.belowMargin}>
               Category
@@ -157,15 +157,7 @@ export default function TicketReport() {
             <CategoryBarChart />
           </Paper>
         </Grid>
-        <Grid item xs={6}>
-          <Paper className={classes.paper}>
-            <Typography variant="h6" className={classes.belowMargin}>
-              Sub Category
-            </Typography>
-            <Divider />
-            <SubCategoryBarChart />
-          </Paper>
-        </Grid>
+      
       </Grid>
     </div>
   );

@@ -1,3 +1,4 @@
+// import { count } from 'console';
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
 import config from '../../views/config.json';
@@ -30,7 +31,7 @@ class TicketNumber extends Component {
       series: [
         {
           name: 'series-1',
-          data: [303, 404, 245, 433, 344, 662, 893, 423, 344, 662, 993, 888]
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
       ]
     };
@@ -41,8 +42,21 @@ class TicketNumber extends Component {
   fetch(apiUrl)
     .then(res => res.json())
     .then(repos => {
-     
-      console.log('tickets', repos.data);
+      var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      
+       repos.data.map(({ _id, count }, index) =>
+   data[_id] = count
+      
+       );
+      
+      this.setState({
+        series: [
+          {
+            name: 'series-1',
+            data: data
+          }
+        ]
+      });
       
     });
 

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
-
+import config from '../../views/config.json';
 class TicketTypePieChart extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      series: [44, 55, 13],
+      series: [],
       options: {
         chart: { type: 'pie', width: 380 },
-        labels: ['Complaint', 'Information', 'Request'],
+        labels: [],
         responsive: [
           {
             breakpoint: 480,
@@ -27,6 +27,39 @@ class TicketTypePieChart extends Component {
     };
   }
 
+  componentDidMount() {
+    var data = [];
+    var series = [];
+    const apiUrl = config.APIS_URL + '/tickets/report/ticketType';
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        repos.data.map(({ _id, count }) =>{ data.push(_id);series.push(count)});
+      
+        
+        this.setState({
+          series:series,
+          options: {
+            chart: { type: 'pie', width: 380 },
+            labels: data,
+            responsive: [
+              {
+                breakpoint: 480,
+                options: {
+                  chart: {
+                    width: 200
+                  },
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }
+            ]
+          }
+        });
+      });
+    
+  }
   render() {
     return (
       <div id="chart">
