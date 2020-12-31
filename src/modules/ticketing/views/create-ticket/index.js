@@ -816,6 +816,102 @@ useEffect(() => {
           />
           <br />
           <TextField
+            id="category"
+            select
+            size="small"
+            label="Category"
+            SelectProps={{
+              native: true
+            }}
+            variant="outlined"
+            style={{ width: '31.4%' }}
+            value={category.value}
+            onChange={e => {
+              setCategory({
+                value: e.target.value,
+                label: categories.filter(
+                  category => category.value === e.target.value
+                )[0].label
+              });
+              props.setClick(createTicket);
+
+              getSubCategories(e.target.value);
+            }}
+          >
+            {' '}
+            {categories.map(({ label, value }) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </TextField>
+          {subCategories.length > 0 ? (
+            <TextField
+              id="subcategories"
+              select
+              size="small"
+              label="Sub categories"
+              SelectProps={{
+                native: true
+              }}
+              variant="outlined"
+              style={{ width: '31%' }}
+              value={subCategory.value}
+              onChange={e => {
+                setSubCategory({
+                  value: e.target.value,
+                  label: subCategories.filter(
+                    subCategory => subCategory.value === e.target.value
+                  )[0].label
+                });
+                props.setClick(createTicket);
+                getSubCategoryItems(category.value, e.target.value);
+              }}
+            >
+              {' '}
+              {subCategories.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </TextField>
+          ) : (
+            <></>
+          )}
+          {subCategoryItems.length > 0 ? (
+            <TextField
+              id="subcategoryitems"
+              select
+              size="small"
+              label="Sub categories Items"
+              SelectProps={{
+                native: true
+              }}
+              variant="outlined"
+              style={{ width: '31.4%' }}
+              value={subCategoryItem.value}
+              onChange={e => {
+                setSubCategoryItem({
+                  value: e.target.value,
+                  label: subCategoryItems.filter(
+                    subCategoryItem => subCategoryItem.value === e.target.value
+                  )[0].label
+                });
+                props.setClick(createTicket);
+              }}
+            >
+              {' '}
+              {subCategoryItems.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </TextField>
+          ) : (
+            <></>
+          )}
+          <br />
+          <TextField
             id="type"
             select
             name="type"
@@ -834,8 +930,7 @@ useEffect(() => {
                   ticketType => ticketType.value === e.target.value
                 )[0].label
               });
-                props.setClick(createTicket);
-             
+              props.setClick(createTicket);
             }}
           >
             {ticketTypes.map(({ label, value }) => (
@@ -868,7 +963,6 @@ useEffect(() => {
                 )[0].sla
               });
               props.setClick(createTicket);
-             
             }}
           >
             {priorities.map(({ label, value }) => (
@@ -905,7 +999,6 @@ useEffect(() => {
                 )[0].color
               });
               props.setClick(createTicket);
-           
             }}
           >
             {statuses.map(({ label, value }) => (
@@ -916,105 +1009,6 @@ useEffect(() => {
           </TextField>
           <br />
 
-          <TextField
-            id="category"
-            select
-            size="small"
-            label="Category"
-            SelectProps={{
-              native: true
-            }}
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            value={category.value}
-            onChange={e => {
-              setCategory({
-                value: e.target.value,
-                label: categories.filter(
-                  category => category.value === e.target.value
-                )[0].label
-              });
-               props.setClick(createTicket);
-            
-              getSubCategories(e.target.value);
-            }}
-          >
-            {' '}
-            {categories.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </TextField>
-          {subCategories.length > 0 ? (
-            <TextField
-              id="subcategories"
-              select
-              size="small"
-              label="Sub categories"
-              SelectProps={{
-                native: true
-              }}
-              variant="outlined"
-              style={{ width: '31%' }}
-              value={subCategory.value}
-              onChange={e => {
-                setSubCategory({
-                  value: e.target.value,
-                  label: subCategories.filter(
-                    subCategory => subCategory.value === e.target.value
-                  )[0].label
-                });
-                props.setClick(createTicket);
-                 getSubCategoryItems(category.value,e.target.value,)
-                 
-             
-              }}
-            >
-              {' '}
-              {subCategories.map(({ label, value }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </TextField>
-          ) : (
-            <></>
-          )}
-          {subCategoryItems.length > 0 ? (
-            <TextField
-              id="subcategoryitems"
-              select
-              size="small"
-              label="Sub categories Items"
-              SelectProps={{
-                native: true
-              }}
-              variant="outlined"
-              style={{ width: '31.4%' }}
-              value={subCategoryItem.value}
-              onChange={e => {
-                setSubCategoryItem({
-                  value: e.target.value,
-                  label: subCategoryItems.filter(
-                    subCategoryItem => subCategoryItem.value === e.target.value
-                  )[0].label
-                });
-                props.setClick(createTicket);
-               
-              }}
-            >
-              {' '}
-              {subCategoryItems.map(({ label, value }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </TextField>
-          ) : (
-            <></>
-          )}
-          <br />
           <TextField
             error={ticketSubject === ''}
             id="title"
@@ -1067,7 +1061,6 @@ useEffect(() => {
             onChange={e => {
               handleChange('file', e);
             }}
-            
           />
           <Button onClick={UploadFile} className="primary" color="secondary">
             Upload
@@ -1097,7 +1090,6 @@ useEffect(() => {
                 )[0].idLabel
               });
               props.setClick(createTicket);
-           
             }}
           >
             {medium.map(({ label, value }) => (
@@ -1151,7 +1143,6 @@ useEffect(() => {
                 )[0].label
               });
               props.setClick(createTicket);
-           
             }}
           >
             {departments.map(({ label, value }) => (
@@ -1175,7 +1166,6 @@ useEffect(() => {
                   .label
               });
               props.setClick(createTicket);
-             
             }}
           >
             {teams.map(({ label, value }) => (
@@ -1208,7 +1198,6 @@ useEffect(() => {
               });
 
               props.setClick(createTicket);
-             
             }}
           >
             {executives.map(({ label, value }) => (
