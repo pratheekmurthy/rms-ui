@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -82,17 +82,18 @@ const useStyles = makeStyles(theme => ({
 
 function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const classes = useStyles();
-
+  const [error, setError] = useState('');
   async function authenticate(values) {
+    setError('');
     try {
-      const res = Axios.post('/login', values);
+      const res = await Axios.post('/user/login', values);
       const obj = res.data.userDetails;
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
       setLoggedInMain(true);
     } catch (err) {
-      // Because the API is not yet ready setting it to true in error case also but will change it once API is available
-      setLoggedInMain(true);
+      setLoggedInMain(false);
+      setError(true);
     }
   }
 
@@ -146,7 +147,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                 handleBlur,
                 handleChange,
                 handleSubmit,
-                isSubmitting,
                 touched,
                 values
               }) => (
@@ -177,10 +177,16 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.password}
                     variant="outlined"
                   />
+                  {!!error && (
+                    <Box my={1}>
+                      <Typography color="secondary">
+                        Invalid Username/Password
+                      </Typography>
+                    </Box>
+                  )}
                   <Box my={2} mt={5}>
                     <Button
                       color="primary"
-                      disabled={isSubmitting}
                       fullWidth
                       size="large"
                       type="submit"
