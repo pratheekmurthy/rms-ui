@@ -51,6 +51,7 @@ import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
 import socketIOClient from 'socket.io-client';
+import { update } from 'lodash';
 
 const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
 
@@ -176,37 +177,169 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [createdTime, setCreatedTime] = useState();
   const [file, setFile] = useState('');
   const [currentCall, setCurrentCall] = useState({
-    callUniqueId: localStorage.getItem('callUniqueId'),
-    callType: localStorage.getItem('callType'),
-    callStatus: localStorage.getItem('callStatus'),
-    callDetails: localStorage.getItem('callDetails'),
-    callDispositionStatus: localStorage.getItem('callDispositionStatus')
+    callUniqueId: '',
+    callType: '',
+    callStatus: '',
+    callDetails: '',
+    callDispositionStatus: ''
+  });
+  const [user, setUserDetails] = useState({
+    userType: 'Agent',
   });
   const [agent, setAgent] = useState({
     AgentId: '1234',
-    AgentSipId: '9999'
+    AgentSipId: '9999',
+    callType: "Outbound",
+    AgentType:"Outbound"
   });
 
+  const [mobile, setmobile] = useState("");
   function setCurrentCallDetails(
+    callStatusId,
     callUniqueId,
     callType,
     callStatus,
-    callDetails,
+    callEvent,
     callDispositionStatus
   ) {
-    localStorage.setItem('callUniqueId', callUniqueId);
-    localStorage.setItem('callType', callType);
-    localStorage.setItem('callStatus', callStatus);
-    localStorage.setItem('callDetails', callDetails);
-    localStorage.setItem('callDispositionStatus', callDispositionStatus);
+
+    console.log("callStatusId", callStatusId)
+    console.log("callUniqueId", callUniqueId)
+    console.log("callType", callType)
+    console.log("callStatus", callStatus)
+    console.log("callEvent", callEvent)
+    console.log("callDispositionStatus", callDispositionStatus)
+
     setCurrentCall({
-      callUniqueId: localStorage.getItem('callUniqueId'),
-      callType: localStorage.getItem('callType'),
-      callStatus: localStorage.getItem('callStatus'),
-      callDetails: localStorage.getItem('callDetails'),
-      callDispositionStatus: localStorage.getItem('callDispositionStatus')
+      callStatusId: callStatusId,
+      callUniqueId: callUniqueId,
+      callType: callType,
+      callStatus: callStatus,
+      callEvent: callEvent,
+      callDispositionStatus: callDispositionStatus
     });
+    localStorage.setItem('callStatusId', callStatusId)
+    localStorage.setItem('callUniqueId', callUniqueId)
+    localStorage.setItem('callType', callType)
+    localStorage.setItem('callStatus', callStatus)
+    localStorage.setItem('callEvent', callEvent)
+    localStorage.setItem('callDispositionStatus', callDispositionStatus)
+    updateAgentCallStatus({
+      callStatusId: callStatusId,
+      callUniqueId: callUniqueId,
+      callType: callType,
+      callStatus: callStatus,
+      callEvent: callEvent,
+      callDispositionStatus: callDispositionStatus
+    })
   }
+
+  function updateAgentCallStatus(updateData) {
+    var axios = require('axios');
+    var data = {
+      agentCallStatus: updateData.callStatus,
+      agentCallEvent: updateData.callEvent,
+      agentCallUniqueId: updateData.callUniqueId,
+      agentCallType: updateData.callType,
+      agentCallDispositionStatus: updateData.callDispositionStatus
+
+    };
+    console.log("update", data);
+    var config = {
+      method: 'put',
+      url: 'http://192.168.3.45:5005/crm/currentstatuses/' + updateData.callStatusId,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  function getAgentCallStatus(agentSipID) {
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: 'http://192.168.3.45:5005/crm/currentstatuses/agentSipID?agentSipID=' + agentSipID,
+      headers: {}
+    };
+
+    axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        if (response.data) {
+          console.log("getAgentCallStatus....................", response.data)
+          var callStatusId = JSON.stringify(response.data[0]._id);
+
+          console.log("callStatusId", callStatusId)
+          setCurrentCallDetails(response.data[0]._id, response.data[0].agentCallUniqueId, response.data[0].agentCallType, response.data[0].agentCallStatus, response.data[0].agentCallEvent, response.data[0].agentCallDispositionStatus)
+
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+  }
+
+  const onClick = (event) => {
+    console.log("mobile", mobile);
+    if (mobile.length === 10) {
+      console.log("valid number")
+
+      const axios = require('axios');
+
+      let config = {
+        method: 'get',
+        url: 'http://192.168.3.45:42002/ami/actions/orginatecall?sipAgentID=SIP%2F9999&NumbertobeCalled=59935413775',
+        headers: { }
+      };
+      
+      axios(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+      // before code
+      // var data = JSON.stringify({ "mobile": mobile });
+
+      // var config = {
+      //   method: 'get',
+      //   url: 'http://192.168.3.45:3003/makeCall',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   data: data
+      // };
+
+      // axios(config)
+      //   .then(function (response) {
+      //     console.log(JSON.stringify(response.data));
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //   });
+    } else {
+      console.log("Invalide number")
+    }
+    // alert('clicked', mobile);
+  }
+
+  const onChange = (event) => {
+    setmobile(event.target.value);
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -214,7 +347,20 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+
   useEffect(() => {
+    async function getInitialData() {
+      try {
+
+        const response = await getAgentCallStatus(agent.AgentSipId);
+
+      } catch (err) {
+        console.log("err", err);
+      }
+    }
+    getInitialData();
+    // console.log("currentCall", currentCall)
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
@@ -233,44 +379,71 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         console.log(err.response);
       }
     }
-    const socket = socketIOClient(SOCKETENDPOINT);
-    socket.on('AstriskEvent', data => {
-      if (data.Event === 'Bridge') {
-        if (
-          data.CallerID2 === agent.AgentSipId &&
-          data.Bridgestate === 'Link'
-        ) {
-          setCurrentCallDetails(
-            data.Uniqueid2,
-            'Inbound',
-            'connected',
-            data,
-            'NotDisposed'
-          );
-          get();
-        }
-      }
+    if (user.userType === 'Agent' ) {
 
-      if (data.Event === 'Hangup') {
-        if (data.ConnectedLineNum === agent.AgentSipId) {
-          console.log('data', data);
-          setCurrentCallDetails(
-            localStorage.getItem('callUniqueId'),
-            localStorage.getItem('callType'),
-            'disconnected',
-            data,
-            localStorage.getItem('callDispositionStatus')
-          );
+      const socket = socketIOClient(SOCKETENDPOINT);
+
+      socket.on('AstriskEvent', data => {
+
+        if (data.Event === 'Bridge') {
+          getInitialData();
+          localStorage.clear()
+          if (
+            data.CallerID2 === agent.AgentSipId &&
+            data.Bridgestate === 'Link'
+          ) {
+            console.log('data Bridge', data);
+            // console.log('inside the bridge event current call', this.currentCall);
+            setCurrentCallDetails(
+              localStorage.getItem("callStatusId"),
+              data.Uniqueid1,
+              agent.AgentType,
+              'connected',
+              'Bridge',
+              'NotDisposed'
+            );
+            get();
+          }
+          // console.log("mobile", '5'+mobile)
+          if(data.Bridgestate === 'Link' && data.CallerID1 === '59935413775'){
+            console.log('data Bridge', data);
+            // console.log('inside the bridge event current call', this.currentCall);
+            setCurrentCallDetails(
+              localStorage.getItem("callStatusId"),
+              data.Uniqueid1,
+              agent.AgentType,
+              'connected',
+              'Bridge',
+              'NotDisposed'
+            );
+            get();
+          }
         }
-      }
-    });
+
+        if (data.Event === 'Hangup') {
+          if (data.ConnectedLineNum === agent.AgentSipId) {
+            console.log('data', data);
+            setCurrentCallDetails(
+              localStorage.getItem("callStatusId"),
+              localStorage.getItem("callUniqueId"),
+              localStorage.getItem("callType"),
+              'disconnected',
+              'Hangup',
+              localStorage.getItem("callDispositionStatus")
+            );
+          }
+        }
+      });
+
+    }
+
     setRootData(
       [[], [], [], [], []].map(res =>
         res.status === 'fulfilled' ? res.value.data : {}
       )
     );
     setLoadingDetails(false);
-  }, [currentCall.callDispositionStatus]);
+  }, []);
 
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
@@ -293,6 +466,15 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         </div>
       ) : null}
       <CustomBreadcrumbs />
+      <input value={mobile} onChange={onChange} />
+            <Button
+              variant="contained"
+              className="jr-btn bg-light-green jr-btn-label left  text-white"
+              onClick={onClick}
+            >
+              {/* <QueuePlayNext /> */}
+              <span>Dail</span>
+            </Button>
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -343,17 +525,19 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   }}
                 />
               ) : (
-                <CommonAlert text="Unable to get dealer details" />
-              )}
-              <Box mt={2}>
-                <Card>
-                  <CardHeader title="Disposition Details" />
-                  <Divider />
-                  <CardContent>
-                    <DispositionForm />
-                  </CardContent>
-                </Card>
-              </Box>
+                  <CommonAlert text="Unable to get dealer details" />
+                )}
+              {currentCall.callDispositionStatus === "NotDisposed" && user.userType === "Agent" ?
+                <Box mt={2}>
+                  <Card>
+                    <CardHeader title="Disposition Details" />
+                    <Divider />
+                    <CardContent>
+                      <DispositionForm setCurrentCallDetails={setCurrentCallDetails} />
+                    </CardContent>
+                  </Card>
+                </Box> : null}
+
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -366,8 +550,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                  <CommonAlert />
-                )}
+                    <CommonAlert />
+                  )}
               </Card>
               <br />
               <Card>
@@ -382,8 +566,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                  <CommonAlert />
-                )}
+                    <CommonAlert />
+                  )}
               </Card>
             </Grid>
           </Grid>
@@ -560,12 +744,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           </DialogActions>
         </Dialog>
       ) : (
-        ''
-      )}
+          ''
+        )}
     </div>
   ) : (
-    <MainLoader />
-  );
+      <MainLoader />
+    );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Avatar,
   Grid,
@@ -33,6 +33,8 @@ import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded'
 import StarsIcon from '@material-ui/icons/Stars';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { grey } from '@material-ui/core/colors';
+
+import socketIOClient from 'socket.io-client';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -71,91 +73,156 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const InboundDataList = [
-  {
-    icon: <CallIcon color="primary" />,
-    data: '09',
-    label: 'I/B Calls Arrived'
-  },
-  {
-    icon: <QueryBuilderIcon color="primary" />,
-    data: '257',
-    label: 'OOO Hours Calls'
-  },
-  {
-    icon: <AddIcCallIcon color="primary" />,
-    data: '247',
-    label: 'I/B Calls Offered'
-  },
-  {
-    icon: <CallReceivedIcon color="primary" />,
-    data: '09',
-    label: 'I/B Calls Answered'
-  },
-  {
-    icon: <QueueIcon color="primary" />,
-    data: '09',
-    label: 'I/B Calls in Queue'
-  },
-  {
-    icon: <SupervisorAccountIcon color="primary" />,
-    data: '257',
-    label: 'I/B Agents Available'
-  },
-  {
-    icon: <AvTimerIcon color="primary" />,
-    data: '247',
-    label: 'I/B Ans within SL'
-  },
-  {
-    icon: <RecordVoiceOverIcon color="primary" />,
-    data: '09',
-    label: 'I/B IVR Aband'
-  },
-  {
-    icon: <VoicemailIcon color="primary" />,
-    data: '09',
-    label: 'I/B Queue Aband'
-  },
-  {
-    icon: <ListAltIcon color="primary" />,
-    data: '257',
-    label: 'I/B Service Level (SL-20)'
-  },
-  {
-    icon: <QuestionAnswerRoundedIcon color="primary" />,
-    data: '247',
-    label: 'I/B Answer Level (SL-20)'
-  },
-  {
-    icon: <TimelapseRoundedIcon color="primary" />,
-    data: '09',
-    label: 'I/B AHT'
-  },
-  {
-    icon: <Timer10RoundedIcon color="primary" />,
-    data: '247',
-    label: 'TeI/B Ans within SL=10 sec'
-  },
-  {
-    icon: <HourglassEmptyRoundedIcon color="primary" />,
-    data: '09',
-    label: 'I/B Service Level (SL-10)'
-  },
-  {
-    icon: <StarsIcon color="primary" />,
-    data: '09',
-    label: 'I/B Answer Level (SL-10)'
-  },
-  {
-    icon: <StarsIcon color="primary" />,
-    data: '09',
-    label: 'I/B Answer Level (SL-10)'
-  }
-];
 
 const Inbound = () => {
   const classes = useStyles();
+  const [Inbound, setInbound] = useState(
+    {
+      "callarrived": 0,
+      "callsoffered": 0,
+      "callsanswered": 0,
+      "callsabandonedonivr": 0,
+      "callsabandonedonqueue": 0,
+      "shortabandoned": 0,
+      "shortabandoned_ten": 0,
+      "callsansweredwithin20": 0,
+      "callsansweredwithin10": 0,
+      "servicelevel": null,
+      "answerlevel": null,
+      "servicelevel_ten": null,
+      "answerlevel_ten": null,
+      "aht": null,
+      "ooohourscalls": 0,
+      "livecalls": 0,
+      "queuecalls": 0,
+      "callstransferedtoCSAT": 0,
+      "GaveCSAT": 0,
+      "totalcsatscore": null
+    }
+  )
+
+  const InboundDataList = [
+    {
+      icon: <CallIcon color="primary" />,
+      data: Inbound.callarrived,
+      label: 'I/B Calls Arrived'
+    },
+    {
+      icon: <QueryBuilderIcon color="primary" />,
+      data: Inbound.ooohourscalls,
+      label: 'OOO Hours Calls'
+    },
+    {
+      icon: <AddIcCallIcon color="primary" />,
+      data: Inbound.callsoffered,
+      label: 'I/B Calls Offered'
+    },
+    {
+      icon: <CallReceivedIcon color="primary" />,
+      data: Inbound.callsanswered,
+      label: 'I/B Calls Answered'
+    },
+    {
+      icon: <QueueIcon color="primary" />,
+      data: Inbound.queuecalls,
+      label: 'I/B Calls in Queue'
+    },
+    {
+      icon: <SupervisorAccountIcon color="primary" />,
+      data: '257',
+      label: 'I/B Agents Available'
+    },
+    {
+      icon: <AvTimerIcon color="primary" />,
+      data: '247',
+      label: 'I/B Ans within SL'
+    },
+    {
+      icon: <RecordVoiceOverIcon color="primary" />,
+      data: '09',
+      label: 'I/B IVR Aband'
+    },
+    {
+      icon: <VoicemailIcon color="primary" />,
+      data: '09',
+      label: 'I/B Queue Aband'
+    },
+    {
+      icon: <ListAltIcon color="primary" />,
+      data: '257',
+      label: 'I/B Service Level (SL-20)'
+    },
+    {
+      icon: <QuestionAnswerRoundedIcon color="primary" />,
+      data: '247',
+      label: 'I/B Answer Level (SL-20)'
+    },
+    {
+      icon: <TimelapseRoundedIcon color="primary" />,
+      data: '09',
+      label: 'I/B AHT'
+    },
+    {
+      icon: <Timer10RoundedIcon color="primary" />,
+      data: '247',
+      label: 'TeI/B Ans within SL=10 sec'
+    },
+    {
+      icon: <HourglassEmptyRoundedIcon color="primary" />,
+      data: '09',
+      label: 'I/B Service Level (SL-10)'
+    },
+    {
+      icon: <StarsIcon color="primary" />,
+      data: '09',
+      label: 'I/B Answer Level (SL-10)'
+    },
+    {
+      icon: <StarsIcon color="primary" />,
+      data: '09',
+      label: 'I/B Answer Level (SL-10)'
+    }
+  ];
+
+  function getIBdata(){
+    const axios = require('axios');
+
+    let config = {
+      method: 'get',
+      url: 'http://192.168.3.45:55556/service/dashboardcount?AccessKeys=123',
+      headers: {}
+    };
+
+    axios(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        var data = response.data;
+        console.log("data", data[0])
+        setInbound(data[0][0])
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+
+  }
+const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
+
+  useEffect(() => {
+    console.log("data inside the useEffect");
+getIBdata();
+const socket = socketIOClient(SOCKETENDPOINT);
+
+socket.on('AstriskEvent', data => {
+  if (data.Event === 'Bridge'&& data.Bridgestate === 'Link') {
+    getIBdata()
+  }
+  if (data.Event === 'Hangup') {
+    getIBdata()
+  }
+})
+
+  }, [])
 
   return (
     <>
