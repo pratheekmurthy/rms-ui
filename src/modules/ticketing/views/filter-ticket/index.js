@@ -35,6 +35,7 @@ export default function FilterTicket(props) {
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
+  const [Createon, setCreateon] = useState('');
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketDescription, setTicketDescription] = useState('');
   const [ticketTypes, setTicketTypes] = useState([]);
@@ -469,6 +470,11 @@ export default function FilterTicket(props) {
                 </InputAdornment>
               )
             }}
+            value={distributorName}
+            onChange={e => {
+              setDistributorName(e.target.value);
+              props.setDistributorName(e.target.value);
+            }}
           ></TextField>{' '}
           <TextField
             id="standard-select-currency-native"
@@ -489,43 +495,15 @@ export default function FilterTicket(props) {
                 </InputAdornment>
               )
             }}
+            value={distributorId}
+            onChange={e => {
+              setDistributorId(e.target.value);
+              props.setDistributorId(e.target.value);
+            }}
           ></TextField>
-          <TextField
-            label="Created On"
-            type="date"
-            defaultValue="2020-12-23"
-            id="standard-select-currency-native"
-            size="medium"
-            SelectProps={{
-              native: true
-            }}
-            InputLabelProps={{
-              shrink: true
-            }}
-            style={{ width: 200 }}
-            inputProps={{ style: { fontSize: 13 } }}
-          ></TextField>
-          <TextField
-            id="standard-select-currency-native"
-            type="date"
-            label="Due On"
-            size="small"
-            defaultValue="2020-12-23"
-            SelectProps={{
-              native: true
-            }}
-            InputLabelProps={{
-              shrink: true
-            }}
-            style={{ width: 200 }}
-            inputProps={{ style: { fontSize: 13 } }}
-          ></TextField>
+         
           <div>
-            {/* <DateRangePicker
-            open={opendate}
-            toggle={toggle}
-            onChange={range => setDateRange(range)}
-          /> */}
+           
           </div>
         </Box>
       </Paper>
