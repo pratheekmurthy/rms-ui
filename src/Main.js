@@ -24,6 +24,7 @@ function Main({
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
+        localStorage.clear();
         const res = await Axios.post('/auth', {});
         const obj = res.data.userDetails;
         setUserDetailsMain(obj);
