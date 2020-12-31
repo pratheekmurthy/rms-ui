@@ -297,10 +297,14 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setApiTickets(body.data);
-        console.log('tickets', body.data);
+      
         setTickets(body.data);
-        setviewTickets(body.data[0]);
-
+      
+        if (body.data[0]) {
+          setviewTickets(body.data[0]);
+        } else {
+          setviewTickets();
+        }
         //  setLoading(false);
       }
     }
@@ -311,7 +315,7 @@ export default function TicketDashboard(props) {
   }, []);
 
   const viewTicket = item => {
-    console.log('item', item);
+   
     setviewTickets(item);
     //setTicketNumber(item.ticketNumber);
     setCreatedTime(item.createdTime);
@@ -347,14 +351,14 @@ export default function TicketDashboard(props) {
       value: item.ticketTypeId
     });
 
-    console.log('item', item);
+  
     let unmounted = false;
     async function getHistoryItems() {
       const response = await fetch(
         config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
-      console.log('history', tktHistory);
+     
       if (!unmounted) {
         setTicketHistory(tktHistory);
       }

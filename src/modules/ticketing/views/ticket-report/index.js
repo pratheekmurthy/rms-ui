@@ -79,24 +79,7 @@ export default function TicketReport() {
   return (
     <div className={classes.root}>
       <Box component="span" className={classes.displayFlex}>
-        <TextField
-          id="standard-select-currency-native"
-          select
-          size="small"
-          value={day}
-          onChange={handleDayChange}
-          variant="outlined"
-          label="Duration"
-          SelectProps={{
-            native: true
-          }}
-        >
-          {days.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </TextField>
+       
       </Box>
       <Grid container spacing={2} className={classes.gridClass}>
         <Grid item xs={12}>

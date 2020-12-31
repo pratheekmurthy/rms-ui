@@ -1067,7 +1067,7 @@ useEffect(() => {
             onChange={e => {
               handleChange('file', e);
             }}
-            value={remarks}
+            
           />
           <Button onClick={UploadFile} className="primary" color="secondary">
             Upload

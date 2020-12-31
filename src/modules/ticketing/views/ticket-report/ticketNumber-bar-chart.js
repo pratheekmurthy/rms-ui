@@ -9,7 +9,7 @@ class TicketNumber extends Component {
     this.state = {
       options: {
         chart: {
-          id: 'apexchart-example'
+          id: 'Total Ticket'
         },
         xaxis: {
           categories: [
@@ -37,25 +37,56 @@ class TicketNumber extends Component {
     };
   }
   componentDidMount(){
+ 
    
   const apiUrl = config.APIS_URL + '/tickets/report/tickets';
   fetch(apiUrl)
     .then(res => res.json())
     .then(repos => {
-      var data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      var data = [];
       
-       repos.data.map(({ _id, count }, index) =>
-   data[_id] = count
+       repos.data.map(({ _id, count }, index) =>{
+        
+      for(var i=1; i<=12; i++){
       
-       );
-      
+if(i=== _id){
+  data.push(count)
+}
+else{
+  data.push("0")
+}
+      }
+       });
+    
       this.setState({
-        series: [
-          {
-            name: 'series-1',
-            data: data
-          }
-        ]
+        options: {
+        chart: {
+          id: 'Total Ticket'
+        },
+        xaxis: {
+          months: [
+            'January',
+            'Feburary',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'Septemeber',
+            'October',
+            'November',
+            'December'
+          ]
+        }
+      },
+      series: [
+        {
+          name: 'count',
+          data: data
+        }
+      ]
+  
       });
       
     });

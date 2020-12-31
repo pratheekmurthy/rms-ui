@@ -9,7 +9,7 @@ class CategoryBarChart extends Component {
     this.state = {
       options: {
         chart: {
-          id: 'apexchart-example'
+          id: 'Category'
         },
         xaxis: {
           categories: [
@@ -43,7 +43,7 @@ class CategoryBarChart extends Component {
         this.setState({
          options: {
         chart: {
-          id: 'apexchart-example'
+          id: 'Category'
         },
         xaxis: {
           categories: data

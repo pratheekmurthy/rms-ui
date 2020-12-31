@@ -6,13 +6,40 @@ class PriorityPieChart extends Component {
     super(props);
 
     this.state = {
-      series: [13, 43, 22],
+      series: [],
       options: {
         chart: {
+          toolbar: {
+            show: true,
+            offsetX: 0,
+            offsetY: 0,
+            tools: {
+              download: true,
+              selection: true,
+              zoom: true,
+              zoomin: true,
+              zoomout: true,
+              pan: true,
+              reset: true | '<img src="/static/icons/reset.png" width="20">',
+              customIcons: []
+            },
+            export: {
+              csv: {
+                filename: 'Department',
+                columnDelimiter: ',',
+                headerCategory: 'category',
+                headerValue: 'count',
+                dateFormatter(timestamp) {
+                  return new Date(timestamp).toDateString();
+                }
+              }
+            },
+            autoSelected: 'zoom'
+          },
           type: 'pie',
           width: 380
         },
-        labels: ['Low', 'Medium', 'High'],
+        labels: [],
         responsive: [
           {
             breakpoint: 480,
@@ -36,7 +63,7 @@ class PriorityPieChart extends Component {
     fetch(apiUrl)
       .then(res => res.json())
       .then(repos => {
-        console.log('res depa', repos);
+       
        
         repos.data.map(({ _id, count }) => {
           if(_id === null){
