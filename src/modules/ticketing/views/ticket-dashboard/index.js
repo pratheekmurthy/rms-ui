@@ -36,7 +36,12 @@ import EqualizerIcon from '@material-ui/icons/Equalizer';
 import Timeline from './timeline';
 import HistoryIcon from '@material-ui/icons/History';
 import { blue, teal, lime } from '@material-ui/core/colors';
+import ReactExport from 'react-export-excel';
+import GetAppIcon from '@material-ui/icons/GetApp';
 
+const ExcelFile = ReactExport.ExcelFile;
+const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
+const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
   root: {
@@ -155,10 +160,9 @@ export default function TicketDashboard(props) {
   const [ticketTypes, setTicketTypes] = useState({ value: '', label: '' });
   const [createdTime, setCreatedTime] = useState();
   const [ticketType, setTicketType] = useState({ value: '', label: '' });
-  // const [ticketType, setTicketType] = useState({
-  //   ticketTypeId: '',
-  //   ticketType: ''
-  // });
+    const [Createon, setCreateon] = useState('');
+     const [file, setFile] = useState('');
+ 
 
   const [ticketHistory, setTicketHistory] = useState([]);
   const [medium, setMedium] = useState([]);
@@ -297,10 +301,14 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setApiTickets(body.data);
-        console.log('tickets', body.data);
+      
         setTickets(body.data);
-        setviewTickets(body.data[0]);
-
+  
+        if (body.data[0]) {
+          setviewTickets(body.data[0]);
+        } else {
+          setviewTickets();
+        }
         //  setLoading(false);
       }
     }
@@ -309,9 +317,27 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
+ const UploadFile = e => {
+   var myHeaders = new Headers();
+   myHeaders.append('ticketnumber', ticketNumber);
 
+   var formdata = new FormData();
+   formdata.append('SoftCopyFile', file);
+
+   var requestOptions = {
+     method: 'POST',
+     headers: myHeaders,
+     body: formdata,
+     redirect: 'follow'
+   };
+   const apiUrl = config.APIS_URL + '/tickets/files';
+   fetch(apiUrl, requestOptions)
+     .then(response => response.text())
+     .then(result => console.log(result))
+     .catch(error => console.log('error', error));
+ };
   const viewTicket = item => {
-    console.log('item', item);
+   
     setviewTickets(item);
     //setTicketNumber(item.ticketNumber);
     setCreatedTime(item.createdTime);
@@ -347,14 +373,14 @@ export default function TicketDashboard(props) {
       value: item.ticketTypeId
     });
 
-    console.log('item', item);
+  
     let unmounted = false;
     async function getHistoryItems() {
       const response = await fetch(
         config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
-      console.log('history', tktHistory);
+     
       if (!unmounted) {
         setTicketHistory(tktHistory);
       }
@@ -366,6 +392,9 @@ export default function TicketDashboard(props) {
       <List className={classes.listRow}>
         {tickets
           .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
+          .filter(tkt => tkt.distributorId.includes(distributorId))
+          .filter(tkt => tkt.distributorName.includes(distributorName))
+        
           .filter(tkt =>
             status.label === 'All'
               ? tkt.status === tkt.status
@@ -599,30 +628,73 @@ export default function TicketDashboard(props) {
         >
           Create Ticket
         </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          size="small"
-          style={{ marginBottom: 15, marginLeft: 10 }}
-          startIcon={<EqualizerIcon />}
+        <ExcelFile
+          filename="tickets"
+          element={
+            <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              style={{ marginBottom: 15, marginLeft: 10 }}
+              startIcon={<GetAppIcon />}
+            >
+              Download
+            </Button>
+          }
         >
-          <Link to="/ticket-report">Report</Link>
-        </Button>
+          <ExcelSheet data={tickets} name="Tickets">
+            <ExcelColumn label="ticketNumber" value="ticketNumber" />
+            <ExcelColumn label="ticketType" value="ticketType" />
+            <ExcelColumn label="priority" value="priority" />
+            <ExcelColumn label="category" value="category" />
+            <ExcelColumn label="subCategory" value="subCategory" />
+            <ExcelColumn label="subCategoryItem" value="subCategoryItem" />
+            <ExcelColumn label="status" value="status" />
+            <ExcelColumn label="distributorId" value="distributorId" />
+            <ExcelColumn label="distributorEmail" value="distributorEmail" />
+            <ExcelColumn label="distributorMobile" value="distributorMobile" />
+            <ExcelColumn label="distributorName" value="distributorName" />
+            <ExcelColumn label="media" value="media" />
+            <ExcelColumn label="ticketSubject" value="ticketSubject" />
+            <ExcelColumn label="ticketDescription" value="ticketDescription" />
+            <ExcelColumn label="ticketRemarks" value="ticketRemarks" />
+            <ExcelColumn
+              label="assignedDepartment"
+              value="assignedDepartment"
+            />
+            <ExcelColumn label="assignedExecutive" value="assignedExecutive" />
+            <ExcelColumn
+              label="assignedExecutiveEmail"
+              value="assignedExecutiveEmail"
+            />
+            <ExcelColumn
+              label="assignedExecutiveMobile"
+              value="assignedExecutiveMobile"
+            />
+            <ExcelColumn label="assignedTeam" value="assignedTeam" />
+
+            <ExcelColumn label="assignedExecutive" value="assignedExecutive" />
+            <ExcelColumn label="createdById" value="createdById" />
+            <ExcelColumn label="createdByName" value="createdByName" />
+            <ExcelColumn label="createdTime" value="createdTime" />
+            <ExcelColumn label="updatedTime" value="updatedTime" />
+          </ExcelSheet>
+        </ExcelFile>
+
         <Tooltip title="Filter">
           <Avatar variant="rounded" className={classes.rounded}>
             <FilterListIcon onClick={configureFilter} />
           </Avatar>
         </Tooltip>
-      
       </Box>
       {(() => {
         if (filter) {
           return (
             <FilterTicket
               ticketNumber={ticketNumber}
-               setTicketNumber={tks => {
+              setTicketNumber={tks => {
                 setTicketNumber(tks);
-              }} 
+              }}
               ticketTypes={ticketTypes}
               setTicketTypes={tkstyps => {
                 setTicketTypes(tkstyps);
@@ -679,6 +751,14 @@ export default function TicketDashboard(props) {
               setStatus={sts => {
                 setStatus(sts);
               }}
+              distributorName={distributorName}
+              setDistributorName={disname => {
+                setDistributorName(disname);
+              }}
+              distributorId={distributorId}
+              setDistributorId={disid => {
+                setDistributorId(disid);
+              }}
             />
           );
         }
@@ -709,7 +789,6 @@ export default function TicketDashboard(props) {
             setOpen={open => setOpen(open)}
             ticket={ticket}
           />
-        
         </DialogContent>
         <DialogActions>
           <Button
@@ -839,15 +918,31 @@ export default function TicketDashboard(props) {
                 {/* </Tooltip> */}
               </Box>
               <Box component="div" display="flex" flexDirection="row">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="small"
-                  className={classes.button}
-                  startIcon={<AttachFileIcon />}
-                >
-                  Attach
-                </Button>
+                <input
+                  // id="SoftCopyFile"
+
+                  onChange={e => setFile(e.target.files[0])}
+                  accept="image/*"
+                  className={classes.input}
+                  style={{ display: 'none' }}
+                  id="raised-button-file"
+                  multiple
+                  type="file"
+                />
+                <label htmlFor="raised-button-file">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="small"
+                    component="span"
+                    className={classes.button}
+                    startIcon={<AttachFileIcon />}
+                    onClick={UploadFile}
+                  >
+                    Attach
+                  </Button>
+                </label>
+
                 <Button
                   variant="contained"
                   color="primary"
@@ -1242,26 +1337,7 @@ export default function TicketDashboard(props) {
                   </Typography>
                 </Box>
               </Box>
-              <Box
-                display="flex"
-                flexDirection="row"
-                className={classes.belowMargin}
-              >
-                <Typography variant="h5" className={classes.labelClass}>
-                  Escalation
-                </Typography>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  className={classes.valueClass}
-                >
-                  <Typography
-                    variant="body1"
-                    className={classes.avatarValue}
-                    component="span"
-                  ></Typography>
-                </Box>
-              </Box>
+
               <Box
                 display="flex"
                 flexDirection="row"
@@ -1280,8 +1356,9 @@ export default function TicketDashboard(props) {
                     variant="body1"
                     className={classes.avatarValue}
                     component="span"
+                    style={{ fontSize: '12px' }}
                   >
-                    {/* {viewticket.idLabel} */}
+                    {viewticket.createdById}
                   </Typography>
                 </Box>
               </Box>
@@ -1304,7 +1381,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {/* {viewticket.nameLabel} */}
+                    {viewticket.createdByName}
                   </Typography>
                 </Box>
               </Box>
@@ -1351,29 +1428,6 @@ export default function TicketDashboard(props) {
                     component="span"
                   >
                     {viewticket.assignedExecutive}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                className={classes.belowMargin}
-              >
-                <Typography variant="h5" className={classes.labelClass}>
-                  Created By
-                </Typography>
-                <Box
-                  display="flex"
-                  flexDirection="row"
-                  className={classes.valueClass}
-                >
-                  <Typography
-                    variant="body1"
-                    className={classes.avatarValue}
-                    component="span"
-                  >
-                    {viewticket.createdByName}
                   </Typography>
                 </Box>
               </Box>

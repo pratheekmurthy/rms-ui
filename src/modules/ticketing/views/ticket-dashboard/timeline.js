@@ -24,13 +24,13 @@ export default function CustomizedTimeline(props) {
   const classes = useStyles();
   const [ticketHistory, setTicketHistory] = useState([]);
 useEffect(()=>{
-  console.log("history child",props.setTicketHistory);
+ 
   setTicketHistory(props.setTicketHistory);
 },[])
   function getHistory() {
     for(var i=0; i<ticketHistory.length; i++){
       if(i%2==0){
-        console.log("e",ticketHistory[i])
+       
         return(
        <TimelineItem>
         <TimelineOppositeContent>
@@ -54,7 +54,7 @@ useEffect(()=>{
         )
       }
       else{
-         console.log("o",ticketHistory[i])
+        
          return(<TimelineItem>
         <TimelineOppositeContent>
           <Typography variant="body2" color="textSecondary">
