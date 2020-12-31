@@ -189,7 +189,7 @@ const Inbound = () => {
 
     let config = {
       method: 'get',
-      url: 'http://192.168.3.45:55556/service/dashboardcount?AccessKeys=123',
+      url: 'http://192.168.3.45:42005/service/dashboardcount?AccessKeys=123',
       headers: {}
     };
 
