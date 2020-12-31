@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
-
+import config from '../../views/config.json';
 class TicketNumber extends Component {
   constructor(props) {
     super(props);
@@ -34,6 +34,18 @@ class TicketNumber extends Component {
         }
       ]
     };
+  }
+  componentDidMount(){
+   
+  const apiUrl = config.APIS_URL + '/tickets/report/tickets';
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(repos => {
+     
+      console.log('tickets', repos.data);
+      
+    });
+
   }
   render() {
     return (

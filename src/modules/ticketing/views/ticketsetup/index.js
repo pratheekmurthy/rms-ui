@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { Grid, Typography, Box } from '@material-ui/core';
+import { Grid, Typography, Box, Paper } from '@material-ui/core';
 import MediaConfig from './mediaconfig';
 import TicketType from './tickettypeconfig';
 import CategoryConfig from './categoryconfig';
@@ -55,7 +55,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
-    height: 'auto'
+    height: 'auto',
+    margin: 15
   },
 
   paper: {
@@ -64,8 +65,7 @@ const useStyles = makeStyles(theme => ({
 
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    color: 'blue',
-    flexAlign: 'left'
+    color: 'blue'
   }
 }));
 
@@ -79,59 +79,65 @@ export default function TicketDashboard() {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={2}>
-        <Grid item sm={3}>
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={value}
-            onChange={handleChange}
-            aria-label="Vertical tabs example"
-            className={classes.tabs}
-          >
-            <Tab label="Ticket Type" {...a11yProps(0)} />
-            <Tab label="Media" {...a11yProps(1)} />
-            <Tab label="Category" {...a11yProps(2)} />
-            <Tab label="Sub category" {...a11yProps(3)} />
-            <Tab label="Sub Category Item" {...a11yProps(4)} />
-            <Tab label="Priority" {...a11yProps(5)} />
-            <Tab label="Status" {...a11yProps(6)} />
-            <Tab label="Department" {...a11yProps(7)} />
-            <Tab label="Team" {...a11yProps(8)} />
-            <Tab label="Excutive" {...a11yProps(9)} />
-          </Tabs>
-        </Grid>
-        <Grid item sm={8}>
-          <TabPanel value={value} index={0}>
-            <TicketType />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <MediaConfig />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <CategoryConfig />
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <SubCategoryConfig />
-          </TabPanel>
-          <TabPanel value={value} index={4}>
-            <SubCategoryItemConfig />
-          </TabPanel>
-          <TabPanel value={value} index={5}>
-            <PriorityConfig />
-          </TabPanel>
-          <TabPanel value={value} index={6}>
-            <StatusConfig />
-          </TabPanel>
-          <TabPanel value={value} index={7}>
-            <DepartmentConfig />
-          </TabPanel>
-          <TabPanel value={value} index={8}>
-            <TeamConfig />
-          </TabPanel>
-          <TabPanel value={value} index={9}>
-            <ExecutiveConfig />
-          </TabPanel>
+      <Grid container spacing={1}>
+        <Grid item sm={12} md={12}>
+          <Paper className={classes.paper} style={{ overflow: 'auto' }}>
+            <Grid container spacing={2}>
+              <Grid item sm={2}>
+                <Tabs
+                  orientation="vertical"
+                  variant="scrollable"
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="Vertical tabs example"
+                  className={classes.tabs}
+                >
+                  <Tab label="Ticket Type" {...a11yProps(0)} />
+                  <Tab label="Media" {...a11yProps(1)} />
+                  <Tab label="Category" {...a11yProps(2)} />
+                  <Tab label="Sub category" {...a11yProps(3)} />
+                  <Tab label="Sub Category Item" {...a11yProps(4)} />
+                  <Tab label="Priority" {...a11yProps(5)} />
+                  <Tab label="Status" {...a11yProps(6)} />
+                  <Tab label="Department" {...a11yProps(7)} />
+                  <Tab label="Team" {...a11yProps(8)} />
+                  <Tab label="Excutive" {...a11yProps(9)} />
+                </Tabs>
+              </Grid>
+              <Grid item sm={8}>
+                <TabPanel value={value} index={0}>
+                  <TicketType />
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <MediaConfig />
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  <CategoryConfig />
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                  <SubCategoryConfig />
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                  <SubCategoryItemConfig />
+                </TabPanel>
+                <TabPanel value={value} index={5}>
+                  <PriorityConfig />
+                </TabPanel>
+                <TabPanel value={value} index={6}>
+                  <StatusConfig />
+                </TabPanel>
+                <TabPanel value={value} index={7}>
+                  <DepartmentConfig />
+                </TabPanel>
+                <TabPanel value={value} index={8}>
+                  <TeamConfig />
+                </TabPanel>
+                <TabPanel value={value} index={9}>
+                  <ExecutiveConfig />
+                </TabPanel>
+              </Grid>
+            </Grid>
+          </Paper>
         </Grid>
       </Grid>
     </div>
