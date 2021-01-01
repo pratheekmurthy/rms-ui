@@ -13,16 +13,9 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  InputLabel,
   makeStyles,
-  MenuItem,
-  Modal,
-  Select,
-  TextField,
-  Tooltip,
   Typography
 } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
 import PropTypes from 'prop-types';
 
 import Page from 'src/components/Page';

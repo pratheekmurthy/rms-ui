@@ -68,9 +68,9 @@ export default function DealerCard({ dealerDetails }) {
   const {
     distributor_name,
     distributor_id,
-    lastInteractionId,
-    lastInteractionDate,
-    lastOrderReference,
+    // lastInteractionId,
+    // lastInteractionDate,
+    // lastOrderReference,
     distributor_rank,
     Joiningdate,
     distributor_status,

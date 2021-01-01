@@ -9,7 +9,6 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
@@ -29,7 +28,6 @@ import Axios from 'axios';
 import SaveIcon from '@material-ui/icons/Save';
 import Spinner from 'src/components/Spinner';
 import CommonAlert from 'src/components/CommonAlert';
-import FormGenerate from '../end-user-form/form-generate';
 
 const asyncFunction = async text =>
   Axios.get('/survey/question/search/' + text)
@@ -299,7 +297,6 @@ export default function CreateSurvey(props) {
                 <br />
                 <Typography>{surveyDetails.description}</Typography>
                 <GenerateForm input={questions} />
-                {/* <FormGenerate inputType={questions} /> */}
                 {!!questions.length && (
                   <Button variant="contained" color="primary">
                     Submit Response
