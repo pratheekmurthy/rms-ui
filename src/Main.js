@@ -16,17 +16,19 @@ function Main({
   setAccountTypeMain,
   setLoggedInMain
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [filteredRoutes, setfilteredRoutes] = useState(
     routes.filter(route => route.requiresAuth === false)
   );
+
+  const [localLoggedInState, setLocalLoggedIn] = useState(false);
 
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
         localStorage.clear();
-        const res = await Axios.post('/auth', {});
-        const obj = res.data.userDetails;
+        const res = await Axios.post('/user/login', {});
+        const obj = res.data.userObj;
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
         setLoggedInMain(true);
@@ -38,16 +40,15 @@ function Main({
     })();
   }, []);
 
-  useEffect(
-    () =>
-      setfilteredRoutes(
-        routes.filter(route => route.requiresAuth === isLoggedIn)
-      ),
-    [isLoggedIn]
-  );
+  useEffect(() => {
+    setfilteredRoutes(
+      routes.filter(route => route.requiresAuth === isLoggedIn)
+    );
+    setLocalLoggedIn(isLoggedIn);
+  }, [isLoggedIn]);
   return loading ? (
     <MainLoader />
-  ) : isLoggedIn ? (
+  ) : localLoggedInState ? (
     <>
       <TopBar />
       <NavBar openMobile={false} onMobileClose={() => null} />

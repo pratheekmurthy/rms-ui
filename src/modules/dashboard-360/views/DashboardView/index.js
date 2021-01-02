@@ -5,7 +5,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Chip,
   Container,
   Dialog,
   DialogActions,
@@ -13,13 +12,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
-  InputLabel,
   makeStyles,
-  MenuItem,
-  Modal,
-  Select,
-  TextField,
-  Tooltip,
   Typography
 } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
@@ -192,7 +185,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     AgentSipId:localStorage.getItem('AgentSIPID')
   });
 
-  const [mobile, setmobile] = useState("");
+  const [mobile, setmobile] = useState('');
   function setCurrentCallDetails(
     callStatusId,
     callUniqueId,
@@ -201,13 +194,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callEvent,
     callDispositionStatus
   ) {
-
-    console.log("callStatusId", callStatusId)
-    console.log("callUniqueId", callUniqueId)
-    console.log("callType", callType)
-    console.log("callStatus", callStatus)
-    console.log("callEvent", callEvent)
-    console.log("callDispositionStatus", callDispositionStatus)
+    console.log('callStatusId', callStatusId);
+    console.log('callUniqueId', callUniqueId);
+    console.log('callType', callType);
+    console.log('callStatus', callStatus);
+    console.log('callEvent', callEvent);
+    console.log('callDispositionStatus', callDispositionStatus);
 
     setCurrentCall({
       callStatusId: callStatusId,
@@ -217,12 +209,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       callEvent: callEvent,
       callDispositionStatus: callDispositionStatus
     });
-    localStorage.setItem('callStatusId', callStatusId)
-    localStorage.setItem('callUniqueId', callUniqueId)
-    localStorage.setItem('callType', callType)
-    localStorage.setItem('callStatus', callStatus)
-    localStorage.setItem('callEvent', callEvent)
-    localStorage.setItem('callDispositionStatus', callDispositionStatus)
+    localStorage.setItem('callStatusId', callStatusId);
+    localStorage.setItem('callUniqueId', callUniqueId);
+    localStorage.setItem('callType', callType);
+    localStorage.setItem('callStatus', callStatus);
+    localStorage.setItem('callEvent', callEvent);
+    localStorage.setItem('callDispositionStatus', callDispositionStatus);
     updateAgentCallStatus({
       callStatusId: callStatusId,
       callUniqueId: callUniqueId,
@@ -230,7 +222,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       callStatus: callStatus,
       callEvent: callEvent,
       callDispositionStatus: callDispositionStatus
-    })
+    });
   }
 
   function updateAgentCallStatus(updateData) {
@@ -241,9 +233,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       agentCallUniqueId: updateData.callUniqueId,
       agentCallType: updateData.callType,
       agentCallDispositionStatus: updateData.callDispositionStatus
-
     };
-    console.log("update", data);
     var config = {
       method: 'put',
       url: 'http://192.168.3.45:42004/crm/currentstatuses/' + updateData.callStatusId,
@@ -254,10 +244,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         console.log(JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -272,45 +262,50 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         // console.log(JSON.stringify(response.data));
         if (response.data) {
-          console.log("getAgentCallStatus....................", response.data)
+          console.log('getAgentCallStatus....................', response.data);
           var callStatusId = JSON.stringify(response.data[0]._id);
 
-          console.log("callStatusId", callStatusId)
-          setCurrentCallDetails(response.data[0]._id, response.data[0].agentCallUniqueId, response.data[0].agentCallType, response.data[0].agentCallStatus, response.data[0].agentCallEvent, response.data[0].agentCallDispositionStatus)
-
+          console.log('callStatusId', callStatusId);
+          setCurrentCallDetails(
+            response.data[0]._id,
+            response.data[0].agentCallUniqueId,
+            response.data[0].agentCallType,
+            response.data[0].agentCallStatus,
+            response.data[0].agentCallEvent,
+            response.data[0].agentCallDispositionStatus
+          );
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-
-
   }
 
-  const onClick = (event) => {
-    console.log("mobile", mobile);
+  const onClick = event => {
+    console.log('mobile', mobile);
     if (mobile.length === 10) {
-      console.log("valid number")
+      console.log('valid number');
 
       const axios = require('axios');
 
       let config = {
         method: 'get',
-        url: 'http://192.168.3.45:42002/ami/actions/orginatecall?sipAgentID=SIP%2F9999&NumbertobeCalled=59935413775',
-        headers: { }
+        url:
+          'http://192.168.3.45:42002/ami/actions/orginatecall?sipAgentID=SIP%2F9999&NumbertobeCalled=59935413775',
+        headers: {}
       };
-      
+
       axios(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      
+        .then(response => {
+          console.log(JSON.stringify(response.data));
+        })
+        .catch(error => {
+          console.log(error);
+        });
+
       // before code
       // var data = JSON.stringify({ "mobile": mobile });
 
@@ -331,12 +326,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       //     console.log(error);
       //   });
     } else {
-      console.log("Invalide number")
+      console.log('Invalide number');
     }
     // alert('clicked', mobile);
-  }
+  };
 
-  const onChange = (event) => {
+  const onChange = event => {
     setmobile(event.target.value);
   };
 
@@ -347,16 +342,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     setOpen(true);
   };
 
-
   useEffect(() => {
     async function getInitialData() {
       try {
-
         const response = await getAgentCallStatus(agent.AgentSipId);
-        console.log('response', response);
-
       } catch (err) {
-        console.log("err", err);
+        console.log('err', err);
       }
     }
     getInitialData();
@@ -402,7 +393,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             setCurrentCallDetails(
-              localStorage.getItem("callStatusId"),
+              localStorage.getItem('callStatusId'),
               data.Uniqueid1,
               agent.AgentType,
               'connected',
@@ -412,11 +403,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             get();
           }
           // console.log("mobile", '5'+mobile)
-          if(data.Bridgestate === 'Link' && data.CallerID1 === '59935413775'){
+          if (data.Bridgestate === 'Link' && data.CallerID1 === '59935413775') {
             console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             setCurrentCallDetails(
-              localStorage.getItem("callStatusId"),
+              localStorage.getItem('callStatusId'),
               data.Uniqueid1,
               agent.AgentType,
               'connected',
@@ -431,18 +422,17 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           if (data.ConnectedLineNum === agent.AgentSipId) {
             console.log('data', data);
             setCurrentCallDetails(
-              localStorage.getItem("callStatusId"),
-              localStorage.getItem("callUniqueId"),
-              localStorage.getItem("callType"),
+              localStorage.getItem('callStatusId'),
+              localStorage.getItem('callUniqueId'),
+              localStorage.getItem('callType'),
               'disconnected',
               'Hangup',
-              localStorage.getItem("callDispositionStatus")
+              localStorage.getItem('callDispositionStatus')
             );
             
           }
         }
       });
-
     }
 
     setRootData(
@@ -451,6 +441,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       )
     );
     setLoadingDetails(false);
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
   }, []);
 
   return !loadingDetails ? (
@@ -535,19 +531,22 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   }}
                 />
               ) : (
-                  <CommonAlert text="Unable to get dealer details" />
-                )}
-              {currentCall.callDispositionStatus === "NotDisposed" && user.userType === "Agent" ?
+                <CommonAlert text="Unable to get dealer details" />
+              )}
+              {currentCall.callDispositionStatus === 'NotDisposed' &&
+              user.userType === 'Agent' ? (
                 <Box mt={2}>
                   <Card>
                     <CardHeader title="Disposition Details" />
                     <Divider />
                     <CardContent>
-                      <DispositionForm setCurrentCallDetails={setCurrentCallDetails} />
+                      <DispositionForm
+                        setCurrentCallDetails={setCurrentCallDetails}
+                      />
                     </CardContent>
                   </Card>
-                </Box> : null}
-
+                </Box>
+              ) : null}
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -560,8 +559,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                    <CommonAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
               <br />
               <Card>
@@ -576,8 +575,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                    <CommonAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
             </Grid>
           </Grid>
@@ -754,12 +753,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           </DialogActions>
         </Dialog>
       ) : (
-          ''
-        )}
+        ''
+      )}
     </div>
   ) : (
-      <MainLoader />
-    );
+    <MainLoader />
+  );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),
