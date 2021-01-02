@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -102,7 +102,7 @@ export default function CreateTicket(props) {
   const [createdTime, setCreatedTime] = useState();
   const [updatedTime, setUpdatedTime] = useState();
   const [file, setFile] = useState('');
-
+   const [files, setFiles] = useState([]);
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -189,13 +189,13 @@ useEffect(() => {
           setUpdatedById(tkt.createdById);
           setTicketSubject(tkt.ticketSubject);
           setTicketDescription(tkt.ticketDescription);
-          setRemarks(tkt.ticketRemarks);
+          // setRemarks(tkt.ticketRemarks);
 
           setTicketType({
             value: tkt.ticketTypeId,
             label: tkt.ticketType
           });
-          setMedia({ value: tkt.mediaId, label: tkt.media });
+          setMedia({ value: tkt.mediaId, label: tkt.media,idLabel:"", nameLabel:""  });
         
          setCategory({ value: tkt.categoryId, label: tkt.category });
             getSubCategories(tkt.categoryId);
@@ -234,6 +234,7 @@ useEffect(() => {
             executiveEmail: tkt.assignedExecutiveEmail,
             executiveMobile: tkt.assignedExecutiveMobile
           });
+            
         }
       }
       getItems();
@@ -292,6 +293,7 @@ useEffect(() => {
         );
         setLoading(false);
         if (!props.ticket_id) {
+          
           body.data[0]
             ? setMedia({
                 label: body.data[0].media,
@@ -301,6 +303,7 @@ useEffect(() => {
               })
             : setMedia({});
         }
+       
       }
     }
     getItems();
@@ -308,7 +311,9 @@ useEffect(() => {
       unmounted = true;
     };
   }, []);
-
+ useEffect(() => {
+  
+ }, [createdById]);
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -532,6 +537,30 @@ useEffect(() => {
       unmounted = true;
     };
   }, [department]);
+   useEffect(() => {
+     let unmounted = false;
+     async function getFiles() {
+       console.log('fils');
+       console.log('tktnumber', ticketNumber);
+
+       const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
+       var apiParam = {
+         method: 'POST',
+         headers: { ticketnumber: ticketNumber }
+       };
+    
+       const response = await fetch(apiUrl, apiParam);
+    
+       const fils = await response.json();
+     
+       setFiles(fils);
+     }
+
+     getFiles();
+     return () => {
+       unmounted = true;
+     };
+   }, [file, ticketNumber]);
   useEffect(() => {
     props.setClick(createTicket);
   }, [executive]);
@@ -709,6 +738,7 @@ useEffect(() => {
        
 
         if (JSON.stringify(repos.status) === '200') {
+          alert(repos.message)
           return true;
         } else {
           return false;
@@ -722,17 +752,20 @@ useEffect(() => {
 
     var formdata = new FormData();
     formdata.append('SoftCopyFile', file);
-
+console.log("files", ticketNumber,file)
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: formdata,
       redirect: 'follow'
     };
-    const apiUrl = config.APIS_URL + '/tickets/files';
+   
+    const apiUrl = config.APIS_URL + '/tickets/uploadfiles';
     fetch(apiUrl, requestOptions)
       .then(response => response.text())
-      .then(result => console.log(result))
+      .then(result => {
+        alert("Uploaded Sucessfully")
+        console.log(result)})
       .catch(error => console.log('error', error));
   };
   return (
@@ -746,6 +779,9 @@ useEffect(() => {
             variant="outlined"
             size="small"
             style={{ width: '32%' }}
+            InputProps={{
+              readOnly: true
+            }}
           />
           <TextField
             id="sm"
@@ -754,6 +790,9 @@ useEffect(() => {
             variant="outlined"
             style={{ width: '31%' }}
             value={createdTime}
+            InputProps={{
+              readOnly: true
+            }}
           ></TextField>
           <br />
           <TextField
@@ -801,7 +840,6 @@ useEffect(() => {
           <Button className="btn btn-primary" onClick={getDistributorByMobile}>
             <SearchIcon color="primary" />
           </Button>
-
           <TextField
             error={distributorEmail === ''}
             id="dn"
@@ -939,7 +977,6 @@ useEffect(() => {
               </option>
             ))}
           </TextField>
-
           <TextField
             id="priorities"
             select
@@ -1008,34 +1045,71 @@ useEffect(() => {
             ))}
           </TextField>
           <br />
-
-          <TextField
-            error={ticketSubject === ''}
-            id="title"
-            label="Subject"
-            variant="outlined"
-            size="small"
-            style={{ width: '98%' }}
-            value={ticketSubject}
-            onChange={e => {
-              handleChange('ticketSubject', e);
-            }}
-          />
+          {props.ticket_id ? (
+            <TextField
+              error={ticketSubject === ''}
+              id="title"
+              label="Subject"
+              variant="outlined"
+              size="small"
+              style={{ width: '98%' }}
+              value={ticketSubject}
+              onChange={e => {
+                handleChange('ticketSubject', e);
+              }}
+              InputProps={{
+                readOnly: true
+              }}
+            />
+          ) : (
+            <TextField
+              error={ticketSubject === ''}
+              id="title"
+              label="Subject"
+              variant="outlined"
+              size="small"
+              style={{ width: '98%' }}
+              value={ticketSubject}
+              onChange={e => {
+                handleChange('ticketSubject', e);
+              }}
+            />
+          )}
           <br />
-          <TextField
-            error={ticketDescription === ''}
-            id="dn"
-            label="Description"
-            multiline
-            rows={5}
-            size="small"
-            variant="outlined"
-            style={{ width: '98%' }}
-            value={ticketDescription}
-            onChange={e => {
-              handleChange('ticketDescription', e);
-            }}
-          />
+          {props.ticket_id ? (
+            <TextField
+              error={ticketDescription === ''}
+              id="dn"
+              label="Description"
+              multiline
+              rows={5}
+              size="small"
+              variant="outlined"
+              style={{ width: '98%' }}
+              value={ticketDescription}
+              onChange={e => {
+                handleChange('ticketDescription', e);
+              }}
+              InputProps={{
+                readOnly: true
+              }}
+            />
+          ) : (
+            <TextField
+              error={ticketDescription === ''}
+              id="dn"
+              label="Description"
+              multiline
+              rows={5}
+              size="small"
+              variant="outlined"
+              style={{ width: '98%' }}
+              value={ticketDescription}
+              onChange={e => {
+                handleChange('ticketDescription', e);
+              }}
+            />
+          )}
           <br />
           <TextField
             error={remarks === ''}
@@ -1045,26 +1119,68 @@ useEffect(() => {
             size="small"
             rows={5}
             variant="outlined"
-            style={{ width: '48%' }}
+            style={{ width: '100%' }}
             onChange={e => {
               handleChange('remarks', e);
             }}
             value={remarks}
           />
+          <div
+            style={{ maxHeight: '150px', overflow: 'scroll', width: '100%' }}
+          >
+            {/* <TextField
+              id="SoftCopyFile"
+              type="file"
+              multiple={false}
+              variant="outlined"
+              // style={{ width: '31.4%' }}
+              onChange={e => {
+                handleChange('file', e);
+              }}
+            />
 
-          <TextField
-            id="SoftCopyFile"
-            type="file"
-            multiple={false}
-            variant="outlined"
-            style={{ width: '31.4%' }}
-            onChange={e => {
-              handleChange('file', e);
-            }}
-          />
-          <Button onClick={UploadFile} className="primary" color="secondary">
-            Upload
-          </Button>
+            <Button onClick={UploadFile} className="primary" color="secondary">
+              Upload
+            </Button> */}
+            <input
+              id="SoftCopyFile"
+              onChange={e => {
+                handleChange('file', e);
+              }}
+              className={classes.input}
+              style={{ display: 'none' }}
+              // id="raised-button-file"
+              multiple
+              type="file"
+            />
+            <label htmlFor="SoftCopyFile">
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                component="span"
+                className={classes.button}
+                startIcon={<AttachFileIcon />}
+                onClick={UploadFile}
+              >
+                Attach
+              </Button>
+            </label>
+            <br />
+
+            <ol>
+              {files.map(fil => (
+                <li>
+                  <a
+                    href={'http://14.98.23.204:8083' + fil.filePath}
+                    target="_blank"
+                  >
+                    {JSON.stringify(fil.fileName)}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </div>
           <br />
           <TextField
             id="sm"
@@ -1122,7 +1238,6 @@ useEffect(() => {
               handleChange('createdByName', e);
             }}
           />
-
           <br />
           <TextField
             id="sm"

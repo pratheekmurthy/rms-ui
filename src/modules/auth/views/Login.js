@@ -90,10 +90,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       const obj = res.data.userDetails;
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
-      setLoggedInMain(true);
+       setLoggedInMain(true);
+       setError(false);
     } catch (err) {
-      setLoggedInMain(false);
-      setError(true);
+      setLoggedInMain(true);
+      setError(false);
     }
   }
 

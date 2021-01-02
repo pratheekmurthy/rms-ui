@@ -60,11 +60,13 @@ const useStyles = makeStyles(theme => ({
     padding: 0
   },
   ticketMargin: {
-    marginLeft: 5
+    marginLeft: 5,
+    width:"90%"
   },
   listItemClass: {
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    width:"100%"
   },
   metadataClass: {
     paddingLeft: 20,
@@ -216,6 +218,7 @@ export default function TicketDashboard(props) {
   };
 
   const [type, setTickettype] = React.useState({});
+
   const handleTicketTypeChange = event => {
     setTicketTypes(ticketTypes);
   };
@@ -317,6 +320,9 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
+  useEffect(() => {
+    // viewTicket(ticket);
+  }, [openEdit, viewticket]);
  const UploadFile = e => {
    var myHeaders = new Headers();
    myHeaders.append('ticketnumber', ticketNumber);
@@ -330,10 +336,13 @@ export default function TicketDashboard(props) {
      body: formdata,
      redirect: 'follow'
    };
-   const apiUrl = config.APIS_URL + '/tickets/files';
+   const apiUrl = config.APIS_URL + '/tickets/uploadfiles';
    fetch(apiUrl, requestOptions)
      .then(response => response.text())
-     .then(result => console.log(result))
+     .then(result => {
+       alert('Uploaded Sucessfully');
+       console.log(result);
+     })
      .catch(error => console.log('error', error));
  };
   const viewTicket = item => {
@@ -485,6 +494,7 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
+ 
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -788,11 +798,15 @@ export default function TicketDashboard(props) {
             setClick={click => (createTicket = click)}
             setOpen={open => setOpen(open)}
             ticket={ticket}
+            setTicket={(ticket)=>setTicket(ticket)}
           />
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => createTicket()}
+            onClick={() => {
+              createTicket();
+              setOpen(false);
+            }}
             color="primary"
             variant="contained"
             size="small"
@@ -897,7 +911,10 @@ export default function TicketDashboard(props) {
                   </DialogContent>
                   <DialogActions>
                     <Button
-                      onClick={() => createTicket()}
+                      onClick={() => {
+                        createTicket();
+                        setOpenEdit(false);
+                      }}
                       color="primary"
                       variant="contained"
                       size="small"
@@ -918,7 +935,7 @@ export default function TicketDashboard(props) {
                 {/* </Tooltip> */}
               </Box>
               <Box component="div" display="flex" flexDirection="row">
-                <input
+                {/* <input
                   // id="SoftCopyFile"
 
                   onChange={e => setFile(e.target.files[0])}
@@ -941,7 +958,7 @@ export default function TicketDashboard(props) {
                   >
                     Attach
                   </Button>
-                </label>
+                </label> */}
 
                 <Button
                   variant="contained"
@@ -1495,6 +1512,7 @@ export default function TicketDashboard(props) {
                 ></Typography>
               </Box>
             </div>
+           
           </Paper>
         </Grid>
       </Grid>
