@@ -184,13 +184,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callDispositionStatus: ''
   });
   const [user, setUserDetails] = useState({
-    userType: 'Agent',
+    userType: "Agent",
   });
   const [agent, setAgent] = useState({
     AgentId: '1234',
-    AgentSipId: '9999',
-    callType: "Outbound",
-    AgentType:"Outbound"
+    AgentType: localStorage.getItem('AgentType'),
+    AgentSipId:localStorage.getItem('AgentSIPID')
   });
 
   const [mobile, setmobile] = useState("");
@@ -247,7 +246,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     console.log("update", data);
     var config = {
       method: 'put',
-      url: 'http://192.168.3.45:5005/crm/currentstatuses/' + updateData.callStatusId,
+      url: 'http://192.168.3.45:42004/crm/currentstatuses/' + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -268,7 +267,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
     var config = {
       method: 'get',
-      url: 'http://192.168.3.45:5005/crm/currentstatuses/agentSipID?agentSipID=' + agentSipID,
+      url: 'http://192.168.3.45:42004/crm/currentstatuses/agentSipID?agentSipID=' + agentSipID,
       headers: {}
     };
 
@@ -354,6 +353,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       try {
 
         const response = await getAgentCallStatus(agent.AgentSipId);
+        console.log('response', response);
 
       } catch (err) {
         console.log("err", err);
@@ -361,6 +361,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     }
     getInitialData();
     // console.log("currentCall", currentCall)
+
     async function get() {
       try {
         const response = await Promise.allSettled(dealerAPICalls(1001));
@@ -379,15 +380,21 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         console.log(err.response);
       }
     }
+
+    console.log('callStatus', localStorage.getItem('callStatus'))
+    if(localStorage.getItem('callStatus') === 'connected'){
+      get();
+    }
     if (user.userType === 'Agent' ) {
 
       const socket = socketIOClient(SOCKETENDPOINT);
 
       socket.on('AstriskEvent', data => {
+        // console.log('AstriskEvent', data);
 
         if (data.Event === 'Bridge') {
-          getInitialData();
-          localStorage.clear()
+          // getInitialData();
+          // localStorage.clear()
           if (
             data.CallerID2 === agent.AgentSipId &&
             data.Bridgestate === 'Link'
@@ -431,6 +438,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               'Hangup',
               localStorage.getItem("callDispositionStatus")
             );
+            
           }
         }
       });
@@ -466,6 +474,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         </div>
       ) : null}
       <CustomBreadcrumbs />
+      { agent.AgentType === 'Outbound' ?<div>
       <input value={mobile} onChange={onChange} />
             <Button
               variant="contained"
@@ -475,6 +484,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               {/* <QueuePlayNext /> */}
               <span>Dail</span>
             </Button>
+     </div> : null }
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           <Grid container spacing={3}>

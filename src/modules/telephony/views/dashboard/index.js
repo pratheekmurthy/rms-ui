@@ -280,7 +280,7 @@ socket.on('AstriskEvent', data => {
                   id="panel1a-header"
                 >
                   <Typography className={classes.heading}>
-                    Live Calls (0)
+                    Live Calls ({Inbound.livecalls})
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
