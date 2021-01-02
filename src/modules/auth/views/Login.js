@@ -126,7 +126,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
             <Formik
               initialValues={{
                 email: 'demo@devias.io',
-                password: 'Password123'
+                password: 'Password123',
+                role:'Agent',
+                AgentType:'Inbound',
+                AgentSIPID:'9999'
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -138,6 +141,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   .required('Password is required')
               })}
               onSubmit={values => {
+                console.log("values", values);
+                localStorage.setItem('AgentType', values.AgentType)
+                localStorage.setItem('role', values.role)
+                localStorage.setItem('AgentSIPID', values.AgentSIPID)
+                
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);
               }}
@@ -177,6 +185,48 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.password}
                     variant="outlined"
                   />
+
+<TextField
+                    error={Boolean(touched.role && errors.role)}
+                    fullWidth
+                    helperText={touched.role && errors.role}
+                    label="role"
+                    margin="normal"
+                    name="role"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.role}
+                    variant="outlined"
+                  />
+                                    <TextField
+                    error={Boolean(touched.AgentType && errors.AgentType)}
+                    fullWidth
+                    helperText={touched.AgentType && errors.AgentType}
+                    label="Agent Type"
+                    margin="normal"
+                    name="AgentType"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.AgentType}
+                    variant="outlined"
+                  />
+                                                      <TextField
+                    error={Boolean(touched.AgentSIPID && errors.AgentSIPID)}
+                    fullWidth
+                    helperText={touched.AgentSIPID && errors.AgentSIPID}
+                    label="Agent SIPID"
+                    margin="normal"
+                    name="AgentSIPID"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.AgentSIPID}
+                    variant="outlined"
+                  />
+
+                  
                   {!!error && (
                     <Box my={1}>
                       <Typography color="secondary">
