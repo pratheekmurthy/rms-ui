@@ -48,6 +48,8 @@ import { update } from 'lodash';
 
 const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
 
+const socket = socketIOClient(SOCKETENDPOINT);
+
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -378,8 +380,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     }
     if (user.userType === 'Agent' ) {
 
-      const socket = socketIOClient(SOCKETENDPOINT);
-
+    
       socket.on('AstriskEvent', data => {
         // console.log('AstriskEvent', data);
 
