@@ -28,11 +28,51 @@ export default function DispositionForm(props) {
   });
   const classes = useStyle();
   const formRef = useRef({});
+  const agentServiceURL = 'http://192.168.3.45:42004/'
+
+  function updateCallData(uniqueid, dispostionData){
+    const axios = require('axios');
+  let data = JSON.stringify(dispostionData);
+  
+  let config = {
+    method: 'post',
+    url: agentServiceURL +'crm/interactions/'+uniqueid,
+    headers: { 
+      'Content-Type': 'application/json'
+    },
+    data : data
+  };
+  
+  axios(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+  
+  }
   function handleSubmit(e) {
     console.log("formRef", formRef.current.values)
+    console.log("dispostion", {
+      category: formRef.current.values.category.label,
+      subcategory: formRef.current.values.subcategory.label,
+      solution: formRef.current.values.solution.label,
+      comments: formRef.current.values.comments,
+      type: formRef.current.values.type
+    })
     localStorage.setItem("callDispositionStatus", "Disposed")
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(localStorage.getItem("callStatusId"), localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
+    props.setCurrentCallDetails(localStorage.getItem("callStatusId"), localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"), localStorage.getItem("callerNumber"))
+    updateCallData(localStorage.getItem("callUniqueId"), {
+      
+        category: formRef.current.values.category.label,
+        subcategory: formRef.current.values.subcategory.label,
+        solution: formRef.current.values.solution.label,
+        comments: formRef.current.values.comments,
+        type: formRef.current.values.type
+      
+    })
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (

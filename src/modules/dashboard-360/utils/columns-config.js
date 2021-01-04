@@ -55,3 +55,33 @@ export const invoicesColumns = [
     flex: 1
   }
 ];
+
+
+export const AgentLastFiveColumns = [
+  {
+    // renderCell: rowData => (
+    //   <Link to={`/dash360/admin/agentlastfive/${rowData.row.InvoiceNumber}`}>
+    //     {rowData.row.InvoiceNumber}
+    //   </Link>
+    // ),
+    headerName: 'Unique ID',
+    field: 'asterixUniqueID',
+    flex: 1
+  },
+  {
+    field: 'agentID',
+    headerName: 'Agent ID',
+    flex: 1
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
+    flex: 1
+  },
+  {
+    field: 'created',
+    headerName: 'Date',
+    flex: 1
+  }
+];
+
