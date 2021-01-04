@@ -371,7 +371,6 @@ export default function TicketDashboard(props) {
       .catch(error => console.log('error', error));
   };
   const viewTicket = item => {
-    alert(JSON.stringify(item));
     setActiveTicket(item);
     //setTicketNumber(item.ticketNumber);
     setCreatedTime(item.createdTime);

@@ -729,7 +729,8 @@ export default function CreateTicket(props) {
     if (props.ticket_id) {
       apiParam.headers = {
         ...apiParam.headers,
-        ticketid: props.ticket_id
+        ticketid: props.ticket_id,
+        _id: props.ticket_id
       };
       props.updateTicket(apiParam.headers);
     }
