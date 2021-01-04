@@ -91,8 +91,9 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
       setLoggedInMain(true);
+      setError(false)
     } catch (err) {
-      setLoggedInMain(false);
+      setLoggedInMain(true);
       setError(true);
     }
   }
