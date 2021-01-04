@@ -29,14 +29,14 @@ const useStyles = makeStyles(theme => ({
   },
   searchIcon: {
     cursor: 'pointer',
-    marginRight:10,
-    marginTop:15  
+    marginRight: 10,
+    marginTop: 15
   }
 }));
 
 export default function CreateTicket(props) {
   const classes = useStyles();
- 
+
   const [ticketNumber, setTicketNumber] = useState('');
   const [ticketHistory, setTicketHistory] = useState([]);
   const [distributorName, setDistributorName] = useState('');
@@ -102,7 +102,7 @@ export default function CreateTicket(props) {
   const [createdTime, setCreatedTime] = useState();
   const [updatedTime, setUpdatedTime] = useState();
   const [file, setFile] = useState('');
-   const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([]);
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -141,13 +141,22 @@ export default function CreateTicket(props) {
       default:
         return props.setClick(createTicket);
     }
- 
   };
-useEffect(() => {
-  props.setClick(createTicket);
-}, [ticketNumber, distributorName, status, category, priority, ticketType, department,executive,team,subCategory]);
   useEffect(() => {
-
+    props.setClick(createTicket);
+  }, [
+    ticketNumber,
+    distributorName,
+    status,
+    category,
+    priority,
+    ticketType,
+    department,
+    executive,
+    team,
+    subCategory
+  ]);
+  useEffect(() => {
     if (!props.ticket_id) {
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -173,8 +182,7 @@ useEffect(() => {
           config.APIS_URL + '/tickets/' + props.ticket_id
         );
         const tkt = (await response.json()).data[0];
-       
-       
+
         if (!unmounted) {
           setTicketNumber(tkt.ticketNumber);
           setCreatedTime(tkt.createdTime);
@@ -195,11 +203,16 @@ useEffect(() => {
             value: tkt.ticketTypeId,
             label: tkt.ticketType
           });
-          setMedia({ value: tkt.mediaId, label: tkt.media,idLabel:"", nameLabel:""  });
-        
-         setCategory({ value: tkt.categoryId, label: tkt.category });
-            getSubCategories(tkt.categoryId);
-        
+          setMedia({
+            value: tkt.mediaId,
+            label: tkt.media,
+            idLabel: '',
+            nameLabel: ''
+          });
+
+          setCategory({ value: tkt.categoryId, label: tkt.category });
+          getSubCategories(tkt.categoryId);
+
           setSubCategory({
             value: tkt.subCategoryId,
             label: tkt.subCategory
@@ -234,11 +247,10 @@ useEffect(() => {
             executiveEmail: tkt.assignedExecutiveEmail,
             executiveMobile: tkt.assignedExecutiveMobile
           });
-            
         }
       }
       getItems();
-    
+
       props.setClick(createTicket);
       return () => {
         unmounted = true;
@@ -293,7 +305,6 @@ useEffect(() => {
         );
         setLoading(false);
         if (!props.ticket_id) {
-          
           body.data[0]
             ? setMedia({
                 label: body.data[0].media,
@@ -303,7 +314,6 @@ useEffect(() => {
               })
             : setMedia({});
         }
-       
       }
     }
     getItems();
@@ -311,9 +321,7 @@ useEffect(() => {
       unmounted = true;
     };
   }, []);
- useEffect(() => {
-  
- }, [createdById]);
+  useEffect(() => {}, [createdById]);
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -321,10 +329,7 @@ useEffect(() => {
       const body = await response.json();
 
       if (!unmounted) {
-        
-       
         if (!props.ticket_id) {
-         
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -332,7 +337,7 @@ useEffect(() => {
               })
             : setCategory({});
         }
-      
+
         setCategories(
           body.data.map(({ _id, category }) => ({
             label: category,
@@ -409,39 +414,38 @@ useEffect(() => {
     };
   };
 
-  
-useEffect(() => {
-  let unmounted = false;
-  async function getItems() {
-    const response = await fetch(
-      config.APIS_URL + '/priorities/' + subCategory.value
-    );
-    const body = await response.json();
-    if (!unmounted) {
-      setPriorities(
-        body.data.map(({ _id, priority, sla }) => ({
-          label: priority,
-          value: _id,
-          sla
-        }))
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/priorities/' + subCategory.value
       );
-      setLoading(false);
-      if (!props.ticket_id) {
-        body.data[0]
-          ? setPriority({
-              label: body.data[0].priority,
-              value: body.data[0]._id,
-              sla: body.data[0].sla
-            })
-          : setPriority({});
+      const body = await response.json();
+      if (!unmounted) {
+        setPriorities(
+          body.data.map(({ _id, priority, sla }) => ({
+            label: priority,
+            value: _id,
+            sla
+          }))
+        );
+        setLoading(false);
+        if (!props.ticket_id) {
+          body.data[0]
+            ? setPriority({
+                label: body.data[0].priority,
+                value: body.data[0]._id,
+                sla: body.data[0].sla
+              })
+            : setPriority({});
+        }
       }
     }
-  }
-  getItems();
-  return () => {
-    unmounted = true;
-  };
-}, [subCategory,category]);
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, [subCategory, category]);
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -482,15 +486,15 @@ useEffect(() => {
       const response = await fetch(config.APIS_URL + '/departments');
       const body = await response.json();
       if (!unmounted) {
-         if (!props.ticket_id) {
-           body.data[0]
-             ? setDepartment({
-                 label: body.data[0].department,
-                 value: body.data[0]._id
-               })
-             : setDepartment({});
-         } 
-      
+        if (!props.ticket_id) {
+          body.data[0]
+            ? setDepartment({
+                label: body.data[0].department,
+                value: body.data[0]._id
+              })
+            : setDepartment({});
+        }
+
         setDepartments(
           body.data.map(({ _id, department }) => ({
             label: department,
@@ -522,7 +526,7 @@ useEffect(() => {
               })
             : setTeam({});
         }
-       
+
         setTeams(
           body.data.map(({ _id, team }) => ({
             label: team,
@@ -537,30 +541,30 @@ useEffect(() => {
       unmounted = true;
     };
   }, [department]);
-   useEffect(() => {
-     let unmounted = false;
-     async function getFiles() {
-       console.log('fils');
-       console.log('tktnumber', ticketNumber);
+  useEffect(() => {
+    let unmounted = false;
+    async function getFiles() {
+      console.log('fils');
+      console.log('tktnumber', ticketNumber);
 
-       const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
-       var apiParam = {
-         method: 'POST',
-         headers: { ticketnumber: ticketNumber }
-       };
-    
-       const response = await fetch(apiUrl, apiParam);
-    
-       const fils = await response.json();
-     
-       setFiles(fils);
-     }
+      const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
+      var apiParam = {
+        method: 'POST',
+        headers: { ticketnumber: ticketNumber }
+      };
 
-     getFiles();
-     return () => {
-       unmounted = true;
-     };
-   }, [file, ticketNumber]);
+      const response = await fetch(apiUrl, apiParam);
+
+      const fils = await response.json();
+
+      setFiles(fils);
+    }
+
+    getFiles();
+    return () => {
+      unmounted = true;
+    };
+  }, [file, ticketNumber]);
   useEffect(() => {
     props.setClick(createTicket);
   }, [executive]);
@@ -582,8 +586,8 @@ useEffect(() => {
               })
             : setExecutive({});
           props.setClick(createTicket);
-        } 
-      
+        }
+
         setExecutives(
           body.data.map(
             ({ _id, executiveName, executiveEmail, executiveMobile }) => ({
@@ -669,11 +673,9 @@ useEffect(() => {
   };
 
   const createTicket = () => {
-  
-    var result= addRow();
- 
+    var result = addRow();
+
     props.setOpen(result);
-  
   };
   const addRow = async () => {
     const apiUrl = config.APIS_URL + '/tickets';
@@ -729,16 +731,14 @@ useEffect(() => {
         ...apiParam.headers,
         ticketid: props.ticket_id
       };
+      props.updateTicket(apiParam.headers);
     }
-  
-   
+
     await fetch(apiUrl, apiParam)
       .then(res => res.json())
       .then(repos => {
-       
-
         if (JSON.stringify(repos.status) === '200') {
-          alert(repos.message)
+          alert(repos.message);
           return true;
         } else {
           return false;
@@ -752,20 +752,21 @@ useEffect(() => {
 
     var formdata = new FormData();
     formdata.append('SoftCopyFile', file);
-console.log("files", ticketNumber,file)
+    console.log('files', ticketNumber, file);
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: formdata,
       redirect: 'follow'
     };
-   
+
     const apiUrl = config.APIS_URL + '/tickets/uploadfiles';
     fetch(apiUrl, requestOptions)
       .then(response => response.text())
       .then(result => {
-        alert("Uploaded Sucessfully")
-        console.log(result)})
+        alert('Uploaded Sucessfully');
+        console.log(result);
+      })
       .catch(error => console.log('error', error));
   };
   return (

@@ -71,12 +71,23 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
+        setTicketType({
+          label: 'All',
+          value: ''
+        });
+        /* setTicketTypes(
+          body.data.map(({ _id, ticketType }) => ({
+            label: ticketType,
+            value: _id
+          }))
+        );
+        setLoading(false);
         body.data[0]
           ? setTicketType({
               label: body.data[0].tickettype,
               value: body.data[0]._id
             })
-          : setTicketType({});
+          : setTicketType({}); */
       }
     }
     getItems();
@@ -302,17 +313,25 @@ export default function FilterTicket(props) {
                 value: e.target.value,
                 label: ticketTypes.filter(
                   ticketType => ticketType.value === e.target.value
-                )[0].label
+                )[0]
+                  ? ticketTypes.filter(
+                      ticketType => ticketType.value === e.target.value
+                    )[0].label
+                  : ''
               });
               props.setTicketType({
                 value: e.target.value,
                 label: ticketTypes.filter(
                   ticketType => ticketType.value === e.target.value
-                )[0].label
+                )[0]
+                  ? ticketTypes.filter(
+                      ticketType => ticketType.value === e.target.value
+                    )[0].label
+                  : ''
               });
             }}
           >
-            {ticketTypes.map(option => (
+            {[...[{ label: 'All', value: '' }], ...ticketTypes].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -336,17 +355,25 @@ export default function FilterTicket(props) {
                 value: e.target.value,
                 label: categories.filter(
                   category => category.value === e.target.value
-                )[0].label
+                )[0]
+                  ? categories.filter(
+                      category => category.value === e.target.value
+                    )[0].label
+                  : ''
               });
               props.setCategory({
                 value: e.target.value,
                 label: categories.filter(
                   category => category.value === e.target.value
-                )[0].label
+                )[0]
+                  ? categories.filter(
+                      category => category.value === e.target.value
+                    )[0].label
+                  : ''
               });
             }}
           >
-            {categories.map(option => (
+            {[...[{ label: 'All', value: '' }], ...categories].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -370,17 +397,25 @@ export default function FilterTicket(props) {
                 value: e.target.value,
                 label: priorities.filter(
                   priority => priority.value === e.target.value
-                )[0].label
+                )[0]
+                  ? priorities.filter(
+                      priority => priority.value === e.target.value
+                    )[0].label
+                  : ''
               });
               props.setPriority({
                 value: e.target.value,
                 label: priorities.filter(
                   priority => priority.value === e.target.value
-                )[0].label
+                )[0]
+                  ? priorities.filter(
+                      priority => priority.value === e.target.value
+                    )[0].label
+                  : ''
               });
             }}
           >
-            {priorities.map(option => (
+            {[...[{ label: 'All', value: '' }], ...priorities].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -404,17 +439,25 @@ export default function FilterTicket(props) {
                 value: e.target.value,
                 label: statuses.filter(
                   status => status.value === e.target.value
-                )[0].label
+                )[0]
+                  ? statuses.filter(
+                      status => status.value === e.target.value
+                    )[0].label
+                  : ''
               });
               props.setStatus({
                 value: e.target.value,
                 label: statuses.filter(
                   status => status.value === e.target.value
-                )[0].label
+                )[0]
+                  ? statuses.filter(
+                      status => status.value === e.target.value
+                    )[0].label
+                  : ''
               });
             }}
           >
-            {statuses.map(option => (
+            {[...[{ label: 'All', value: '' }], ...statuses].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -437,16 +480,20 @@ export default function FilterTicket(props) {
               setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]
-                  .label
+                  ? medium.filter(media => media.value === e.target.value)[0]
+                      .label
+                  : ''
               });
               props.setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]
-                  .label
+                  ? medium.filter(media => media.value === e.target.value)[0]
+                      .label
+                  : ''
               });
             }}
           >
-            {medium.map(option => (
+            {[...[{ label: 'All', value: '' }], ...medium].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -501,10 +548,7 @@ export default function FilterTicket(props) {
               props.setDistributorId(e.target.value);
             }}
           ></TextField>
-         
-          <div>
-           
-          </div>
+          <div></div>
         </Box>
       </Paper>
     </div>

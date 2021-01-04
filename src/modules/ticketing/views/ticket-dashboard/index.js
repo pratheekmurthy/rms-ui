@@ -61,12 +61,12 @@ const useStyles = makeStyles(theme => ({
   },
   ticketMargin: {
     marginLeft: 5,
-    width:"90%"
+    width: '90%'
   },
   listItemClass: {
     paddingLeft: 10,
     paddingRight: 10,
-    width:"100%"
+    width: '100%'
   },
   metadataClass: {
     paddingLeft: 20,
@@ -146,7 +146,7 @@ export default function TicketDashboard(props) {
   const [ticket, setTicket] = useState({});
   const [clickChild, setClickChild] = useState();
   const [apiTickets, setApiTickets] = useState([]);
-  const [viewticket, setviewTickets] = useState({});
+  const [activeTicket, setActiveTicket] = useState({});
   const [opentimeline, setOpentimeline] = React.useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
@@ -162,9 +162,8 @@ export default function TicketDashboard(props) {
   const [ticketTypes, setTicketTypes] = useState({ value: '', label: '' });
   const [createdTime, setCreatedTime] = useState();
   const [ticketType, setTicketType] = useState({ value: '', label: '' });
-    const [Createon, setCreateon] = useState('');
-     const [file, setFile] = useState('');
- 
+  const [Createon, setCreateon] = useState('');
+  const [file, setFile] = useState('');
 
   const [ticketHistory, setTicketHistory] = useState([]);
   const [medium, setMedium] = useState([]);
@@ -288,7 +287,7 @@ export default function TicketDashboard(props) {
   const [isEditable, makeEditable] = React.useState(false);
   const [filter, openFilter] = React.useState(false);
   const [tickets, setTickets] = useState([]);
-  const [openEdit, setOpenEdit] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState();
 
   const handleClickOpenEdit = () => {
     setOpenEdit(true);
@@ -298,56 +297,82 @@ export default function TicketDashboard(props) {
     setOpenEdit(false);
   };
   useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(config.APIS_URL + '/tickets');
-      const body = await response.json();
-      if (!unmounted) {
-        setApiTickets(body.data);
-      
-        setTickets(body.data);
-  
-        if (body.data[0]) {
-          setviewTickets(body.data[0]);
-        } else {
-          setviewTickets();
+    if (!activeTicket.ticketNumber) {
+      let unmounted = false;
+      async function getItems() {
+        const response = await fetch(config.APIS_URL + '/tickets');
+        const body = await response.json();
+        if (!unmounted) {
+          setApiTickets(body.data);
+
+          setTickets(body.data);
+
+          if (body.data[0]) {
+            setActiveTicket(body.data[0]);
+          } else {
+            setActiveTicket();
+          }
+          //  setLoading(false);
         }
-        //  setLoading(false);
       }
+      getItems();
+      return () => {
+        unmounted = true;
+      };
     }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
   }, []);
   useEffect(() => {
     // viewTicket(ticket);
-  }, [openEdit, viewticket]);
- const UploadFile = e => {
-   var myHeaders = new Headers();
-   myHeaders.append('ticketnumber', ticketNumber);
+    if (!openEdit && activeTicket.ticketNumber) {
+      let unmounted = false;
+      async function getItems() {
+        const response = await fetch(config.APIS_URL + '/tickets');
+        const body = await response.json();
+        if (!unmounted) {
+          setApiTickets(body.data);
 
-   var formdata = new FormData();
-   formdata.append('SoftCopyFile', file);
+          setTickets(body.data);
 
-   var requestOptions = {
-     method: 'POST',
-     headers: myHeaders,
-     body: formdata,
-     redirect: 'follow'
-   };
-   const apiUrl = config.APIS_URL + '/tickets/uploadfiles';
-   fetch(apiUrl, requestOptions)
-     .then(response => response.text())
-     .then(result => {
-       alert('Uploaded Sucessfully');
-       console.log(result);
-     })
-     .catch(error => console.log('error', error));
- };
+          // if (body.data[0]) {
+          //   setActiveTicket(body.data[0]);
+          // } else {
+          //   setActiveTicket();
+          // }
+          //  setLoading(false);
+        }
+      }
+      getItems();
+      return () => {
+        unmounted = true;
+      };
+    }
+  }, [openEdit]);
+  useEffect(() => {}, [activeTicket]);
+  const UploadFile = e => {
+    var myHeaders = new Headers();
+    myHeaders.append('ticketnumber', ticketNumber);
+
+    var formdata = new FormData();
+    formdata.append('SoftCopyFile', file);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+    const apiUrl = config.APIS_URL + '/tickets/uploadfiles';
+    fetch(apiUrl, requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        alert('Uploaded Sucessfully');
+        console.log(result);
+      })
+      .catch(error => console.log('error', error));
+  };
   const viewTicket = item => {
-   
-    setviewTickets(item);
+    alert(JSON.stringify(item));
+    setActiveTicket(item);
     //setTicketNumber(item.ticketNumber);
     setCreatedTime(item.createdTime);
     setTicketDescription(item.ticketDescription);
@@ -382,14 +407,13 @@ export default function TicketDashboard(props) {
       value: item.ticketTypeId
     });
 
-  
     let unmounted = false;
     async function getHistoryItems() {
       const response = await fetch(
         config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
-     
+
       if (!unmounted) {
         setTicketHistory(tktHistory);
       }
@@ -403,7 +427,7 @@ export default function TicketDashboard(props) {
           .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
           .filter(tkt => tkt.distributorId.includes(distributorId))
           .filter(tkt => tkt.distributorName.includes(distributorName))
-        
+
           .filter(tkt =>
             status.label === 'All'
               ? tkt.status === tkt.status
@@ -494,7 +518,7 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
- 
+
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -597,7 +621,6 @@ export default function TicketDashboard(props) {
       unmounted = true;
     };
   }, []);
- 
 
   const handleClose = () => {
     setOpen(false);
@@ -798,7 +821,7 @@ export default function TicketDashboard(props) {
             setClick={click => (createTicket = click)}
             setOpen={open => setOpen(open)}
             ticket={ticket}
-            setTicket={(ticket)=>setTicket(ticket)}
+            setTicket={ticket => setTicket(ticket)}
           />
         </DialogContent>
         <DialogActions>
@@ -866,10 +889,10 @@ export default function TicketDashboard(props) {
                   className={classes.ticketMargin}
                 >
                   <Typography variant="body1" className={classes.textBold}>
-                    {viewticket.ticketNumber}
+                    {activeTicket.ticketNumber}
                   </Typography>
                   <Typography variant="h3" color="textPrimary">
-                    {viewticket.ticketSubject}
+                    {activeTicket.ticketSubject}
                   </Typography>
                 </Box>
                 {/* <Tooltip title="Edit"> */}
@@ -906,7 +929,11 @@ export default function TicketDashboard(props) {
                     <CreateTicket
                       setClick={click => (createTicket = click)}
                       setOpen={open => setOpenEdit(open)}
-                      ticket_id={viewticket._id}
+                      ticket_id={activeTicket._id}
+                      updateTicket={tkt => {
+                        setActiveTicket(tkt);
+                        viewTicket(tkt);
+                      }}
                     />
                   </DialogContent>
                   <DialogActions>
@@ -1052,7 +1079,7 @@ export default function TicketDashboard(props) {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                {viewticket.ticketType}
+                                {activeTicket.ticketType}
                               </Typography>
                             </Box>
                           )}
@@ -1102,7 +1129,7 @@ export default function TicketDashboard(props) {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                {viewticket.priority}
+                                {activeTicket.priority}
                               </Typography>
                             </Box>
                           )}
@@ -1153,7 +1180,7 @@ export default function TicketDashboard(props) {
                                 className={classes.ticketMargin}
                                 component="span"
                               >
-                                {viewticket.category}
+                                {activeTicket.category}
                               </Typography>
                             </Box>
                           )}
@@ -1202,7 +1229,7 @@ export default function TicketDashboard(props) {
                                 variant="body1"
                                 className={classes.ticketMargin}
                               >
-                                {viewticket.status}
+                                {activeTicket.status}
                               </Typography>
                             </Box>
                           )}
@@ -1225,7 +1252,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a description..."
-                    value={viewticket.ticketDescription}
+                    value={activeTicket.ticketDescription}
                     rows={5}
                     fullWidth
                     multiline
@@ -1235,7 +1262,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a description..."
-                    value={viewticket.ticketDescription}
+                    value={activeTicket.ticketDescription}
                     rows={5}
                     fullWidth
                     multiline
@@ -1259,7 +1286,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a comment..."
-                    value={viewticket.remarks}
+                    value={activeTicket.remarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -1269,7 +1296,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a comment..."
-                    value={viewticket.ticketRemarks}
+                    value={activeTicket.ticketRemarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -1327,7 +1354,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.distributorName}
+                    {activeTicket.distributorName}
                   </Typography>
                 </Box>
               </Box>
@@ -1350,7 +1377,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.distributorId}
+                    {activeTicket.distributorId}
                   </Typography>
                 </Box>
               </Box>
@@ -1375,7 +1402,7 @@ export default function TicketDashboard(props) {
                     component="span"
                     style={{ fontSize: '12px' }}
                   >
-                    {viewticket.createdById}
+                    {activeTicket.createdById}
                   </Typography>
                 </Box>
               </Box>
@@ -1398,7 +1425,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.createdByName}
+                    {activeTicket.createdByName}
                   </Typography>
                 </Box>
               </Box>
@@ -1421,7 +1448,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.media}
+                    {activeTicket.media}
                   </Typography>
                 </Box>
               </Box>
@@ -1444,7 +1471,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {viewticket.assignedExecutive}
+                    {activeTicket.assignedExecutive}
                   </Typography>
                 </Box>
               </Box>
@@ -1481,7 +1508,7 @@ export default function TicketDashboard(props) {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {new Date(viewticket.createdAt).toLocaleString(undefined, {
+                  {new Date(activeTicket.createdAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
                 </Typography>
@@ -1501,7 +1528,7 @@ export default function TicketDashboard(props) {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {new Date(viewticket.updatedAt).toLocaleString(undefined, {
+                  {new Date(activeTicket.updatedAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
                 </Typography>
@@ -1512,7 +1539,6 @@ export default function TicketDashboard(props) {
                 ></Typography>
               </Box>
             </div>
-           
           </Paper>
         </Grid>
       </Grid>
