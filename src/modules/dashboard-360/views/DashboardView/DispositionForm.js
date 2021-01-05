@@ -45,10 +45,10 @@ export default function DispositionForm(props) {
   
   axios(config)
   .then((response) => {
-    console.log(JSON.stringify(response.data));
+    console.log("dispostionForm",JSON.stringify(response.data));
   })
   .catch((error) => {
-    console.log(error);
+    console.log("dispostionFrom", error);
   });
   
   }
@@ -62,6 +62,8 @@ export default function DispositionForm(props) {
       type: formRef.current.values.type
     })
     localStorage.setItem("callDispositionStatus", "Disposed")
+    props.removeFromQueue(props.AgentSipId, "9002")
+    props.addToQueue(props.agentSipID, "9002")
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(localStorage.getItem("callStatusId"), localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"), localStorage.getItem("callerNumber"))
     updateCallData(localStorage.getItem("callUniqueId"), {

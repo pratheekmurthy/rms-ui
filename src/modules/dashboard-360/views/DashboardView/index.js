@@ -203,15 +203,32 @@ let config = {
 };
 
 axios(config)
-.then((response) => {
+.then( async (response) => {
   console.log(JSON.stringify(response.data));
   var ALFDATA = response.data.items;
-  ALFDATA = ALFDATA.reverse();
-  ALFDATA = ALFDATA.filter(function (e) {
-    return e.agentExtension === agent.AgentSipId;
+  
+//   ALFDATA = ALFDATA.filter(function (e) {
+//     return e.agentExtension === agent.AgentSipId;
+// })
+// ALFDATA.sort(function(a,b){
+//   console.log("a",a);
+//   console.log("b",b)
+//   // Turn your strings into dates, and then subtract them
+//   // to get a value that is either negative, positive, or zero.
+//   console.log(new Date(b.created) - new Date(a.created))
+//   return new Date(b.created) - new Date(a.created);
+// });
+//  ALFDATA = ALFDATA.reverse();
+var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
+
+//  sortedActivities = sortedActivities.reverse();
+ sortedActivities = await sortedActivities.filter(function (e) {
+      return e.agentExtension === agent.AgentSipId;
+  })
+  console.log("ALFDATA", sortedActivities)
+  setALF(sortedActivities)
 })
-  setALF(ALFDATA)
-})
+
 .catch((error) => {
   console.log(error);
 });
@@ -259,6 +276,69 @@ axios(config)
     });
     getALF()
   }
+
+
+  var APIENDPOINT = 'http://192.168.3.45:42002'
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function addToQueue(agentId, queue) {
+    var axios = require('axios');
+    var data = JSON.stringify({ "agentId": agentId, "queue": queue, "action": "QueueAdd" });
+
+    var config = {
+      method: 'get',
+      url: APIENDPOINT + '/ami/actions/addq?Interface=SIP%2F'+agentId+'&Queue='+queue+'',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log("addQueue",JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+  }
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function removeFromQueue(agentId, queue) {
+    var axios = require('axios');
+    var data = JSON.stringify({ "agentId": agentId, "queue": queue, "action": "QueueRemove" });
+
+    var config = {
+      method: 'get',
+      url: APIENDPOINT + '/ami/actions/rmq?Queue='+queue+'&Interface=SIP%2F'+agentId+'',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log("Removed Queue",JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+
+  }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function updateAgentCallStatus(updateData) {
     var axios = require('axios');
@@ -387,6 +467,11 @@ axios(config)
          get(Dnumber);
        }
      });
+    if(localStorage.getItem('callDispositionStatus') === 'Disposed'){
+    removeFromQueue(agent.AgentSipId, "9002")
+    addToQueue(agent.AgentSipId, "9002")
+
+    }
     getALF();
     async function getInitialData() {
       try {
@@ -470,6 +555,7 @@ axios(config)
     console.log('callStatus', localStorage.getItem('callStatus'))
     if (localStorage.getItem('callStatus') === 'connected') {
       disProfileByNum(localStorage.getItem("callerNumber"));
+     
     }
     if (user.userType === 'Agent') {
 
@@ -484,6 +570,7 @@ axios(config)
             data.CallerID2 === agent.AgentSipId &&
             data.Bridgestate === 'Link'
           ) {
+            removeFromQueue(agent.AgentSipId, "9002")
             console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             setCurrentCallDetails(
@@ -632,6 +719,22 @@ axios(config)
                       <TicketsList />
                     </CustomTabPanel>
                   </Card>
+                  <br />
+                  <Card>
+                <CardHeader title={"Distributer last five interactions"} />
+                {ALF.length ? (
+                  <div>
+                    <BasicTable
+                      columns={AgentLastFiveColumns}
+                      records={ALF.slice(0, 3)}
+                      redirectLink="/dash360/admin/agentlastfive"
+                      redirectLabel="View All"
+                    />
+                  </div>
+                ) : (
+                    <CommonAlert />
+                  )}
+              </Card>
                 </Grid>
               </Grid>
             </Grid>
@@ -657,12 +760,31 @@ axios(config)
                       <Divider />
                       <CardContent>
                         <DispositionForm
+                          agentSipID={agent.AgentSipId}
                           setCurrentCallDetails={setCurrentCallDetails}
+                          addToQueue={addToQueue}
+                          removeFromQueue={removeFromQueue}
                         />
                       </CardContent>
                     </Card>
                   </Box>
-                ) : null}
+                ) : 
+                <Card>
+                <CardHeader title={"My last five interactions ("+agent.AgentSipId+")"} />
+                {ALF.length ? (
+                  <div>
+                    <BasicTable
+                      columns={AgentLastFiveColumns}
+                      records={ALF.slice(0, 3)}
+                      redirectLink="/dash360/admin/agentlastfive"
+                      redirectLabel="View All"
+                    />
+                  </div>
+                ) : (
+                    <CommonAlert />
+                  )}
+              </Card>
+                }
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -694,9 +816,9 @@ axios(config)
                     <CommonAlert />
                   )}
               </Card>
-              <br />
+              {/* <br />
               <Card>
-                <CardHeader title="Agent Last Five" />
+                <CardHeader title={"My last five interactions ("+agent.AgentSipId+")"} />
                 {ALF.length ? (
                   <div>
                     <BasicTable
@@ -709,7 +831,7 @@ axios(config)
                 ) : (
                     <CommonAlert />
                   )}
-              </Card>
+              </Card> */}
             </Grid>
           </Grid>
 
