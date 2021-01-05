@@ -80,7 +80,7 @@ export default function TicketsList() {
           }
         />
       </ListItem>
-      <Divider component="li" />
+      {/* <Divider component="li" />
       <ListItem alignItems="flex-start">
         <ListItemText
           primary={
@@ -120,9 +120,9 @@ export default function TicketsList() {
             </>
           }
         />
-      </ListItem>
-      <Divider component="li" />
-      <ListItem alignItems="flex-start">
+      </ListItem> */}
+      {/* <Divider component="li" /> */}
+      {/* <ListItem alignItems="flex-start">
         <ListItemText
           primary={
             <Box
@@ -161,8 +161,8 @@ export default function TicketsList() {
             </>
           }
         />
-      </ListItem>
-      <Divider />
+      </ListItem> */}
+      {/* <Divider /> */}
       <Box display="flex" justifyContent="flex-end" p={2} alignItems="center">
         <Link
           to="/ticketing/ticket-dashboard"
