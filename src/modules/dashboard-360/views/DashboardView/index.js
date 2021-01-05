@@ -379,6 +379,14 @@ axios(config)
   };
 
   useEffect(() => {
+     window.addEventListener('storage', function(e) {
+       console.log('storage event', e.storageArea.search);
+       var Dnumber = e.storageArea.search;
+       if (Dnumber !== '') {
+         //  getDistributorById(Dnumber);
+         get(Dnumber);
+       }
+     });
     getALF();
     async function getInitialData() {
       try {
@@ -430,6 +438,16 @@ axios(config)
         // return data;
 
     }
+    //  useEffect(() => {
+    //    window.addEventListener('storage', function(e) {
+    //      console.log('storage event', e.storageArea.search);
+    //      var Dnumber = e.storageArea.search;
+    //      if (Dnumber !== '') {
+    //       //  getDistributorById(Dnumber);
+    //       get(Dnumber);
+    //      }
+    //    });
+    //  }, []);
     async function get(distributor_id) {
       try {
         const response = await Promise.allSettled(dealerAPICalls(distributor_id));

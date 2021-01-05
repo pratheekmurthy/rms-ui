@@ -446,6 +446,7 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, [subCategory, category]);
+  
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
