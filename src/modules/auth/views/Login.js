@@ -86,17 +86,16 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const res = await Axios.post('/user/login', values);
+      const res = await Axios.post('/auth/user/login', values);
       const obj = res.data.userDetails;
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
 
       setLoggedInMain(true);
-      setError(false)
+      setError(false);
     } catch (err) {
-      setLoggedInMain(true);
+      setLoggedInMain(false);
       setError(true);
-
     }
   }
 
@@ -130,9 +129,9 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
               initialValues={{
                 email: 'demo@devias.io',
                 password: 'Password123',
-                role:'Agent',
-                AgentType:'Inbound',
-                AgentSIPID:'9999'
+                role: 'Agent',
+                AgentType: 'Inbound',
+                AgentSIPID: '9999'
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -144,11 +143,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   .required('Password is required')
               })}
               onSubmit={values => {
-                console.log("values", values);
-                localStorage.setItem('AgentType', values.AgentType)
-                localStorage.setItem('role', values.role)
-                localStorage.setItem('AgentSIPID', values.AgentSIPID)
-                
+                console.log('values', values);
+                localStorage.setItem('AgentType', values.AgentType);
+                localStorage.setItem('role', values.role);
+                localStorage.setItem('AgentSIPID', values.AgentSIPID);
+
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);
               }}
@@ -189,7 +188,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     variant="outlined"
                   />
 
-<TextField
+                  <TextField
                     error={Boolean(touched.role && errors.role)}
                     fullWidth
                     helperText={touched.role && errors.role}
@@ -202,7 +201,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.role}
                     variant="outlined"
                   />
-                                    <TextField
+                  <TextField
                     error={Boolean(touched.AgentType && errors.AgentType)}
                     fullWidth
                     helperText={touched.AgentType && errors.AgentType}
@@ -215,7 +214,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.AgentType}
                     variant="outlined"
                   />
-                                                      <TextField
+                  <TextField
                     error={Boolean(touched.AgentSIPID && errors.AgentSIPID)}
                     fullWidth
                     helperText={touched.AgentSIPID && errors.AgentSIPID}
@@ -229,7 +228,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     variant="outlined"
                   />
 
-                  
                   {!!error && (
                     <Box my={1}>
                       <Typography color="secondary">
