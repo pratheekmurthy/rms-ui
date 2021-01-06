@@ -464,7 +464,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
        var Dnumber = e.storageArea.search;
        if (Dnumber !== '') {
          //  getDistributorById(Dnumber);
-         get(Dnumber);
+        //  get(Dnumber);
        }
      });
     if(localStorage.getItem('callDispositionStatus') === 'Disposed'){
@@ -488,7 +488,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
       let config = {
         method: 'get',
-        url: '/boapi/profile?mobilenumber=' + mobile,
+        url: '/bo/boapi/profile?mobilenumber=' + mobile,
         headers: {}
       };
 
