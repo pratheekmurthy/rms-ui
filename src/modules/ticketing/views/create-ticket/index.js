@@ -136,7 +136,9 @@ export default function CreateTicket(props) {
         setRemarks(e.target.value);
         return props.setClick(createTicket);
       case 'file':
+       
         setFile(e.target.files[0]);
+        // alert(e.target.files[0]);
         return props.setClick(createTicket);
       default:
         return props.setClick(createTicket);
@@ -171,8 +173,10 @@ export default function CreateTicket(props) {
       let month = (newDate.getMonth() + 1).toString();
       let year = newDate.getFullYear().toString();
       setTicketNumber('TKT' + year + month + date + result);
-
-      setCreatedTime(new Date().toDateString());
+setCreatedTime(new Date().toLocaleString(undefined, {
+                    timeZone: 'Asia/Kolkata'
+                  }));
+      // setCreatedTime(new Date().toDateString());
       setUpdatedTime(new Date().toDateString());
       props.setClick(createTicket);
     } else {
@@ -545,27 +549,31 @@ export default function CreateTicket(props) {
   useEffect(() => {
     let unmounted = false;
     async function getFiles() {
-      console.log('fils');
+    
       console.log('tktnumber', ticketNumber);
-
-      const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
+       
+         
+           const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
       var apiParam = {
         method: 'POST',
         headers: { ticketnumber: ticketNumber }
       };
 
-      const response = await fetch(apiUrl, apiParam);
+   const response = await fetch(apiUrl, apiParam);
 
-      const fils = await response.json();
-
-      setFiles(fils);
-    }
+   const fils = await response.json();
+ 
+ if (fils.length && props.ticket_id) {
+   setFiles(fils);
+ }
+  }
 
     getFiles();
+
     return () => {
       unmounted = true;
     };
-  }, [file, ticketNumber]);
+  }, [file,ticketNumber]);
   useEffect(() => {
     props.setClick(createTicket);
   }, [executive]);
@@ -751,10 +759,12 @@ export default function CreateTicket(props) {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
+alert("function")
 
     var formdata = new FormData();
     formdata.append('SoftCopyFile', file);
-    console.log('files', ticketNumber, file);
+    console.log('tkt', ticketNumber, file);
+     console.log('files', file);
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -767,7 +777,7 @@ export default function CreateTicket(props) {
       .then(response => response.text())
       .then(result => {
         alert('Uploaded Sucessfully');
-        console.log(result);
+        console.log("upload", result);
       })
       .catch(error => console.log('error', error));
   };
@@ -796,6 +806,7 @@ export default function CreateTicket(props) {
             InputProps={{
               readOnly: true
             }}
+            type="text"
           ></TextField>
           <br />
           <TextField
@@ -1164,7 +1175,7 @@ export default function CreateTicket(props) {
                 component="span"
                 className={classes.button}
                 startIcon={<AttachFileIcon />}
-                onClick={UploadFile}
+                onClick={()=>UploadFile()}
               >
                 Attach
               </Button>

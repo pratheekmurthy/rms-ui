@@ -462,9 +462,13 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
      window.addEventListener('storage', function(e) {
        console.log('storage event', e.storageArea.search);
        var Dnumber = e.storageArea.search;
-       if (Dnumber !== '') {
+       if (Dnumber !== '' && Dnumber.length===4) {
+       
          //  getDistributorById(Dnumber);
          get(Dnumber);
+       }
+       else{
+          get(Dnumber);
        }
      });
     if(localStorage.getItem('callDispositionStatus') === 'Disposed'){
@@ -488,7 +492,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
       let config = {
         method: 'get',
-        url: '/boapi/profile?mobilenumber=' + mobile,
+        url: '/bo/boapi/profile?mobilenumber=' + mobile,
         headers: {}
       };
 

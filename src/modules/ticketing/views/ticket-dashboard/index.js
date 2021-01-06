@@ -308,7 +308,19 @@ export default function TicketDashboard(props) {
           setTickets(body.data);
 
           if (body.data[0]) {
-        
+       
+        async function getHistoryItems() {
+         
+          const response = await fetch(
+            config.APIS_URL + '/ticketHistory/' + body.data[0].ticketNumber
+          );
+          const tktHistory = (await response.json()).data;
+
+          if (!unmounted) {
+            setTicketHistory(tktHistory);
+          }
+        }
+        getHistoryItems();
             setActiveTicket(body.data[0]);
           
           } else {
@@ -410,7 +422,9 @@ export default function TicketDashboard(props) {
 
     let unmounted = false;
     async function getHistoryItems() {
+       
       const response = await fetch(
+      
         config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
@@ -500,7 +514,7 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setCategories(
-          ...[{ label: 'All', value: '' }],
+          ...[{ label: 'All', value: 'All' }],
           ...body.data.map(({ _id, category }) => ({
             label: category,
             value: _id
@@ -510,7 +524,7 @@ export default function TicketDashboard(props) {
 
         setCategory({
           label: 'All',
-          value: ''
+          value: 'All'
         });
       }
     }
@@ -527,7 +541,7 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setPriorities(
-          ...[{ label: 'All', value: '' }],
+          ...[{ label: 'All', value: 'All' }],
           ...body.data.map(({ _id, priority }) => ({
             label: priority,
             value: _id
@@ -536,7 +550,7 @@ export default function TicketDashboard(props) {
         setLoading(false);
         setPriority({
           label: 'All',
-          value: ''
+          value: 'All'
         });
       }
     }
@@ -553,7 +567,7 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setTicketTypes(
-          ...[{ label: 'All', value: '' }],
+          ...[{ label: 'All', value: 'All' }],
           ...body.data.map(({ _id, ticketType }) => ({
             label: ticketType,
             value: _id
@@ -562,7 +576,7 @@ export default function TicketDashboard(props) {
         setLoading(false);
         setTicketType({
           label: 'All',
-          value: ''
+          value: 'All'
         });
       }
     }
@@ -579,7 +593,7 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setMedium(
-          ...[{ label: 'All', value: '' }],
+          ...[{ label: 'All', value: 'All' }],
           ...body.data.map(({ _id, media }) => ({
             label: media,
             value: _id
@@ -588,7 +602,7 @@ export default function TicketDashboard(props) {
         setLoading(false);
         setMedia({
           label: 'All',
-          value: ''
+          value: 'All'
         });
       }
     }
@@ -604,7 +618,7 @@ export default function TicketDashboard(props) {
       const body = await response.json();
       if (!unmounted) {
         setStatuses([
-          ...[{ label: 'All', value: '' }],
+          ...[{ label: 'All', value: 'All' }],
           ...body.data.map(({ _id, status }) => ({
             label: status,
             value: _id
@@ -613,7 +627,7 @@ export default function TicketDashboard(props) {
         setLoading(false);
         setStatus({
           label: 'All',
-          value: ''
+          value: 'All'
         });
       }
     }
