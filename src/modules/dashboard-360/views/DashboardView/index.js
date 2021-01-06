@@ -464,7 +464,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
        var Dnumber = e.storageArea.search;
        if (Dnumber !== '') {
          //  getDistributorById(Dnumber);
-         get(Dnumber);
+        //  get(Dnumber);
        }
      });
     if(localStorage.getItem('callDispositionStatus') === 'Disposed'){
