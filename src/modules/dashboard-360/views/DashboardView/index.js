@@ -480,7 +480,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
       let config = {
         method: 'get',
-        url: '/boapi/profile?mobilenumber=' + mobile,
+        url: '/bo/boapi/profile?mobilenumber=' + mobile,
         headers: {}
       };
 
