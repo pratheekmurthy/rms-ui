@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CreateTicket(props) {
+export default function CreateTicket(props, dealerDetails) {
   const classes = useStyles();
 
   const [ticketNumber, setTicketNumber] = useState('');
@@ -58,7 +58,10 @@ export default function CreateTicket(props) {
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({ value: '', label: '' });
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({ value: '', label: '' });
+  const [category, setCategory] = useState({
+    value: '',
+    label: ''
+  });
   const [subCategories, setSubCategories] = useState([]);
   const [subCategory, setSubCategory] = useState({
     value: '',
@@ -103,6 +106,23 @@ export default function CreateTicket(props) {
   const [updatedTime, setUpdatedTime] = useState();
   const [file, setFile] = useState('');
   const [files, setFiles] = useState([]);
+  const {
+    distributor_name,
+    distributor_id,
+    lastInteractionId,
+    lastInteractionDate,
+    lastOrderReference,
+    distributor_rank,
+    Joiningdate,
+    distributor_status,
+    email_id,
+    display_name,
+    mob_no,
+    pan_no,
+    adhar_no,
+    phone_no,
+    SelfDOB
+  } = dealerDetails;
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -136,7 +156,6 @@ export default function CreateTicket(props) {
         setRemarks(e.target.value);
         return props.setClick(createTicket);
       case 'file':
-       
         setFile(e.target.files[0]);
         // alert(e.target.files[0]);
         return props.setClick(createTicket);
@@ -159,6 +178,13 @@ export default function CreateTicket(props) {
     subCategory
   ]);
   useEffect(() => {
+    // alert(props.formtype);
+    if (props.formtype === 'telephony') {
+      setDistributorMobile(mob_no);
+      setDistributorEmail(email_id);
+      setDistributorId(distributor_id);
+      setDistributorName(distributorName);
+    }
     if (!props.ticket_id) {
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -173,9 +199,11 @@ export default function CreateTicket(props) {
       let month = (newDate.getMonth() + 1).toString();
       let year = newDate.getFullYear().toString();
       setTicketNumber('TKT' + year + month + date + result);
-setCreatedTime(new Date().toLocaleString(undefined, {
-                    timeZone: 'Asia/Kolkata'
-                  }));
+      setCreatedTime(
+        new Date().toLocaleString(undefined, {
+          timeZone: 'Asia/Kolkata'
+        })
+      );
       // setCreatedTime(new Date().toDateString());
       setUpdatedTime(new Date().toDateString());
       props.setClick(createTicket);
@@ -214,7 +242,10 @@ setCreatedTime(new Date().toLocaleString(undefined, {
             nameLabel: ''
           });
 
-          setCategory({ value: tkt.categoryId, label: tkt.category });
+          setCategory({
+            value: tkt.categoryId,
+            label: tkt.category
+          });
           getSubCategories(tkt.categoryId);
 
           setSubCategory({
@@ -232,7 +263,10 @@ setCreatedTime(new Date().toLocaleString(undefined, {
             value: tkt.assignedDepartmentId,
             label: tkt.assignedDepartment
           });
-          setTeam({ value: tkt.assignedTeamId, label: tkt.assignedTeam });
+          setTeam({
+            value: tkt.assignedTeamId,
+            label: tkt.assignedTeam
+          });
           setPriority({
             value: tkt.priorityId,
             label: tkt.priority,
@@ -450,7 +484,7 @@ setCreatedTime(new Date().toLocaleString(undefined, {
       unmounted = true;
     };
   }, [subCategory, category]);
-  
+
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -549,31 +583,29 @@ setCreatedTime(new Date().toLocaleString(undefined, {
   useEffect(() => {
     let unmounted = false;
     async function getFiles() {
-    
       console.log('tktnumber', ticketNumber);
-       
-         
-           const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
+
+      const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
       var apiParam = {
         method: 'POST',
         headers: { ticketnumber: ticketNumber }
       };
 
-   const response = await fetch(apiUrl, apiParam);
+      const response = await fetch(apiUrl, apiParam);
 
-   const fils = await response.json();
- 
- if (fils.length && props.ticket_id) {
-   setFiles(fils);
- }
-  }
+      const fils = await response.json();
+
+      if (fils.length && props.ticket_id) {
+        setFiles(fils);
+      }
+    }
 
     getFiles();
 
     return () => {
       unmounted = true;
     };
-  }, [file,ticketNumber]);
+  }, [file, ticketNumber]);
   useEffect(() => {
     props.setClick(createTicket);
   }, [executive]);
@@ -759,12 +791,12 @@ setCreatedTime(new Date().toLocaleString(undefined, {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
-alert("function")
+    alert('function');
 
     var formdata = new FormData();
     formdata.append('SoftCopyFile', file);
     console.log('tkt', ticketNumber, file);
-     console.log('files', file);
+    console.log('files', file);
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -777,7 +809,7 @@ alert("function")
       .then(response => response.text())
       .then(result => {
         alert('Uploaded Sucessfully');
-        console.log("upload", result);
+        console.log('upload', result);
       })
       .catch(error => console.log('error', error));
   };
@@ -1140,7 +1172,11 @@ alert("function")
             value={remarks}
           />
           <div
-            style={{ maxHeight: '150px', overflow: 'scroll', width: '100%' }}
+            style={{
+              maxHeight: '150px',
+              overflow: 'scroll',
+              width: '100%'
+            }}
           >
             {/* <TextField
               id="SoftCopyFile"
@@ -1175,7 +1211,7 @@ alert("function")
                 component="span"
                 className={classes.button}
                 startIcon={<AttachFileIcon />}
-                onClick={()=>UploadFile()}
+                onClick={() => UploadFile()}
               >
                 Attach
               </Button>

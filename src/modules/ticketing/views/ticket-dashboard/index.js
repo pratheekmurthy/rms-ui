@@ -837,6 +837,7 @@ export default function TicketDashboard(props) {
             setOpen={open => setOpen(open)}
             ticket={ticket}
             setTicket={ticket => setTicket(ticket)}
+            formtype="ticketing"
           />
         </DialogContent>
         <DialogActions>
@@ -949,6 +950,7 @@ export default function TicketDashboard(props) {
                         setActiveTicket(tkt);
                         viewTicket(tkt);
                       }}
+                      formtype="editTicket"
                     />
                   </DialogContent>
                   <DialogActions>

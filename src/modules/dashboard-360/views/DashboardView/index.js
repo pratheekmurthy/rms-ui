@@ -51,7 +51,6 @@ const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 
-
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -117,6 +116,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketDescription, setTicketDescription] = useState('');
   const [remarks, setRemarks] = useState('');
+ 
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({
     ticketTypeId: '',
@@ -169,7 +169,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     executiveEmail: '',
     executiveMobile: ''
   });
-
+  const [ticket, setTicket] = useState({});
   const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
   const [file, setFile] = useState('');
@@ -181,58 +181,60 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callDispositionStatus: ''
   });
   const [user, setUserDetails] = useState({
-    userType: "Agent",
+    userType: 'Agent'
   });
   const [agent, setAgent] = useState({
     AgentId: '1234',
     AgentType: localStorage.getItem('AgentType'),
     AgentSipId: localStorage.getItem('AgentSIPID')
   });
-  const [ALF, setALF] = useState([])
-  const agentServiceURL = 'http://192.168.3.45:42004/'
+  const [ALF, setALF] = useState([]);
+  const agentServiceURL = 'http://192.168.3.45:42004/';
   const [mobile, setmobile] = useState('');
-  function getALF(){
+   const [disForm, setdisForm] = useState({});
+  function getALF() {
     const axios = require('axios');
-let data = '';
+    let data = '';
 
-let config = {
-  method: 'get',
-  url: 'http://192.168.3.45:42004/crm/interactions',
-  headers: { },
-  data : data
-};
+    let config = {
+      method: 'get',
+      url: 'http://192.168.3.45:42004/crm/interactions',
+      headers: {},
+      data: data
+    };
 
-axios(config)
-.then( async (response) => {
-  console.log(JSON.stringify(response.data));
-  var ALFDATA = response.data.items;
-  
-//   ALFDATA = ALFDATA.filter(function (e) {
-//     return e.agentExtension === agent.AgentSipId;
-// })
-// ALFDATA.sort(function(a,b){
-//   console.log("a",a);
-//   console.log("b",b)
-//   // Turn your strings into dates, and then subtract them
-//   // to get a value that is either negative, positive, or zero.
-//   console.log(new Date(b.created) - new Date(a.created))
-//   return new Date(b.created) - new Date(a.created);
-// });
-//  ALFDATA = ALFDATA.reverse();
-var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
+    axios(config)
+      .then(async response => {
+        console.log(JSON.stringify(response.data));
+        var ALFDATA = response.data.items;
 
-//  sortedActivities = sortedActivities.reverse();
- sortedActivities = await sortedActivities.filter(function (e) {
-      return e.agentExtension === agent.AgentSipId;
-  })
-  console.log("ALFDATA", sortedActivities)
-  setALF(sortedActivities)
-})
+        //   ALFDATA = ALFDATA.filter(function (e) {
+        //     return e.agentExtension === agent.AgentSipId;
+        // })
+        // ALFDATA.sort(function(a,b){
+        //   console.log("a",a);
+        //   console.log("b",b)
+        //   // Turn your strings into dates, and then subtract them
+        //   // to get a value that is either negative, positive, or zero.
+        //   console.log(new Date(b.created) - new Date(a.created))
+        //   return new Date(b.created) - new Date(a.created);
+        // });
+        //  ALFDATA = ALFDATA.reverse();
+        var sortedActivities = await ALFDATA.sort(
+          (a, b) => b.created - a.created
+        );
 
-.catch((error) => {
-  console.log(error);
-});
+        //  sortedActivities = sortedActivities.reverse();
+        sortedActivities = await sortedActivities.filter(function(e) {
+          return e.agentExtension === agent.AgentSipId;
+        });
+        console.log('ALFDATA', sortedActivities);
+        setALF(sortedActivities);
+      })
 
+      .catch(error => {
+        console.log(error);
+      });
   }
   function setCurrentCallDetails(
     callStatusId,
@@ -241,7 +243,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
     callStatus,
     callEvent,
     callDispositionStatus,
-    callerNumber,
+    callerNumber
   ) {
     console.log('callStatusId', callStatusId);
     console.log('callUniqueId', callUniqueId);
@@ -256,7 +258,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
       callType: callType,
       callStatus: callStatus,
       callEvent: callEvent,
-      callDispositionStatus: callDispositionStatus,
+      callDispositionStatus: callDispositionStatus
     });
     localStorage.setItem('callStatusId', callStatusId);
     localStorage.setItem('callUniqueId', callUniqueId);
@@ -272,38 +274,45 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
       callStatus: callStatus,
       callEvent: callEvent,
       callDispositionStatus: callDispositionStatus,
-      callerNumber:callerNumber
+      callerNumber: callerNumber
     });
-    getALF()
+    getALF();
   }
 
-
-  var APIENDPOINT = 'http://192.168.3.45:42002'
+  var APIENDPOINT = 'http://192.168.3.45:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function addToQueue(agentId, queue) {
     var axios = require('axios');
-    var data = JSON.stringify({ "agentId": agentId, "queue": queue, "action": "QueueAdd" });
+    var data = JSON.stringify({
+      agentId: agentId,
+      queue: queue,
+      action: 'QueueAdd'
+    });
 
     var config = {
       method: 'get',
-      url: APIENDPOINT + '/ami/actions/addq?Interface=SIP%2F'+agentId+'&Queue='+queue+'',
+      url:
+        APIENDPOINT +
+        '/ami/actions/addq?Interface=SIP%2F' +
+        agentId +
+        '&Queue=' +
+        queue +
+        '',
       headers: {
         'Content-Type': 'application/json'
       }
     };
 
     axios(config)
-      .then(function (response) {
-        console.log("addQueue",JSON.stringify(response.data));
+      .then(function(response) {
+        console.log('addQueue', JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-
-
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
@@ -315,25 +324,33 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
   function removeFromQueue(agentId, queue) {
     var axios = require('axios');
-    var data = JSON.stringify({ "agentId": agentId, "queue": queue, "action": "QueueRemove" });
+    var data = JSON.stringify({
+      agentId: agentId,
+      queue: queue,
+      action: 'QueueRemove'
+    });
 
     var config = {
       method: 'get',
-      url: APIENDPOINT + '/ami/actions/rmq?Queue='+queue+'&Interface=SIP%2F'+agentId+'',
+      url:
+        APIENDPOINT +
+        '/ami/actions/rmq?Queue=' +
+        queue +
+        '&Interface=SIP%2F' +
+        agentId +
+        '',
       headers: {
         'Content-Type': 'application/json'
       }
     };
 
     axios(config)
-      .then(function (response) {
-        console.log("Removed Queue",JSON.stringify(response.data));
+      .then(function(response) {
+        console.log('Removed Queue', JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-
-
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,7 +365,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
       agentCallUniqueId: updateData.callUniqueId,
       agentCallType: updateData.callType,
       agentCallDispositionStatus: updateData.callDispositionStatus,
-      callerNumber:updateData.callerNumber
+      callerNumber: updateData.callerNumber
     };
     var config = {
       method: 'put',
@@ -360,10 +377,10 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         console.log(JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -373,12 +390,15 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
     var config = {
       method: 'get',
-      url: agentServiceURL + 'crm/currentstatuses/agentSipID?agentSipID=' + agentSipID,
+      url:
+        agentServiceURL +
+        'crm/currentstatuses/agentSipID?agentSipID=' +
+        agentSipID,
       headers: {}
     };
 
     axios(config)
-      .then(function (response) {
+      .then(function(response) {
         // console.log(JSON.stringify(response.data));
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
@@ -396,7 +416,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
           );
         }
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -410,7 +430,12 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
       let config = {
         method: 'get',
-        url: SOCKETENDPOINT+ 'ami/actions/orginatecall?sipAgentID=SIP%2F'+agent.AgentSipId+'&NumbertobeCalled=5'+mobile,
+        url:
+          SOCKETENDPOINT +
+          'ami/actions/orginatecall?sipAgentID=SIP%2F' +
+          agent.AgentSipId +
+          '&NumbertobeCalled=5' +
+          mobile,
         headers: {}
       };
 
@@ -459,22 +484,19 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
   };
 
   useEffect(() => {
-     window.addEventListener('storage', function(e) {
-       console.log('storage event', e.storageArea.search);
-       var Dnumber = e.storageArea.search;
-       if (Dnumber !== '' && Dnumber.length===4) {
-       
-         //  getDistributorById(Dnumber);
-         get(Dnumber);
-       }
-       else{
-          get(Dnumber);
-       }
-     });
-    if(localStorage.getItem('callDispositionStatus') === 'Disposed'){
-    removeFromQueue(agent.AgentSipId, "9002")
-    addToQueue(agent.AgentSipId, "9002")
-
+    window.addEventListener('storage', function(e) {
+      console.log('storage event', e.storageArea.search);
+      var Dnumber = e.storageArea.search;
+      if (Dnumber !== '' && Dnumber.length === 4) {
+        //  getDistributorById(Dnumber);
+        get(Dnumber);
+      } else {
+        get(Dnumber);
+      }
+    });
+    if (localStorage.getItem('callDispositionStatus') === 'Disposed') {
+      removeFromQueue(agent.AgentSipId, '9002');
+      addToQueue(agent.AgentSipId, '9002');
     }
     getALF();
     async function getInitialData() {
@@ -486,8 +508,8 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
     }
     getInitialData();
     // console.log("currentCall", currentCall)
-   async function disProfileByNum(mobile) {
-      mobile = mobile.substring(1)
+    async function disProfileByNum(mobile) {
+      mobile = mobile.substring(1);
       const axios = require('axios');
 
       let config = {
@@ -496,36 +518,31 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
         headers: {}
       };
 
- 
-        // const response =      await axios(config)
-        // .then((response) => {
-        //   console.log(JSON.stringify(response.data));
-        //   if (response.data.status === "1") {
-        //     console.log("response", response.data)
-           
+      // const response =      await axios(config)
+      // .then((response) => {
+      //   console.log(JSON.stringify(response.data));
+      //   if (response.data.status === "1") {
+      //     console.log("response", response.data)
 
-        //   }
-        // })
-        // .catch((error) => {
-        //   console.log(error);
-        // });
-        // console.log("res", response)
-        const response = await axios.get(config.url);
-        console.log("res", response)
-                  if (response.data.status === "1") {
-            console.log("response", response.data)
-            var data1 = response.data.data;
-            if (data1.length) {
-              console.log('data1', data1)
-              get(data1[0].distributor_id)
-    
-            }
+      //   }
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+      // console.log("res", response)
+      const response = await axios.get(config.url);
+      console.log('res', response);
+      if (response.data.status === '1') {
+        console.log('response', response.data);
+        var data1 = response.data.data;
+        if (data1.length) {
+          console.log('data1', data1);
+          get(data1[0].distributor_id);
+        }
+      }
+      // const data = await response.json();
 
-          }
-        // const data = await response.json();
-
-        // return data;
-
+      // return data;
     }
     //  useEffect(() => {
     //    window.addEventListener('storage', function(e) {
@@ -539,7 +556,9 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
     //  }, []);
     async function get(distributor_id) {
       try {
-        const response = await Promise.allSettled(dealerAPICalls(distributor_id));
+        const response = await Promise.allSettled(
+          dealerAPICalls(distributor_id)
+        );
         setRootData(
           response.map(res =>
             res.status === 'fulfilled' ? res.value.data : {}
@@ -556,14 +575,11 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
       }
     }
 
-    console.log('callStatus', localStorage.getItem('callStatus'))
+    console.log('callStatus', localStorage.getItem('callStatus'));
     if (localStorage.getItem('callStatus') === 'connected') {
-      disProfileByNum(localStorage.getItem("callerNumber"));
-     
+      disProfileByNum(localStorage.getItem('callerNumber'));
     }
     if (user.userType === 'Agent') {
-
-
       socket.on('AstriskEvent', data => {
         // console.log('AstriskEvent', data);
 
@@ -574,7 +590,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
             data.CallerID2 === agent.AgentSipId &&
             data.Bridgestate === 'Link'
           ) {
-            removeFromQueue(agent.AgentSipId, "9002")
+            removeFromQueue(agent.AgentSipId, '9002');
             console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             setCurrentCallDetails(
@@ -586,12 +602,15 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
               'NotDisposed',
               data.CallerID1
             );
-            disProfileByNum(localStorage.getItem("callerNumber"));
+            disProfileByNum(localStorage.getItem('callerNumber'));
           }
           var Channel1 = data.Channel1;
           // if(str.includes("world")){}
           // console.log("mobile", '5'+mobile)
-          if (data.Bridgestate === 'Link' && Channel1.includes("SIP/"+agent.AgentSipId+"")) {
+          if (
+            data.Bridgestate === 'Link' &&
+            Channel1.includes('SIP/' + agent.AgentSipId + '')
+          ) {
             console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             var callerNumber = data.CallerID1;
@@ -605,7 +624,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
               'NotDisposed',
               callerNumber
             );
-            disProfileByNum(localStorage.getItem("callerNumber"));
+            disProfileByNum(localStorage.getItem('callerNumber'));
           }
         }
 
@@ -621,12 +640,13 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
               localStorage.getItem('callDispositionStatus'),
               localStorage.getItem('callerNumber')
             );
-
           }
-
         }
         var Channel1 = data.Channel1;
-        if (data.Bridgestate === 'Unlink' && Channel1.includes("SIP/"+agent.AgentSipId+"")) {
+        if (
+          data.Bridgestate === 'Unlink' &&
+          Channel1.includes('SIP/' + agent.AgentSipId + '')
+        ) {
           console.log('data', data);
           setCurrentCallDetails(
             localStorage.getItem('callStatusId'),
@@ -637,7 +657,6 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
             localStorage.getItem('callDispositionStatus'),
             localStorage.getItem('callerNumber')
           );
-
         }
       });
     }
@@ -655,7 +674,7 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
       }
     };
   }, []);
-
+  var createTicket = () => {};
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
       {currentCall.callStatus === 'connected' ? (
@@ -677,17 +696,19 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
         </div>
       ) : null}
       <CustomBreadcrumbs />
-      { agent.AgentType === 'Outbound' ? <div>
-        <input value={mobile} onChange={onChange} />
-        <Button
-          variant="contained"
-          className="jr-btn bg-light-green jr-btn-label left  text-white"
-          onClick={onClick}
-        >
-          {/* <QueuePlayNext /> */}
-          <span>Dail</span>
-        </Button>
-      </div> : null}
+      {agent.AgentType === 'Outbound' ? (
+        <div>
+          <input value={mobile} onChange={onChange} />
+          <Button
+            variant="contained"
+            className="jr-btn bg-light-green jr-btn-label left  text-white"
+            onClick={onClick}
+          >
+            {/* <QueuePlayNext /> */}
+            <span>Dail</span>
+          </Button>
+        </div>
+      ) : null}
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -725,20 +746,20 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
                   </Card>
                   <br />
                   <Card>
-                <CardHeader title={"Distributer last five interactions"} />
-                {ALF.length ? (
-                  <div>
-                    <BasicTable
-                      columns={AgentLastFiveColumns}
-                      records={ALF.slice(0, 3)}
-                      redirectLink="/dash360/admin/agentlastfive"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
-                    <CommonAlert />
-                  )}
-              </Card>
+                    <CardHeader title={'Distributer last five interactions'} />
+                    {ALF.length ? (
+                      <div>
+                        <BasicTable
+                          columns={AgentLastFiveColumns}
+                          records={ALF.slice(0, 3)}
+                          redirectLink="/dash360/admin/agentlastfive"
+                          redirectLabel="View All"
+                        />
+                      </div>
+                    ) : (
+                      <CommonAlert />
+                    )}
+                  </Card>
                 </Grid>
               </Grid>
             </Grid>
@@ -754,41 +775,49 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
                   }}
                 />
               ) : (
-                  <CommonAlert text="Unable to get dealer details" />
-                )}
+                <CommonAlert text="Unable to get dealer details" />
+              )}
               {currentCall.callDispositionStatus === 'NotDisposed' &&
-                user.userType === 'Agent' ? (
-                  <Box mt={2}>
-                    <Card>
-                      <CardHeader title="Disposition Details" />
-                      <Divider />
-                      <CardContent>
-                        <DispositionForm
-                          agentSipID={agent.AgentSipId}
-                          setCurrentCallDetails={setCurrentCallDetails}
-                          addToQueue={addToQueue}
-                          removeFromQueue={removeFromQueue}
-                        />
-                      </CardContent>
-                    </Card>
-                  </Box>
-                ) : 
+              user.userType === 'Agent' ? (
+                <Box mt={2}>
+                  <Card>
+                    <CardHeader title="Disposition Details" />
+                    <Divider />
+                    <CardContent>
+                      <DispositionForm
+                        agentSipID={agent.AgentSipId}
+                        setCurrentCallDetails={setCurrentCallDetails}
+                        addToQueue={addToQueue}
+                        removeFromQueue={removeFromQueue}
+                        disForm={disForm}
+                        setdisForm={form => {
+                           setdisForm(form);
+                        }}
+                      />
+                    </CardContent>
+                  </Card>
+                </Box>
+              ) : (
                 <Card>
-                <CardHeader title={"My last five interactions ("+agent.AgentSipId+")"} />
-                {ALF.length ? (
-                  <div>
-                    <BasicTable
-                      columns={AgentLastFiveColumns}
-                      records={ALF.slice(0, 3)}
-                      redirectLink="/dash360/admin/agentlastfive"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
+                  <CardHeader
+                    title={
+                      'My last five interactions (' + agent.AgentSipId + ')'
+                    }
+                  />
+                  {ALF.length ? (
+                    <div>
+                      <BasicTable
+                        columns={AgentLastFiveColumns}
+                        records={ALF.slice(0, 3)}
+                        redirectLink="/dash360/admin/agentlastfive"
+                        redirectLabel="View All"
+                      />
+                    </div>
+                  ) : (
                     <CommonAlert />
                   )}
-              </Card>
-                }
+                </Card>
+              )}
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -801,8 +830,8 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
                     redirectLabel="View All"
                   />
                 ) : (
-                    <CommonAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
               <br />
               <Card>
@@ -817,8 +846,8 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
                     />
                   </div>
                 ) : (
-                    <CommonAlert />
-                  )}
+                  <CommonAlert />
+                )}
               </Card>
               {/* <br />
               <Card>
@@ -838,7 +867,6 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
               </Card> */}
             </Grid>
           </Grid>
-
         </Container>
       </Page>
       {showCreateTicket ? (
@@ -862,132 +890,148 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
             </Box>
           </DialogTitle>
           <DialogContent dividers>
-            <CreateTicket
-              ticketNumber={ticketNumber}
-              setTicketNumber={tks => {
-                setTicketNumber(tks);
-              }}
-              distributorName={distributorName}
-              setDistributorName={disname => {
-                setDistributorName(disname);
-              }}
-              distributorId={distributorId}
-              setDistributorId={disid => {
-                setDistributorId(disid);
-              }}
-              distributorEmail={distributorEmail}
-              setDistributorEmail={disemail => {
-                setDistributorEmail(disemail);
-              }}
-              distributorMobile={distributorMobile}
-              setDistributorMobile={dismob => {
-                setDistributorMobile(dismob);
-              }}
-              createdByName={createdByName}
-              setCreatedByName={crename => {
-                setCreatedByName(crename);
-              }}
-              createdById={createdById}
-              setCreatedById={creid => {
-                setCreatedById(creid);
-              }}
-              ticketSubject={ticketSubject}
-              setTicketSubject={tktsub => {
-                setTicketSubject(tktsub);
-              }}
-              ticketDescription={ticketDescription}
-              setTicketDescription={tktdisp => {
-                setTicketDescription(tktdisp);
-              }}
-              remarks={remarks}
-              setRemarks={rks => {
-                setRemarks(rks);
-              }}
-              ticketTypes={ticketTypes}
-              setTicketTypes={tkstyps => {
-                setTicketTypes(tkstyps);
-              }}
-              ticketType={ticketType}
-              setTicketType={tkstyp => {
-                setTicketType(tkstyp);
-              }}
-              medium={medium}
-              setMedium={mdm => {
-                setMedium(mdm);
-              }}
-              media={media}
-              setMedia={media => {
-                setMedia(media);
-              }}
-              categories={categories}
-              setCategories={catgs => {
-                setCategories(catgs);
-              }}
-              category={category}
-              setCategory={cat => {
-                setCategory(cat);
-              }}
-              subCategories={subCategories}
-              setSubCategories={subcats => {
-                setSubCategories(subcats);
-              }}
-              subCategory={subCategory}
-              setSubCategory={subcat => {
-                setSubCategory(subcat);
-              }}
-              subCategoryItems={subCategoryItems}
-              setSubCategoryItems={subcatitems => {
-                setSubCategoryItems(subcatitems);
-              }}
-              subCategoryItem={subCategoryItem}
-              setSubCategoryItem={subcatitem => {
-                setSubCategoryItem(subcatitem);
-              }}
-              departments={departments}
-              setDepartments={deps => {
-                setDepartments(deps);
-              }}
-              department={department}
-              setDepartment={dept => {
-                setDepartment(dept);
-              }}
-              teams={teams}
-              setTeams={tms => {
-                setTeams(tms);
-              }}
-              team={team}
-              setTeam={tm => {
-                setTeam(tm);
-              }}
-              priorities={priorities}
-              setPriorities={prts => {
-                setPriorities(prts);
-              }}
-              priority={priority}
-              setPriority={prt => {
-                setPriority(prt);
-              }}
-              statuses={statuses}
-              setStatuses={stses => {
-                setStatuses(stses);
-              }}
-              status={status}
-              setStatus={sts => {
-                setStatus(sts);
-              }}
-              executives={executives}
-              setExecutives={exts => {
-                setExecutives(exts);
-              }}
-              executive={executive}
-              setExecutive={ext => {
-                setExecutive(ext);
-              }}
-              createdTime={createdTime}
-              setCreatedTime={cretime => {
-                setCreatedTime(cretime);
-              }}
-            />
+            {rootData[0].data ? (
+              <CreateTicket
+                dealerDetails={
+                  rootData[0].data[0]
+                  // rootData[0].data[0].length ?
+                  // ...rootData[0].data[0]: "",
+                  // lastOrderReference: rootData[2].data
+                  //   ? rootData[2].data[0].OrderNumber
+                  //   : ''
+                }
+                setClick={click => (createTicket = click)}
+                ticket={ticket}
+                formtype="telephony"
+                setTicket={ticket => setTicket(ticket)}
+                ticketNumber={ticketNumber}
+                setTicketNumber={tks => {
+                  setTicketNumber(tks);
+                }}
+                distributorName={distributorName}
+                setDistributorName={disname => {
+                  setDistributorName(disname);
+                }}
+                distributorId={distributorId}
+                setDistributorId={disid => {
+                  setDistributorId(disid);
+                }}
+                distributorEmail={distributorEmail}
+                setDistributorEmail={disemail => {
+                  setDistributorEmail(disemail);
+                }}
+                distributorMobile={distributorMobile}
+                setDistributorMobile={dismob => {
+                  setDistributorMobile(dismob);
+                }}
+                createdByName={createdByName}
+                setCreatedByName={crename => {
+                  setCreatedByName(crename);
+                }}
+                createdById={createdById}
+                setCreatedById={creid => {
+                  setCreatedById(creid);
+                }}
+                ticketSubject={ticketSubject}
+                setTicketSubject={tktsub => {
+                  setTicketSubject(tktsub);
+                }}
+                ticketDescription={ticketDescription}
+                setTicketDescription={tktdisp => {
+                  setTicketDescription(tktdisp);
+                }}
+                remarks={remarks}
+                setRemarks={rks => {
+                  setRemarks(rks);
+                }}
+                ticketTypes={ticketTypes}
+                setTicketTypes={tkstyps => {
+                  setTicketTypes(tkstyps);
+                }}
+                ticketType={ticketType}
+                setTicketType={tkstyp => {
+                  setTicketType(tkstyp);
+                }}
+                medium={medium}
+                setMedium={mdm => {
+                  setMedium(mdm);
+                }}
+                media={media}
+                setMedia={media => {
+                  setMedia(media);
+                }}
+                categories={categories}
+                setCategories={catgs => {
+                  setCategories(catgs);
+                }}
+                category={category}
+                setCategory={cat => {
+                  setCategory(cat);
+                }}
+                subCategories={subCategories}
+                setSubCategories={subcats => {
+                  setSubCategories(subcats);
+                }}
+                subCategory={subCategory}
+                setSubCategory={subcat => {
+                  setSubCategory(subcat);
+                }}
+                subCategoryItems={subCategoryItems}
+                setSubCategoryItems={subcatitems => {
+                  setSubCategoryItems(subcatitems);
+                }}
+                subCategoryItem={subCategoryItem}
+                setSubCategoryItem={subcatitem => {
+                  setSubCategoryItem(subcatitem);
+                }}
+                departments={departments}
+                setDepartments={deps => {
+                  setDepartments(deps);
+                }}
+                department={department}
+                setDepartment={dept => {
+                  setDepartment(dept);
+                }}
+                teams={teams}
+                setTeams={tms => {
+                  setTeams(tms);
+                }}
+                team={team}
+                setTeam={tm => {
+                  setTeam(tm);
+                }}
+                priorities={priorities}
+                setPriorities={prts => {
+                  setPriorities(prts);
+                }}
+                priority={priority}
+                setPriority={prt => {
+                  setPriority(prt);
+                }}
+                statuses={statuses}
+                setStatuses={stses => {
+                  setStatuses(stses);
+                }}
+                status={status}
+                setStatus={sts => {
+                  setStatus(sts);
+                }}
+                executives={executives}
+                setExecutives={exts => {
+                  setExecutives(exts);
+                }}
+                executive={executive}
+                setExecutive={ext => {
+                  setExecutive(ext);
+                }}
+                createdTime={createdTime}
+                setCreatedTime={cretime => {
+                  setCreatedTime(cretime);
+                }}
+              />
+            ) : (
+              ''
+            )}
           </DialogContent>
           <DialogActions>
             <Button
@@ -1012,12 +1056,12 @@ var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
           </DialogActions>
         </Dialog>
       ) : (
-          ''
-        )}
+        ''
+      )}
     </div>
   ) : (
-      <MainLoader />
-    );
+    <MainLoader />
+  );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),

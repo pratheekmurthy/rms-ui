@@ -61,6 +61,7 @@ export default function DispositionForm(props) {
       comments: formRef.current.values.comments,
       type: formRef.current.values.type
     })
+    props.disForm(formRef.current.values);
     localStorage.setItem("callDispositionStatus", "Disposed")
     props.removeFromQueue(props.AgentSipId, "9002")
     props.addToQueue(props.agentSipID, "9002")
