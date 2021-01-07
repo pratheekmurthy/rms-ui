@@ -72,7 +72,6 @@ const FormFormik = props => {
     }
   };
   const onAddData = data => {
-    console.log('Formik data : ', data);
     setInput([...input, data]);
   };
 
