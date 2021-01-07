@@ -40,7 +40,7 @@ class Home extends Component {
 
   async componentDidMount() {
     try {
-      const res = await Axios.get('/surveys');
+      const res = await Axios.get('/survey/surveys');
       this.setState(prevState => ({
         ...prevState,
         loading: false,

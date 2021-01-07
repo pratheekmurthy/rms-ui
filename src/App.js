@@ -11,6 +11,7 @@ import MainLoader from './components/MainLoader';
 import Main from './Main';
 import Axios from 'axios';
 Axios.defaults.baseURL = process.env.REACT_APP_BASE_URI;
+Axios.defaults.withCredentials = true;
 const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
