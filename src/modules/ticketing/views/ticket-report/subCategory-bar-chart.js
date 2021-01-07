@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
-
+import config from '../../views/config.json';
 class SubCategoryBarChart extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +28,38 @@ class SubCategoryBarChart extends Component {
         }
       ]
     };
+  }
+  componentDidMount() {
+    var data = [];
+    var series = [];
+    const apiUrl = config.APIS_URL + '/tickets/report/category';
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        
+
+        repos.data.map(({ _id, count }) => {
+          data.push(_id);
+          series.push(count);
+        });
+
+        this.setState({
+          options: {
+            chart: {
+              id: 'apexchart-example'
+            },
+            xaxis: {
+              categories: data
+            }
+          },
+          series: [
+            {
+              name: 'series-1',
+              data: series
+            }
+          ]
+        });
+      });
   }
   render() {
     return (

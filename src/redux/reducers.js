@@ -1,3 +1,4 @@
+import { SET_USER_DATA } from 'src/modules/dashboard-360/redux/constants';
 import {
   SET_LOGGED_IN,
   SET_ACCOUNT_TYPE,
@@ -6,12 +7,22 @@ import {
   SET_URL_MATCH_FOUND
 } from './constants';
 
-const logInInitialState = true;
+const logInInitialState = false;
 const accountTypeInitialState = '';
 
 export const logInState = (state = logInInitialState, action) => {
   switch (action.type) {
     case SET_LOGGED_IN: {
+      return action.payload;
+    }
+    default:
+      return state;
+  }
+};
+
+export const userData = (state = null, action) => {
+  switch (action.type) {
+    case SET_USER_DATA: {
       return action.payload;
     }
     default:

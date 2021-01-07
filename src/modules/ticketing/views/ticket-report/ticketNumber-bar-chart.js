@@ -1,6 +1,7 @@
+// import { count } from 'console';
 import React, { Component } from 'react';
 import Chart from 'react-apexcharts';
-
+import config from '../../views/config.json';
 class TicketNumber extends Component {
   constructor(props) {
     super(props);
@@ -8,7 +9,7 @@ class TicketNumber extends Component {
     this.state = {
       options: {
         chart: {
-          id: 'apexchart-example'
+          id: 'Total Ticket'
         },
         xaxis: {
           categories: [
@@ -30,10 +31,66 @@ class TicketNumber extends Component {
       series: [
         {
           name: 'series-1',
-          data: [303, 404, 245, 433, 344, 662, 893, 423, 344, 662, 993, 888]
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         }
       ]
     };
+  }
+  componentDidMount(){
+ 
+   
+  const apiUrl = config.APIS_URL + '/tickets/report/tickets';
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(repos => {
+      var data = [];
+      
+       repos.data.map(({ _id, count }, index) =>{
+        
+      for(var i=1; i<=12; i++){
+      
+if(i=== _id){
+  data.push(count)
+}
+else{
+  data.push("0")
+}
+      }
+       });
+    
+      this.setState({
+        options: {
+        chart: {
+          id: 'Total Ticket'
+        },
+        xaxis: {
+          months: [
+            'January',
+            'Feburary',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'Septemeber',
+            'October',
+            'November',
+            'December'
+          ]
+        }
+      },
+      series: [
+        {
+          name: 'count',
+          data: data
+        }
+      ]
+  
+      });
+      
+    });
+
   }
   render() {
     return (

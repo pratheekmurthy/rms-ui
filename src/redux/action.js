@@ -1,3 +1,4 @@
+import { SET_USER_DATA } from 'src/modules/dashboard-360/redux/constants';
 import {
   SET_LOGGED_IN,
   SET_ACCOUNT_TYPE,
@@ -10,6 +11,12 @@ export const setLoggedIn = isLoggedIn => {
   return {
     type: SET_LOGGED_IN,
     payload: isLoggedIn
+  };
+};
+export const setUserDetails = details => {
+  return {
+    type: SET_USER_DATA,
+    payload: details
   };
 };
 

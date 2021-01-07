@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Link as RouterLink } from 'react-router-dom';
+import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -12,7 +12,8 @@ import {
   makeStyles,
   Typography,
   InputBase,
-  fade
+  fade,
+  Tooltip
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
@@ -21,6 +22,10 @@ import Logo from 'src/modules/dashboard-360/components/Logo';
 import NestedMenu from './NestedMenu';
 import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { setLoggedIn } from 'src/redux/action';
+import { connect } from 'react-redux';
+import Axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -78,10 +83,32 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
+const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
-
+  const [searchText, setSearchText] = useState('');
+  const updateSearchText = evt => {
+    setSearchText(evt.target.value);
+    console.log('search', evt.target.value);
+    localStorage.setItem('search', evt.target.value);
+    changeValue();
+    // alert(evt.target.value);
+    // getDistributorById(evt.target.value);
+  };
+  const changeValue = () => {
+    var x = window.open('', 'myWindow', 'width=200,height=100');
+    x.localStorage.setItem('mytime', Date.now());
+    x.close();
+  };
+  async function logoutUser() {
+    try {
+      await Axios.get('/user/logout');
+      logout();
+    } catch (err) {
+      console.log(err);
+    }
+      
+  }
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
@@ -99,6 +126,8 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
               input: classes.inputInput
             }}
             inputProps={{ 'aria-label': 'search' }}
+            onChange={updateSearchText}
+            value={searchText}
           />
         </div>
         <Box flexGrow={1} />
@@ -131,12 +160,12 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
           </Typography>
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/ticketing/setup" className="color-white">
-              Setup
+              Tkt-Setup
             </Link>
           </Typography>
           <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/ticketing/charts" className="color-white">
-              Charts
+            <Link to="/ticketing/ticket-report" className="color-white">
+              Tkt-Dashboard
             </Link>
           </Typography>
           <IconButton color="inherit">
@@ -149,11 +178,13 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
             </Badge>
           </IconButton>
           <IconButton color="inherit">
-            <InputIcon />
-          </IconButton>
-          <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton>
+          <Tooltip title="Logout">
+            <IconButton color="inherit" onClick={() => logoutUser()}>
+              <ExitToAppIcon />
+            </IconButton>
+          </Tooltip>
         </Hidden>
         <Hidden lgUp>
           <IconButton color="inherit" onClick={onMobileNavOpen}>
@@ -165,9 +196,14 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   );
 };
 
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(setLoggedIn(false))
+});
+
 TopBar.propTypes = {
   className: PropTypes.string,
-  onMobileNavOpen: PropTypes.func
+  onMobileNavOpen: PropTypes.func,
+  logout: PropTypes.func
 };
 
-export default TopBar;
+export default connect(null, mapDispatchToProps)(TopBar);

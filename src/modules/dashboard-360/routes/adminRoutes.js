@@ -1,6 +1,8 @@
+import agentlastfive from '../views/admin/agentlastfive';
 import invoices from '../views/admin/invoices';
 import Orders from '../views/admin/orders';
 import Dashboard from '../views/DashboardView/index';
+import agentDispostionList from '../views/admin/agentlastfive'
 
 export default [
   {
@@ -34,5 +36,18 @@ export default [
     exact: true,
     key: 'invoicesWithId',
     component: invoices
+  },
+  {
+    path: '/agentlastfive',
+    exact: true,
+    key: 'agentlastfive',
+    component: agentDispostionList,
+    crumb: 'Agent Dispositon List'
+  },
+  {
+    path: '/agentlastfive/:uniqueId',
+    exact: true,
+    key: 'uniqueId',
+    component: agentDispostionList
   }
 ];

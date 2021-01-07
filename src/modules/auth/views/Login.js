@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
@@ -13,10 +11,16 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
-import { setLoggedIn } from '../../../redux/action';
-import { Link as RouterLink } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import {
+  setLoggedIn,
+  setUserDetails,
+  setAccountType
+} from '../../../redux/action';
+import Axios from 'axios';
+import { ADMIN, USER } from 'src/redux/constants';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -24,7 +28,7 @@ function Copyright() {
       <Link color="inherit" href="https://material-ui.com/">
         IndusViva
       </Link>{' '}
-      {new Date().getFullYear()}
+      {2020}
       {'.'}
     </Typography>
   );
@@ -76,8 +80,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Login({ setLoggedIn }) {
+function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const classes = useStyles();
+  const [error, setError] = useState('');
+  async function authenticate(values) {
+    setError('');
+    try {
+      const res = await Axios.post('/user/login', values);
+      const obj = res.data.userDetails;
+      setUserDetailsMain(obj);
+      setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
+
+      setLoggedInMain(true);
+      setError(false)
+    } catch (err) {
+      setLoggedInMain(true);
+      setError(true);
+
+    }
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -108,7 +129,10 @@ function Login({ setLoggedIn }) {
             <Formik
               initialValues={{
                 email: 'demo@devias.io',
-                password: 'Password123'
+                password: 'Password123',
+                role:'Agent',
+                AgentType:'Inbound',
+                AgentSIPID:'9999'
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -119,9 +143,14 @@ function Login({ setLoggedIn }) {
                   .max(255)
                   .required('Password is required')
               })}
-              onSubmit={() => {
+              onSubmit={values => {
+                console.log("values", values);
+                localStorage.setItem('AgentType', values.AgentType)
+                localStorage.setItem('role', values.role)
+                localStorage.setItem('AgentSIPID', values.AgentSIPID)
+                
                 // navigate('/app/dashboard', { replace: true });
-                setLoggedIn();
+                authenticate(values);
               }}
             >
               {({
@@ -129,7 +158,6 @@ function Login({ setLoggedIn }) {
                 handleBlur,
                 handleChange,
                 handleSubmit,
-                isSubmitting,
                 touched,
                 values
               }) => (
@@ -160,10 +188,58 @@ function Login({ setLoggedIn }) {
                     value={values.password}
                     variant="outlined"
                   />
+
+<TextField
+                    error={Boolean(touched.role && errors.role)}
+                    fullWidth
+                    helperText={touched.role && errors.role}
+                    label="role"
+                    margin="normal"
+                    name="role"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.role}
+                    variant="outlined"
+                  />
+                                    <TextField
+                    error={Boolean(touched.AgentType && errors.AgentType)}
+                    fullWidth
+                    helperText={touched.AgentType && errors.AgentType}
+                    label="Agent Type"
+                    margin="normal"
+                    name="AgentType"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.AgentType}
+                    variant="outlined"
+                  />
+                                                      <TextField
+                    error={Boolean(touched.AgentSIPID && errors.AgentSIPID)}
+                    fullWidth
+                    helperText={touched.AgentSIPID && errors.AgentSIPID}
+                    label="Agent SIPID"
+                    margin="normal"
+                    name="AgentSIPID"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.AgentSIPID}
+                    variant="outlined"
+                  />
+
+                  
+                  {!!error && (
+                    <Box my={1}>
+                      <Typography color="secondary">
+                        Invalid Username/Password
+                      </Typography>
+                    </Box>
+                  )}
                   <Box my={2} mt={5}>
                     <Button
                       color="primary"
-                      disabled={isSubmitting}
                       fullWidth
                       size="large"
                       type="submit"
@@ -186,7 +262,9 @@ function Login({ setLoggedIn }) {
 }
 
 const mapDispatchToProps = dispatch => ({
-  setLoggedIn: () => dispatch(setLoggedIn(true))
+  setUserDetailsMain: details => dispatch(setUserDetails(details)),
+  setAccountTypeMain: type => dispatch(setAccountType(type)),
+  setLoggedInMain: val => dispatch(setLoggedIn(val))
 });
 
 export default connect(null, mapDispatchToProps)(Login);
