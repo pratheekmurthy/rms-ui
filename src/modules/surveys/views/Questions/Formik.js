@@ -96,7 +96,7 @@ const FormFormik = props => {
 
   async function postQuestions() {
     try {
-      await Axios['post']('/survey/survey/questions', input);
+      await Axios.post('/survey/survey/questions', input);
       props.history.push({
         pathname: '/surveys/questions',
         state: 'create'
