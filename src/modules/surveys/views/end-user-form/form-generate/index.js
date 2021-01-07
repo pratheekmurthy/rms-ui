@@ -105,7 +105,7 @@ const FormGenerate = ({ inputType }) => {
                 <Field
                   component={TextField}
                   color="primary"
-                  name={question.questionName}?
+                  name={question.questionName}
                   id={question.questionName}
                   type="text"
                   variant="outlined"
