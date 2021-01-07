@@ -102,12 +102,11 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
   };
   async function logoutUser() {
     try {
-      await Axios.get('/user/logout');
+      await Axios.get('/auth/user/logout');
       logout();
     } catch (err) {
       console.log(err);
     }
-      
   }
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
