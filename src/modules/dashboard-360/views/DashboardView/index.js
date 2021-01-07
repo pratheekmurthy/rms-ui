@@ -900,6 +900,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   //   ? rootData[2].data[0].OrderNumber
                   //   : ''
                 }
+                disForm={disForm}
                 setClick={click => (createTicket = click)}
                 ticket={ticket}
                 formtype="telephony"

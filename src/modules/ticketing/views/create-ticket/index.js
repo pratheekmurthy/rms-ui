@@ -157,6 +157,7 @@ export default function CreateTicket(props, dealerDetails) {
         return props.setClick(createTicket);
       case 'file':
         setFile(e.target.files[0]);
+        UploadFile(e.target.files[0]);
         // alert(e.target.files[0]);
         return props.setClick(createTicket);
       default:
@@ -184,6 +185,7 @@ export default function CreateTicket(props, dealerDetails) {
       setDistributorEmail(email_id);
       setDistributorId(distributor_id);
       setDistributorName(distributorName);
+      console.log("disform",props)
     }
     if (!props.ticket_id) {
       var result = '';
@@ -791,12 +793,12 @@ export default function CreateTicket(props, dealerDetails) {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
-    alert('function');
-
+    alert(e);
+      setFile(e);
     var formdata = new FormData();
-    formdata.append('SoftCopyFile', file);
-    console.log('tkt', ticketNumber, file);
-    console.log('files', file);
+    formdata.append('SoftCopyFile',e);
+    console.log('tkt', ticketNumber, e);
+    console.log('files', e);
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -1211,7 +1213,7 @@ export default function CreateTicket(props, dealerDetails) {
                 component="span"
                 className={classes.button}
                 startIcon={<AttachFileIcon />}
-                onClick={() => UploadFile()}
+                // onClick={(e) => UploadFile(e)}
               >
                 Attach
               </Button>
