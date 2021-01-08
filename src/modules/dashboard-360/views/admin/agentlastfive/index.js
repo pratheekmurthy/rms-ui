@@ -2,7 +2,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDistributorInvoices } from 'src/modules/dashboard-360/redux/action';
-import { AgentLastFiveColumns } from 'src/modules/dashboard-360/utils/columns-config';
+import { AgentCallColumns } from 'src/modules/dashboard-360/utils/columns-config';
 import PropTypes from 'prop-types';
 import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
@@ -32,11 +32,38 @@ function Invoices({
   } = props;
 
   const [invoiceDetails, setSingleInvoiceDetails] = useState(null);
-  const [agentdisposedCalls, setagentdisposedCalls] = useState([{"UniqueID":1}, {"UniqueID":2}])
+  const [agentdisposedCalls, setagentdisposedCalls] = useState([])
 
   const orderIdPrev = useRef(orderId);
 
+  const agentServiceURL = 'http://192.168.3.45:42004/'
+  function getALF(){
+    // console.log("ALF is callled")
+    const axios = require('axios');
+let data = '';
+
+let config = {
+  method: 'get',
+  url: agentServiceURL +'crm/interactions/getByAgentSIPID?SipID='+localStorage.getItem('AgentSIPID')+'',
+  headers: { },
+  data : data
+};
+
+axios(config)
+.then( async (response) => {
+  var ALFDATA = response.data;
+ ALFDATA = ALFDATA.reverse();
+ setagentdisposedCalls(ALFDATA)
+})
+
+.catch((error) => {
+  console.log(error);
+});
+
+  }
+
   useEffect(() => {
+    getALF()
     if (!distributorInvoices || orderIdPrev !== orderId) {
       (async function getDetails() {
         try {
@@ -76,10 +103,10 @@ function Invoices({
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         autoHeight
-        columns={AgentLastFiveColumns}
+        columns={AgentCallColumns}
         rows={agentdisposedCalls.map(calls => ({
           ...calls,
-          id: calls.UniqueID
+          id: calls._id
         }))}
       />
     </div>
