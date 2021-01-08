@@ -45,13 +45,14 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
   root: {
-    width: '100%',
+    // width: '100%',
     flexGrow: 1,
-    '& .MuiTextField-root': {
-      margin: theme.spacing(1),
-      width: 200,
-      shrink: false
-    }
+    margin:15,
+    // '& .MuiTextField-root': {
+    //   margin: theme.spacing(1),
+    //   width: 200,
+    //   shrink: false
+    // }
   },
   textBold: {
     fontWeight: '600'
