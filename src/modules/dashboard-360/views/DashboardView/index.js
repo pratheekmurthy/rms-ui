@@ -997,6 +997,7 @@ getALF();
                    //   ? rootData[2].data[0].OrderNumber
                    //   : ''
                  }
+                 setOpen={open => setOpen(open)}
                  disForm={disForm}
                  setClick={click => (createTicket = click)}
                  ticket={ticket}
@@ -1133,11 +1134,15 @@ getALF();
            </DialogContent>
            <DialogActions>
              <Button
-               onClick={() => setShowCreateTicket(false)}
+               onClick={() => {
+                 createTicket();
+                 setOpen(false);
+               }}
+               //  onClick={() => setShowCreateTicket(false)}
                color="primary"
                variant="contained"
                size="small"
-               onClick={handleOpen}
+               //  onClick={handleOpen}
              >
                Create
              </Button>

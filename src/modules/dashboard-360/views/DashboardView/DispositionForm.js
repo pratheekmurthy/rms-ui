@@ -359,8 +359,9 @@ export default function DispositionForm(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item>
-              {/* <Field
+            {subCategories.length > 0 ? (
+              <Grid item>
+                {/* <Field
                 className={classes.fieldContainer}
                 name="solution"
                 component={TextField}
@@ -371,38 +372,42 @@ export default function DispositionForm(props) {
                 label="Select provided solution"
               /> */}
 
-              <Autocomplete
-                options={subCategories}
-                getOptionLabel={option => option.label}
-                // style={{ width: 400, overflow: "hidden" }}
-                getOptionSelected={(option, value) => value.id === option.id}
-                key={autoCompleteKey}
-                onChange={(event, value) => {
-                  setFieldValue('subcategory', value);
-                  props.setSubCategory(value);
-                  getSubCategoryItems(
-                    formRef.current.values.category.value,
-                    value
-                  );
-                }}
-                renderInput={params => (
-                  <Field
-                    component={TextField}
-                    {...params}
-                    label="Select a sub category"
-                    variant="outlined"
-                    name="subcategory"
-                  />
-                )}
-                name="subcategory"
-              />
-            </Grid>
-            <Grid item>
-              <FormControl
-                variant="outlined"
-                className={classes.fieldContainer}
-              >
-                {/* <InputLabel htmlFor="sub-category-box" id="sub-category-label">
+                <Autocomplete
+                  options={subCategories}
+                  getOptionLabel={option => option.label}
+                  // style={{ width: 400, overflow: "hidden" }}
+                  getOptionSelected={(option, value) => value.id === option.id}
+                  key={autoCompleteKey}
+                  onChange={(event, value) => {
+                    setFieldValue('subcategory', value);
+                    props.setSubCategory(value);
+                    getSubCategoryItems(
+                      formRef.current.values.category.value,
+                      value
+                    );
+                  }}
+                  renderInput={params => (
+                    <Field
+                      component={TextField}
+                      {...params}
+                      label="Select a sub category"
+                      variant="outlined"
+                      name="subcategory"
+                    />
+                  )}
+                  name="subcategory"
+                />
+              </Grid>
+            ) : (
+              <></>
+            )}
+            {subCategoryItems.length > 0 ? (
+              <Grid item>
+                <FormControl
+                  variant="outlined"
+                  className={classes.fieldContainer}
+                >
+                  {/* <InputLabel htmlFor="sub-category-box" id="sub-category-label">
                   Select Sub Category
                 </InputLabel>
 
@@ -418,29 +423,34 @@ export default function DispositionForm(props) {
                   label="Select Sub Category"
                 /> */}
 
-                <Autocomplete
-                  options={subCategoryItems}
-                  getOptionLabel={option => option.label}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) => value.id === option.id}
-                  key={autoCompleteKey}
-                  onChange={(event, value) => {
-                    setFieldValue('subcategoryitem', value);
-                    props.setSubCategoryItem(value);
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select a sub cateqory item"
-                      variant="outlined"
-                      name="subcategoryitem"
-                    />
-                  )}
-                  name="subcategoryitem"
-                />
-              </FormControl>
-            </Grid>
+                  <Autocomplete
+                    options={subCategoryItems}
+                    getOptionLabel={option => option.label}
+                    // style={{ width: 400, overflow: "hidden" }}
+                    getOptionSelected={(option, value) =>
+                      value.id === option.id
+                    }
+                    key={autoCompleteKey}
+                    onChange={(event, value) => {
+                      setFieldValue('subcategoryitem', value);
+                      props.setSubCategoryItem(value);
+                    }}
+                    renderInput={params => (
+                      <Field
+                        component={TextField}
+                        {...params}
+                        label="Select a sub category item"
+                        variant="outlined"
+                        name="subcategoryitem"
+                      />
+                    )}
+                    name="subcategoryitem"
+                  />
+                </FormControl>
+              </Grid>
+            ) : (
+              <></>
+            )}
             <Grid item>
               <Field
                 className={classes.fieldContainer}
