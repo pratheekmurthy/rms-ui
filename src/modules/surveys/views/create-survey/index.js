@@ -30,7 +30,7 @@ import Spinner from 'src/components/Spinner';
 import CommonAlert from 'src/components/CommonAlert';
 
 const asyncFunction = async text =>
-  Axios.get('/survey/question/search/' + text)
+  Axios.get('/survey/survey/question/search/' + text)
     .then(val => val.data)
     .catch(err => console.log(err));
 
@@ -80,7 +80,9 @@ export default function CreateSurvey(props) {
       (async function getSurveyDetails() {
         try {
           showSpinner(true);
-          const res = await Axios.get('/survey/' + match.params.surveyId);
+          const res = await Axios.get(
+            '/survey/survey/' + match.params.surveyId
+          );
           const obj = res.data;
           setInitFormVal({ ...obj, chooseQuestion: '' });
           setQuestions(obj.questions);
@@ -149,7 +151,7 @@ export default function CreateSurvey(props) {
   async function saveSurvey() {
     try {
       await Axios[isPost ? 'post' : 'patch'](
-        isPost ? '/survey' : `/survey/${match.params.surveyId}`,
+        isPost ? '/survey/survey' : `/survey/survey/${match.params.surveyId}`,
         {
           ...surveyDetails,
           questions,
