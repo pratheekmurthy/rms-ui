@@ -89,6 +89,9 @@ const useStyles = makeStyles(theme => {
     callInbound: {
       backgroundColor: theme.palette.success.light
     },
+    callOutbound: {
+      backgroundColor: theme.palette.secondary.light
+    },
     drawerHeader: {
       display: 'flex',
       alignItems: 'center',
@@ -119,8 +122,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
  
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({
-    ticketTypeId: '',
-    ticketType: ''
+   
   });
 
   const [medium, setMedium] = useState([]);
@@ -129,7 +131,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     label: ''
   });
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({ value: '', label: '' });
+  const [category, setCategory] = useState({});
   const [subCategories, setSubCategories] = useState([]);
   const [subCategory, setSubCategory] = useState({
     value: '',
@@ -178,7 +180,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: ''
+    callDispositionStatus: '',
+    callerNumber:''
   });
   const [user, setUserDetails] = useState({
     userType: 'Agent'
@@ -192,50 +195,51 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   const agentServiceURL = 'http://192.168.3.45:42004/';
   const [mobile, setmobile] = useState('');
    const [disForm, setdisForm] = useState({});
-  function getALF() {
+   function getALF(){
+    // console.log("ALF is callled")
     const axios = require('axios');
-    let data = '';
+let data = '';
 
-    let config = {
-      method: 'get',
-      url: 'http://192.168.3.45:42004/crm/interactions',
-      headers: {},
-      data: data
-    };
+let config = {
+  method: 'get',
+  url: agentServiceURL +'crm/interactions/getByAgentSIPID?SipID='+agent.AgentSipId+'',
+  headers: { },
+  data : data
+};
 
-    axios(config)
-      .then(async response => {
-        console.log(JSON.stringify(response.data));
-        var ALFDATA = response.data.items;
+axios(config)
+.then( async (response) => {
+  // console.log(JSON.stringify(response.data));
+  var ALFDATA = response.data;
+  
+//   ALFDATA = ALFDATA.filter(function (e) {
+//     return e.agentExtension === agent.AgentSipId;
+// })
+// ALFDATA.sort(function(a,b){
+//   console.log("a",a);
+//   console.log("b",b)
+//   // Turn your strings into dates, and then subtract them
+//   // to get a value that is either negative, positive, or zero.
+//   console.log(new Date(b.created) - new Date(a.created))
+//   return new Date(b.created) - new Date(a.created);
+// });
+ ALFDATA = ALFDATA.reverse();
+// var sortedActivities = await ALFDATA.sort((a, b) => b.created - a.created)
 
-        //   ALFDATA = ALFDATA.filter(function (e) {
-        //     return e.agentExtension === agent.AgentSipId;
-        // })
-        // ALFDATA.sort(function(a,b){
-        //   console.log("a",a);
-        //   console.log("b",b)
-        //   // Turn your strings into dates, and then subtract them
-        //   // to get a value that is either negative, positive, or zero.
-        //   console.log(new Date(b.created) - new Date(a.created))
-        //   return new Date(b.created) - new Date(a.created);
-        // });
-        //  ALFDATA = ALFDATA.reverse();
-        var sortedActivities = await ALFDATA.sort(
-          (a, b) => b.created - a.created
-        );
+// //  sortedActivities = sortedActivities.reverse();
+//  sortedActivities = await sortedActivities.filter(function (e) {
+//       return e.agentExtension === agent.AgentSipId;
+//   })
+//   console.log("ALFDATA", sortedActivities)
+  setALF(ALFDATA)
+})
 
-        //  sortedActivities = sortedActivities.reverse();
-        sortedActivities = await sortedActivities.filter(function(e) {
-          return e.agentExtension === agent.AgentSipId;
-        });
-        console.log('ALFDATA', sortedActivities);
-        setALF(sortedActivities);
-      })
+.catch((error) => {
+  console.log(error);
+});
 
-      .catch(error => {
-        console.log(error);
-      });
   }
+
   function setCurrentCallDetails(
     callStatusId,
     callUniqueId,
@@ -245,12 +249,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callDispositionStatus,
     callerNumber
   ) {
-    console.log('callStatusId', callStatusId);
-    console.log('callUniqueId', callUniqueId);
-    console.log('callType', callType);
-    console.log('callStatus', callStatus);
-    console.log('callEvent', callEvent);
-    console.log('callDispositionStatus', callDispositionStatus);
+  
+    // console.log('callStatusId', callStatusId);
+    // console.log('callUniqueId', callUniqueId);
+    // console.log('callType', callType);
+    // console.log('callStatus', callStatus);
+    // console.log('callEvent', callEvent);
+    // console.log('callDispositionStatus', callDispositionStatus);
 
     setCurrentCall({
       callStatusId: callStatusId,
@@ -258,7 +263,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       callType: callType,
       callStatus: callStatus,
       callEvent: callEvent,
-      callDispositionStatus: callDispositionStatus
+      callDispositionStatus: callDispositionStatus,
+      callerNumber: callerNumber
     });
     localStorage.setItem('callStatusId', callStatusId);
     localStorage.setItem('callUniqueId', callUniqueId);
@@ -276,7 +282,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       callDispositionStatus: callDispositionStatus,
       callerNumber: callerNumber
     });
-    getALF();
+  
   }
 
   var APIENDPOINT = 'http://192.168.3.45:42002';
@@ -307,8 +313,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     };
 
     axios(config)
-      .then(function(response) {
-        console.log('addQueue', JSON.stringify(response.data));
+      .then(function (response) {
+        // console.log("addQueue",JSON.stringify(response.data));
       })
       .catch(function(error) {
         console.log(error);
@@ -345,8 +351,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     };
 
     axios(config)
-      .then(function(response) {
-        console.log('Removed Queue', JSON.stringify(response.data));
+      .then(function (response) {
+        // console.log("Removed Queue",JSON.stringify(response.data));
       })
       .catch(function(error) {
         console.log(error);
@@ -377,8 +383,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     };
 
     axios(config)
-      .then(function(response) {
-        console.log(JSON.stringify(response.data));
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
       })
       .catch(function(error) {
         console.log(error);
@@ -401,10 +407,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       .then(function(response) {
         // console.log(JSON.stringify(response.data));
         if (response.data) {
-          console.log('getAgentCallStatus....................', response.data);
+          // console.log('getAgentCallStatus....................', response.data);
           var callStatusId = JSON.stringify(response.data[0]._id);
 
-          console.log('callStatusId', callStatusId);
+          // console.log('callStatusId', callStatusId);
           setCurrentCallDetails(
             response.data[0]._id,
             response.data[0].agentCallUniqueId,
@@ -422,9 +428,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   }
 
   const onClick = event => {
-    console.log('mobile', mobile);
+    // console.log('mobile', mobile);
     if (mobile.length === 10) {
-      console.log('valid number');
+      // console.log('valid number');
 
       const axios = require('axios');
 
@@ -441,7 +447,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
       axios(config)
         .then(response => {
-          console.log(JSON.stringify(response.data));
+          // console.log(JSON.stringify(response.data));
         })
         .catch(error => {
           console.log(error);
@@ -483,6 +489,69 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     setOpen(true);
   };
 
+
+  async function disProfileByNum(mobile) {
+    // console.log("disProfileByNum", mobile);
+     mobile = mobile.substring(1)
+     const axios = require('axios');
+
+     let config = {
+       method: 'get',
+       url: '/bo/boapi/profile?mobilenumber=' + mobile,
+       headers: {}
+     };
+
+
+       // const response =      await axios(config)
+       // .then((response) => {
+       //   console.log(JSON.stringify(response.data));
+       //   if (response.data.status === "1") {
+       //     console.log("response", response.data)
+          
+
+       //   }
+       // })
+       // .catch((error) => {
+       //   console.log(error);
+       // });
+       // console.log("res", response)
+       const response = await axios.get(config.url);
+       // console.log("res", response)
+                 if (response.data.status === "1") {
+           // console.log("response", response.data)
+           var data1 = response.data.data;
+           if (data1.length) {
+             // console.log('data1', data1)
+             get(data1[0].distributor_id)
+   
+           }
+
+         }
+       // const data = await response.json();
+
+       // return data;
+
+   }
+
+   async function get(distributor_id) {
+    try {
+      const response = await Promise.allSettled(dealerAPICalls(distributor_id));
+      setRootData(
+        response.map(res =>
+          res.status === 'fulfilled' ? res.value.data : {}
+        )
+      );
+      setDistributorOrdersAction(
+        response[2].status === 'fulfilled'
+          ? response[2].value.data.data
+          : null
+      );
+      setLoadingDetails(false);
+    } catch (err) {
+      console.log(err.response);
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('storage', function(e) {
       console.log('storage event', e.storageArea.search);
@@ -508,42 +577,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     }
     getInitialData();
     // console.log("currentCall", currentCall)
-    async function disProfileByNum(mobile) {
-      mobile = mobile.substring(1);
-      const axios = require('axios');
-
-      let config = {
-        method: 'get',
-        url: '/bo/boapi/profile?mobilenumber=' + mobile,
-        headers: {}
-      };
-
-      // const response =      await axios(config)
-      // .then((response) => {
-      //   console.log(JSON.stringify(response.data));
-      //   if (response.data.status === "1") {
-      //     console.log("response", response.data)
-
-      //   }
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
-      // console.log("res", response)
-      const response = await axios.get(config.url);
-      console.log('res', response);
-      if (response.data.status === '1') {
-        console.log('response', response.data);
-        var data1 = response.data.data;
-        if (data1.length) {
-          console.log('data1', data1);
-          get(data1[0].distributor_id);
-        }
-      }
-      // const data = await response.json();
-
-      // return data;
-    }
     //  useEffect(() => {
     //    window.addEventListener('storage', function(e) {
     //      console.log('storage event', e.storageArea.search);
@@ -554,31 +587,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     //      }
     //    });
     //  }, []);
-    async function get(distributor_id) {
-      try {
-        const response = await Promise.allSettled(
-          dealerAPICalls(distributor_id)
-        );
-        setRootData(
-          response.map(res =>
-            res.status === 'fulfilled' ? res.value.data : {}
-          )
-        );
-        setDistributorOrdersAction(
-          response[2].status === 'fulfilled'
-            ? response[2].value.data.data
-            : null
-        );
-        setLoadingDetails(false);
-      } catch (err) {
-        console.log(err.response);
-      }
-    }
 
-    console.log('callStatus', localStorage.getItem('callStatus'));
-    if (localStorage.getItem('callStatus') === 'connected') {
-      disProfileByNum(localStorage.getItem('callerNumber'));
-    }
+
+    // console.log('callStatus', localStorage.getItem('callStatus'))
+    // if (localStorage.getItem('callStatus') === 'connected') {
+    //   disProfileByNum(localStorage.getItem("callerNumber"));
+     
+    // }
     if (user.userType === 'Agent') {
       socket.on('AstriskEvent', data => {
         // console.log('AstriskEvent', data);
@@ -590,8 +605,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             data.CallerID2 === agent.AgentSipId &&
             data.Bridgestate === 'Link'
           ) {
-            removeFromQueue(agent.AgentSipId, '9002');
-            console.log('data Bridge', data);
+            
+            removeFromQueue(agent.AgentSipId, "9002")
+            // console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             setCurrentCallDetails(
               localStorage.getItem('callStatusId'),
@@ -602,16 +618,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               'NotDisposed',
               data.CallerID1
             );
-            disProfileByNum(localStorage.getItem('callerNumber'));
+            // disProfileByNum(localStorage.getItem("callerNumber"));
           }
           var Channel1 = data.Channel1;
           // if(str.includes("world")){}
           // console.log("mobile", '5'+mobile)
-          if (
-            data.Bridgestate === 'Link' &&
-            Channel1.includes('SIP/' + agent.AgentSipId + '')
-          ) {
-            console.log('data Bridge', data);
+          if (data.Bridgestate === 'Link' && Channel1.includes("SIP/"+agent.AgentSipId+"")) {
+            // console.log('data Bridge', data);
             // console.log('inside the bridge event current call', this.currentCall);
             var callerNumber = data.CallerID1;
             // callerNumber = callerNumber.substring(1);
@@ -624,13 +637,13 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               'NotDisposed',
               callerNumber
             );
-            disProfileByNum(localStorage.getItem('callerNumber'));
+            // disProfileByNum(localStorage.getItem("callerNumber"));
           }
         }
 
         if (data.Event === 'Hangup') {
           if (data.ConnectedLineNum === agent.AgentSipId) {
-            console.log('data', data);
+            // console.log('data', data);
             setCurrentCallDetails(
               localStorage.getItem('callStatusId'),
               localStorage.getItem('callUniqueId'),
@@ -643,11 +656,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           }
         }
         var Channel1 = data.Channel1;
-        if (
-          data.Bridgestate === 'Unlink' &&
-          Channel1.includes('SIP/' + agent.AgentSipId + '')
-        ) {
-          console.log('data', data);
+        if (data.Bridgestate === 'Unlink' && Channel1.includes("SIP/"+agent.AgentSipId+"")) {
+          // console.log('data', data);
           setCurrentCallDetails(
             localStorage.getItem('callStatusId'),
             localStorage.getItem('callUniqueId'),
@@ -660,6 +670,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         }
       });
     }
+
+    // if(localStorage.getItem('callDispositionStatus') === 'NotDisposed'){
+    //   disProfileByNum(localStorage.getItem('callerNumber'))
+    //   }
 
     setRootData(
       [[], [], [], [], []].map(res =>
@@ -674,182 +688,237 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       }
     };
   }, []);
-  var createTicket = () => {};
-  return !loadingDetails ? (
-    <div style={{ position: 'relative' }}>
-      {currentCall.callStatus === 'connected' ? (
-        <div>
-          <div className={classes.timerComp}>
-            <TimerComp />
-          </div>
-          <Box
-            alignItems="center"
-            display="flex"
-            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
-          >
-            <CallIcon />
-            &nbsp;
-            <Typography display="inline">
-              {currentCall.callType} Call In Progress
-            </Typography>
-          </Box>{' '}
-        </div>
-      ) : null}
-      <CustomBreadcrumbs />
-      {agent.AgentType === 'Outbound' ? (
-        <div>
-          <input value={mobile} onChange={onChange} />
-          <Button
-            variant="contained"
-            className="jr-btn bg-light-green jr-btn-label left  text-white"
-            onClick={onClick}
-          >
-            {/* <QueuePlayNext /> */}
-            <span>Dail</span>
-          </Button>
-        </div>
-      ) : null}
-      <Page className={classes.root} title="Dashboard">
-        <Container maxWidth={false}>
-          <Grid container spacing={3}>
-            <Grid item lg={4} md={6} xs={12}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => setShowCreateTicket(true)}
-                  >
-                    Create Ticket
-                  </Button>
-                  &nbsp;&nbsp;
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    style={{ color: 'white' }}
-                  >
-                    BreakIn/BreakOut
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Card>
-                    <CustomTabs
-                      variant="fullWidth"
-                      indicatorColor="primary"
-                      textColor="primary"
-                      tabNames={['Tickets', 'Incentives', 'E-Wallet']}
-                      setCurrent={val => setTab(val)}
-                    />
-                    <CustomTabPanel value={tab} index={0}>
-                      <TicketsList />
-                    </CustomTabPanel>
-                  </Card>
-                  <br />
-                  <Card>
-                    <CardHeader title={'Distributer last five interactions'} />
-                    {ALF.length ? (
-                      <div>
-                        <BasicTable
-                          columns={AgentLastFiveColumns}
-                          records={ALF.slice(0, 3)}
-                          redirectLink="/dash360/admin/agentlastfive"
-                          redirectLabel="View All"
-                        />
-                      </div>
-                    ) : (
-                      <CommonAlert />
-                    )}
-                  </Card>
-                </Grid>
-              </Grid>
-            </Grid>
 
-            <Grid item lg={3} md={6} xs={12}>
-              {rootData[0].data ? (
-                <DealerCard
-                  dealerDetails={{
-                    ...rootData[0].data[0],
-                    lastOrderReference: rootData[2].data
-                      ? rootData[2].data[0].OrderNumber
-                      : ''
-                  }}
-                />
-              ) : (
-                <CommonAlert text="Unable to get dealer details" />
-              )}
-              {currentCall.callDispositionStatus === 'NotDisposed' &&
-              user.userType === 'Agent' ? (
-                <Box mt={2}>
-                  <Card>
-                    <CardHeader title="Disposition Details" />
-                    <Divider />
-                    <CardContent>
-                      <DispositionForm
-                        agentSipID={agent.AgentSipId}
-                        setCurrentCallDetails={setCurrentCallDetails}
-                        addToQueue={addToQueue}
-                        removeFromQueue={removeFromQueue}
-                        disForm={disForm}
-                        setdisForm={form => {
+  useEffect(() => {
+console.log("data second useEffect", currentCall)
+console.log("currentCall.callerNumber", currentCall.callerNumber);
+if(currentCall.callerNumber !== '' && currentCall.callDispositionStatus === 'NotDisposed'){
+  disProfileByNum(currentCall.callerNumber);
+}
+// if(currentCall.callerNumber !== null || currentCall.callerNumber !== ""){
+
+// disProfileByNum(localStorage.getItem('callerNumber'))
+
+// }
+getALF();
+
+   }, [currentCall.callDispositionStatus])
+   var createTicket = () => {};
+   return !loadingDetails ? (
+     <div style={{ position: 'relative' }}>
+       {currentCall.callStatus === 'connected' ? (
+         <div>
+           <div className={classes.timerComp}>
+             <TimerComp />
+           </div>
+           <Box
+             alignItems="center"
+             display="flex"
+             className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+           >
+             <CallIcon />
+             &nbsp;
+             <Typography display="inline">
+               {currentCall.callType} Call In Progress
+             </Typography>
+           </Box>{' '}
+         </div>
+       ) : null}
+       {currentCall.callDispositionStatus === 'NotDisposed' &&
+       currentCall.callStatus === 'disconnected' ? (
+         <div>
+           <div className={classes.timerComp}>
+             <TimerComp />
+           </div>
+           <Box
+             alignItems="center"
+             display="flex"
+             className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
+           >
+             <CallIcon />
+             &nbsp;
+             <Typography display="inline">
+               {currentCall.callType} Call Is Disconnected
+             </Typography>
+           </Box>{' '}
+         </div>
+       ) : null}
+       <CustomBreadcrumbs />
+       {agent.AgentType === 'Outbound' ? (
+         <div>
+           <input value={mobile} onChange={onChange} />
+           <Button
+             variant="contained"
+             className="jr-btn bg-light-green jr-btn-label left  text-white"
+             onClick={onClick}
+           >
+             {/* <QueuePlayNext /> */}
+             <span>Dail</span>
+           </Button>
+         </div>
+       ) : null}
+       <Page className={classes.root} title="Dashboard">
+         <Container maxWidth={false}>
+           <Grid container spacing={3}>
+             <Grid item lg={4} md={6} xs={12}>
+               <Grid container direction="column" spacing={2}>
+                 <Grid item>
+                   <Button
+                     color="primary"
+                     variant="contained"
+                     onClick={() => setShowCreateTicket(true)}
+                   >
+                     Create Ticket
+                   </Button>
+                   &nbsp;&nbsp;
+                   <Button
+                     color="secondary"
+                     variant="contained"
+                     style={{ color: 'white' }}
+                   >
+                     BreakIn/BreakOut
+                   </Button>
+                 </Grid>
+                 <Grid item>
+                   <Card>
+                     <CustomTabs
+                       variant="fullWidth"
+                       indicatorColor="primary"
+                       textColor="primary"
+                       tabNames={['Tickets', 'Incentives', 'E-Wallet']}
+                       setCurrent={val => setTab(val)}
+                     />
+                     <CustomTabPanel value={tab} index={0}>
+                       <TicketsList />
+                     </CustomTabPanel>
+                   </Card>
+                   <br />
+                   <Card>
+                     <CardHeader title={'Distributer last five interactions'} />
+                     {ALF.length ? (
+                       <div>
+                         <BasicTable
+                           columns={AgentLastFiveColumns}
+                           records={ALF.slice(0, 3)}
+                           redirectLink="/dash360/admin/agentlastfive"
+                           redirectLabel="View All"
+                         />
+                       </div>
+                     ) : (
+                       <CommonAlert />
+                     )}
+                   </Card>
+                 </Grid>
+               </Grid>
+             </Grid>
+
+             <Grid item lg={3} md={6} xs={12}>
+               {rootData[0].data ? (
+                 <DealerCard
+                   dealerDetails={{
+                     ...rootData[0].data[0],
+                     lastOrderReference: rootData[2].data
+                       ? rootData[2].data[0].OrderNumber
+                       : ''
+                   }}
+                 />
+               ) : (
+                 <CommonAlert text="Unable to get dealer details" />
+               )}
+               {currentCall.callDispositionStatus === 'NotDisposed' &&
+               user.userType === 'Agent' ? (
+                 <Box mt={2}>
+                   <Card>
+                     <CardHeader title="Disposition Details" />
+                     <Divider />
+                     <CardContent>
+                       <DispositionForm
+                         agentSipID={agent.AgentSipId}
+                         setCurrentCallDetails={setCurrentCallDetails}
+                         addToQueue={addToQueue}
+                         removeFromQueue={removeFromQueue}
+                         getALF={getALF}
+                         disForm={disForm}
+                         setdisForm={form => {
                            setdisForm(form);
-                        }}
-                      />
-                    </CardContent>
-                  </Card>
-                </Box>
-              ) : (
-                <Card>
-                  <CardHeader
-                    title={
-                      'My last five interactions (' + agent.AgentSipId + ')'
-                    }
-                  />
-                  {ALF.length ? (
-                    <div>
-                      <BasicTable
-                        columns={AgentLastFiveColumns}
-                        records={ALF.slice(0, 3)}
-                        redirectLink="/dash360/admin/agentlastfive"
-                        redirectLabel="View All"
-                      />
-                    </div>
-                  ) : (
-                    <CommonAlert />
-                  )}
-                </Card>
-              )}
-            </Grid>
-            <Grid item lg={5} xs={12}>
-              <Card>
-                <CardHeader title="Orders" />
-                {rootData[2].data ? (
-                  <BasicTable
-                    columns={orderColumns}
-                    records={rootData[2].data.slice(0, 3)}
-                    redirectLink="/dash360/admin/orders"
-                    redirectLabel="View All"
-                  />
-                ) : (
-                  <CommonAlert />
-                )}
-              </Card>
-              <br />
-              <Card>
-                <CardHeader title="Invoices" />
-                {rootData[3].data ? (
-                  <div>
-                    <BasicTable
-                      columns={invoicesColumns}
-                      records={rootData[3].data.slice(0, 3)}
-                      redirectLink="/dash360/admin/invoices"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
-                  <CommonAlert />
-                )}
-              </Card>
-              {/* <br />
+                         }}
+                         category={category}
+                         setCategory={cat => {
+                           setCategory(cat);
+                         }}
+                         ticketType={ticketType}
+                         setTicketType={tkstyp => {
+                           setTicketType(tkstyp);
+                         }}
+                         subCategory={subCategory}
+                         setSubCategory={subcat => {
+                           setSubCategory(subcat);
+                         }}
+                         subCategoryItem={subCategoryItem}
+                         setSubCategoryItem={subcatitem => {
+                           setSubCategoryItem(subcatitem);
+                         }}
+                         remarks={remarks}
+                         setRemarks={rks => {
+                           setRemarks(rks);
+                         }}
+                       />
+                     </CardContent>
+                   </Card>
+                 </Box>
+               ) : (
+                 <Card>
+                   <CardHeader
+                     title={
+                       'My last five interactions (' + agent.AgentSipId + ')'
+                     }
+                   />
+                   {ALF.length ? (
+                     <div>
+                       <BasicTable
+                         columns={AgentLastFiveColumns}
+                         records={ALF.slice(0, 3)}
+                         redirectLink="/dash360/admin/agentlastfive"
+                         redirectLabel="View All"
+                       />
+                     </div>
+                   ) : (
+                     <CommonAlert />
+                   )}
+                 </Card>
+               )}
+             </Grid>
+             <Grid item lg={5} xs={12}>
+               <Card>
+                 <CardHeader title="Orders" />
+                 {rootData[2].data ? (
+                   <BasicTable
+                     columns={orderColumns}
+                     records={rootData[2].data.slice(0, 3)}
+                     redirectLink="/dash360/admin/orders"
+                     redirectLabel="View All"
+                   />
+                 ) : (
+                   <CommonAlert />
+                 )}
+               </Card>
+               <br />
+               <Card>
+                 <CardHeader title="Invoices" />
+                 {rootData[3].data ? (
+                   <div>
+                     <BasicTable
+                       columns={invoicesColumns}
+                       records={rootData[3].data.slice(0, 3)}
+                       redirectLink="/dash360/admin/invoices"
+                       redirectLabel="View All"
+                     />
+                   </div>
+                 ) : (
+                   <CommonAlert />
+                 )}
+               </Card>
+               {/* <br />
               <Card>
                 <CardHeader title={"My last five interactions ("+agent.AgentSipId+")"} />
                 {ALF.length ? (
@@ -865,204 +934,204 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     <CommonAlert />
                   )}
               </Card> */}
-            </Grid>
-          </Grid>
-        </Container>
-      </Page>
-      {showCreateTicket ? (
-        <Dialog
-          open
-          fullWidth
-          maxWidth="md"
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            <Box component="span" className={classes.drawerHeader}>
-              <EditIcon />
-              <Typography
-                variant="h4"
-                color="textPrimary"
-                style={{ marginLeft: 10 }}
-              >
-                Create Ticket
-              </Typography>
-            </Box>
-          </DialogTitle>
-          <DialogContent dividers>
-            {rootData[0].data ? (
-              <CreateTicket
-                dealerDetails={
-                  rootData[0].data[0]
-                  // rootData[0].data[0].length ?
-                  // ...rootData[0].data[0]: "",
-                  // lastOrderReference: rootData[2].data
-                  //   ? rootData[2].data[0].OrderNumber
-                  //   : ''
-                }
-                disForm={disForm}
-                setClick={click => (createTicket = click)}
-                ticket={ticket}
-                formtype="telephony"
-                setTicket={ticket => setTicket(ticket)}
-                ticketNumber={ticketNumber}
-                setTicketNumber={tks => {
-                  setTicketNumber(tks);
-                }}
-                distributorName={distributorName}
-                setDistributorName={disname => {
-                  setDistributorName(disname);
-                }}
-                distributorId={distributorId}
-                setDistributorId={disid => {
-                  setDistributorId(disid);
-                }}
-                distributorEmail={distributorEmail}
-                setDistributorEmail={disemail => {
-                  setDistributorEmail(disemail);
-                }}
-                distributorMobile={distributorMobile}
-                setDistributorMobile={dismob => {
-                  setDistributorMobile(dismob);
-                }}
-                createdByName={createdByName}
-                setCreatedByName={crename => {
-                  setCreatedByName(crename);
-                }}
-                createdById={createdById}
-                setCreatedById={creid => {
-                  setCreatedById(creid);
-                }}
-                ticketSubject={ticketSubject}
-                setTicketSubject={tktsub => {
-                  setTicketSubject(tktsub);
-                }}
-                ticketDescription={ticketDescription}
-                setTicketDescription={tktdisp => {
-                  setTicketDescription(tktdisp);
-                }}
-                remarks={remarks}
-                setRemarks={rks => {
-                  setRemarks(rks);
-                }}
-                ticketTypes={ticketTypes}
-                setTicketTypes={tkstyps => {
-                  setTicketTypes(tkstyps);
-                }}
-                ticketType={ticketType}
-                setTicketType={tkstyp => {
-                  setTicketType(tkstyp);
-                }}
-                medium={medium}
-                setMedium={mdm => {
-                  setMedium(mdm);
-                }}
-                media={media}
-                setMedia={media => {
-                  setMedia(media);
-                }}
-                categories={categories}
-                setCategories={catgs => {
-                  setCategories(catgs);
-                }}
-                category={category}
-                setCategory={cat => {
-                  setCategory(cat);
-                }}
-                subCategories={subCategories}
-                setSubCategories={subcats => {
-                  setSubCategories(subcats);
-                }}
-                subCategory={subCategory}
-                setSubCategory={subcat => {
-                  setSubCategory(subcat);
-                }}
-                subCategoryItems={subCategoryItems}
-                setSubCategoryItems={subcatitems => {
-                  setSubCategoryItems(subcatitems);
-                }}
-                subCategoryItem={subCategoryItem}
-                setSubCategoryItem={subcatitem => {
-                  setSubCategoryItem(subcatitem);
-                }}
-                departments={departments}
-                setDepartments={deps => {
-                  setDepartments(deps);
-                }}
-                department={department}
-                setDepartment={dept => {
-                  setDepartment(dept);
-                }}
-                teams={teams}
-                setTeams={tms => {
-                  setTeams(tms);
-                }}
-                team={team}
-                setTeam={tm => {
-                  setTeam(tm);
-                }}
-                priorities={priorities}
-                setPriorities={prts => {
-                  setPriorities(prts);
-                }}
-                priority={priority}
-                setPriority={prt => {
-                  setPriority(prt);
-                }}
-                statuses={statuses}
-                setStatuses={stses => {
-                  setStatuses(stses);
-                }}
-                status={status}
-                setStatus={sts => {
-                  setStatus(sts);
-                }}
-                executives={executives}
-                setExecutives={exts => {
-                  setExecutives(exts);
-                }}
-                executive={executive}
-                setExecutive={ext => {
-                  setExecutive(ext);
-                }}
-                createdTime={createdTime}
-                setCreatedTime={cretime => {
-                  setCreatedTime(cretime);
-                }}
-              />
-            ) : (
-              ''
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => setShowCreateTicket(false)}
-              color="primary"
-              variant="contained"
-              size="small"
-              onClick={handleOpen}
-            >
-              Create
-            </Button>
-            <Button
-              onClick={() => setShowCreateTicket(false)}
-              color="primary"
-              size="small"
-              variant="outlined"
-              autoFocus
-              onClick={() => setShowCreateTicket(false)}
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (
-        ''
-      )}
-    </div>
-  ) : (
-    <MainLoader />
-  );
+             </Grid>
+           </Grid>
+         </Container>
+       </Page>
+       {showCreateTicket ? (
+         <Dialog
+           open
+           fullWidth
+           maxWidth="md"
+           aria-labelledby="alert-dialog-title"
+           aria-describedby="alert-dialog-description"
+         >
+           <DialogTitle id="alert-dialog-title">
+             <Box component="span" className={classes.drawerHeader}>
+               <EditIcon />
+               <Typography
+                 variant="h4"
+                 color="textPrimary"
+                 style={{ marginLeft: 10 }}
+               >
+                 Create Ticket
+               </Typography>
+             </Box>
+           </DialogTitle>
+           <DialogContent dividers>
+             {rootData[0].data ? (
+               <CreateTicket
+                 dealerDetails={
+                   rootData[0].data[0]
+                   // rootData[0].data[0].length ?
+                   // ...rootData[0].data[0]: "",
+                   // lastOrderReference: rootData[2].data
+                   //   ? rootData[2].data[0].OrderNumber
+                   //   : ''
+                 }
+                 disForm={disForm}
+                 setClick={click => (createTicket = click)}
+                 ticket={ticket}
+                 formtype="telephony"
+                 setTicket={ticket => setTicket(ticket)}
+                 ticketNumber={ticketNumber}
+                 setTicketNumber={tks => {
+                   setTicketNumber(tks);
+                 }}
+                 distributorName={distributorName}
+                 setDistributorName={disname => {
+                   setDistributorName(disname);
+                 }}
+                 distributorId={distributorId}
+                 setDistributorId={disid => {
+                   setDistributorId(disid);
+                 }}
+                 distributorEmail={distributorEmail}
+                 setDistributorEmail={disemail => {
+                   setDistributorEmail(disemail);
+                 }}
+                 distributorMobile={distributorMobile}
+                 setDistributorMobile={dismob => {
+                   setDistributorMobile(dismob);
+                 }}
+                 createdByName={createdByName}
+                 setCreatedByName={crename => {
+                   setCreatedByName(crename);
+                 }}
+                 createdById={createdById}
+                 setCreatedById={creid => {
+                   setCreatedById(creid);
+                 }}
+                 ticketSubject={ticketSubject}
+                 setTicketSubject={tktsub => {
+                   setTicketSubject(tktsub);
+                 }}
+                 ticketDescription={ticketDescription}
+                 setTicketDescription={tktdisp => {
+                   setTicketDescription(tktdisp);
+                 }}
+                 remarks={remarks}
+                 setRemarks={rks => {
+                   setRemarks(rks);
+                 }}
+                 ticketTypes={ticketTypes}
+                 setTicketTypes={tkstyps => {
+                   setTicketTypes(tkstyps);
+                 }}
+                 ticketType={ticketType}
+                 setTicketType={tkstyp => {
+                   setTicketType(tkstyp);
+                 }}
+                 medium={medium}
+                 setMedium={mdm => {
+                   setMedium(mdm);
+                 }}
+                 media={media}
+                 setMedia={media => {
+                   setMedia(media);
+                 }}
+                 categories={categories}
+                 setCategories={catgs => {
+                   setCategories(catgs);
+                 }}
+                 category={category}
+                 setCategory={cat => {
+                   setCategory(cat);
+                 }}
+                 subCategories={subCategories}
+                 setSubCategories={subcats => {
+                   setSubCategories(subcats);
+                 }}
+                 subCategory={subCategory}
+                 setSubCategory={subcat => {
+                   setSubCategory(subcat);
+                 }}
+                 subCategoryItems={subCategoryItems}
+                 setSubCategoryItems={subcatitems => {
+                   setSubCategoryItems(subcatitems);
+                 }}
+                 subCategoryItem={subCategoryItem}
+                 setSubCategoryItem={subcatitem => {
+                   setSubCategoryItem(subcatitem);
+                 }}
+                 departments={departments}
+                 setDepartments={deps => {
+                   setDepartments(deps);
+                 }}
+                 department={department}
+                 setDepartment={dept => {
+                   setDepartment(dept);
+                 }}
+                 teams={teams}
+                 setTeams={tms => {
+                   setTeams(tms);
+                 }}
+                 team={team}
+                 setTeam={tm => {
+                   setTeam(tm);
+                 }}
+                 priorities={priorities}
+                 setPriorities={prts => {
+                   setPriorities(prts);
+                 }}
+                 priority={priority}
+                 setPriority={prt => {
+                   setPriority(prt);
+                 }}
+                 statuses={statuses}
+                 setStatuses={stses => {
+                   setStatuses(stses);
+                 }}
+                 status={status}
+                 setStatus={sts => {
+                   setStatus(sts);
+                 }}
+                 executives={executives}
+                 setExecutives={exts => {
+                   setExecutives(exts);
+                 }}
+                 executive={executive}
+                 setExecutive={ext => {
+                   setExecutive(ext);
+                 }}
+                 createdTime={createdTime}
+                 setCreatedTime={cretime => {
+                   setCreatedTime(cretime);
+                 }}
+               />
+             ) : (
+               ''
+             )}
+           </DialogContent>
+           <DialogActions>
+             <Button
+               onClick={() => setShowCreateTicket(false)}
+               color="primary"
+               variant="contained"
+               size="small"
+               onClick={handleOpen}
+             >
+               Create
+             </Button>
+             <Button
+               onClick={() => setShowCreateTicket(false)}
+               color="primary"
+               size="small"
+               variant="outlined"
+               autoFocus
+               onClick={() => setShowCreateTicket(false)}
+             >
+               Cancel
+             </Button>
+           </DialogActions>
+         </Dialog>
+       ) : (
+         ''
+       )}
+     </div>
+   ) : (
+     <MainLoader />
+   );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),
