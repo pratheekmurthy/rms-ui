@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Paper, Typography, TextField, Box } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 const useStyles = makeStyles(theme => ({
@@ -29,14 +28,9 @@ const useStyles = makeStyles(theme => ({
 export default function FilterTicket(props) {
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
-  const [apiTickets, setApiTickets] = useState([]);
-  const [tickets, setTickets] = useState([]);
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
-  const [Createon, setCreateon] = useState('');
-  const [ticketSubject, setTicketSubject] = useState('');
-  const [ticketDescription, setTicketDescription] = useState('');
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({});
   const [categories, setCategories] = useState([]);
@@ -54,8 +48,6 @@ export default function FilterTicket(props) {
 
   const [open, setOpen] = React.useState(false);
   const [opendate, setOpendate] = React.useState(true);
-  // const toggle = () => setOpen(!open);
-  const [dateRange, setDateRange] = React.useState({});
   const toggle = () => setOpendate(!open);
   useEffect(() => {
     let unmounted = false;
@@ -109,9 +101,9 @@ export default function FilterTicket(props) {
         );
         setLoading(false);
         setMedia({
-              label: 'All',
-              value: 'All'
-            })
+          label: 'All',
+          value: 'All'
+        });
         // body.data[0]
         //   ? setMedia({
         //       label: body.data[0].media,
@@ -138,10 +130,10 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-         setCategory({
-           label: 'All',
-           value: 'All'
-         });
+        setCategory({
+          label: 'All',
+          value: 'All'
+        });
         // body.data[0]
         //   ? setCategory({
         //       label: body.data[0].category,
@@ -239,10 +231,10 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-         setPriority({
-           label: 'All',
-           value: 'All'
-         });
+        setPriority({
+          label: 'All',
+          value: 'All'
+        });
         // body.data[0]
         //   ? setPriority({
         //       label: body.data[0].priority,
@@ -270,10 +262,10 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-         setStatus({
-           label: 'All',
-           value: 'All'
-         });
+        setStatus({
+          label: 'All',
+          value: 'All'
+        });
         // body.data[0]
         //   ? setStatus({
         //       label: body.data[0].status,
@@ -354,11 +346,13 @@ export default function FilterTicket(props) {
               });
             }}
           >
-            {[...[{ label: 'All', value: 'All' }], ...ticketTypes].map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            {[...[{ label: 'All', value: 'All' }], ...ticketTypes].map(
+              option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
           </TextField>
           <TextField
             id="standard-select-currency-native"
@@ -396,11 +390,13 @@ export default function FilterTicket(props) {
               });
             }}
           >
-            {[...[{ label: 'All', value: 'All' }], ...categories].map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            {[...[{ label: 'All', value: 'All' }], ...categories].map(
+              option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
           </TextField>
           <TextField
             id="standard-select-currency-native"
@@ -528,11 +524,13 @@ export default function FilterTicket(props) {
               });
             }}
           >
-            {[...[{ label: 'All', value: 'All' }], ...priorities].map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            {[...[{ label: 'All', value: 'All' }], ...priorities].map(
+              option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
           </TextField>
           <TextField
             id="standard-select-currency-native"

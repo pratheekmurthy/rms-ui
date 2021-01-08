@@ -16,8 +16,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
 function SubCategoryConfig() {
   const useStyles = makeStyles(theme => ({
     root: {

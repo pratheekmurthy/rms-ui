@@ -1,23 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  Grid,
-  Paper,
-  Typography,
-  Divider,
-  Box,
-  TextField
-} from '@material-ui/core';
+import { Grid, Paper, Typography, Divider, Box } from '@material-ui/core';
 import CategoryBarChart from './category-bar-chart';
 import StatusPieChart from './status-pie-chart';
 import TicketTypePieChart from './ticketType-pie-chart';
 import DepartmentPieChart from './department-pie-chart';
-import SubCategoryBarChart from './subCategory-bar-chart';
 import SourceMediaPieChart from './sourceMedia-pie-chart';
 import TicketNumber from './ticketNumber-bar-chart';
 import { blueGrey } from '@material-ui/core/colors';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
     margin: 15,
@@ -72,15 +64,13 @@ export default function TicketReport() {
     }
   ];
   const [day, selectDays] = React.useState('year');
-  const handleDayChange = (event) => {
+  const handleDayChange = event => {
     selectDays(event.target.value);
   };
 
   return (
     <div className={classes.root}>
-      <Box component="span" className={classes.displayFlex}>
-       
-      </Box>
+      <Box component="span" className={classes.displayFlex}></Box>
       <Grid container spacing={2} className={classes.gridClass}>
         <Grid item xs={12}>
           <Paper className={classes.paper}>
@@ -140,7 +130,6 @@ export default function TicketReport() {
             <CategoryBarChart />
           </Paper>
         </Grid>
-      
       </Grid>
     </div>
   );

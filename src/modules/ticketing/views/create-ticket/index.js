@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, TextField, Drawer } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 import Button from '@material-ui/core/Button';
@@ -39,7 +39,6 @@ export default function CreateTicket(props, dealerDetails) {
   const classes = useStyles();
 
   const [ticketNumber, setTicketNumber] = useState('');
-  const [ticketHistory, setTicketHistory] = useState([]);
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
   const [distributorEmail, setDistributorEmail] = useState('');
@@ -107,23 +106,6 @@ export default function CreateTicket(props, dealerDetails) {
   const [updatedTime, setUpdatedTime] = useState();
   const [file, setFile] = useState('');
   const [files, setFiles] = useState([]);
-  const {
-    distributor_name,
-    distributor_id,
-    lastInteractionId,
-    lastInteractionDate,
-    lastOrderReference,
-    distributor_rank,
-    Joiningdate,
-    distributor_status,
-    email_id,
-    display_name,
-    mob_no,
-    pan_no,
-    adhar_no,
-    phone_no,
-    SelfDOB
-  } = dealerDetails;
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
