@@ -262,7 +262,9 @@ export default function TicketDashboard(props) {
           setTickets(body.data);
 
           if (body.data[0]) {
+        
             setActiveTicket(body.data[0]);
+          
           } else {
             setActiveTicket();
           }
@@ -286,7 +288,7 @@ export default function TicketDashboard(props) {
           setApiTickets(body.data);
 
           setTickets(body.data);
-
+ 
           // if (body.data[0]) {
           //   setActiveTicket(body.data[0]);
           // } else {

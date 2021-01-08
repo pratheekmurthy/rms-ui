@@ -244,7 +244,7 @@ export default function FilterTicket(props) {
     return () => {
       unmounted = true;
     };
-  }, [subCategory.value]);
+  }, [subCategory, category]);
 
   useEffect(() => {
     let unmounted = false;

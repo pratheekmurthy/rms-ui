@@ -86,9 +86,23 @@ const useStyles = makeStyles(theme => ({
 const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
+  const [searchText, setSearchText] = useState('');
+  const updateSearchText = evt => {
+    setSearchText(evt.target.value);
+    console.log('search', evt.target.value);
+    localStorage.setItem('search', evt.target.value);
+    changeValue();
+    // alert(evt.target.value);
+    // getDistributorById(evt.target.value);
+  };
+  const changeValue = () => {
+    var x = window.open('', 'myWindow', 'width=200,height=100');
+    x.localStorage.setItem('mytime', Date.now());
+    x.close();
+  };
   async function logoutUser() {
     try {
-      await Axios.get('/user/logout');
+      await Axios.get('/auth/user/logout');
       logout();
     } catch (err) {
       console.log(err);
@@ -111,6 +125,8 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
               input: classes.inputInput
             }}
             inputProps={{ 'aria-label': 'search' }}
+            onChange={updateSearchText}
+            value={searchText}
           />
         </div>
         <Box flexGrow={1} />

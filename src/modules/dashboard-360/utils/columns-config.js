@@ -68,11 +68,11 @@ export const AgentLastFiveColumns = [
     field: 'asterixUniqueID',
     flex: 1
   },
-  {
-    field: 'agentID',
-    headerName: 'Agent ID',
-    flex: 1
-  },
+  // {
+  //   field: 'agentID',
+  //   headerName: 'Agent ID',
+  //   flex: 1
+  // },
   {
     field: 'type',
     headerName: 'Type',
