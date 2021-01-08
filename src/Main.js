@@ -27,13 +27,13 @@ function Main({
     (async function checkLoggedInState() {
       try {
         localStorage.clear();
-        const res = await Axios.post('/auth/user/login', {});
+        const res = await Axios.post('/user/login', {});
         const obj = res.data.userObj;
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
         setLoggedInMain(true);
       } catch (error) {
-        setLoggedInMain(true);
+        setLoggedInMain(false);
       } finally {
         setLoading(false);
       }
