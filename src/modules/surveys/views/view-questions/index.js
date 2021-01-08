@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import CommonAlert from 'src/components/CommonAlert';
 import Spinner from 'src/components/Spinner';
 
+// Collecting all question from database and getting question id
 const colConfig = [
   {
     field: 'questionId',

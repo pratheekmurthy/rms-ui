@@ -7,6 +7,7 @@ import getCampaignModule from './redux/module';
 export default function View({ routes }) {
   return (
     <DynamicModuleLoader modules={[getCampaignModule()]}>
+      {/* <DynamicModuleLoader> */}
       <CustomBreadcrumbs />
       <RouteSwitch routes={routes} redirectPath="/surveys/dashboard" />
     </DynamicModuleLoader>
