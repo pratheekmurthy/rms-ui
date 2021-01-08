@@ -154,7 +154,8 @@ export default function CreateTicket(props) {
     department,
     executive,
     team,
-    subCategory
+    subCategory,
+    remarks
   ]);
   useEffect(() => {
     if (!props.ticket_id) {
@@ -674,7 +675,6 @@ export default function CreateTicket(props) {
 
   const createTicket = () => {
     var result = addRow();
-
     props.setOpen(result);
   };
   const addRow = async () => {
@@ -732,6 +732,7 @@ export default function CreateTicket(props) {
         ticketid: props.ticket_id,
         _id: props.ticket_id
       };
+      props.setClick(createTicket);
       props.updateTicket(apiParam.headers);
     }
 
@@ -1115,6 +1116,7 @@ export default function CreateTicket(props) {
           <br />
           <TextField
             error={remarks === ''}
+            validators={['required']}
             id="remark"
             label="Remarks"
             multiline
@@ -1124,6 +1126,7 @@ export default function CreateTicket(props) {
             style={{ width: '100%' }}
             onChange={e => {
               handleChange('remarks', e);
+              props.setClick(createTicket);
             }}
             value={remarks}
           />

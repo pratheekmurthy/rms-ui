@@ -209,12 +209,20 @@ export default function FilterTicket(props) {
     return () => {
       unmounted = true;
     };
-  }, [subCategoryItem]);
+  }, [subCategory.value]);
 
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
-      const response = await fetch(config.APIS_URL + '/priorities');
+      const response = await fetch(
+        config.APIS_URL +
+          '/priorities/' +
+          (subCategory.value
+            ? subCategory.value.toString().length > 0
+              ? subCategory.value
+              : 'abcdefghijklmnop'
+            : 'abcdefghijklmnop')
+      );
       const body = await response.json();
       if (!unmounted) {
         setPriorities(
@@ -236,7 +244,7 @@ export default function FilterTicket(props) {
     return () => {
       unmounted = true;
     };
-  }, []);
+  }, [subCategory.value]);
 
   useEffect(() => {
     let unmounted = false;
@@ -378,6 +386,96 @@ export default function FilterTicket(props) {
                 {option.label}
               </option>
             ))}
+          </TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Sub-Category"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+            inputProps={{ style: { fontSize: 13 } }}
+            value={subCategory.value}
+            onChange={e => {
+              setSubCategory({
+                value: e.target.value,
+                label: subCategories.filter(
+                  subCategory => subCategory.value === e.target.value
+                )[0]
+                  ? subCategories.filter(
+                      subCategory => subCategory.value === e.target.value
+                    )[0].label
+                  : ''
+              });
+              props.setSubCategory({
+                value: e.target.value,
+                label: subCategories.filter(
+                  subCategory => subCategory.value === e.target.value
+                )[0]
+                  ? subCategories.filter(
+                      subCategory => subCategory.value === e.target.value
+                    )[0].label
+                  : ''
+              });
+            }}
+          >
+            {[...[{ label: 'All', value: '' }], ...subCategories].map(
+              option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
+          </TextField>
+          <TextField
+            id="standard-select-currency-native"
+            select
+            label="Sub-Category Item"
+            size="small"
+            SelectProps={{
+              native: true
+            }}
+            InputLabelProps={{
+              shrink: true
+            }}
+            inputProps={{ style: { fontSize: 13 } }}
+            value={subCategoryItem.value}
+            onChange={e => {
+              setSubCategoryItem({
+                value: e.target.value,
+                label: subCategoryItems.filter(
+                  subCategoryItem => subCategoryItem.value === e.target.value
+                )[0]
+                  ? subCategoryItems.filter(
+                      subCategoryItem =>
+                        subCategoryItem.value === e.target.value
+                    )[0].label
+                  : ''
+              });
+              props.setSubCategoryItem({
+                value: e.target.value,
+                label: subCategoryItems.filter(
+                  subCategoryItem => subCategoryItem.value === e.target.value
+                )[0]
+                  ? subCategoryItems.filter(
+                      subCategoryItem =>
+                        subCategoryItem.value === e.target.value
+                    )[0].label
+                  : ''
+              });
+            }}
+          >
+            {[...[{ label: 'All', value: '' }], ...subCategoryItems].map(
+              option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              )
+            )}
           </TextField>
           <TextField
             id="standard-select-currency-native"
