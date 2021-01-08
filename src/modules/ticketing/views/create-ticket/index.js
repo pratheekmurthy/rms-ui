@@ -202,9 +202,13 @@ export default function CreateTicket(props, dealerDetails) {
              value: props.subCategoryItem.value,
              label: props.subCategoryItem.label
            });
+              getSubCategories(props.category.value);
+              getSubCategoryItems(
+                props.category.value,
+                props.subCategory.value
+              );
         }
-        getSubCategories(props.category.value);
-         getSubCategoryItems(props.category.value, props.subCategory.value);
+     
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var charactersLength = characters.length;
@@ -837,7 +841,7 @@ export default function CreateTicket(props, dealerDetails) {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
-    alert(e);
+   
       setFile(e);
     var formdata = new FormData();
     formdata.append('SoftCopyFile',e);
@@ -995,7 +999,7 @@ export default function CreateTicket(props, dealerDetails) {
                   )[0].label
                 });
                 props.setClick(createTicket);
-                alert(category.value);
+                // alert(category.value);
                 getSubCategoryItems(category.value, e.target.value);
               }}
             >

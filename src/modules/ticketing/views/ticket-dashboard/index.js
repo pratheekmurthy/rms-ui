@@ -257,7 +257,7 @@ export default function TicketDashboard(props) {
         const response = await fetch(config.APIS_URL + '/tickets');
         const body = await response.json();
         if (!unmounted) {
-          setApiTickets(body.data);
+          // setApiTickets(body.data);
 
           setTickets(body.data);
 
@@ -297,9 +297,9 @@ export default function TicketDashboard(props) {
         const response = await fetch(config.APIS_URL + '/tickets');
         const body = await response.json();
         if (!unmounted) {
-          setApiTickets(body.data);
+          // setApiTickets(body.data);
 
-          setTickets(body.data);
+          // setTickets(body.data);
  
           // if (body.data[0]) {
           //   setActiveTicket(body.data[0]);
@@ -339,41 +339,42 @@ export default function TicketDashboard(props) {
       .catch(error => console.log('error', error));
   };
   const viewTicket = item => {
+    // alert("click")
     setActiveTicket(item);
     //setTicketNumber(item.ticketNumber);
-    setCreatedTime(item.createdTime);
-    setTicketDescription(item.ticketDescription);
-    setRemarks(item.ticketRemarks);
-    setTicketSubject(item.ticketSubject);
-    setCategory({
-      label: item.category,
-      value: item.categoryId
-    });
-    setSubCategory({
-      label: item.subCategory,
-      value: item.subCategoryId
-    });
-    setSubCategoryItems({
-      label: item.subCategoryItem,
-      value: item.subCategoryItemId
-    });
-    setPriority({
-      label: item.priority,
-      value: item.priorityId
-    });
-    setMedia({
-      label: item.media,
-      value: item.mediaId
-    });
-    setDistributorEmail(item.distributorEmail);
-    setDistributorId(item.distributorId);
-    setDistributorMobile(item.distributorMobile);
-    setDistributorName(item.distributorName);
-    setTicketType({
-      label: item.ticketType,
-      value: item.ticketTypeId
-    });
-    setAssignedExecutive(item.assignedExecutive);
+    // setCreatedTime(item.createdTime);
+    // setTicketDescription(item.ticketDescription);
+    // setRemarks(item.ticketRemarks);
+    // setTicketSubject(item.ticketSubject);
+    // setCategory({
+    //   label: item.category,
+    //   value: item.categoryId
+    // });
+    // setSubCategory({
+    //   label: item.subCategory,
+    //   value: item.subCategoryId
+    // });
+    // setSubCategoryItems({
+    //   label: item.subCategoryItem,
+    //   value: item.subCategoryItemId
+    // });
+    // setPriority({
+    //   label: item.priority,
+    //   value: item.priorityId
+    // });
+    // setMedia({
+    //   label: item.media,
+    //   value: item.mediaId
+    // });
+    // setDistributorEmail(item.distributorEmail);
+    // setDistributorId(item.distributorId);
+    // setDistributorMobile(item.distributorMobile);
+    // setDistributorName(item.distributorName);
+    // setTicketType({
+    //   label: item.ticketType,
+    //   value: item.ticketTypeId
+    // });
+    // setAssignedExecutive(item.assignedExecutive);
     let unmounted = false;
     async function getHistoryItems() {
        
@@ -889,7 +890,7 @@ export default function TicketDashboard(props) {
           >
             {tickets.length > 0 ? (
               <Box component="div" overflow="auto">
-                <h3>All</h3>
+                <h3>All ({tickets.length})</h3>
                 {getTicketList()}
               </Box>
             ) : (
