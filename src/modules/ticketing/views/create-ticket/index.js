@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CreateTicket(props) {
+export default function CreateTicket(props, dealerDetails) {
   const classes = useStyles();
 
   const [ticketNumber, setTicketNumber] = useState('');
@@ -52,13 +52,16 @@ export default function CreateTicket(props) {
   const [remarks, setRemarks] = useState('');
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({
-    ticketTypeId: '',
-    ticketType: ''
+    value: '',
+    label: ''
   });
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({ value: '', label: '' });
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({ value: '', label: '' });
+  const [category, setCategory] = useState({
+    value: '',
+    label: ''
+  });
   const [subCategories, setSubCategories] = useState([]);
   const [subCategory, setSubCategory] = useState({
     value: '',
@@ -103,6 +106,23 @@ export default function CreateTicket(props) {
   const [updatedTime, setUpdatedTime] = useState();
   const [file, setFile] = useState('');
   const [files, setFiles] = useState([]);
+  const {
+    distributor_name,
+    distributor_id,
+    lastInteractionId,
+    lastInteractionDate,
+    lastOrderReference,
+    distributor_rank,
+    Joiningdate,
+    distributor_status,
+    email_id,
+    display_name,
+    mob_no,
+    pan_no,
+    adhar_no,
+    phone_no,
+    SelfDOB
+  } = dealerDetails;
   const handleChange = (ctrl, e) => {
     switch (ctrl) {
       case 'ticketNumber':
@@ -137,6 +157,8 @@ export default function CreateTicket(props) {
         return props.setClick(createTicket);
       case 'file':
         setFile(e.target.files[0]);
+        UploadFile(e.target.files[0]);
+        // alert(e.target.files[0]);
         return props.setClick(createTicket);
       default:
         return props.setClick(createTicket);
@@ -158,7 +180,31 @@ export default function CreateTicket(props) {
     remarks
   ]);
   useEffect(() => {
+    // alert(props.formtype);
+  
     if (!props.ticket_id) {
+        if (props.formtype === 'telephony') {
+          setDistributorMobile(props.dealerDetails.mob_no);
+          setDistributorEmail(props.dealerDetails.email_id);
+          setDistributorId(props.dealerDetails.distributor_id);
+          setDistributorName(props.dealerDetails.distributor_name);
+          console.log('disform', props);
+          setCategory({label:props.category.label, value:props.category.value});
+          setTicketType({
+            value: props.ticketType.value,
+            label: props.ticketType.label
+          });
+           setSubCategory({
+             value: props.subCategory.value,
+             label: props.subCategory.label
+           });
+           setSubCategoryItem({
+             value: props.subCategoryItem.value,
+             label: props.subCategoryItem.label
+           });
+        }
+        getSubCategories(props.category.value);
+         getSubCategoryItems(props.category.value, props.subCategory.value);
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var charactersLength = characters.length;
@@ -172,8 +218,12 @@ export default function CreateTicket(props) {
       let month = (newDate.getMonth() + 1).toString();
       let year = newDate.getFullYear().toString();
       setTicketNumber('TKT' + year + month + date + result);
-
-      setCreatedTime(new Date().toDateString());
+      setCreatedTime(
+        new Date().toLocaleString(undefined, {
+          timeZone: 'Asia/Kolkata'
+        })
+      );
+      // setCreatedTime(new Date().toDateString());
       setUpdatedTime(new Date().toDateString());
       props.setClick(createTicket);
     } else {
@@ -211,7 +261,10 @@ export default function CreateTicket(props) {
             nameLabel: ''
           });
 
-          setCategory({ value: tkt.categoryId, label: tkt.category });
+          setCategory({
+            value: tkt.categoryId,
+            label: tkt.category
+          });
           getSubCategories(tkt.categoryId);
 
           setSubCategory({
@@ -229,7 +282,10 @@ export default function CreateTicket(props) {
             value: tkt.assignedDepartmentId,
             label: tkt.assignedDepartment
           });
-          setTeam({ value: tkt.assignedTeamId, label: tkt.assignedTeam });
+          setTeam({
+            value: tkt.assignedTeamId,
+            label: tkt.assignedTeam
+          });
           setPriority({
             value: tkt.priorityId,
             label: tkt.priority,
@@ -267,6 +323,12 @@ export default function CreateTicket(props) {
       const response = await fetch(config.APIS_URL + '/tickettypes');
       const body = await response.json();
       if (!unmounted) {
+        if (props.formtype === 'telephony') {
+     setTicketType({
+       value: props.ticketType.value,
+       label: props.ticketType.label
+     });
+      }
         setTicketTypes(
           body.data.map(({ _id, ticketType }) => ({
             label: ticketType,
@@ -274,7 +336,8 @@ export default function CreateTicket(props) {
           }))
         );
         setLoading(false);
-        if (!props.ticket_id) {
+        
+        if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
             ? setTicketType({
                 label: body.data[0].ticketType,
@@ -330,7 +393,15 @@ export default function CreateTicket(props) {
       const body = await response.json();
 
       if (!unmounted) {
-        if (!props.ticket_id) {
+          if (props.formtype === 'telephony') {
+           
+            setCategory({
+              label: props.category.label,
+              value: props.category.value
+            });
+          }
+        if (!props.ticket_id && props.formtype !== 'telephony') {
+         
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -366,7 +437,13 @@ export default function CreateTicket(props) {
             value: _id
           }))
         );
-        if (!props.ticket_id) {
+          if (props.formtype === 'telephony') {
+        setSubCategory({
+          value: props.subCategory.value,
+          label: props.subCategory.label
+        });
+      }
+        if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
             ? setSubCategory({
                 label: body.data[0].subCategory,
@@ -399,7 +476,13 @@ export default function CreateTicket(props) {
         );
 
         setLoading(false);
-        if (!props.ticket_id) {
+        if (props.formtype === 'telephony') {
+         setSubCategoryItem({
+           value: props.subCategoryItem.value,
+           label: props.subCategoryItem.label
+         });
+        }
+        if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
             ? setSubCategoryItem({
                 label: body.data[0].subCategoryItem,
@@ -447,7 +530,7 @@ export default function CreateTicket(props) {
       unmounted = true;
     };
   }, [subCategory, category]);
-  
+
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -546,7 +629,6 @@ export default function CreateTicket(props) {
   useEffect(() => {
     let unmounted = false;
     async function getFiles() {
-      console.log('fils');
       console.log('tktnumber', ticketNumber);
 
       const apiUrl = config.APIS_URL + '/tickets/fetchfiles';
@@ -559,10 +641,13 @@ export default function CreateTicket(props) {
 
       const fils = await response.json();
 
-      setFiles(fils);
+      if (fils.length && props.ticket_id) {
+        setFiles(fils);
+      }
     }
 
     getFiles();
+
     return () => {
       unmounted = true;
     };
@@ -752,10 +837,12 @@ export default function CreateTicket(props) {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
-
+    alert(e);
+      setFile(e);
     var formdata = new FormData();
-    formdata.append('SoftCopyFile', file);
-    console.log('files', ticketNumber, file);
+    formdata.append('SoftCopyFile',e);
+    console.log('tkt', ticketNumber, e);
+    console.log('files', e);
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -768,7 +855,7 @@ export default function CreateTicket(props) {
       .then(response => response.text())
       .then(result => {
         alert('Uploaded Sucessfully');
-        console.log(result);
+        console.log('upload', result);
       })
       .catch(error => console.log('error', error));
   };
@@ -797,6 +884,7 @@ export default function CreateTicket(props) {
             InputProps={{
               readOnly: true
             }}
+            type="text"
           ></TextField>
           <br />
           <TextField
@@ -867,7 +955,7 @@ export default function CreateTicket(props) {
             }}
             variant="outlined"
             style={{ width: '31.4%' }}
-            value={category.value}
+            value={category.value||''}
             onChange={e => {
               setCategory({
                 value: e.target.value,
@@ -907,6 +995,7 @@ export default function CreateTicket(props) {
                   )[0].label
                 });
                 props.setClick(createTicket);
+                alert(category.value);
                 getSubCategoryItems(category.value, e.target.value);
               }}
             >
@@ -964,7 +1053,7 @@ export default function CreateTicket(props) {
             }}
             variant="outlined"
             style={{ width: '32%' }}
-            value={ticketType.value || ''}
+            value={ticketType.value}
             onChange={e => {
               setTicketType({
                 value: e.target.value,
@@ -1132,7 +1221,11 @@ export default function CreateTicket(props) {
             value={remarks}
           />
           <div
-            style={{ maxHeight: '150px', overflow: 'scroll', width: '100%' }}
+            style={{
+              maxHeight: '150px',
+              overflow: 'scroll',
+              width: '100%'
+            }}
           >
             {/* <TextField
               id="SoftCopyFile"
@@ -1167,7 +1260,7 @@ export default function CreateTicket(props) {
                 component="span"
                 className={classes.button}
                 startIcon={<AttachFileIcon />}
-                onClick={UploadFile}
+                // onClick={(e) => UploadFile(e)}
               >
                 Attach
               </Button>

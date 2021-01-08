@@ -107,9 +107,7 @@ const [tickets, setTickets] = useState([]);
                       <Link>{ticket.ticketNumber}</Link>
                     </ListItemIcon>
 
-                    <Box my={1}>
-                      <Chip label="Escalated" color="secondary" />
-                    </Box>
+                   
                   </Box>
                 }
                 secondary={

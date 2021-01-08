@@ -73,7 +73,7 @@ export default function FilterTicket(props) {
         setLoading(false);
         setTicketType({
           label: 'All',
-          value: ''
+          value: 'All'
         });
         /* setTicketTypes(
           body.data.map(({ _id, ticketType }) => ({
@@ -109,12 +109,16 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setMedia({
-              label: body.data[0].media,
-              value: body.data[0]._id
+        setMedia({
+              label: 'All',
+              value: 'All'
             })
-          : setMedia({});
+        // body.data[0]
+        //   ? setMedia({
+        //       label: body.data[0].media,
+        //       value: body.data[0]._id
+        //     })
+        //   : setMedia({});
       }
     }
     getItems();
@@ -135,12 +139,16 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setCategory({
-              label: body.data[0].category,
-              value: body.data[0]._id
-            })
-          : setCategory({});
+         setCategory({
+           label: 'All',
+           value: 'All'
+         });
+        // body.data[0]
+        //   ? setCategory({
+        //       label: body.data[0].category,
+        //       value: body.data[0]._id
+        //     })
+        //   : setCategory({});
       }
     }
     getItems();
@@ -232,12 +240,16 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setPriority({
-              label: body.data[0].priority,
-              value: body.data[0]._id
-            })
-          : setPriority({});
+         setPriority({
+           label: 'All',
+           value: 'All'
+         });
+        // body.data[0]
+        //   ? setPriority({
+        //       label: body.data[0].priority,
+        //       value: body.data[0]._id
+        //     })
+        //   : setPriority({});
       }
     }
     getItems();
@@ -259,12 +271,16 @@ export default function FilterTicket(props) {
           }))
         );
         setLoading(false);
-        body.data[0]
-          ? setStatus({
-              label: body.data[0].status,
-              value: body.data[0]._id
-            })
-          : setStatus({});
+         setStatus({
+           label: 'All',
+           value: 'All'
+         });
+        // body.data[0]
+        //   ? setStatus({
+        //       label: body.data[0].status,
+        //       value: body.data[0]._id
+        //     })
+        //   : setStatus({});
       }
     }
     getItems();
@@ -325,7 +341,7 @@ export default function FilterTicket(props) {
                   ? ticketTypes.filter(
                       ticketType => ticketType.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
               props.setTicketType({
                 value: e.target.value,
@@ -335,11 +351,11 @@ export default function FilterTicket(props) {
                   ? ticketTypes.filter(
                       ticketType => ticketType.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
             }}
           >
-            {[...[{ label: 'All', value: '' }], ...ticketTypes].map(option => (
+            {[...[{ label: 'All', value: 'All' }], ...ticketTypes].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -367,7 +383,7 @@ export default function FilterTicket(props) {
                   ? categories.filter(
                       category => category.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
               props.setCategory({
                 value: e.target.value,
@@ -377,11 +393,11 @@ export default function FilterTicket(props) {
                   ? categories.filter(
                       category => category.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
             }}
           >
-            {[...[{ label: 'All', value: '' }], ...categories].map(option => (
+            {[...[{ label: 'All', value: 'All' }], ...categories].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -499,7 +515,7 @@ export default function FilterTicket(props) {
                   ? priorities.filter(
                       priority => priority.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
               props.setPriority({
                 value: e.target.value,
@@ -509,11 +525,11 @@ export default function FilterTicket(props) {
                   ? priorities.filter(
                       priority => priority.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
             }}
           >
-            {[...[{ label: 'All', value: '' }], ...priorities].map(option => (
+            {[...[{ label: 'All', value: 'All' }], ...priorities].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -541,7 +557,7 @@ export default function FilterTicket(props) {
                   ? statuses.filter(
                       status => status.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
               props.setStatus({
                 value: e.target.value,
@@ -551,11 +567,11 @@ export default function FilterTicket(props) {
                   ? statuses.filter(
                       status => status.value === e.target.value
                     )[0].label
-                  : ''
+                  : 'All'
               });
             }}
           >
-            {[...[{ label: 'All', value: '' }], ...statuses].map(option => (
+            {[...[{ label: 'All', value: 'All' }], ...statuses].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -580,18 +596,18 @@ export default function FilterTicket(props) {
                 label: medium.filter(media => media.value === e.target.value)[0]
                   ? medium.filter(media => media.value === e.target.value)[0]
                       .label
-                  : ''
+                  : 'All'
               });
               props.setMedia({
                 value: e.target.value,
                 label: medium.filter(media => media.value === e.target.value)[0]
                   ? medium.filter(media => media.value === e.target.value)[0]
                       .label
-                  : ''
+                  : 'All'
               });
             }}
           >
-            {[...[{ label: 'All', value: '' }], ...medium].map(option => (
+            {[...[{ label: 'All', value: 'All' }], ...medium].map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
