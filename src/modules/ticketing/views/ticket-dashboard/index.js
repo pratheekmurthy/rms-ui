@@ -45,11 +45,20 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 const drawerWidth = 350;
 const useStyles = makeStyles(theme => ({
   root: {
+    width: '100%',
     flexGrow: 1,
-    margin: 15
+    '& .MuiTextField-root': {
+      margin: theme.spacing(1),
+      width: 200,
+      shrink: false
+    }
   },
   textBold: {
     fontWeight: '600'
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 220
   },
   paper: {
     padding: theme.spacing(1)
@@ -262,21 +271,18 @@ export default function TicketDashboard(props) {
           setTickets(body.data);
 
           if (body.data[0]) {
-       
-        async function getHistoryItems() {
-         
-          const response = await fetch(
-            config.APIS_URL + '/ticketHistory/' + body.data[0].ticketNumber
-          );
-          const tktHistory = (await response.json()).data;
+            async function getHistoryItems() {
+              const response = await fetch(
+                config.APIS_URL + '/ticketHistory/' + body.data[0].ticketNumber
+              );
+              const tktHistory = (await response.json()).data;
 
-          if (!unmounted) {
-            setTicketHistory(tktHistory);
-          }
-        }
-        getHistoryItems();
+              if (!unmounted) {
+                setTicketHistory(tktHistory);
+              }
+            }
+            getHistoryItems();
             setActiveTicket(body.data[0]);
-          
           } else {
             setActiveTicket();
           }
@@ -298,9 +304,7 @@ export default function TicketDashboard(props) {
         const body = await response.json();
         if (!unmounted) {
           // setApiTickets(body.data);
-
           // setTickets(body.data);
- 
           // if (body.data[0]) {
           //   setActiveTicket(body.data[0]);
           // } else {
@@ -377,9 +381,7 @@ export default function TicketDashboard(props) {
     // setAssignedExecutive(item.assignedExecutive);
     let unmounted = false;
     async function getHistoryItems() {
-       
       const response = await fetch(
-      
         config.APIS_URL + '/ticketHistory/' + item.ticketNumber
       );
       const tktHistory = (await response.json()).data;
@@ -1124,7 +1126,6 @@ export default function TicketDashboard(props) {
                           alignItems="center"
                         >
                           <Typography
-                            variant="body1"
                             style={{
                               fontWeight: '500',
                               float: 'left',
@@ -1191,6 +1192,8 @@ export default function TicketDashboard(props) {
                               select
                               value={category}
                               onChange={handleCategoryChange}
+                              label="Label"
+                              InputLabelProps={{ shrink: true }}
                               SelectProps={{
                                 native: true
                               }}

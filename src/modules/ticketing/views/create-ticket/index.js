@@ -22,7 +22,8 @@ const useStyles = makeStyles(theme => ({
   // new code
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 220
+    minWidth: 220,
+    shrink: false
   },
   selectEmpty: {
     marginTop: theme.spacing(2)
@@ -181,34 +182,34 @@ export default function CreateTicket(props, dealerDetails) {
   ]);
   useEffect(() => {
     // alert(props.formtype);
-  
+
     if (!props.ticket_id) {
-        if (props.formtype === 'telephony') {
-          setDistributorMobile(props.dealerDetails.mob_no);
-          setDistributorEmail(props.dealerDetails.email_id);
-          setDistributorId(props.dealerDetails.distributor_id);
-          setDistributorName(props.dealerDetails.distributor_name);
-          console.log('disform', props);
-          setCategory({label:props.category.label, value:props.category.value});
-          setTicketType({
-            value: props.ticketType.value,
-            label: props.ticketType.label
-          });
-           setSubCategory({
-             value: props.subCategory.value,
-             label: props.subCategory.label
-           });
-           setSubCategoryItem({
-             value: props.subCategoryItem.value,
-             label: props.subCategoryItem.label
-           });
-              getSubCategories(props.category.value);
-              getSubCategoryItems(
-                props.category.value,
-                props.subCategory.value
-              );
-        }
-     
+      if (props.formtype === 'telephony') {
+        setDistributorMobile(props.dealerDetails.mob_no);
+        setDistributorEmail(props.dealerDetails.email_id);
+        setDistributorId(props.dealerDetails.distributor_id);
+        setDistributorName(props.dealerDetails.distributor_name);
+        console.log('disform', props);
+        setCategory({
+          label: props.category.label,
+          value: props.category.value
+        });
+        setTicketType({
+          value: props.ticketType.value,
+          label: props.ticketType.label
+        });
+        setSubCategory({
+          value: props.subCategory.value,
+          label: props.subCategory.label
+        });
+        setSubCategoryItem({
+          value: props.subCategoryItem.value,
+          label: props.subCategoryItem.label
+        });
+        getSubCategories(props.category.value);
+        getSubCategoryItems(props.category.value, props.subCategory.value);
+      }
+
       var result = '';
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var charactersLength = characters.length;
@@ -328,11 +329,11 @@ export default function CreateTicket(props, dealerDetails) {
       const body = await response.json();
       if (!unmounted) {
         if (props.formtype === 'telephony') {
-     setTicketType({
-       value: props.ticketType.value,
-       label: props.ticketType.label
-     });
-      }
+          setTicketType({
+            value: props.ticketType.value,
+            label: props.ticketType.label
+          });
+        }
         setTicketTypes(
           body.data.map(({ _id, ticketType }) => ({
             label: ticketType,
@@ -340,7 +341,7 @@ export default function CreateTicket(props, dealerDetails) {
           }))
         );
         setLoading(false);
-        
+
         if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
             ? setTicketType({
@@ -397,15 +398,13 @@ export default function CreateTicket(props, dealerDetails) {
       const body = await response.json();
 
       if (!unmounted) {
-          if (props.formtype === 'telephony') {
-           
-            setCategory({
-              label: props.category.label,
-              value: props.category.value
-            });
-          }
+        if (props.formtype === 'telephony') {
+          setCategory({
+            label: props.category.label,
+            value: props.category.value
+          });
+        }
         if (!props.ticket_id && props.formtype !== 'telephony') {
-         
           body.data[0]
             ? setCategory({
                 label: body.data[0].category,
@@ -436,17 +435,18 @@ export default function CreateTicket(props, dealerDetails) {
       const body = await response.json();
       if (!unmounted) {
         setSubCategories(
-          body.data.map(({ _id, subCategory }) => ({
-            label: subCategory,
-            value: _id
-          }))
+          body.data ||
+            [].map(({ _id, subCategory }) => ({
+              label: subCategory,
+              value: _id
+            }))
         );
-          if (props.formtype === 'telephony') {
-        setSubCategory({
-          value: props.subCategory.value,
-          label: props.subCategory.label
-        });
-      }
+        if (props.formtype === 'telephony') {
+          setSubCategory({
+            value: props.subCategory.value,
+            label: props.subCategory.label
+          });
+        }
         if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
             ? setSubCategory({
@@ -473,18 +473,19 @@ export default function CreateTicket(props, dealerDetails) {
 
       if (!unmounted) {
         setSubCategoryItems(
-          body.data.map(({ _id, subCategoryItem }) => ({
-            label: subCategoryItem,
-            value: _id
-          }))
+          body.data ||
+            [].map(({ _id, subCategoryItem }) => ({
+              label: subCategoryItem,
+              value: _id
+            }))
         );
 
         setLoading(false);
         if (props.formtype === 'telephony') {
-         setSubCategoryItem({
-           value: props.subCategoryItem.value,
-           label: props.subCategoryItem.label
-         });
+          setSubCategoryItem({
+            value: props.subCategoryItem.value,
+            label: props.subCategoryItem.label
+          });
         }
         if (!props.ticket_id && props.formtype !== 'telephony') {
           body.data[0]
@@ -841,10 +842,10 @@ export default function CreateTicket(props, dealerDetails) {
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
-   
-      setFile(e);
+
+    setFile(e);
     var formdata = new FormData();
-    formdata.append('SoftCopyFile',e);
+    formdata.append('SoftCopyFile', e);
     console.log('tkt', ticketNumber, e);
     console.log('files', e);
     var requestOptions = {
@@ -959,7 +960,8 @@ export default function CreateTicket(props, dealerDetails) {
             }}
             variant="outlined"
             style={{ width: '31.4%' }}
-            value={category.value||''}
+            value={category.value || ''}
+            InputLabelProps={{ shrink: true }}
             onChange={e => {
               setCategory({
                 value: e.target.value,
@@ -1052,6 +1054,7 @@ export default function CreateTicket(props, dealerDetails) {
             name="type"
             size="small"
             label="Ticket Type"
+            InputLabelProps={{ shrink: true }}
             SelectProps={{
               native: true
             }}

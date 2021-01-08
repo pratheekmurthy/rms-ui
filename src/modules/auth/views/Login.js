@@ -88,7 +88,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     try {
       const res = await Axios.post('/auth/user/login', values);
       const obj = res.data.userDetails;
-    
+
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
 
@@ -128,8 +128,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
             </div>
             <Formik
               initialValues={{
-                email: 'demo@devias.io',
-                password: 'Password123',
+                email: 'admin@admin.com',
+                password: 'abcabcabc',
                 role: 'Agent',
                 AgentType: 'Inbound',
                 AgentSIPID: '9999'
