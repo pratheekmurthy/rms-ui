@@ -57,7 +57,36 @@ export const invoicesColumns = [
 ];
 
 
-export const AgentLastFiveColumns = [
+export const lastFiveCallData = [
+  {
+    // renderCell: rowData => (
+    //   <Link to={`/dash360/admin/agentlastfive/${rowData.row.InvoiceNumber}`}>
+    //     {rowData.row.InvoiceNumber}
+    //   </Link>
+    // ),
+    headerName: 'Unique ID',
+    field: 'asterixUniqueID',
+    flex: 1
+  },
+  // {
+  //   field: 'agentID',
+  //   headerName: 'Agent ID',
+  //   flex: 1
+  // },
+  {
+    field: 'type',
+    headerName: 'Type',
+    flex: 1
+  },
+  
+  {
+    field: 'created',
+    headerName: 'Date',
+    flex: 1
+  }
+];
+
+export const AgentCallColumns = [
   {
     // renderCell: rowData => (
     //   <Link to={`/dash360/admin/agentlastfive/${rowData.row.InvoiceNumber}`}>
@@ -79,9 +108,77 @@ export const AgentLastFiveColumns = [
     flex: 1
   },
   {
+    field: 'category',
+    headerName: 'Category',
+    flex: 1
+  },
+  {
+    field: 'subcategory',
+    headerName: 'Sub Category',
+    flex: 1
+  },
+  {
+    field: 'solution',
+    headerName: 'solution',
+    flex: 1
+  },
+  {
+    field: 'comments',
+    headerName: 'Comments',
+    flex: 1
+  },
+  {
     field: 'created',
     headerName: 'Date',
     flex: 1
   }
 ];
+export const DistributerCallColumns = [
+  {
+    // renderCell: rowData => (
+    //   <Link to={`/dash360/admin/agentlastfive/${rowData.row.InvoiceNumber}`}>
+    //     {rowData.row.InvoiceNumber}
+    //   </Link>
+    // ),
+    headerName: 'Unique ID',
+    field: 'asterixUniqueID',
+    flex: 1
+  },
+  // {
+  //   field: 'agentID',
+  //   headerName: 'Agent ID',
+  //   flex: 1
+  // },
+  {
+    field: 'type',
+    headerName: 'Type',
+    flex: 1
+  },
+  {
+    field: 'category',
+    headerName: 'Category',
+    flex: 1
+  },
+  {
+    field: 'subcategory',
+    headerName: 'Sub Category',
+    flex: 1
+  },
+  {
+    field: 'solution',
+    headerName: 'solution',
+    flex: 1
+  },
+  {
+    field: 'comments',
+    headerName: 'Comments',
+    flex: 1
+  },
+  {
+    field: 'created',
+    headerName: 'Date',
+    flex: 1
+  }
+];
+
 

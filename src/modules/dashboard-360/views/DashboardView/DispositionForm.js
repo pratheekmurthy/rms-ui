@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import React, { useRef, useState } from 'react';
 import { TextField, RadioGroup, Select } from 'formik-material-ui';
+import { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -12,7 +13,9 @@ import {
   Radio
 } from '@material-ui/core';
 import * as yup from 'yup';
+import config from '../../../ticketing/views/config.json';
 import { Autocomplete } from '@material-ui/lab';
+import { AlternateEmailTwoTone } from '@material-ui/icons';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
     width: '100%'
@@ -20,16 +23,156 @@ const useStyle = makeStyles(() => ({
 }));
 export default function DispositionForm(props) {
   const [initialValue] = useState({
+    tickettype: '',
     category: '',
     subcategory: '',
     comments: '',
     type: '',
-    solution: ''
+    subcategoryitem: '',
+    enable: false
   });
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.45:42004/'
+  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const [category, setCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [ticketTypes, setTicketTypes] = useState([]);
+  const [ticketType, setTicketType] = useState({
+    ticketTypeId: '',
+    ticketType: ''
+  });
+  const [subCategories, setSubCategories] = useState([]);
+  const [subCategory, setSubCategory] = useState({
+    value: '',
+    label: ''
+  });
+  const [subCategoryItems, setSubCategoryItems] = useState([]);
+  const [subCategoryItem, setSubCategoryItem] = useState({
+    value: '',
+    label: ''
+  });
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/categories');
+      const body = await response.json();
 
+      if (!unmounted) {
+        body.data[0]
+          ? setCategory({
+              label: body.data[0].category,
+              value: body.data[0]._id
+            })
+          : setCategory({});
+
+        setCategories(
+          body.data.map(({ _id, category }) => ({
+            label: category,
+            value: _id
+          }))
+        );
+        setLoading(false);
+      }
+    }
+    getItems();
+
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/tickettypes');
+      const body = await response.json();
+      if (!unmounted) {
+        setTicketTypes(
+          body.data.map(({ _id, ticketType }) => ({
+            label: ticketType,
+            value: _id
+          }))
+        );
+        setLoading(false);
+
+        body.data[0]
+          ? setTicketType({
+              label: body.data[0].ticketType,
+              value: body.data[0]._id
+            })
+          : setTicketType({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  const getSubCategories = cat => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/subcategories/' + cat.value
+      );
+      const body = await response.json();
+      if (!unmounted) {
+        setSubCategories(
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
+        );
+
+        body.data[0]
+          ? setSubCategory({
+              label: body.data[0].subCategory,
+              value: body.data[0]._id
+            })
+          : setSubCategory({});
+
+        setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
+  const getSubCategoryItems = (cat, sct) => {
+    let unmounted = false;
+    async function getItems() {
+      //  alert(JSON.stringify(cat))
+      const response = await fetch(
+        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct.value
+      );
+      const body = await response.json();
+
+      if (!unmounted) {
+        setSubCategoryItems(
+          body.data.map(({ _id, subCategoryItem }) => ({
+            label: subCategoryItem,
+            value: _id
+          }))
+        );
+
+        setLoading(false);
+
+        body.data[0]
+          ? setSubCategoryItem({
+              label: body.data[0].subCategoryItem,
+              value: body.data[0]._id
+            })
+          : setSubCategoryItem({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     let data = JSON.stringify(dispostionData);
@@ -44,63 +187,79 @@ export default function DispositionForm(props) {
     };
 
     axios(config)
-      .then((response) => {
-        console.log("dispostionForm", JSON.stringify(response.data));
-        props.getALF()
+      .then(response => {
+        console.log('dispostionForm', JSON.stringify(response.data));
+        props.getALF();
       })
-      .catch((error) => {
-        console.log("dispostionFrom", error);
+      .catch(error => {
+        console.log('dispostionFrom', error);
       });
-
   }
   function handleSubmit(e) {
-    console.log("formRef", formRef.current.values)
-    console.log("dispostion", {
+    console.log('formRef', formRef.current.values);
+    console.log('dispostion', {
+      tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
       subcategory: formRef.current.values.subcategory.label,
-      solution: formRef.current.values.solution.label,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
       comments: formRef.current.values.comments,
       type: formRef.current.values.type
-    })
-    localStorage.setItem("callDispositionStatus", "Disposed")
-    props.removeFromQueue(props.AgentSipId, "9002")
-    props.addToQueue(props.agentSipID, "9002")
+    });
+    // props.setdisForm(formRef.current.values);
+    localStorage.setItem('callDispositionStatus', 'Disposed');
+    props.removeFromQueue(props.AgentSipId, '9002');
+    props.addToQueue(props.agentSipID, '9002');
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(localStorage.getItem("callStatusId"), localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"), localStorage.getItem("callerNumber"))
-    updateCallData(localStorage.getItem("callUniqueId"), {
-
+    props.setCurrentCallDetails(
+      localStorage.getItem('callStatusId'),
+      localStorage.getItem('callUniqueId'),
+      localStorage.getItem('callType'),
+      localStorage.getItem('callStatus'),
+      localStorage.getItem('callEvent'),
+      localStorage.getItem('callDispositionStatus'),
+      localStorage.getItem('callerNumber')
+    );
+    updateCallData(localStorage.getItem('callUniqueId'), {
+      tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
       subcategory: formRef.current.values.subcategory.label,
-      solution: formRef.current.values.solution.label,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
       comments: formRef.current.values.comments,
-      type: formRef.current.values.type
+      type: formRef.current.values.type,
+      distributerID: localStorage.getItem('distributer_id')
 
     })
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
-    <Formik initialValues={initialValue}
-      onSubmit={e => handleSubmit(e)}
+    <Formik
+      validateOnBlur={false}
+      initialValues={initialValue}
+      disform={initialValue}
+      onSubmit={(e, { validate }) => {
+        handleSubmit(e);
+        validate(e);
+      }}
       innerRef={formRef}
       validationSchema={yup.object({
-        category: yup
+        tickettype: yup
           .object()
           .required('Please select a Type')
           .typeError('Please select a valid Type'),
-        subcategory: yup
+        category: yup
           .object()
           .required('Please select a  category')
           .typeError('Please select a valid  category'),
-        comments: yup
-          .string()
-          .required('Please Enter Comments'),
-        type: yup
-          .string()
-          .required('Please Enter type'),
-        solution: yup
+        subcategory: yup
           .object()
-          .required('Please select a sub category')
-          .typeError('Please select a sub category')
+          .required('Please select a  subcategory')
+          .typeError('Please select a valid  subcategory'),
+        subcategoryitem: yup
+          .object()
+          .required('Please select a  subcategoryitem')
+          .typeError('Please select a valid  subcategoryitem'),
+        comments: yup.string().required('Please Enter Comments'),
+        type: yup.string().required('Please Enter type')
       })}
     >
       {({ setFieldValue }) => (
@@ -129,40 +288,25 @@ export default function DispositionForm(props) {
 
                 /> */}
                 <Autocomplete
-                  options={[
-                    {
-                      label: 'Query',
-                      id: '1'
-                    },
-                    {
-                      label: 'Request',
-                      id: '2'
-                    },
-                    {
-                      label: 'Complaint',
-                      id: '3'
-                    }
-                  ]}
+                  options={ticketTypes}
                   getOptionLabel={option => option.label}
                   // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) =>
-                    value.id === option.id
-                  }
+                  getOptionSelected={(option, value) => value.id === option.id}
                   key={option => option.id}
-                  onChange={(event, value) =>
-                    setFieldValue('category', value)
-
-                  }
+                  onChange={(event, value) => {
+                    setFieldValue('tickettype', value);
+                    props.setTicketType(value);
+                  }}
                   renderInput={params => (
                     <Field
                       component={TextField}
                       {...params}
                       label="Select a Type"
                       variant="outlined"
-                      name="category"
+                      name="tickettype"
                     />
                   )}
-                  name="category"
+                  name="tickettype"
                 />
               </FormControl>
             </Grid>
@@ -188,111 +332,36 @@ export default function DispositionForm(props) {
                 /> */}
 
                 <Autocomplete
-                  options={[
-                    {
-                      label: 'Activation',
-                      id: '1'
-                    },
-                    {
-                      label: 'Business Opening',
-                      id: '2'
-                    },
-                    {
-                      label: 'Free product',
-                      id: '3'
-                    },
-                    {
-                      label: 'GST',
-                      id: '4'
-                    },
-                    {
-                      label: 'ID related',
-                      id: '5'
-                    },
-                    {
-                      label: 'Incentive',
-                      id: '6'
-                    },
-                    {
-                      label: 'Insurance',
-                      id: '7'
-                    },
-                    {
-                      label: 'KYC',
-                      id: '8'
-                    },
-                    {
-                      label: 'Merchandise',
-                      id: '9'
-                    },
-                    {
-                      label: 'Order Related',
-                      id: '10'
-                    },
-                    {
-                      label: 'PINs',
-                      id: '11'
-                    },
-                    {
-                      label: 'Product',
-                      id: '12'
-                    },
-                    {
-                      label: 'Product delivery',
-                      id: '13'
-                    },
-                    {
-                      label: 'Profile',
-                      id: '14'
-                    },
-                    {
-                      label: 'PV , GV related',
-                      id: '15'
-                    },
-                    {
-                      label: 'Refund',
-                      id: '16'
-                    },
-                    {
-                      label: 'Rewards',
-                      id: '17'
-                    },
-                    {
-                      label: 'Schemes/Offer',
-                      id: '18'
-                    },
-                    {
-
-                      label: 'Virtual office',
-                      id: '19'
-                    }
-
-                  ]}
+                  options={categories}
                   getOptionLabel={option => option.label}
                   // style={{ width: 400, overflow: "hidden" }}
                   getOptionSelected={(option, value) =>
-                    value.id === option.id
+                    value.label === option.label
                   }
                   key={autoCompleteKey}
-                  onChange={(event, value) =>
-                    setFieldValue('subcategory', value)
-                  }
+                  onChange={(event, value) => {
+                    setFieldValue('category', value);
+
+                    props.setCategory(value);
+
+                    getSubCategories(value);
+                  }}
                   renderInput={params => (
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a cateqory"
+                      label="Select a category"
                       variant="outlined"
-                      name="subcategory"
+                      name="category"
                     />
                   )}
-                  name="subcategory"
+                  name="category"
                 />
-
               </FormControl>
             </Grid>
-            <Grid item>
-              {/* <Field
+            {subCategories.length > 0 ? (
+              <Grid item>
+                {/* <Field
                 className={classes.fieldContainer}
                 name="solution"
                 component={TextField}
@@ -303,336 +372,85 @@ export default function DispositionForm(props) {
                 label="Select provided solution"
               /> */}
 
-              <Autocomplete
-                options={[
-                  {
-                    id: "1",
-                    label: "PCM Related",
-                    subcategoryid: "1"
-                  },
-                  {
-                    id: "2",
-                    label: "VOTM Related",
-                    subcategoryid: "1"
-                  },
-                  {
-                    id: "3",
-                    label: "Procedure",
-                    subcategoryid: "2"
-                  },
-                  {
-                    id: "4",
-                    label: "Options",
-                    subcategoryid: "3"
-                  },
-                  {
-                    id: "5",
-                    label: "Revert the option",
-                    subcategoryid: "3"
-                  },
-                  {
-                    id: "6",
-                    label: "General Information",
-                    subcategoryid: "4"
-                  },
-                  {
-                    id: "7",
-                    label: "Refund",
-                    subcategoryid: "4"
-                  },
-                  {
-                    id: "8",
-                    label: "Clarification",
-                    subcategoryid: "5"
-                  },
-                  {
-                    id: "9",
-                    label: "Duel ID",
-                    subcategoryid: "5"
-                  },
-                  {
-                    id: "10",
-                    label: "ID reactivation",
-                    subcategoryid: "5"
-                  },
-                  {
-                    id: "11",
-                    label: "Vacate ID",
-                    subcategoryid: "5"
-                  },
-                  {
-                    id: "12",
-                    label: "General Information",
-                    subcategoryid: "6"
-                  },
-                  {
-                    id: "13",
-                    label: "Not credited",
-                    subcategoryid: "6"
-                  },
-                  {
-                    id: "14",
-                    label: "TDS related",
-                    subcategoryid: "6"
-                  },
-                  {
-                    id: "15",
-                    label: "Claim Procedure",
-                    subcategoryid: "7"
-                  },
-                  {
-                    id: "16",
-                    label: "Claims pending",
-                    subcategoryid: "7"
-                  },
-                  {
-                    id: "17",
-                    label: "Genaral Information",
-                    subcategoryid: "7"
-                  },
-                  {
-                    id: "18",
-                    label: "Insurance Card",
-                    subcategoryid: "7"
-                  },
-                  {
-                    id: "19",
-                    label: "Policy Number",
-                    subcategoryid: "7"
-                  },
-                  {
-                    id: "20",
-                    label: "Approval",
-                    subcategoryid: "8"
-                  },
-                  {
-                    id: "21",
-                    label: "Change Bank Details",
-                    subcategoryid: "8"
-                  },
-                  {
-                    id: "22",
-                    label: "Document Related",
-                    subcategoryid: "8"
-                  },
-                  {
-                    id: "23",
-                    label: "Tax Exemption Certificate",
-                    subcategoryid: "8"
-                  },
-                  {
-                    id: "24",
-                    label: "Wrongly updated, Correction",
-                    subcategoryid: "8"
-                  },
-                  {
-                    id: "25",
-                    label: "General",
-                    subcategoryid: "9"
-                  },
-                  {
-                    id: "26",
-                    label: "Approve Order",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "27",
-                    label: "Cancel Invoice",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "28",
-                    label: "Cancel Order",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "29",
-                    label: "General Information",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "30",
-                    label: "Invoice not generated",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "31",
-                    label: "PV limit related",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "32",
-                    label: "Rejected",
-                    subcategoryid: "10"
-                  },
-                  {
-                    id: "33",
-                    label: "PIN not received",
-                    subcategoryid: "11"
-                  },
-                  {
-                    id: "34",
-                    label: "Certificate Related",
-                    subcategoryid: "12"
-                  },
-                  {
-                    id: "35",
-                    label: "General Information",
-                    subcategoryid: "12"
-                  },
-                  {
-                    id: "36",
-                    label: "Stock Related",
-                    subcategoryid: "12"
-                  },
-                  {
-                    id: "37",
-                    label: "change Shipping Address",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "38",
-                    label: "Courier Agency",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "39",
-                    label: "Delayed Delivery",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "40",
-                    label: "Dispatch Related",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "41",
-                    label: "Dispute",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "42",
-                    label: "Docket Number",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "43",
-                    label: "General Information",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "44",
-                    label: "International Shipment",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "45",
-                    label: "Non serviceable area",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "46",
-                    label: "Partial Delivery",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "47",
-                    label: "Product damaged",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "48",
-                    label: "Replacement",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "49",
-                    label: "RTO",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "50",
-                    label: "Wrong Delivery",
-                    subcategoryid: "13"
-                  },
-                  {
-                    id: "51",
-                    label: "Sponsor Change",
-                    subcategoryid: "14"
-                  },
-                  {
-                    id: "52",
-                    label: "Change of personal infomation",
-                    subcategoryid: "14"
-                  },
-                  {
-                    id: "53",
-                    label: "Co-Applicant",
-                    subcategoryid: "14"
-                  },
-                  {
-                    id: "54",
-                    label: "Carry Forward",
-                    subcategoryid: "15"
-                  },
-                  {
-                    id: "55",
-                    label: "Procedure",
-                    subcategoryid: "16"
-                  },
-                  {
-                    id: "56",
-                    label: "Claim Procedure",
-                    subcategoryid: "17"
-                  },
-                  {
-                    id: "57",
-                    label: "Royalty not received",
-                    subcategoryid: "17"
-                  },
-                  {
-                    id: "58",
-                    label: "Clarification",
-                    subcategoryid: "18"
-                  },
-                  {
-                    id: "59",
-                    label: "Dispute",
-                    subcategoryid: "18"
-                  },
-                  {
-                    id: "60",
-                    label: "Error",
-                    subcategoryid: "19"
-                  },
-                  {
-                    id: "61",
-                    label: "ID Card /Welcome letter",
-                    subcategoryid: "19"
-                  }
+                <Autocomplete
+                  options={subCategories}
+                  getOptionLabel={option => option.label}
+                  // style={{ width: 400, overflow: "hidden" }}
+                  getOptionSelected={(option, value) => value.id === option.id}
+                  key={autoCompleteKey}
+                  onChange={(event, value) => {
+                    setFieldValue('subcategory', value);
+                    props.setSubCategory(value);
+                    getSubCategoryItems(
+                      formRef.current.values.category.value,
+                      value
+                    );
+                  }}
+                  renderInput={params => (
+                    <Field
+                      component={TextField}
+                      {...params}
+                      label="Select a sub category"
+                      variant="outlined"
+                      name="subcategory"
+                    />
+                  )}
+                  name="subcategory"
+                />
+              </Grid>
+            ) : (
+              <></>
+            )}
+            {subCategoryItems.length > 0 ? (
+              <Grid item>
+                <FormControl
+                  variant="outlined"
+                  className={classes.fieldContainer}
+                >
+                  {/* <InputLabel htmlFor="sub-category-box" id="sub-category-label">
+                  Select Sub Category
+                </InputLabel>
 
-                ]}
-                getOptionLabel={option => option.label}
-                // style={{ width: 400, overflow: "hidden" }}
-                getOptionSelected={(option, value) =>
-                  value.id === option.id
-                }
-                key={autoCompleteKey}
-                onChange={(event, value) =>
-                  setFieldValue('solution', value)
-                }
-                renderInput={params => (
-                  <Field
-                    component={TextField}
-                    {...params}
-                    label="Select a sub category"
-                    variant="outlined"
-                    name="solution"
+                <Field
+                  className={classes.fieldContainer}
+                  name="subcategory"
+                  type="select"
+                  component={Select}
+                  inputProps={{
+                    id: 'sub-category-box',
+                    labelId: 'sub-category-label'
+                  }}
+                  label="Select Sub Category"
+                /> */}
+
+                  <Autocomplete
+                    options={subCategoryItems}
+                    getOptionLabel={option => option.label}
+                    // style={{ width: 400, overflow: "hidden" }}
+                    getOptionSelected={(option, value) =>
+                      value.id === option.id
+                    }
+                    key={autoCompleteKey}
+                    onChange={(event, value) => {
+                      setFieldValue('subcategoryitem', value);
+                      props.setSubCategoryItem(value);
+                    }}
+                    renderInput={params => (
+                      <Field
+                        component={TextField}
+                        {...params}
+                        label="Select a sub category item"
+                        variant="outlined"
+                        name="subcategoryitem"
+                      />
+                    )}
+                    name="subcategoryitem"
                   />
-                )}
-                name="solution"
-              />
-            </Grid>
+                </FormControl>
+              </Grid>
+            ) : (
+              <></>
+            )}
             <Grid item>
               <Field
                 className={classes.fieldContainer}
@@ -661,6 +479,7 @@ export default function DispositionForm(props) {
             </Grid>
           </Grid>
           <br />
+
           <Button color="primary" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
