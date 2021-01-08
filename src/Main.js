@@ -33,7 +33,7 @@ function Main({
         setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
         setLoggedInMain(true);
       } catch (error) {
-        setLoggedInMain(false);
+        setLoggedInMain(true);
       } finally {
         setLoading(false);
       }

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import CommonAlert from 'src/components/CommonAlert';
 import Spinner from 'src/components/Spinner';
 
-// Collecting all question from database and getting question id
+// Collecting all questions from database and getting question id from questions for mapping in datagrid
 const colConfig = [
   {
     field: 'questionId',
