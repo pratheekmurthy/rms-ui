@@ -26,8 +26,8 @@ function Main({
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
-        localStorage.clear();
-        const res = await Axios.post('/user/login', {});
+        // localStorage.clear();
+        const res = await Axios.post('/auth/user/login', {});
         const obj = res.data.userObj;
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);

@@ -2,7 +2,8 @@ import agentlastfive from '../views/admin/agentlastfive';
 import invoices from '../views/admin/invoices';
 import Orders from '../views/admin/orders';
 import Dashboard from '../views/DashboardView/index';
-import agentDispostionList from '../views/admin/agentlastfive'
+import agentDispostionList from '../views/admin/agentlastfive';
+import distribuerCallDisposedList from '../views/admin/distributerlastfive';
 
 export default [
   {
@@ -49,5 +50,18 @@ export default [
     exact: true,
     key: 'uniqueId',
     component: agentDispostionList
+  },
+  {
+    path: '/distributerDisposedCallList',
+    exact: true,
+    key: 'distributerDisposedCallList',
+    component: distribuerCallDisposedList,
+    crumb: 'Distributer Call Dispositon List'
+  },
+  {
+    path: '/distributercall/:uniqueId',
+    exact: true,
+    key: 'distributerCallById',
+    component: distribuerCallDisposedList
   }
 ];

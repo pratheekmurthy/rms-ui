@@ -225,8 +225,10 @@ export default function DispositionForm(props) {
       subcategory: formRef.current.values.subcategory.label,
       subcategoryitem: formRef.current.values.subcategoryitem.label,
       comments: formRef.current.values.comments,
-      type: formRef.current.values.type
-    });
+      type: formRef.current.values.type,
+      distributerID: localStorage.getItem('distributer_id')
+
+    })
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (

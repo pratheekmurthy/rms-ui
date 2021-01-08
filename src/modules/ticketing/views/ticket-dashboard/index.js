@@ -222,62 +222,16 @@ export default function TicketDashboard(props) {
     setTicketTypes(ticketTypes);
   };
 
-  const priorityList = [
-    {
-      value: 'low',
-      label: 'Low'
-    },
-    {
-      value: 'medium',
-      label: 'Medium'
-    },
-    {
-      value: 'high',
-      label: 'High'
-    }
-  ];
-
   const handlePriorityChange = event => {
     setPriority(event.target.value);
   };
 
-  const categoryList = [
-    {
-      value: 'delay',
-      label: 'Delayed dispatch'
-    },
-    {
-      value: 'dispute',
-      label: 'Dispute'
-    },
-    {
-      value: 'replacement',
-      label: 'Replacement'
-    }
-  ];
   const [category, setCategory] = React.useState({});
+  const [assignedExecutive, setAssignedExecutive] = React.useState({});
   const handleCategoryChange = event => {
     setCategory(category);
   };
 
-  const statusList = [
-    {
-      value: 'open',
-      label: 'Open'
-    },
-    {
-      value: 'wip',
-      label: 'Work in Progress'
-    },
-    {
-      value: 'resolved',
-      label: 'Resolved'
-    },
-    {
-      value: 'close',
-      label: 'Closed'
-    }
-  ];
   const [status, setStatus] = React.useState({});
   const handleStatusChange = event => {
     setStatus(status);
@@ -361,7 +315,7 @@ export default function TicketDashboard(props) {
       };
     }
   }, [openEdit]);
-  useEffect(() => {}, [activeTicket]);
+  useEffect(() => {}, [activeTicket, activeTicket.assignedExecutive]);
   const UploadFile = e => {
     var myHeaders = new Headers();
     myHeaders.append('ticketnumber', ticketNumber);
@@ -419,7 +373,7 @@ export default function TicketDashboard(props) {
       label: item.ticketType,
       value: item.ticketTypeId
     });
-
+    setAssignedExecutive(item.assignedExecutive);
     let unmounted = false;
     async function getHistoryItems() {
        
@@ -534,6 +488,66 @@ export default function TicketDashboard(props) {
     };
   }, []);
 
+  const getSubCategories = cat => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/subcategories/' + cat);
+      const body = await response.json();
+      if (!unmounted) {
+        setSubCategories(
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
+        );
+        if (!props.ticket_id) {
+          body.data[0]
+            ? setSubCategory({
+                label: body.data[0].subCategory,
+                value: body.data[0]._id
+              })
+            : setSubCategory({});
+        }
+        setLoading(false);
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
+  const getSubCategoryItems = (cat, sct) => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(
+        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct
+      );
+      const body = await response.json();
+
+      if (!unmounted) {
+        setSubCategoryItems(
+          body.data.map(({ _id, subCategoryItem }) => ({
+            label: subCategoryItem,
+            value: _id
+          }))
+        );
+
+        setLoading(false);
+        if (!props.ticket_id) {
+          body.data[0]
+            ? setSubCategoryItem({
+                label: body.data[0].subCategoryItem,
+                value: body.data[0]._id
+              })
+            : setSubCategoryItem({});
+        }
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  };
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -1128,7 +1142,7 @@ export default function TicketDashboard(props) {
                                 native: true
                               }}
                             >
-                              {priorityList.map(option => (
+                              {priorities.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -1180,7 +1194,7 @@ export default function TicketDashboard(props) {
                                 native: true
                               }}
                             >
-                              {categoryList.map(option => (
+                              {categories.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -1229,7 +1243,7 @@ export default function TicketDashboard(props) {
                                 native: true
                               }}
                             >
-                              {statusList.map(option => (
+                              {statuses.map(option => (
                                 <option key={option.value} value={option.value}>
                                   {option.label}
                                 </option>
@@ -1313,7 +1327,7 @@ export default function TicketDashboard(props) {
                   <TextField
                     id="outlined-textarea"
                     placeholder="Add a comment..."
-                    value={activeTicket.ticketRemarks}
+                    value={activeTicket.remarks || activeTicket.ticketRemarks}
                     rows={5}
                     fullWidth
                     multiline
@@ -1488,7 +1502,7 @@ export default function TicketDashboard(props) {
                     className={classes.avatarValue}
                     component="span"
                   >
-                    {activeTicket.assignedExecutive}
+                    {activeTicket.executive || activeTicket.assignedExecutive}
                   </Typography>
                 </Box>
               </Box>
@@ -1525,7 +1539,9 @@ export default function TicketDashboard(props) {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {new Date(activeTicket.createdAt).toLocaleString(undefined, {
+                  {new Date(
+                    activeTicket.createdTime || activeTicket.createdAt
+                  ).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
                 </Typography>
@@ -1545,7 +1561,9 @@ export default function TicketDashboard(props) {
                   className={classes.ticketMargin}
                   component="span"
                 >
-                  {new Date(activeTicket.updatedAt).toLocaleString(undefined, {
+                  {new Date(
+                    activeTicket.updatedTime || activeTicket.updatedAt
+                  ).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
                   })}
                 </Typography>

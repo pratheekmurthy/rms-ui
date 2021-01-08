@@ -26,7 +26,7 @@ import MainLoader from 'src/components/MainLoader';
 import {
   invoicesColumns,
   orderColumns,
-  AgentLastFiveColumns
+  lastFiveCallData
 } from 'src/modules/dashboard-360/utils/columns-config';
 
 import CommonAlert from 'src/components/CommonAlert';
@@ -191,11 +191,37 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     AgentType: localStorage.getItem('AgentType'),
     AgentSipId: localStorage.getItem('AgentSIPID')
   });
-  const [ALF, setALF] = useState([]);
-  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const [ALF, setALF] = useState([])
+  const [DLF, setDLF] = useState([])
+  const agentServiceURL = 'http://192.168.3.45:42004/'
+  const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
-   const [disForm, setdisForm] = useState({});
-   function getALF(){
+
+  function getDLF(){
+    // console.log("ALF is callled")
+    const axios = require('axios');
+let data = '';
+let config = {
+  method: 'get',
+  url: agentServiceURL +'crm/interactions/getByDistributerID?distributerID='+localStorage.getItem('distributer_id')+'',
+  headers: { },
+  data : data
+};
+
+axios(config)
+.then( async (response) => {
+  var DLFDATA = response.data;
+  DLFDATA = DLFDATA.reverse();
+ setDLF(DLFDATA)
+})
+
+.catch((error) => {
+  console.log(error);
+});
+
+  }
+
+  function getALF(){
     // console.log("ALF is callled")
     const axios = require('axios');
 let data = '';
@@ -523,6 +549,7 @@ axios(config)
            if (data1.length) {
              // console.log('data1', data1)
              get(data1[0].distributor_id)
+             localStorage.setItem('distributer_id', data1[0].distributor_id)
    
            }
 
@@ -694,6 +721,7 @@ console.log("data second useEffect", currentCall)
 console.log("currentCall.callerNumber", currentCall.callerNumber);
 if(currentCall.callerNumber !== '' && currentCall.callDispositionStatus === 'NotDisposed'){
   disProfileByNum(currentCall.callerNumber);
+  getDLF();
 }
 // if(currentCall.callerNumber !== null || currentCall.callerNumber !== ""){
 
@@ -795,12 +823,12 @@ getALF();
                    <br />
                    <Card>
                      <CardHeader title={'Distributer last five interactions'} />
-                     {ALF.length ? (
+                     {DLF.length ? (
                        <div>
                          <BasicTable
-                           columns={AgentLastFiveColumns}
+                           columns={lastFiveCallData}
                            records={ALF.slice(0, 3)}
-                           redirectLink="/dash360/admin/agentlastfive"
+                           redirectLink="/dash360/admin/distributerDisposedCallList"
                            redirectLabel="View All"
                          />
                        </div>
@@ -876,7 +904,7 @@ getALF();
                    {ALF.length ? (
                      <div>
                        <BasicTable
-                         columns={AgentLastFiveColumns}
+                         columns={lastFiveCallData}
                          records={ALF.slice(0, 3)}
                          redirectLink="/dash360/admin/agentlastfive"
                          redirectLabel="View All"
