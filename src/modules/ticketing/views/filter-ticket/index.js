@@ -4,7 +4,6 @@ import { Paper, Typography, TextField, Box } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import { DateRangePicker } from 'materialui-daterange-picker';
 import { useState, useEffect } from 'react';
 import config from '../../views/config.json';
 const useStyles = makeStyles(theme => ({

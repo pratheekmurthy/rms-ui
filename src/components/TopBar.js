@@ -153,6 +153,11 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
             </Link>
           </Typography>
           <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/campaign/dashboard" className="color-white">
+              Campaign
+             </Link>
+          </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/ticketing/setup" className="color-white">
               Tkt-Setup
             </Link>

@@ -1,5 +1,6 @@
 import routes from 'src/modules/dashboard-360/routes';
 import surveyRoutes from 'src/modules/surveys/routes';
+import campaignRoutes from 'src/modules/campaign/routes';
 import React from 'react';
 import telephonyRoutes from '../modules/telephony/routes';
 import ticketingRoutes from '../modules/ticketing/routes';
@@ -15,6 +16,7 @@ export const telephony = React.lazy(() =>
 export const ticketing = React.lazy(() =>
   import('src/modules/ticketing/views')
 );
+export const campaign = React.lazy(() => import('src/modules/campaign'));
 export const auth = React.lazy(() => import('src/modules/auth/views/index'));
 
 export default [
@@ -48,6 +50,14 @@ export default [
     key: 'ticketing',
     component: ticketing,
     crumb: 'Ticketing',
+    requiresAuth: true
+  },
+  {
+    path: '/campaign',
+    routes: campaignRoutes,
+    key: 'campign',
+    component: campaign,
+    crumb: 'Campaign',
     requiresAuth: true
   },
   {

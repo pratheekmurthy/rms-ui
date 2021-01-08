@@ -9,7 +9,6 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   makeStyles,
@@ -96,7 +95,7 @@ export default function CreateSurvey(props) {
         }
       })();
     }
-  }, [match]);
+  }, [match.params.surveyId]);
 
   function addQuestionEvent(e) {
     if (e.chooseQuestion) {
@@ -217,6 +216,7 @@ export default function CreateSurvey(props) {
                             label="Enter Survey Title"
                             variant="outlined"
                             disabled={false}
+                            autoComplete="off"
                           />
                           <br />
                           <br />
@@ -298,7 +298,7 @@ export default function CreateSurvey(props) {
                 <Typography variant="h6">{surveyDetails.title}</Typography>
                 <br />
                 <Typography>{surveyDetails.description}</Typography>
-                <GenerateForm inputs={questions} />
+                <GenerateForm input={questions} />
                 {!!questions.length && (
                   <Button variant="contained" color="primary">
                     Submit Response

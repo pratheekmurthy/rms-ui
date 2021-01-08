@@ -64,6 +64,9 @@ export default function NestedMenu(props) {
         <MenuItem onClick={() => handleItemClick('/surveys/home')}>
           Surveys
         </MenuItem>
+        <MenuItem onClick={() => handleItemClick('/campaign/dashboard')}>
+          Campaign
+        </MenuItem>
         {/* <NestedMenuItem
           label="Button 3"
           parentMenuOpen={!!menuPosition}

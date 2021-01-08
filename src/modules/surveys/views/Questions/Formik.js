@@ -5,49 +5,34 @@ import {
   makeStyles,
   Grid,
   Box,
+  List,
   Card,
   CardHeader,
   CardContent,
   Divider,
   ListItem,
   ListItemText,
-  IconButton
+  IconButton,
+  ListItemSecondaryAction
 } from '@material-ui/core';
 import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
 import React, { useRef, useState } from 'react';
 import * as Yup from 'yup';
 import GenerateForm from './GenerateForm';
-import CheckboxInput from './InputTypes/Checkbox';
 import RatingInput from './InputTypes/Rating';
 import TextInput from './InputTypes/Text';
 import TextareaInput from './InputTypes/Textarea';
-import RadioInput from './InputTypes/Radio';
-import SelectInput from './InputTypes/Select';
 import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
-
-const drawerWidth = '45%';
+import MultiOptions from './InputTypes/MultiOptions';
 
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexGrow: 1
   },
-  appBar: {
-    width: `calc(100% - ${drawerWidth})`,
-    marginLeft: drawerWidth
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0
-  },
-  drawerPaper: {
-    width: drawerWidth
-  },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
@@ -59,51 +44,33 @@ const useStyles = makeStyles(theme => ({
   cardActions: {
     height: '70%',
     flexGrow: 1
+  },
+  container: {
+    width: 400,
+    position: 'relative'
+  },
+  listItem: {
+    paddingRight: theme.spacing(5)
+  },
+  cardcontent: {
+    '&:last-child': {
+      paddingBottom: 0
+    }
   }
 }));
 
-const FormFormik = () => {
+const FormFormik = props => {
   const formRef = useRef();
 
   const classes = useStyles();
   const [inputValue, setInputValue] = useState('');
-  const [textList, setTextList] = useState([]);
   const [input, setInput] = useState([]);
-
-  let test = true;
 
   const handleClick = e => {
     if (e.target.value !== undefined) {
       setInputValue(e.target.value);
     }
   };
-
-  // const handleText = () => {
-  //   let name = document.getElementById('textName').value;
-  //   let label =
-  //     inputValue === 'rating'
-  //       ? inputValue
-  //       : inputValue === 'radio'
-  //       ? name.split(';')
-  //       : name;
-  //   if (name && label !== '') {
-  //     setTextList([
-  //       ...textList,
-  //       {
-  //         name: name,
-  //         label: label,
-  //         type: inputValue,
-  //         row: document.getElementById('textNum')
-  //           ? document.getElementById('textNum').value
-  //           : null
-  //       }
-  //     ]);
-  //   }
-  //   if (formRef.current) {
-  //     formRef.current.handleSubmit();
-  //   }
-  // };
-
   const onAddData = data => {
     setInput([...input, data]);
   };
@@ -117,24 +84,26 @@ const FormFormik = () => {
       case 'text':
         return <TextInput submit={onAddData} />;
       case 'checkbox':
-        return <CheckboxInput submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="checkbox" />;
       case 'radio':
-        return <RadioInput submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="radio" />;
       case 'select':
-        return <SelectInput submit={onAddData} />;
+        return <MultiOptions submit={onAddData} questionType="select" />;
       default:
         return null;
     }
   };
 
-  function postQuestions() {
-    Axios.post('/survey/survey/questions', input)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(input);
+  async function postQuestions() {
+    try {
+      await Axios.post('/survey/survey/questions', input);
+      props.history.push({
+        pathname: '/surveys/questions',
+        state: 'create'
       });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   const handleDelete = data => {
@@ -144,13 +113,23 @@ const FormFormik = () => {
 
   return (
     <Page title="questions">
+      {/* <Box margin="0.5rem 0 0 1rem">
+        <ButtonGroup color="primary" aria-label="outlined primary button group">
+          <Button>
+            <Link to="/surveys/questions">View Questions</Link>
+          </Button>
+          <Button>
+            <Link to="/surveys/edit">Edit Questions</Link>
+          </Button>
+        </ButtonGroup>
+      </Box> */}
       <Box margin="1rem">
         <Grid container spacing={2}>
-          <Grid xs={12} lg={5} item>
+          <Grid xs={12} lg={6} item>
             <Card style={{ width: '100%' }}>
               <CardHeader title="Feedback Designer" />
               <Divider />
-              <CardContent>
+              <CardContent className={classes.cardcontent}>
                 <Formik
                   innerRef={formRef}
                   initialValues={{
@@ -221,52 +200,56 @@ const FormFormik = () => {
                   )}
                 </Formik>
                 {inputValue && handleInputs(inputValue)}
-                {!!input.length &&
-                  input.map((data, index) => (
-                    <div>
-                      <ListItem key={index} style={{ marginTop: '-1%' }}>
-                        <IconButton
-                          aria-label="delete"
-                          color="secondary"
-                          onClick={() => {
-                            handleDelete(data);
+                <List component="nav" aria-label="main mailbox folders">
+                  {!!input.length &&
+                    input.map((data, index) => (
+                      <div key={input + 'formik'}>
+                        <ListItem
+                          key={index}
+                          classes={{
+                            container: classes.container,
+                            root: classes.listItem
                           }}
                         >
-                          <DeleteIcon />
-                        </IconButton>
-                        <ListItemText
-                          primary={data.label}
-                          style={{ marginLeft: '5%' }}
-                        />
-                      </ListItem>
-                    </div>
-                  ))}
+                          <ListItemText primary={data.label} />
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              aria-label="delete"
+                              onClick={() => handleDelete(data)}
+                            >
+                              <DeleteIcon color="secondary" />
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                        </ListItem>
+                      </div>
+                    ))}
+                </List>
               </CardContent>
             </Card>
           </Grid>
-
-          <Grid xs={12} lg={7} item>
+          <Grid xs={12} lg={6} item>
             <Card style={{ width: '100%' }}>
-              <CardHeader title="Survey Preview" />
+              <CardHeader title="Questions Preview" />
               <Divider />
               <CardContent>
-                {test ? (
-                  <>
-                    <GenerateForm inputs={input} />
-                  </>
-                ) : null}
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="button"
-                  onClick={() => {
-                    if (input.length !== 0) {
-                      postQuestions();
-                    }
-                  }}
-                >
-                  Save questions
-                </Button>
+                <>
+                  <GenerateForm input={input} />
+                </>
+                {!!input.length && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    type="button"
+                    onClick={() => {
+                      if (input.length !== 0) {
+                        postQuestions();
+                      }
+                    }}
+                  >
+                    Save Questions
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </Grid>

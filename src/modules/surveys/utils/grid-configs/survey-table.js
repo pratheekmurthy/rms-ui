@@ -28,5 +28,13 @@ export default [
     field: 'questions',
     flex: 1,
     renderCell: rowData => rowData.row.questions.length
+  },
+  {
+    headerName: 'View Preview',
+    field: 'viewPreview',
+    flex: 1,
+    renderCell: rowData => (
+      <Link to={`/surveys/${rowData.row.surveyId}/form`}>Preview</Link>
+    )
   }
 ];

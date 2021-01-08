@@ -77,9 +77,12 @@ class Home extends Component {
               <Button>
                 <Link to="/surveys/questions">View Questions</Link>
               </Button>
-              <Button>
+              {/* <Button>
                 <Link to="/surveys/questions/new">Add New Questions</Link>
               </Button>
+              <Button>
+                <Link to="/surveys/edit">Edit Questions</Link>
+              </Button> */}
             </ButtonGroup>
           </Box>
           <Grid container spacing={3}>
