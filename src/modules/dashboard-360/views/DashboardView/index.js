@@ -730,7 +730,7 @@ if(currentCall.callerNumber !== '' && currentCall.callDispositionStatus === 'Not
 // }
 getALF();
 
-   }, [currentCall.callDispositionStatus])
+   }, [currentCall.callDispositionStatus, currentCall.callStatus])
    var createTicket = () => {};
    return !loadingDetails ? (
      <div style={{ position: 'relative' }}>
