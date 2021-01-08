@@ -88,6 +88,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     try {
       const res = await Axios.post('/auth/user/login', values);
       const obj = res.data.userDetails;
+    
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
 

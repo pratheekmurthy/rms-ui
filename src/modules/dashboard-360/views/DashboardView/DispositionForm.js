@@ -73,7 +73,8 @@ export default function DispositionForm(props) {
       subcategory: formRef.current.values.subcategory.label,
       solution: formRef.current.values.solution.label,
       comments: formRef.current.values.comments,
-      type: formRef.current.values.type
+      type: formRef.current.values.type,
+      distributerID: localStorage.getItem('distributer_id')
 
     })
   }
