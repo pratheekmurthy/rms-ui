@@ -128,59 +128,59 @@ const Inbound = () => {
     },
     {
       icon: <SupervisorAccountIcon color="primary" />,
-      data: '257',
+      data: '0',
       label: 'I/B Agents Available'
     },
     {
       icon: <AvTimerIcon color="primary" />,
-      data: '247',
+      data: '0',
       label: 'I/B Ans within SL'
     },
     {
       icon: <RecordVoiceOverIcon color="primary" />,
-      data: '09',
+      data: Inbound.shortabandoned,
       label: 'I/B IVR Aband'
     },
     {
       icon: <VoicemailIcon color="primary" />,
-      data: '09',
+      data: '0',
       label: 'I/B Queue Aband'
     },
     {
       icon: <ListAltIcon color="primary" />,
-      data: '257',
+      data: '0',
       label: 'I/B Service Level (SL-20)'
     },
     {
       icon: <QuestionAnswerRoundedIcon color="primary" />,
-      data: '247',
+      data: Inbound.callsansweredwithin20,
       label: 'I/B Answer Level (SL-20)'
     },
     {
       icon: <TimelapseRoundedIcon color="primary" />,
-      data: '09',
+      data: Inbound.aht,
       label: 'I/B AHT'
-    },
-    {
-      icon: <Timer10RoundedIcon color="primary" />,
-      data: '247',
-      label: 'TeI/B Ans within SL=10 sec'
-    },
-    {
-      icon: <HourglassEmptyRoundedIcon color="primary" />,
-      data: '09',
-      label: 'I/B Service Level (SL-10)'
-    },
-    {
-      icon: <StarsIcon color="primary" />,
-      data: '09',
-      label: 'I/B Answer Level (SL-10)'
-    },
-    {
-      icon: <StarsIcon color="primary" />,
-      data: '09',
-      label: 'I/B Answer Level (SL-10)'
     }
+    // {
+    //   icon: <Timer10RoundedIcon color="primary" />,
+    //   data: '0',
+    //   label: 'TeI/B Ans within SL=10 sec'
+    // },
+    // {
+    //   icon: <HourglassEmptyRoundedIcon color="primary" />,
+    //   data: '09',
+    //   label: 'I/B Service Level (SL-10)'
+    // },
+    // {
+    //   icon: <StarsIcon color="primary" />,
+    //   data: '09',
+    //   label: 'I/B Answer Level (SL-10)'
+    // },
+    // {
+    //   icon: <StarsIcon color="primary" />,
+    //   data: '09',
+    //   label: 'I/B Answer Level (SL-10)'
+    // }
   ];
 
   function getIBdata(){
