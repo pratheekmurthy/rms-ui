@@ -571,6 +571,93 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     }
   }
 
+  ///socket start 
+  if (user.userType === 'Agent') {
+    socket.on('AstriskEvent', data => {
+      // console.log('AstriskEvent', data);
+
+      if (data.Event === 'Bridge') {
+        // getInitialData();
+        // localStorage.clear()
+        if (
+          data.CallerID2 === agent.AgentSipId &&
+          data.Bridgestate === 'Link'
+        ) {
+          removeFromQueue(agent.AgentSipId, '9002');
+          // console.log('data Bridge', data);
+          // console.log('inside the bridge event current call', this.currentCall);
+          setCurrentCallDetails(
+            localStorage.getItem('callStatusId'),
+            data.Uniqueid1,
+            agent.AgentType,
+            'connected',
+            'Bridge',
+            'NotDisposed',
+            data.CallerID1
+          );
+          // disProfileByNum(localStorage.getItem("callerNumber"));
+        }
+        var Channel1 = data.Channel1;
+        // if(str.includes("world")){}
+        // console.log("mobile", '5'+mobile)
+        if (
+          data.Bridgestate === 'Link' &&
+          Channel1.includes('SIP/' + agent.AgentSipId + '')
+        ) {
+          // console.log('data Bridge', data);
+          // console.log('inside the bridge event current call', this.currentCall);
+          var callerNumber = data.CallerID1;
+          // callerNumber = callerNumber.substring(1);
+          setCurrentCallDetails(
+            localStorage.getItem('callStatusId'),
+            data.Uniqueid1,
+            agent.AgentType,
+            'connected',
+            'Bridge',
+            'NotDisposed',
+            callerNumber
+          );
+          // disProfileByNum(localStorage.getItem("callerNumber"));
+        }
+      }
+
+      if (data.Event === 'Hangup') {
+        if (data.ConnectedLineNum === agent.AgentSipId) {
+          // console.log('data', data);
+          setCurrentCallDetails(
+            localStorage.getItem('callStatusId'),
+            localStorage.getItem('callUniqueId'),
+            localStorage.getItem('callType'),
+            'disconnected',
+            'Hangup',
+            localStorage.getItem('callDispositionStatus'),
+            localStorage.getItem('callerNumber')
+          );
+        }
+      }
+      var Channel1 = data.Channel1;
+      if (
+        data.Bridgestate === 'Unlink' &&
+        Channel1.includes('SIP/' + agent.AgentSipId + '')
+      ) {
+        // console.log('data', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber')
+        );
+      }
+    });
+  }
+
+
+
+  ///socket ends
+
   useEffect(() => {
     window.addEventListener('storage', function(e) {
       console.log('storage event', e.storageArea.search);
@@ -595,109 +682,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       }
     }
     getInitialData();
-    // console.log("currentCall", currentCall)
-    //  useEffect(() => {
-    //    window.addEventListener('storage', function(e) {
-    //      console.log('storage event', e.storageArea.search);
-    //      var Dnumber = e.storageArea.search;
-    //      if (Dnumber !== '') {
-    //       //  getDistributorById(Dnumber);
-    //       get(Dnumber);
-    //      }
-    //    });
-    //  }, []);
-
-    // console.log('callStatus', localStorage.getItem('callStatus'))
-    // if (localStorage.getItem('callStatus') === 'connected') {
-    //   disProfileByNum(localStorage.getItem("callerNumber"));
-
-    // }
-    if (user.userType === 'Agent') {
-      socket.on('AstriskEvent', data => {
-        // console.log('AstriskEvent', data);
-
-        if (data.Event === 'Bridge') {
-          // getInitialData();
-          // localStorage.clear()
-          if (
-            data.CallerID2 === agent.AgentSipId &&
-            data.Bridgestate === 'Link'
-          ) {
-            removeFromQueue(agent.AgentSipId, '9002');
-            // console.log('data Bridge', data);
-            // console.log('inside the bridge event current call', this.currentCall);
-            setCurrentCallDetails(
-              localStorage.getItem('callStatusId'),
-              data.Uniqueid1,
-              agent.AgentType,
-              'connected',
-              'Bridge',
-              'NotDisposed',
-              data.CallerID1
-            );
-            // disProfileByNum(localStorage.getItem("callerNumber"));
-          }
-          var Channel1 = data.Channel1;
-          // if(str.includes("world")){}
-          // console.log("mobile", '5'+mobile)
-          if (
-            data.Bridgestate === 'Link' &&
-            Channel1.includes('SIP/' + agent.AgentSipId + '')
-          ) {
-            // console.log('data Bridge', data);
-            // console.log('inside the bridge event current call', this.currentCall);
-            var callerNumber = data.CallerID1;
-            // callerNumber = callerNumber.substring(1);
-            setCurrentCallDetails(
-              localStorage.getItem('callStatusId'),
-              data.Uniqueid1,
-              agent.AgentType,
-              'connected',
-              'Bridge',
-              'NotDisposed',
-              callerNumber
-            );
-            // disProfileByNum(localStorage.getItem("callerNumber"));
-          }
-        }
-
-        if (data.Event === 'Hangup') {
-          if (data.ConnectedLineNum === agent.AgentSipId) {
-            // console.log('data', data);
-            setCurrentCallDetails(
-              localStorage.getItem('callStatusId'),
-              localStorage.getItem('callUniqueId'),
-              localStorage.getItem('callType'),
-              'disconnected',
-              'Hangup',
-              localStorage.getItem('callDispositionStatus'),
-              localStorage.getItem('callerNumber')
-            );
-          }
-        }
-        var Channel1 = data.Channel1;
-        if (
-          data.Bridgestate === 'Unlink' &&
-          Channel1.includes('SIP/' + agent.AgentSipId + '')
-        ) {
-          // console.log('data', data);
-          setCurrentCallDetails(
-            localStorage.getItem('callStatusId'),
-            localStorage.getItem('callUniqueId'),
-            localStorage.getItem('callType'),
-            'disconnected',
-            'Hangup',
-            localStorage.getItem('callDispositionStatus'),
-            localStorage.getItem('callerNumber')
-          );
-        }
-      });
-    }
-
-    // if(localStorage.getItem('callDispositionStatus') === 'NotDisposed'){
-    //   disProfileByNum(localStorage.getItem('callerNumber'))
-    //   }
-
     setRootData(
       [[], [], [], [], []].map(res =>
         res.status === 'fulfilled' ? res.value.data : {}
@@ -722,11 +706,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       disProfileByNum(currentCall.callerNumber);
       getDLF();
     }
-    // if(currentCall.callerNumber !== null || currentCall.callerNumber !== ""){
-
-    // disProfileByNum(localStorage.getItem('callerNumber'))
-
-    // }
     getALF();
   }, [currentCall.callDispositionStatus, currentCall.callStatus]);
   var createTicket = () => {};
@@ -893,6 +872,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   </Card>
                 </Box>
               ) : (
+                <Box mt={2}>
                 <Card>
                   <CardHeader
                     title={
@@ -912,6 +892,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     <CommonAlert />
                   )}
                 </Card>
+                </Box>
               )}
             </Grid>
             <Grid item lg={5} xs={12}>

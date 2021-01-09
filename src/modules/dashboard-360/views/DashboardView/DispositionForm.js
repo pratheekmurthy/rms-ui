@@ -480,7 +480,7 @@ export default function DispositionForm(props) {
           </Grid>
           <br />
 
-          <Button color="primary" variant="contained" onClick={handleSubmit}>
+          <Button color="primary" variant="contained"  disabled={localStorage.getItem('callStatus') === 'connected'? true:false} onClick={handleSubmit}>
             Submit
           </Button>
         </Form>
