@@ -114,7 +114,7 @@ class Home extends Component {
                   ) : (
                     <DataGrid
                       columns={gridConfig.surveyTable}
-                      rows={this.state.surveys.map(survey => ({
+                      rows={(this.state.surveys || []).map(survey => ({
                         ...survey,
                         id: survey._id
                       }))}
