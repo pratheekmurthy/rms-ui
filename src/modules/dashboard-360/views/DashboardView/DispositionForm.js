@@ -195,6 +195,34 @@ export default function DispositionForm(props) {
         console.log('dispostionFrom', error);
       });
   }
+
+  function updateAgentCallStatus(updateData) {
+    var axios = require('axios');
+    var data = {
+      agentCallStatus: updateData.callStatus,
+      agentCallEvent: updateData.callEvent,
+      agentCallUniqueId: updateData.callUniqueId,
+      agentCallType: updateData.callType,
+      agentCallDispositionStatus: updateData.callDispositionStatus,
+      callerNumber: updateData.callerNumber
+    };
+    var config = {
+      method: 'put',
+      url: agentServiceURL + 'crm/currentstatuses/' + updateData.callStatusId,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log("update",JSON.stringify(response.data));
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
   function handleSubmit(e) {
     console.log('formRef', formRef.current.values);
     console.log('dispostion', {
@@ -219,6 +247,15 @@ export default function DispositionForm(props) {
       localStorage.getItem('callDispositionStatus'),
       localStorage.getItem('callerNumber')
     );
+    updateAgentCallStatus({
+      callStatusId:localStorage.getItem('callStatusId'),
+      callUniqueId:localStorage.getItem('callUniqueId'),
+      callType:localStorage.getItem('callType'),
+      callStatus:localStorage.getItem('callStatus'),
+      callEvent:localStorage.getItem('callEvent'),
+      callDispositionStatus:localStorage.getItem('callDispositionStatus'),
+      callerNumber:localStorage.getItem('callerNumber')
+    })
     updateCallData(localStorage.getItem('callUniqueId'), {
       tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
@@ -229,6 +266,8 @@ export default function DispositionForm(props) {
       distributerID: localStorage.getItem('distributer_id')
 
     })
+
+    
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
