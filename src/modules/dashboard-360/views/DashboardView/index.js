@@ -836,7 +836,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   </Card>
                   <br />
                   <Card>
-                    <CardHeader title={'Distributer last five interactions'} />
+                    <CardHeader title={'Distributor last five interactions'} />
                     {DLF.length ? (
                       <div>
                         <BasicTable
@@ -847,7 +847,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                         />
                       </div>
                     ) : (
-                      <CommonAlert />
+                      <CommonAlert text="Unable to get distributor details" />
                     )}
                   </Card>
                 </Grid>
@@ -865,7 +865,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   }}
                 />
               ) : (
-                <CommonAlert text="Unable to get dealer details" />
+                <CommonAlert text="Unable to get distributor details" />
               )}
               {currentCall.callDispositionStatus === 'NotDisposed' &&
               user.userType === 'Agent' ? (
@@ -926,7 +926,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                       />
                     </div>
                   ) : (
-                    <CommonAlert />
+                    <CommonAlert text="Unable to get distributor details" />
                   )}
                 </Card>
                 </Box>
@@ -943,7 +943,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     redirectLabel="View All"
                   />
                 ) : (
-                  <CommonAlert />
+                  <CommonAlert text="Unable to get distributor details" />
                 )}
               </Card>
               <br />
@@ -959,7 +959,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                     />
                   </div>
                 ) : (
-                  <CommonAlert />
+                  <CommonAlert text="Unable to get distributor details" />
                 )}
               </Card>
               {/* <br />
