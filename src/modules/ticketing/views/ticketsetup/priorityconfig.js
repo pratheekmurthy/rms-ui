@@ -173,7 +173,7 @@ function PriorityConfig() {
         setApiPriorities(repos.data);
         setPriorities(repos.data);
       });
-  }, [subCategory.value, isEditing]);
+  }, [subCategory.value, isEditing, newRow]);
 
   useEffect(() => {
     setUpdatedRow(isEditing === '-1' ? {} : priorities[isEditing]);
