@@ -141,7 +141,7 @@ export default function CreateTicket(props, dealerDetails) {
       case 'file':
         setFile(e.target.files[0]);
         UploadFile(e.target.files[0]);
-        // alert(e.target.files[0]);
+
         return props.setClick(createTicket);
       default:
         return props.setClick(createTicket);
@@ -163,15 +163,16 @@ export default function CreateTicket(props, dealerDetails) {
     remarks
   ]);
   useEffect(() => {
-    // alert(props.formtype);
-
+    
     if (!props.ticket_id) {
+      setCreatedByName(localStorage.getItem("AgentName"))
+     setCreatedById(localStorage.getItem('AgentEmail'))
       if (props.formtype === 'telephony') {
         setDistributorMobile(props.dealerDetails.mob_no);
         setDistributorEmail(props.dealerDetails.email_id);
         setDistributorId(props.dealerDetails.distributor_id);
         setDistributorName(props.dealerDetails.distributor_name);
-        console.log('disform', props);
+        // console.log('disform', props);
         setCategory({
           label: props.category.label,
           value: props.category.value
@@ -417,11 +418,10 @@ export default function CreateTicket(props, dealerDetails) {
       const body = await response.json();
       if (!unmounted) {
         setSubCategories(
-          body.data ||
-            [].map(({ _id, subCategory }) => ({
-              label: subCategory,
-              value: _id
-            }))
+          body.data.map(({ _id, subCategory }) => ({
+            label: subCategory,
+            value: _id
+          }))
         );
         if (props.formtype === 'telephony') {
           setSubCategory({
@@ -455,11 +455,10 @@ export default function CreateTicket(props, dealerDetails) {
 
       if (!unmounted) {
         setSubCategoryItems(
-          body.data ||
-            [].map(({ _id, subCategoryItem }) => ({
-              label: subCategoryItem,
-              value: _id
-            }))
+          body.data.map(({ _id, subCategoryItem }) => ({
+            label: subCategoryItem,
+            value: _id
+          }))
         );
 
         setLoading(false);
@@ -842,7 +841,6 @@ export default function CreateTicket(props, dealerDetails) {
       .then(response => response.text())
       .then(result => {
         alert('Uploaded Sucessfully');
-        console.log('upload', result);
       })
       .catch(error => console.log('error', error));
   };
@@ -983,7 +981,7 @@ export default function CreateTicket(props, dealerDetails) {
                   )[0].label
                 });
                 props.setClick(createTicket);
-                // alert(category.value);
+
                 getSubCategoryItems(category.value, e.target.value);
               }}
             >
@@ -1280,6 +1278,7 @@ export default function CreateTicket(props, dealerDetails) {
             }}
             style={{ width: '31%' }}
             variant="outlined"
+            disabled
             value={media.value || ''}
             onChange={e => {
               setMedia({

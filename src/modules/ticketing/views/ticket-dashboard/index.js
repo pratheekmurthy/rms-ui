@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     // width: '100%',
     flexGrow: 1,
-    margin:15,
+    margin: 15
     // '& .MuiTextField-root': {
     //   margin: theme.spacing(1),
     //   width: 200,
@@ -893,7 +893,44 @@ export default function TicketDashboard(props) {
           >
             {tickets.length > 0 ? (
               <Box component="div" overflow="auto">
-                <h3>All ({tickets.length})</h3>
+                <h3>
+                  All (
+                  {
+                    tickets
+                      .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
+                      .filter(tkt => tkt.distributorId.includes(distributorId))
+                      .filter(tkt =>
+                        tkt.distributorName.includes(distributorName)
+                      )
+
+                      .filter(tkt =>
+                        status.label === 'All'
+                          ? tkt.status === tkt.status
+                          : tkt.status === status.label
+                      )
+                      .filter(tkt =>
+                        category.label === 'All'
+                          ? tkt.category === tkt.category
+                          : tkt.category === category.label
+                      )
+                      .filter(tkt =>
+                        media.label === 'All'
+                          ? tkt.media === tkt.media
+                          : tkt.media === media.label
+                      )
+                      .filter(tkt =>
+                        ticketType.label === 'All'
+                          ? tkt.ticketType === tkt.ticketType
+                          : tkt.ticketType === ticketType.label
+                      )
+                      .filter(tkt =>
+                        priority.label === 'All'
+                          ? tkt.priority === tkt.priority
+                          : tkt.priority === priority.label
+                      ).length
+                  }
+                  )
+                </h3>
                 {getTicketList()}
               </Box>
             ) : (
