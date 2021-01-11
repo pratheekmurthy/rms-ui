@@ -279,13 +279,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     callDispositionStatus,
     callerNumber
   ) {
-    // console.log('callStatusId', callStatusId);
-    // console.log('callUniqueId', callUniqueId);
-    // console.log('callType', callType);
-    // console.log('callStatus', callStatus);
-    // console.log('callEvent', callEvent);
-    // console.log('callDispositionStatus', callDispositionStatus);
-
     setCurrentCall({
       callStatusId: callStatusId,
       callUniqueId: callUniqueId,
@@ -302,15 +295,15 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     localStorage.setItem('callEvent', callEvent);
     localStorage.setItem('callDispositionStatus', callDispositionStatus);
     localStorage.setItem('callerNumber', callerNumber);
-    updateAgentCallStatus({
-      callStatusId: callStatusId,
-      callUniqueId: callUniqueId,
-      callType: callType,
-      callStatus: callStatus,
-      callEvent: callEvent,
-      callDispositionStatus: callDispositionStatus,
-      callerNumber: callerNumber
-    });
+    // updateAgentCallStatus({
+    //   callStatusId: callStatusId,
+    //   callUniqueId: callUniqueId,
+    //   callType: callType,
+    //   callStatus: callStatus,
+    //   callEvent: callEvent,
+    //   callDispositionStatus: callDispositionStatus,
+    //   callerNumber: callerNumber
+    // });
   }
 
   var APIENDPOINT = 'http://192.168.3.45:42002';
@@ -412,7 +405,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
     axios(config)
       .then(function(response) {
-        // console.log(JSON.stringify(response.data));
+        console.log("update",JSON.stringify(response.data));
       })
       .catch(function(error) {
         console.log(error);
@@ -435,7 +428,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       .then(function(response) {
         // console.log(JSON.stringify(response.data));
         if (response.data) {
-          // console.log('getAgentCallStatus....................', response.data);
+          console.log('getAgentCallStatus....................', response.data);
           var callStatusId = JSON.stringify(response.data[0]._id);
 
           // console.log('callStatusId', callStatusId);
@@ -486,7 +479,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
       // var config = {
       //   method: 'get',
-      //   url: 'http://localhost:3003/makeCall',
+      //   url: 'http://192.168.3.45:3003/makeCall',
       //   headers: {
       //     'Content-Type': 'application/json'
       //   },
@@ -572,6 +565,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   }
 
   ///socket start 
+
   if (user.userType === 'Agent') {
     socket.on('AstriskEvent', data => {
       // console.log('AstriskEvent', data);
@@ -583,7 +577,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           data.CallerID2 === agent.AgentSipId &&
           data.Bridgestate === 'Link'
         ) {
-          removeFromQueue(agent.AgentSipId, '9002');
+          if(localStorage.getItem('callEvent') !== 'Bridge'){
+            removeFromQueue(agent.AgentSipId, '9002');
+          // removeFromQueue(agent.AgentSipId, '9002');
           // console.log('data Bridge', data);
           // console.log('inside the bridge event current call', this.currentCall);
           setCurrentCallDetails(
@@ -597,6 +593,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           );
           // disProfileByNum(localStorage.getItem("callerNumber"));
         }
+      }
         var Channel1 = data.Channel1;
         // if(str.includes("world")){}
         // console.log("mobile", '5'+mobile)
@@ -604,6 +601,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           data.Bridgestate === 'Link' &&
           Channel1.includes('SIP/' + agent.AgentSipId + '')
         ) {
+          if(localStorage.getItem('callEvent') !== 'Bridge'){
+            removeFromQueue(agent.AgentSipId, '9002');
           // console.log('data Bridge', data);
           // console.log('inside the bridge event current call', this.currentCall);
           var callerNumber = data.CallerID1;
@@ -620,19 +619,34 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
           // disProfileByNum(localStorage.getItem("callerNumber"));
         }
       }
-
+      }
+    
       if (data.Event === 'Hangup') {
         if (data.ConnectedLineNum === agent.AgentSipId) {
-          // console.log('data', data);
-          setCurrentCallDetails(
-            localStorage.getItem('callStatusId'),
-            localStorage.getItem('callUniqueId'),
-            localStorage.getItem('callType'),
-            'disconnected',
-            'Hangup',
-            localStorage.getItem('callDispositionStatus'),
-            localStorage.getItem('callerNumber')
-          );
+          if(localStorage.getItem('callEvent') !== 'Hangup'){
+            console.log('data', data);
+            setCurrentCallDetails(
+              localStorage.getItem('callStatusId'),
+              localStorage.getItem('callUniqueId'),
+              localStorage.getItem('callType'),
+              'disconnected',
+              'Hangup',
+              localStorage.getItem('callDispositionStatus'),
+              localStorage.getItem('callerNumber')
+            );
+              updateAgentCallStatus({
+      callStatusId: localStorage.getItem('callStatusId'),
+      callUniqueId: localStorage.getItem('callUniqueId'),
+      callType: localStorage.getItem('callType'),
+      callStatus: 'disconnected',
+      callEvent: 'Hangup',
+      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+      callerNumber: localStorage.getItem('callerNumber')
+    });
+
+
+          }
+
         }
       }
       var Channel1 = data.Channel1;
@@ -640,16 +654,29 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         data.Bridgestate === 'Unlink' &&
         Channel1.includes('SIP/' + agent.AgentSipId + '')
       ) {
-        // console.log('data', data);
-        setCurrentCallDetails(
-          localStorage.getItem('callStatusId'),
-          localStorage.getItem('callUniqueId'),
-          localStorage.getItem('callType'),
-          'disconnected',
-          'Hangup',
-          localStorage.getItem('callDispositionStatus'),
-          localStorage.getItem('callerNumber')
-        );
+        if(localStorage.getItem('callEvent') !== 'Unlink'){
+            console.log('data', data);
+            setCurrentCallDetails(
+              localStorage.getItem('callStatusId'),
+              localStorage.getItem('callUniqueId'),
+              localStorage.getItem('callType'),
+              'disconnected',
+              'Hangup',
+              localStorage.getItem('callDispositionStatus'),
+              localStorage.getItem('callerNumber')
+            );
+              updateAgentCallStatus({
+      callStatusId: localStorage.getItem('callStatusId'),
+      callUniqueId: localStorage.getItem('callUniqueId'),
+      callType: localStorage.getItem('callType'),
+      callStatus: 'disconnected',
+      callEvent: 'Hangup',
+      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+      callerNumber: localStorage.getItem('callerNumber')
+    });
+    
+
+          }
       }
     });
   }
@@ -657,7 +684,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
 
 
   ///socket ends
-
   useEffect(() => {
     window.addEventListener('storage', function(e) {
       console.log('storage event', e.storageArea.search);
@@ -669,10 +695,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
         get(Dnumber);
       }
     });
-    if (localStorage.getItem('callDispositionStatus') === 'Disposed') {
-      removeFromQueue(agent.AgentSipId, '9002');
-      addToQueue(agent.AgentSipId, '9002');
-    }
+    // if (localStorage.getItem('callDispositionStatus') === 'Disposed') {
+    //   // removeFromQueue(agent.AgentSipId, '9002');
+    //   addToQueue(agent.AgentSipId, '9002');
+    // }
     getALF();
     async function getInitialData() {
       try {
@@ -699,12 +725,23 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
   useEffect(() => {
     console.log('data second useEffect', currentCall);
     console.log('currentCall.callerNumber', currentCall.callerNumber);
+
+  // updateAgentCallStatus({
+  //     callStatusId: localStorage.getItem('callStatusId'),
+  //     callUniqueId: localStorage.getItem('callUniqueId'),
+  //     callType: localStorage.getItem('callType'),
+  //     callStatus: localStorage.getItem('callStatus'),
+  //     callEvent: localStorage.getItem('callEvent'),
+  //     callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+  //     callerNumber: localStorage.getItem('callerNumber')
+  //   });
     if (
       currentCall.callerNumber !== '' &&
       currentCall.callDispositionStatus === 'NotDisposed'
     ) {
       disProfileByNum(currentCall.callerNumber);
       getDLF();
+      // removeFromQueue(agent.AgentSipId, '9002');
     }
     getALF();
   }, [currentCall.callDispositionStatus, currentCall.callStatus]);
@@ -713,9 +750,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     <div style={{ position: 'relative' }}>
       {currentCall.callStatus === 'connected' ? (
         <div>
-          <div className={classes.timerComp}>
+          {/* <div className={classes.timerComp}>
             <TimerComp />
-          </div>
+          </div> */}
           <Box
             alignItems="center"
             display="flex"
@@ -732,9 +769,9 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       {currentCall.callDispositionStatus === 'NotDisposed' &&
       currentCall.callStatus === 'disconnected' ? (
         <div>
-          <div className={classes.timerComp}>
+          {/* <div className={classes.timerComp}>
             <TimerComp />
-          </div>
+          </div> */}
           <Box
             alignItems="center"
             display="flex"
