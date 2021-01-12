@@ -12,7 +12,7 @@ import {
   getSingleOrderDetails
 } from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
-
+import DownloadReport from '../../DashboardView/DownloadReport';
 const style = makeStyles(() => ({
   dgContainer: {
     maxHeight: 628,
@@ -61,6 +61,10 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
           All Orders
         </Typography>
       </Box>
+      <DownloadReport
+      DownloadData={distributorOrders}
+      
+      />
       <DataGrid
         page={page}
         onPageChange={params => {
