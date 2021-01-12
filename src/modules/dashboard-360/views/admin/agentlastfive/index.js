@@ -12,6 +12,7 @@ import {
   getSingleInvoiceDetails
 } from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
@@ -63,6 +64,7 @@ axios(config)
   }
 
   useEffect(() => {
+    
     getALF()
     if (!distributorInvoices || orderIdPrev !== orderId) {
       (async function getDetails() {
@@ -94,6 +96,10 @@ axios(config)
           All Disposed Calls
         </Typography>
       </Box>
+      <DownloadReport
+      DownloadData={agentdisposedCalls}
+      
+      />
       <DataGrid
         page={page}
         onPageChange={params => {
