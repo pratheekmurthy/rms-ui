@@ -33,7 +33,7 @@ export default function DispositionForm(props) {
   });
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const agentServiceURL = 'http://localhost:42004/';
   const [category, setCategory] = useState({
     value: '',
     label: ''
