@@ -4,11 +4,25 @@ import {
   SET_ACCOUNT_TYPE,
   SET_ACTIVATED_ROUTE,
   SET_NEW_CRUMB,
-  SET_URL_MATCH_FOUND
+  SET_URL_MATCH_FOUND,
+  SET_AGENT_CURRENT_STATUS
 } from './constants';
 
 const logInInitialState = false;
 const accountTypeInitialState = '';
+const agentInitialState = {
+  "AgentType":"",
+  "role":"",
+  "callUniqueId":"",
+  "distributer_id":"",
+  "callStatusId":"",
+  "callDispositionStatus":"",
+  "callType":"",
+  "callEvent":"",
+  "callerNumber":"",
+  "callStatus":"",
+  "AgentSIPID":""
+}
 
 export const logInState = (state = logInInitialState, action) => {
   switch (action.type) {
@@ -29,6 +43,16 @@ export const userData = (state = null, action) => {
       return state;
   }
 };
+
+export const agentCurrentStatus = (state = agentInitialState, action) =>{
+  switch (action.type) {
+    case SET_AGENT_CURRENT_STATUS: {
+      return action.payload
+    }
+    default:
+      return state
+  }
+}
 
 export const accountType = (state = accountTypeInitialState, action) => {
   switch (action.type) {
