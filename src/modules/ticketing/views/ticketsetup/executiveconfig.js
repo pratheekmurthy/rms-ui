@@ -38,6 +38,8 @@ function ExecutiveConfig() {
   const [department, setDepartment] = useState({});
   const [teams, setTeams] = useState([]);
   const [team, setTeam] = useState({});
+  const [roles, setRoles] = useState([]);
+  const [role, setRole] = useState({});
   const [newRow, setNewRow] = useState({
     executive: '',
     email: '',
@@ -109,6 +111,33 @@ function ExecutiveConfig() {
     };
   }, [department.value]);
 
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/roles');
+      const body = await response.json();
+      if (!unmounted) {
+        setRoles(
+          body.data.map(({ _id, role }) => ({
+            label: role,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        body.data[0]
+          ? setRole({
+              label: body.data[0].role,
+              value: body.data[0]._id
+            })
+          : setRole({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
   const updateRow = () => {
     const val1 = JSON.stringify(updatedRow.executive);
     const val2 = JSON.stringify(updatedRow.email);
@@ -150,6 +179,7 @@ function ExecutiveConfig() {
           executive: newRow.executive,
           email: newRow.email,
           mobile: newRow.mobile,
+          role: newRow.role,
           active: newRow.active
         }
       };
@@ -161,6 +191,7 @@ function ExecutiveConfig() {
             executive: '',
             email: '',
             mobile: '',
+            role: '',
             active: true
           });
         });
@@ -189,6 +220,7 @@ function ExecutiveConfig() {
           executive: '',
           email: '',
           mobile: '',
+          role: '',
           active: false
         })
       : setUpdatedRow({
@@ -200,6 +232,7 @@ function ExecutiveConfig() {
           executive: executives[isEditing].executiveName,
           email: executives[isEditing].executiveEmail,
           mobile: executives[isEditing].executiveMobile,
+          role: executives[isEditing].role,
           active: executives[isEditing].active
         });
   }, [isEditing]);
@@ -216,6 +249,7 @@ function ExecutiveConfig() {
       executive: event.target.value,
       email: updatedRow.email,
       mobile: updatedRow.mobile,
+      role: updatedRow.role,
       active: updatedRow.active
     });
   };
@@ -230,6 +264,7 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: event.target.value,
       mobile: updatedRow.mobile,
+      role: updatedRow.role,
       active: updatedRow.active
     });
   };
@@ -244,6 +279,21 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: updatedRow.email,
       mobile: event.target.value,
+      role: updatedRow.role,
+      active: updatedRow.active
+    });
+  };
+  const handleRoleChange = (index, event) => {
+    setUpdatedRow({
+      id: executives[index]._id,
+      deptid: department.value,
+      dept: department.label,
+      teamid: team.value,
+      team: team.label,
+      executive: updatedRow.executive,
+      email: updatedRow.email,
+      mobile: updatedRow.mobile,
+      role: event.target.value,
       active: updatedRow.active
     });
   };
@@ -258,6 +308,7 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: updatedRow.email,
       mobile: updatedRow.mobile,
+      role: updatedRow.role,
       active: event.target.checked
     });
   };
@@ -325,6 +376,7 @@ function ExecutiveConfig() {
           <TableCell>Executive</TableCell>
           <TableCell>eMail</TableCell>
           <TableCell>Mobile</TableCell>
+          <TableCell>Role</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -340,6 +392,7 @@ function ExecutiveConfig() {
                   executive: e.target.value,
                   email: newRow.email,
                   mobile: newRow.mobile,
+                  role: newRow.role,
                   active: newRow.active
                 })
               }
@@ -357,6 +410,7 @@ function ExecutiveConfig() {
                   executive: newRow.executive,
                   email: e.target.value,
                   mobile: newRow.mobile,
+                  role: newRow.role,
                   active: newRow.active
                 })
               }
@@ -374,6 +428,7 @@ function ExecutiveConfig() {
                   executive: newRow.executive,
                   email: newRow.email,
                   mobile: e.target.value,
+                  role: newRow.role,
                   active: newRow.active
                 })
               }
@@ -382,12 +437,38 @@ function ExecutiveConfig() {
             />
           </TableCell>
           <TableCell>
+            <Select
+              native
+              disabled={loading}
+              label="roles"
+              inputProps={{
+                name: 'roles',
+                id: 'roles'
+              }}
+              value={role.value}
+              onChange={e => {
+                setRole({
+                  value: e.target.value,
+                  label: roles.filter(role => role.value === e.target.value)[0]
+                    .label
+                });
+              }}
+            >
+              {roles.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </TableCell>
+          <TableCell>
             <Checkbox
               onChange={e =>
                 setNewRow({
                   executive: newRow.executive,
                   email: newRow.email,
                   mobile: newRow.mobile,
+                  role: newRow.role,
                   active: e.target.checked
                 })
               }
@@ -450,6 +531,36 @@ function ExecutiveConfig() {
                   />
                 ) : (
                   item.executiveMobile
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <Select
+                    native
+                    disabled={loading}
+                    label="roles"
+                    inputProps={{
+                      name: 'roles',
+                      id: 'roles'
+                    }}
+                    value={role.value}
+                    onChange={e => {
+                      setRole({
+                        value: e.target.value,
+                        label: roles.filter(
+                          role => role.value === e.target.value
+                        )[0].label
+                      });
+                    }}
+                  >
+                    {roles.map(({ label, value }) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
+                ) : (
+                  item.role
                 )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>
