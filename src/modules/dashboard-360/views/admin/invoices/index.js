@@ -71,10 +71,10 @@ function Invoices({
           All Invoices
         </Typography>
       </Box>
-      <DownloadReport
+      {distributorInvoices.length?<DownloadReport
       DownloadData={distributorInvoices}
       
-      />
+      />:<></>}
       <DataGrid
         page={page}
         onPageChange={params => {
