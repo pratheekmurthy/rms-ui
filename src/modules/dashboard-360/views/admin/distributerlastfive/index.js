@@ -41,27 +41,27 @@ function Invoices({
 
 
   const agentServiceURL = 'http://192.168.3.45:42004/'
-  function getALF(){
+  function getALF() {
     // console.log("ALF is callled")
     const axios = require('axios');
-let data = '';
-let config = {
-  method: 'get',
-  url: agentServiceURL +'crm/interactions/getByDistributerID?distributerID='+localStorage.getItem('distributer_id')+'',
-  headers: { },
-  data : data
-};
+    let data = '';
+    let config = {
+      method: 'get',
+      url: agentServiceURL + 'crm/interactions/getByDistributerID?distributerID=' + localStorage.getItem('distributer_id') + '',
+      headers: {},
+      data: data
+    };
 
-axios(config)
-.then( async (response) => {
-  var ALFDATA = response.data;
- ALFDATA = ALFDATA.reverse();
- setagentdisposedCalls(ALFDATA)
-})
+    axios(config)
+      .then(async (response) => {
+        var ALFDATA = response.data;
+        ALFDATA = ALFDATA.reverse();
+        setagentdisposedCalls(ALFDATA)
+      })
 
-.catch((error) => {
-  console.log(error);
-});
+      .catch((error) => {
+        console.log(error);
+      });
 
   }
 
@@ -120,11 +120,11 @@ axios(config)
       />
     </div>
   ) : // </Card>
-  showLoader ? (
-    <MainLoader />
-  ) : (
-    <CommonAlert style={{ margin: 20 }} />
-  );
+    showLoader ? (
+      <MainLoader />
+    ) : (
+        <CommonAlert style={{ margin: 20 }} />
+      );
 }
 
 Invoices.propTypes = {

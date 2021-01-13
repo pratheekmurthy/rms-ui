@@ -53,6 +53,7 @@ let config = {
 axios(config)
 .then( async (response) => {
   var ALFDATA = response.data;
+  console.log('ALFDATA', ALFDATA)
  ALFDATA = ALFDATA.reverse();
  setagentdisposedCalls(ALFDATA)
 })
@@ -110,6 +111,7 @@ axios(config)
         pagination
         autoHeight
         columns={AgentCallColumns}
+        exportButton={true}
         rows={agentdisposedCalls.map(calls => ({
           ...calls,
           id: calls._id

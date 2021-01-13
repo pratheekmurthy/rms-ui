@@ -6,10 +6,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 function ExecutiveConfig() {
   const useStyles = makeStyles(theme => ({
@@ -38,6 +38,9 @@ function ExecutiveConfig() {
   const [department, setDepartment] = useState({});
   const [teams, setTeams] = useState([]);
   const [team, setTeam] = useState({});
+  const [roles, setRoles] = useState([]);
+  const [roleNew, setRoleNew] = useState({});
+  const [roleUpdate, setRoleUpdate] = useState({});
   const [newRow, setNewRow] = useState({
     executive: '',
     email: '',
@@ -109,6 +112,39 @@ function ExecutiveConfig() {
     };
   }, [department.value]);
 
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(config.APIS_URL + '/roles');
+      const body = await response.json();
+      if (!unmounted) {
+        setRoles(
+          body.data.map(({ _id, role }) => ({
+            label: role,
+            value: _id
+          }))
+        );
+        setLoading(false);
+        body.data[0]
+          ? setRoleNew({
+              label: body.data[0].role,
+              value: body.data[0]._id
+            })
+          : setRoleNew({});
+        body.data[0]
+          ? setRoleUpdate({
+              label: body.data[0].role,
+              value: body.data[0]._id
+            })
+          : setRoleUpdate({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+
   const updateRow = () => {
     const val1 = JSON.stringify(updatedRow.executive);
     const val2 = JSON.stringify(updatedRow.email);
@@ -150,6 +186,8 @@ function ExecutiveConfig() {
           executive: newRow.executive,
           email: newRow.email,
           mobile: newRow.mobile,
+          roleid: roleNew.value,
+          role: roleNew.label,
           active: newRow.active
         }
       };
@@ -161,6 +199,8 @@ function ExecutiveConfig() {
             executive: '',
             email: '',
             mobile: '',
+            roleid: '',
+            role: '',
             active: true
           });
         });
@@ -189,6 +229,8 @@ function ExecutiveConfig() {
           executive: '',
           email: '',
           mobile: '',
+          roleid: '',
+          role: '',
           active: false
         })
       : setUpdatedRow({
@@ -200,7 +242,15 @@ function ExecutiveConfig() {
           executive: executives[isEditing].executiveName,
           email: executives[isEditing].executiveEmail,
           mobile: executives[isEditing].executiveMobile,
+          roleid: roleUpdate.value,
+          role: roleUpdate.label,
           active: executives[isEditing].active
+        });
+    isEditing === -1
+      ? setRoleUpdate(roles[0])
+      : setRoleUpdate({
+          roleId: executives[isEditing].roleId || roles[0].value,
+          role: executives[isEditing].role || roles[0].label
         });
   }, [isEditing]);
 
@@ -216,6 +266,8 @@ function ExecutiveConfig() {
       executive: event.target.value,
       email: updatedRow.email,
       mobile: updatedRow.mobile,
+      roleid: roleUpdate.value,
+      role: roleUpdate.label,
       active: updatedRow.active
     });
   };
@@ -230,6 +282,8 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: event.target.value,
       mobile: updatedRow.mobile,
+      roleid: roleUpdate.value,
+      role: roleUpdate.label,
       active: updatedRow.active
     });
   };
@@ -244,6 +298,23 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: updatedRow.email,
       mobile: event.target.value,
+      roleid: roleUpdate.value,
+      role: roleUpdate.label,
+      active: updatedRow.active
+    });
+  };
+  const handleRoleChange = (index, event) => {
+    setUpdatedRow({
+      id: executives[index]._id,
+      deptid: department.value,
+      dept: department.label,
+      teamid: team.value,
+      team: team.label,
+      executive: updatedRow.executive,
+      email: updatedRow.email,
+      mobile: updatedRow.mobile,
+      roleid: event.target.value,
+      role: roles.filter(role => role.value === event.target.value)[0].label,
       active: updatedRow.active
     });
   };
@@ -258,6 +329,8 @@ function ExecutiveConfig() {
       executive: updatedRow.executive,
       email: updatedRow.email,
       mobile: updatedRow.mobile,
+      roleid: roleUpdate.value,
+      role: roleUpdate.label,
       active: event.target.checked
     });
   };
@@ -306,7 +379,7 @@ function ExecutiveConfig() {
             onChange={e => {
               setTeam({
                 value: e.target.value,
-                text: teams.filter(team => team.value === e.target.value)[0]
+                label: teams.filter(team => team.value === e.target.value)[0]
                   .label
               });
             }}
@@ -325,6 +398,7 @@ function ExecutiveConfig() {
           <TableCell>Executive</TableCell>
           <TableCell>eMail</TableCell>
           <TableCell>Mobile</TableCell>
+          <TableCell>Role</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -340,6 +414,8 @@ function ExecutiveConfig() {
                   executive: e.target.value,
                   email: newRow.email,
                   mobile: newRow.mobile,
+                  roleId: roleNew.value,
+                  role: roleNew.label,
                   active: newRow.active
                 })
               }
@@ -357,6 +433,8 @@ function ExecutiveConfig() {
                   executive: newRow.executive,
                   email: e.target.value,
                   mobile: newRow.mobile,
+                  roleId: roleNew.value,
+                  role: roleNew.label,
                   active: newRow.active
                 })
               }
@@ -374,6 +452,8 @@ function ExecutiveConfig() {
                   executive: newRow.executive,
                   email: newRow.email,
                   mobile: e.target.value,
+                  roleId: roleNew.value,
+                  role: roleNew.label,
                   active: newRow.active
                 })
               }
@@ -382,12 +462,39 @@ function ExecutiveConfig() {
             />
           </TableCell>
           <TableCell>
+            <Select
+              native
+              disabled={loading}
+              label="roles"
+              inputProps={{
+                name: 'roles',
+                id: 'roles'
+              }}
+              value={roleNew.value}
+              onChange={e => {
+                setRoleNew({
+                  value: e.target.value,
+                  label: roles.filter(role => role.value === e.target.value)[0]
+                    .label
+                });
+              }}
+            >
+              {roles.map(({ label, value }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </TableCell>
+          <TableCell>
             <Checkbox
               onChange={e =>
                 setNewRow({
                   executive: newRow.executive,
                   email: newRow.email,
                   mobile: newRow.mobile,
+                  roleId: roleNew.value,
+                  role: roleNew.label,
                   active: e.target.checked
                 })
               }
@@ -450,6 +557,37 @@ function ExecutiveConfig() {
                   />
                 ) : (
                   item.executiveMobile
+                )}
+              </TableCell>
+              <TableCell>
+                {isEditing === idx ? (
+                  <Select
+                    native
+                    disabled={loading}
+                    label="roles"
+                    inputProps={{
+                      name: 'roles',
+                      id: 'roles'
+                    }}
+                    value={roleUpdate.value}
+                    onChange={e => {
+                      setRoleUpdate({
+                        value: e.target.value,
+                        label: roles.filter(
+                          role => role.value === e.target.value
+                        )[0].label
+                      });
+                      handleRoleChange(idx, e);
+                    }}
+                  >
+                    {roles.map(({ label, value }) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
+                ) : (
+                  item.role
                 )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>

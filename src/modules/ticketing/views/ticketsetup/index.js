@@ -15,6 +15,8 @@ import StatusConfig from './statusconfig';
 import DepartmentConfig from './departmentconfig';
 import TeamConfig from './teamconfig';
 import ExecutiveConfig from './executiveconfig';
+import RoleConfig from './roleconfig';
+import AccessConfig from './accessconfig';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -66,6 +68,10 @@ const useStyles = makeStyles(theme => ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
     color: 'blue'
+  },
+
+  tab: {
+    justifySelf: 'left'
   }
 }));
 
@@ -91,17 +97,64 @@ export default function TicketDashboard() {
                   onChange={handleChange}
                   aria-label="Vertical tabs example"
                   className={classes.tabs}
+                  alignItems="flex-start"
                 >
-                  <Tab label="Ticket Type" {...a11yProps(0)} />
-                  <Tab label="Media" {...a11yProps(1)} />
-                  <Tab label="Category" {...a11yProps(2)} />
-                  <Tab label="Sub category" {...a11yProps(3)} />
-                  <Tab label="Sub Category Item" {...a11yProps(4)} />
-                  <Tab label="Priority" {...a11yProps(5)} />
-                  <Tab label="Status" {...a11yProps(6)} />
-                  <Tab label="Department" {...a11yProps(7)} />
-                  <Tab label="Team" {...a11yProps(8)} />
-                  <Tab label="Excutive" {...a11yProps(9)} />
+                  <Tab
+                    className={classes.tab}
+                    label="Ticket Type"
+                    {...a11yProps(0)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Media"
+                    {...a11yProps(1)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Category"
+                    {...a11yProps(2)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Sub category"
+                    {...a11yProps(3)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Sub Category Item"
+                    {...a11yProps(4)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Priority"
+                    {...a11yProps(5)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Status"
+                    {...a11yProps(6)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Department"
+                    {...a11yProps(7)}
+                  />
+                  <Tab className={classes.tab} label="Team" {...a11yProps(8)} />
+                  <Tab
+                    className={classes.tab}
+                    label="Excutive"
+                    {...a11yProps(9)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Role"
+                    {...a11yProps(10)}
+                  />
+                  <Tab
+                    className={classes.tab}
+                    label="Access"
+                    {...a11yProps(11)}
+                  />
                 </Tabs>
               </Grid>
               <Grid item sm={8}>
@@ -134,6 +187,12 @@ export default function TicketDashboard() {
                 </TabPanel>
                 <TabPanel value={value} index={9}>
                   <ExecutiveConfig />
+                </TabPanel>
+                <TabPanel value={value} index={10}>
+                  <RoleConfig />
+                </TabPanel>
+                <TabPanel value={value} index={11}>
+                  <AccessConfig />
                 </TabPanel>
               </Grid>
             </Grid>
