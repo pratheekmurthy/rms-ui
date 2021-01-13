@@ -34,7 +34,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { grey } from '@material-ui/core/colors';
 
 import socketIOClient from 'socket.io-client';
-
+import DaterangeReport from '../../../dashboard-360/views/DashboardView/DaterangeReport';
+import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -256,6 +257,11 @@ socket.on('AstriskEvent', data => {
                   </Card>
                 </Grid>
               ))}
+              <DaterangeReport/>
+              <DownloadReport
+      DownloadData={InboundDataList}
+      
+      />
             </Grid>
             <Grid item xs={3}>
               <Accordion>
@@ -303,7 +309,9 @@ socket.on('AstriskEvent', data => {
             </Grid>
           </Grid>
         </Box>
+       
       </div>
+    
     </>
   );
 };

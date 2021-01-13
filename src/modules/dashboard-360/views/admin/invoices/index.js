@@ -16,7 +16,9 @@ import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
-    maxHeight: 628
+    maxHeight: 628,
+    paddingLeft: "16px",
+paddingRight: "16px",
   }
 }));
 function Invoices({
