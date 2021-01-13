@@ -51,7 +51,7 @@ import { update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import { agentCurrentStatus } from 'src/redux/reducers';
 
-const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
+const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 
@@ -195,7 +195,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
   });
   const [ALF, setALF] = useState([]);
   const [DLF, setDLF] = useState([]);
-  const agentServiceURL = 'http://127.0.0.1:42004/';
+  const agentServiceURL = 'http://192.168.3.45:42004/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
 
@@ -310,7 +310,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     // });
   }
 
-  var APIENDPOINT = 'http://127.0.0.1:42002';
+  var APIENDPOINT = 'http://192.168.3.45:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -496,7 +496,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
 
       // var config = {
       //   method: 'get',
-      //   url: 'http://127.0.0.1:3003/makeCall',
+      //   url: 'http://192.168.3.45:3003/makeCall',
       //   headers: {
       //     'Content-Type': 'application/json'
       //   },
