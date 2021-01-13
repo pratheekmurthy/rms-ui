@@ -78,6 +78,12 @@ const useStyles = makeStyles(theme => ({
     paddingRight: 10,
     width: '100%'
   },
+  listSelectedItemClass: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    width: '100%',
+    backgroundColor: green[100]
+  },
   metadataClass: {
     paddingLeft: 20,
     paddingRight: 20,
@@ -344,7 +350,6 @@ export default function TicketDashboard(props) {
       .catch(error => console.log('error', error));
   };
   const viewTicket = item => {
-    // alert("click")
     setActiveTicket(item);
     //setTicketNumber(item.ticketNumber);
     // setCreatedTime(item.createdTime);
@@ -430,7 +435,11 @@ export default function TicketDashboard(props) {
             <>
               <ListItem
                 alignItems="flex-start"
-                className={classes.listItemClass}
+                className={
+                  ticket.ticketNumber === activeTicket.ticketNumber
+                    ? classes.listSelectedItemClass
+                    : classes.listItemClass
+                }
               >
                 <ListItemText>
                   <div className={classes.textBold}>
