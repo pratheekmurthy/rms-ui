@@ -97,10 +97,10 @@ axios(config)
           All Disposed Calls
         </Typography>
       </Box>
-      <DownloadReport
+     {agentdisposedCalls.length ?<DownloadReport
       DownloadData={agentdisposedCalls}
       
-      />
+      />:<></>}
       <DataGrid
         page={page}
         onPageChange={params => {

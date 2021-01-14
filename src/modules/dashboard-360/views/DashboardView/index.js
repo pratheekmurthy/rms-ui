@@ -106,7 +106,7 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCurrentStatusAction}) => {
+const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurrentStatusAction }) => {
   const classes = useStyles();
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
@@ -314,10 +314,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     };
 
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         // console.log("addQueue",JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -352,10 +352,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     };
 
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         // console.log("Removed Queue",JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -385,10 +385,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     };
 
     axios(config)
-      .then(function(response) {
-        console.log("update",JSON.stringify(response.data));
+      .then(function (response) {
+        console.log("update", JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -406,14 +406,14 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     };
 
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         // console.log(JSON.stringify(response.data));
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
           var callStatusId = JSON.stringify(response.data[0]._id);
 
           // console.log('callStatusId', callStatusId);
-        
+
           setCurrentCallDetails(
             response.data[0]._id,
             response.data[0].agentCallUniqueId,
@@ -425,11 +425,11 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
             response.data[0].breakStatus
           );
           setAgentCurrentStatusAction({
-            "AgentType":agent.AgentType,
-            "role":user.userType,
-            "callUniqueId":response.data[0].agentCallUniqueId,
-            "distributer_id":"",
-            "callStatusId":response.data[0]._id,
+            "AgentType": agent.AgentType,
+            "role": user.userType,
+            "callUniqueId": response.data[0].agentCallUniqueId,
+            "distributer_id": "",
+            "callStatusId": response.data[0]._id,
             "callDispositionStatus": response.data[0].agentCallDispositionStatus,
             "callType":response.data[0].agentCallType,
             "callEvent":response.data[0].agentCallEvent,
@@ -440,7 +440,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
           })
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -448,17 +448,17 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
   const onClick = event => {
     console.log('mobile', mobile);
     if (mobile.length === 10) {
-      console.log('valid number',SOCKETENDPOINT +
-      'ami/actions/orginatecall?sipAgentID=SIP%2F' +
-      agent.AgentSipId +
-      '&NumbertobeCalled=5' +
-      mobile,);
+      console.log('valid number', SOCKETENDPOINT +
+        'ami/actions/orginatecall?sipAgentID=SIP%2F' +
+        agent.AgentSipId +
+        '&NumbertobeCalled=5' +
+        mobile);
 
       const axios = require('axios');
 
       let config = {
         method: 'get',
-        url:SOCKETENDPOINT+"ami/actions/orginatecall?sipAgentID=SIP%2F"+agent.AgentSipId+"&NumbertobeCalled=5"+mobile,
+        url: SOCKETENDPOINT + "ami/actions/orginatecall?sipAgentID=SIP%2F" + agent.AgentSipId + "&NumbertobeCalled=5" + mobile,
         headers: {}
       };
 
@@ -519,7 +519,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
         // console.log('data1', data1)
         get(data1[0].distributor_id);
         localStorage.setItem('distributer_id', data1[0].distributor_id);
-       }
+      }
     }
     // const data = await response.json();
 
@@ -678,7 +678,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     // });
     
 
-          }
+
+        }
       }
     });
   }
@@ -840,15 +841,15 @@ axios(config)
     console.log('data second useEffect', currentCall);
     console.log('currentCall.callerNumber', currentCall.callerNumber);
 
-  // updateAgentCallStatus({
-  //     callStatusId: localStorage.getItem('callStatusId'),
-  //     callUniqueId: localStorage.getItem('callUniqueId'),
-  //     callType: localStorage.getItem('callType'),
-  //     callStatus: localStorage.getItem('callStatus'),
-  //     callEvent: localStorage.getItem('callEvent'),
-  //     callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-  //     callerNumber: localStorage.getItem('callerNumber')
-  //   });
+    // updateAgentCallStatus({
+    //     callStatusId: localStorage.getItem('callStatusId'),
+    //     callUniqueId: localStorage.getItem('callUniqueId'),
+    //     callType: localStorage.getItem('callType'),
+    //     callStatus: localStorage.getItem('callStatus'),
+    //     callEvent: localStorage.getItem('callEvent'),
+    //     callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+    //     callerNumber: localStorage.getItem('callerNumber')
+    //   });
     if (
       currentCall.callerNumber !== '' &&
       currentCall.callDispositionStatus === 'NotDisposed'
@@ -881,38 +882,38 @@ axios(config)
         </div>
       ) : null}
       {currentCall.callDispositionStatus === 'NotDisposed' &&
-      currentCall.callStatus === 'disconnected' ? (
-        <div>
-          {/* <div className={classes.timerComp}>
+        currentCall.callStatus === 'disconnected' ? (
+          <div>
+            {/* <div className={classes.timerComp}>
             <TimerComp />
           </div> */}
-          <Box
-            alignItems="center"
-            display="flex"
-            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
-          >
-            <CallIcon />
+            <Box
+              alignItems="center"
+              display="flex"
+              className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
+            >
+              <CallIcon />
             &nbsp;
             <Typography display="inline">
-              {currentCall.callType} Call Is Disconnected
+                {currentCall.callType} Call Is Disconnected
             </Typography>
-          </Box>{' '}
-        </div>
-      ) : null}
+            </Box>{' '}
+          </div>
+        ) : null}
       <CustomBreadcrumbs />
       {agent.AgentType === 'Outbound' && localStorage.getItem('callDispositionStatus') === 'Disposed' && localStorage.getItem('callStatus') === 'disconnected' && localStorage.getItem('breakStatus') === 'OUT'? (
         <div>
-          
+
           <Input value={mobile} onChange={onChange} margin='dense' />
-          <CallIcon  onClick={onClick} />
+          <CallIcon onClick={onClick} />
           {/* <Button
             variant="contained"
             className="jr-btn bg-light-green jr-btn-label left  text-white"
             onClick={onClick}
           >
             {/* <QueuePlayNext /> */}
-            {/* <span><CallIcon  onClick={onClick} /></span>
-          </Button> */} 
+          {/* <span><CallIcon  onClick={onClick} /></span>
+          </Button> */}
         </div>
       ) : null}
       <Page className={classes.root} title="Dashboard">
@@ -966,8 +967,8 @@ axios(config)
                         />
                       </div>
                     ) : (
-                      <CommonAlert text="Unable to get distributor details" />
-                    )}
+                        <CommonAlert text="Unable to get distributor details" />
+                      )}
                   </Card>
                 </Grid>
               </Grid>
@@ -984,72 +985,72 @@ axios(config)
                   }}
                 />
               ) : (
-                <CommonAlert text="Unable to get distributor details" />
-              )}
+                  <CommonAlert text="Unable to get distributor details" />
+                )}
               {currentCall.callDispositionStatus === 'NotDisposed' &&
-              user.userType === 'Agent' ? (
-                <Box mt={2}>
-                  <Card>
-                    <CardHeader title="Disposition Details" />
-                    <Divider />
-                    <CardContent>
-                      <DispositionForm
-                        agentSipID={agent.AgentSipId}
-                        setCurrentCallDetails={setCurrentCallDetails}
-                        addToQueue={addToQueue}
-                        removeFromQueue={removeFromQueue}
-                        getALF={getALF}
-                        disForm={disForm}
-                        setdisForm={form => {
-                          setdisForm(form);
-                        }}
-                        category={category}
-                        setCategory={cat => {
-                          setCategory(cat);
-                        }}
-                        ticketType={ticketType}
-                        setTicketType={tkstyp => {
-                          setTicketType(tkstyp);
-                        }}
-                        subCategory={subCategory}
-                        setSubCategory={subcat => {
-                          setSubCategory(subcat);
-                        }}
-                        subCategoryItem={subCategoryItem}
-                        setSubCategoryItem={subcatitem => {
-                          setSubCategoryItem(subcatitem);
-                        }}
-                        remarks={remarks}
-                        setRemarks={rks => {
-                          setRemarks(rks);
-                        }}
+                user.userType === 'Agent' ? (
+                  <Box mt={2}>
+                    <Card>
+                      <CardHeader title="Disposition Details" />
+                      <Divider />
+                      <CardContent>
+                        <DispositionForm
+                          agentSipID={agent.AgentSipId}
+                          setCurrentCallDetails={setCurrentCallDetails}
+                          addToQueue={addToQueue}
+                          removeFromQueue={removeFromQueue}
+                          getALF={getALF}
+                          disForm={disForm}
+                          setdisForm={form => {
+                            setdisForm(form);
+                          }}
+                          category={category}
+                          setCategory={cat => {
+                            setCategory(cat);
+                          }}
+                          ticketType={ticketType}
+                          setTicketType={tkstyp => {
+                            setTicketType(tkstyp);
+                          }}
+                          subCategory={subCategory}
+                          setSubCategory={subcat => {
+                            setSubCategory(subcat);
+                          }}
+                          subCategoryItem={subCategoryItem}
+                          setSubCategoryItem={subcatitem => {
+                            setSubCategoryItem(subcatitem);
+                          }}
+                          remarks={remarks}
+                          setRemarks={rks => {
+                            setRemarks(rks);
+                          }}
+                        />
+                      </CardContent>
+                    </Card>
+                  </Box>
+                ) : (
+                  <Box mt={2}>
+                    <Card>
+                      <CardHeader
+                        title={
+                          'My last five interactions (' + agent.AgentSipId + ')'
+                        }
                       />
-                    </CardContent>
-                  </Card>
-                </Box>
-              ) : (
-                <Box mt={2}>
-                <Card>
-                  <CardHeader
-                    title={
-                      'My last five interactions (' + agent.AgentSipId + ')'
-                    }
-                  />
-                  {ALF.length ? (
-                    <div>
-                      <BasicTable
-                        columns={lastFiveCallData}
-                        records={ALF.slice(0, 3)}
-                        redirectLink="/dash360/admin/agentlastfive"
-                        redirectLabel="View All"
-                      />
-                    </div>
-                  ) : (
-                    <CommonAlert text="Unable to get distributor details" />
-                  )}
-                </Card>
-                </Box>
-              )}
+                      {ALF.length ? (
+                        <div>
+                          <BasicTable
+                            columns={lastFiveCallData}
+                            records={ALF.slice(0, 3)}
+                            redirectLink="/dash360/admin/agentlastfive"
+                            redirectLabel="View All"
+                          />
+                        </div>
+                      ) : (
+                          <CommonAlert text="Unable to get distributor details" />
+                        )}
+                    </Card>
+                  </Box>
+                )}
             </Grid>
             <Grid item lg={5} xs={12}>
               <Card>
@@ -1062,8 +1063,8 @@ axios(config)
                     redirectLabel="View All"
                   />
                 ) : (
-                  <CommonAlert text="Unable to get distributor details" />
-                )}
+                    <CommonAlert text="Unable to get distributor details" />
+                  )}
               </Card>
               <br />
               <Card>
@@ -1078,8 +1079,8 @@ axios(config)
                     />
                   </div>
                 ) : (
-                  <CommonAlert text="Unable to get distributor details" />
-                )}
+                    <CommonAlert text="Unable to get distributor details" />
+                  )}
               </Card>
               {/* <br />
               <Card>
@@ -1264,8 +1265,8 @@ axios(config)
                 }}
               />
             ) : (
-              ''
-            )}
+                ''
+              )}
           </DialogContent>
           <DialogActions>
             <Button
@@ -1277,7 +1278,7 @@ axios(config)
               color="primary"
               variant="contained"
               size="small"
-              //  onClick={handleOpen}
+            //  onClick={handleOpen}
             >
               Create
             </Button>
@@ -1294,12 +1295,12 @@ axios(config)
           </DialogActions>
         </Dialog>
       ) : (
-        ''
-      )}
+          ''
+        )}
     </div>
   ) : (
-    <MainLoader />
-  );
+      <MainLoader />
+    );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),
