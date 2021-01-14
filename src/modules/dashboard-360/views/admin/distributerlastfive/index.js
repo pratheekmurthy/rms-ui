@@ -16,7 +16,9 @@ import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
-    maxHeight: 628
+    maxHeight: 628,
+    paddingLeft: "16px",
+    paddingRight: "16px",
   }
 }));
 function Invoices({
@@ -40,7 +42,7 @@ function Invoices({
 
   const agentServiceURL = 'http://192.168.3.45:42004/'
   function getALF() {
-    // console.log("ALF is callled")
+
     const axios = require('axios');
     let data = '';
     let config = {
@@ -65,7 +67,7 @@ function Invoices({
 
 
   useEffect(() => {
-    
+
     getALF()
     if (!distributorInvoices || orderIdPrev !== orderId) {
       (async function getDetails() {
@@ -97,10 +99,10 @@ function Invoices({
           All Disposed Calls
         </Typography>
       </Box>
-     {agentdisposedCalls.length>0 ? <DownloadReport
-      DownloadData={agentdisposedCalls}
-      
-      />:<></>}
+      {agentdisposedCalls.length > 0 ? <DownloadReport
+        DownloadData={agentdisposedCalls}
+
+      /> : <></>}
       <DataGrid
         page={page}
         onPageChange={params => {

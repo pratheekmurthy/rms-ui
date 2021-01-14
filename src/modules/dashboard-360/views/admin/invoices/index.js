@@ -16,7 +16,9 @@ import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
-    maxHeight: 628
+    maxHeight: 628,
+    paddingLeft: "16px",
+paddingRight: "16px",
   }
 }));
 function Invoices({
@@ -69,10 +71,10 @@ function Invoices({
           All Invoices
         </Typography>
       </Box>
-      <DownloadReport
+      {distributorInvoices.length?<DownloadReport
       DownloadData={distributorInvoices}
       
-      />
+      />:<></>}
       <DataGrid
         page={page}
         onPageChange={params => {
