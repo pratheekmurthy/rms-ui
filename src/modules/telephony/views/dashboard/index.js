@@ -242,11 +242,7 @@ const Inbound = () => {
 
 
   }
-<<<<<<< HEAD
 const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
-=======
-  const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
->>>>>>> 859a4a73ed30f0040a7b8a64672361dee4d81c21
 
   useEffect(() => {
 
