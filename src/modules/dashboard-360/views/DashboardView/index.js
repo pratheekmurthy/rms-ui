@@ -836,6 +836,7 @@ axios(config)
       socket.off('AstriskEventHangup');
     };
   }, []);
+  
 
   useEffect(() => {
     console.log('data second useEffect', currentCall);
