@@ -51,7 +51,7 @@ import { update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import { agentCurrentStatus } from 'src/redux/reducers';
 
-const SOCKETENDPOINT = 'http://localhost:42002/';
+const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 
@@ -184,7 +184,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     callStatus: '',
     callDetails: '',
     callDispositionStatus: '',
-    callerNumber: ''
+    callerNumber: '',
+    breakStatus:''
   });
   const [user, setUserDetails] = useState({
     userType: 'Agent'
@@ -196,7 +197,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
   });
   const [ALF, setALF] = useState([]);
   const [DLF, setDLF] = useState([]);
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'http://127.0.0.1:42004/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
 
@@ -262,7 +263,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     callStatus,
     callEvent,
     callDispositionStatus,
-    callerNumber
+    callerNumber,
+    breakStatus
   ) {
     setCurrentCall({
       callStatusId: callStatusId,
@@ -271,7 +273,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
       callStatus: callStatus,
       callEvent: callEvent,
       callDispositionStatus: callDispositionStatus,
-      callerNumber: callerNumber
+      callerNumber: callerNumber,
+      breakStatus:breakStatus
     });
     localStorage.setItem('callStatusId', callStatusId);
     localStorage.setItem('callUniqueId', callUniqueId);
@@ -280,9 +283,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
     localStorage.setItem('callEvent', callEvent);
     localStorage.setItem('callDispositionStatus', callDispositionStatus);
     localStorage.setItem('callerNumber', callerNumber);
+    localStorage.setItem('breakStatus', breakStatus)
    }
 
-  var APIENDPOINT = 'http://localhost:42002';
+  var APIENDPOINT = 'http://127.0.0.1:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -368,7 +372,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
       agentCallUniqueId: updateData.callUniqueId,
       agentCallType: updateData.callType,
       agentCallDispositionStatus: updateData.callDispositionStatus,
-      callerNumber: updateData.callerNumber
+      callerNumber: updateData.callerNumber,
+      breakStatus: updateData.breakStatus,
     };
     var config = {
       method: 'put',
@@ -416,7 +421,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
             response.data[0].agentCallStatus,
             response.data[0].agentCallEvent,
             response.data[0].agentCallDispositionStatus,
-            response.data[0].contactNumber
+            response.data[0].contactNumber,
+            response.data[0].breakStatus
           );
           setAgentCurrentStatusAction({
             "AgentType":agent.AgentType,
@@ -429,7 +435,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
             "callEvent":response.data[0].agentCallEvent,
             "callerNumber":response.data[0].contactNumber,
             "callStatus":response.data[0].agentCallStatus,
-            "AgentSIPID":agent.AgentSipId
+            "AgentSIPID":agent.AgentSipId,
+            "breakStatus":response.data[0].breakStatus
           })
         }
       })
@@ -677,7 +684,75 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
   }
 
   function breakService(e) {
-    alert('Clicked on Break');
+    // alert('Clicked on Break');
+    console.log('Break', localStorage.getItem('breakStatus'))
+    var BreakStatus =  localStorage.getItem('breakStatus');
+    if(BreakStatus === 'NA'){
+      console.log('Inside the NA')
+      localStorage.setItem('breakStatus', 'IN');
+      if(agent.AgentType === 'Inbound'){
+        addToQueue(agent.AgentSipId, '9002');
+      }
+    }
+    if(BreakStatus === 'IN'){
+      console.log('Inside the IN')
+      localStorage.setItem('breakStatus', 'OUT')
+      if(agent.AgentType === 'Inbound'){
+        addToQueue(agent.AgentSipId, '9002');
+      }
+    }
+    if(BreakStatus === 'OUT'){
+      console.log('Inside the OUT')
+      localStorage.setItem('breakStatus', 'IN')
+      if(agent.AgentType === 'Inbound'){
+        removeFromQueue(agent.AgentSipId, '9002');
+      }
+    }
+
+    updateAgentCallStatus({
+      callStatusId: localStorage.getItem('callStatusId'),
+      callUniqueId: localStorage.getItem('callUniqueId'),
+      callType: localStorage.getItem('callType'),
+      callStatus: localStorage.getItem('callStatus'),
+      callEvent: localStorage.getItem('callEvent'),
+      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+      callerNumber: localStorage.getItem('callerNumber'),
+      breakStatus: localStorage.getItem('breakStatus')
+    });
+
+    setCurrentCallDetails(
+      localStorage.getItem('callStatusId'),
+      localStorage.getItem('callUniqueId'),
+      localStorage.getItem('callType'),
+      localStorage.getItem('callStatus'),
+      localStorage.getItem('callEvent'),
+      localStorage.getItem('callDispositionStatus'),
+      localStorage.getItem('callerNumber'),
+      localStorage.getItem('breakStatus')
+    );
+
+    var axios = require('axios');
+var data = JSON.stringify({"agentID":agent.AgentId,"agentSIPID":agent.AgentSipId,"breakStatus":localStorage.getItem('breakStatus')});
+
+var config = {
+  method: 'post',
+  url: 'http://127.0.0.1:42004/crm/agentbreakservices',
+  headers: { 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+  console.log(error);
+});
+
+ 
+
   }
 
   ///socket ends
@@ -722,7 +797,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
             'connected',
             'Bridge',
             'NotDisposed',
-            data.CallerID1
+            data.CallerID1,
+            localStorage.getItem('breakStatus')
           );
       
     });
@@ -735,7 +811,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
         'connected',
         'Bridge',
         'NotDisposed',
-        data.CallerID1
+        data.CallerID1,
+        localStorage.getItem('breakStatus')
       );
       removeFromQueue(agent.AgentSipId, '9002');
     });
@@ -748,7 +825,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
               'disconnected',
               'Hangup',
               localStorage.getItem('callDispositionStatus'),
-              localStorage.getItem('callerNumber')
+              localStorage.getItem('callerNumber'),
+              localStorage.getItem('breakStatus')
             );
     });
     return () => {
@@ -780,7 +858,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
       // removeFromQueue(agent.AgentSipId, '9002');
     }
     getALF();
-  }, [currentCall.callDispositionStatus, currentCall.callStatus]);
+  }, [currentCall.callDispositionStatus, currentCall.callStatus, currentCall.breakStatus]);
   var createTicket = () => {};
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
@@ -822,7 +900,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
         </div>
       ) : null}
       <CustomBreadcrumbs />
-      {agent.AgentType === 'Outbound' && localStorage.getItem('callDispositionStatus') === 'Disposed' && localStorage.getItem('callStatus') === 'disconnected' ? (
+      {agent.AgentType === 'Outbound' && localStorage.getItem('callDispositionStatus') === 'Disposed' && localStorage.getItem('callStatus') === 'disconnected' && localStorage.getItem('breakStatus') === 'OUT'? (
         <div>
           
           <Input value={mobile} onChange={onChange} margin='dense' />
@@ -850,14 +928,16 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction,  setAgentCur
                   >
                     Create Ticket
                   </Button>
+                  
                   &nbsp;&nbsp;
-                  { currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected' ? <Button
+
+                  { currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected'  ? <Button
                     color="secondary"
                     variant="contained"
                     style={{ color: 'white' }}
                     onClick={(e) => breakService(e)}
                   >
-                     BreakIn/BreakOut
+                 {currentCall.breakStatus === 'IN' ?  <label>Break IN</label> : <label>Break OUT</label>}
                   </Button> : null }
                 </Grid>
                 <Grid item>
