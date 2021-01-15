@@ -86,7 +86,7 @@ export default function DealerCard({ dealerDetails }) {
   } = dealerDetails;
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
+  const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
   const getIconColor = () => {
     return 'primary';
   };
