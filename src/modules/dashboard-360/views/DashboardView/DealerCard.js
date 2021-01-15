@@ -119,6 +119,7 @@ export default function DealerCard({ dealerDetails }) {
             title="View More Details"
             className={`position-absolute ${classes.profileIcon} `}
           >
+          
             <AccountCircleIcon
               color="primary"
               style={{ cursor: 'pointer' }}
@@ -325,6 +326,8 @@ export default function DealerCard({ dealerDetails }) {
           </DialogActions>
         </Dialog>
       )}
+     
+
       {/* <ListItem>
           <ListItemText
             primary={

@@ -33,7 +33,7 @@ import {
 
 import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 import CallIcon from '@material-ui/icons/Call';
@@ -43,11 +43,13 @@ import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 
 import { setDistributorOrders } from '../../redux/action';
+import { setSearchDistributor } from '../../../../redux/action';
+import {searchDistributor} from '../../../../redux/action';
 import DispositionForm from './DispositionForm';
 import TimerComp from './TimerComp';
 
 import socketIOClient from 'socket.io-client';
-import { update } from 'lodash';
+import { get, update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import { agentCurrentStatus } from 'src/redux/reducers';
 
@@ -106,8 +108,9 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurrentStatusAction }) => {
+const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurrentStatusAction,setSearchDistributor,searchDistributor}) => {
   const classes = useStyles();
+  const reduxState = useSelector((state) => state)
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
@@ -200,6 +203,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   const agentServiceURL = 'http://192.168.3.45:42004/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
+  
 
   function getDLF() {
     // console.log("ALF is callled")
@@ -229,7 +233,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   }
 
   function getALF() {
-    // console.log("ALF is callled")
+   
     const axios = require('axios');
     let data = '';
 
@@ -516,7 +520,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
       // console.log("response", response.data)
       var data1 = response.data.data;
       if (data1.length) {
-        // console.log('data1', data1)
+        console.log('data1', data1)
         get(data1[0].distributor_id);
         localStorage.setItem('distributer_id', data1[0].distributor_id);
       }
@@ -527,6 +531,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   }
 
   async function get(distributor_id) {
+    console.log("distributor_id",distributor_id)
     try {
       const response = await Promise.allSettled(dealerAPICalls(distributor_id));
       setRootData(
@@ -758,21 +763,7 @@ axios(config)
 
   ///socket ends
   useEffect(() => {
-    // window.addEventListener('storage', function(e) {
-    //   console.log('storage event', e.storageArea.search);
-    //   var Dnumber = e.storageArea.search;
-    //   if (Dnumber !== '' && Dnumber.length === 4) {
-    //     //  getDistributorById(Dnumber);
-    //     get(Dnumber);
-    //   } else {
-    //     get(Dnumber);
-    //   }
-    // });
-  
-    // if (localStorage.getItem('callDispositionStatus') === 'Disposed') {
-    //   // removeFromQueue(agent.AgentSipId, '9002');
-    //   addToQueue(agent.AgentSipId, '9002');
-    // }
+    
     getALF();
     async function getInitialData() {
       try {
@@ -879,6 +870,16 @@ axios(config)
     }
     getALF();
   }, [currentCall.callDispositionStatus, currentCall.callStatus, currentCall.breakStatus]);
+
+  useEffect(()=>{
+    if(reduxState.searchDistributor.length>= 4){
+      get(reduxState.searchDistributor)
+    }
+    else{
+      get()
+    }
+    },[reduxState.searchDistributor])
+
   var createTicket = () => {};
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
@@ -1325,20 +1326,25 @@ Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),
   agentCurrentStatus: PropTypes.arrayOf(PropTypes.object),
   setDistributorOrdersAction: PropTypes.func,
-  setAgentCurrentStatusAction: PropTypes.func
+  setAgentCurrentStatusAction: PropTypes.func,
+  searchDistributor:PropTypes.string
 };
 
 const mapStateToProps = state => {
+
   return {
     distributorOrders: state.distributorOrders,
-    agentCurrentStatus: state.currentCall
+    agentCurrentStatus: state.currentCall,
+    searchDistributor: state.searchDistributor
   };
 };
 
 const mapDispatchToProps = dispatch => {
+ 
   return {
     setDistributorOrdersAction: orders => dispatch(setDistributorOrders(orders)),
-    setAgentCurrentStatusAction: currentCall => dispatch(setAgentCurrentStatus(currentCall))
+    setAgentCurrentStatusAction: currentCall => dispatch(setAgentCurrentStatus(currentCall)),
+    setSearchDistributor: dist => dispatch(setSearchDistributor(dist))
   };
 };
 
