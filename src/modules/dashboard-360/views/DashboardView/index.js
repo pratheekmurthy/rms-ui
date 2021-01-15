@@ -51,7 +51,7 @@ import { update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import { agentCurrentStatus } from 'src/redux/reducers';
 
-const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
+const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 
@@ -197,7 +197,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   });
   const [ALF, setALF] = useState([]);
   const [DLF, setDLF] = useState([]);
-  const agentServiceURL = 'http://127.0.0.1:42004/';
+  const agentServiceURL = 'http://192.168.3.45:42004/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
 
@@ -286,7 +286,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     localStorage.setItem('breakStatus', breakStatus)
    }
 
-  var APIENDPOINT = 'http://127.0.0.1:42002';
+  var APIENDPOINT = 'http://192.168.3.45:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -737,7 +737,7 @@ var data = JSON.stringify({"agentID":agent.AgentId,"agentSIPID":agent.AgentSipId
 
 var config = {
   method: 'post',
-  url: 'http://127.0.0.1:42004/crm/agentbreakservices',
+  url: 'http://192.168.3.45:42004/crm/agentbreakservices',
   headers: { 
     'Content-Type': 'application/json'
   },
@@ -790,45 +790,63 @@ axios(config)
     setLoadingDetails(false);
     
     socket.on('AstriskEventBridgeOutbound', data => {
-      console.log('AstriskEventBridgeOutbound', data);
-          setCurrentCallDetails(
-            localStorage.getItem('callStatusId'),
-            data.Uniqueid1,
-            agent.AgentType,
-            'connected',
-            'Bridge',
-            'NotDisposed',
-            data.CallerID1,
-            localStorage.getItem('breakStatus')
-          );
+      var Channel1 = data.Channel1;
+      var agentExtension = Channel1.substring(4, 8);
+      if(agentExtension === agent.AgentSipId){
+        console.log('AstriskEventBridgeOutbound', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          data.Uniqueid1,
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          data.CallerID1,
+          localStorage.getItem('breakStatus')
+        );
+
+      }
+
       
     });
     socket.on('AstriskEventBridgeInbound', data => {
-      console.log('AstriskEventBridgeInbound', data);
-      setCurrentCallDetails(
-        localStorage.getItem('callStatusId'),
-        data.Uniqueid1,
-        agent.AgentType,
-        'connected',
-        'Bridge',
-        'NotDisposed',
-        data.CallerID1,
-        localStorage.getItem('breakStatus')
-      );
-      removeFromQueue(agent.AgentSipId, '9002');
+     
+      if(data.CallerID2 === agent.AgentSipId){
+        console.log('AstriskEventBridgeInbound', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          data.Uniqueid1,
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          data.CallerID1,
+          localStorage.getItem('breakStatus')
+        );
+        removeFromQueue(agent.AgentSipId, '9002');
+
+      }
+
     });
     socket.on('AstriskEventHangup', data => {
-      console.log('AstriskEventHangup', data);
-            setCurrentCallDetails(
-              localStorage.getItem('callStatusId'),
-              localStorage.getItem('callUniqueId'),
-              localStorage.getItem('callType'),
-              'disconnected',
-              'Hangup',
-              localStorage.getItem('callDispositionStatus'),
-              localStorage.getItem('callerNumber'),
-              localStorage.getItem('breakStatus')
-            );
+      var str = data.Channel;
+      var agentsipid = str.substring(4, 8);
+      console.log('agentsipid', agentsipid)
+      if(agentsipid === agent.AgentSipId){
+        console.log('AstriskEventHangup', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+
+      }
+
     });
     return () => {
       socket.off('AstriskEventBridgeOutbound');
