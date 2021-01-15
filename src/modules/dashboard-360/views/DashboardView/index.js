@@ -725,16 +725,16 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
 
   ///socket ends
   useEffect(() => {
-    window.addEventListener('storage', function (e) {
-      // console.log('storage event', e.storageArea.search);
-      var Dnumber = localStorage.getItem("search");
-      if (Dnumber !== '' && Dnumber.length === 4) {
-        //  getDistributorById(Dnumber);
-        get(Dnumber);
-      } else {
-        get(Dnumber);
-      }
-    });
+    // window.addEventListener('storage', function (e) {
+    //   // console.log('storage event', e.storageArea.search);
+    //   var Dnumber = localStorage.getItem("search");
+    //   if (Dnumber !== '' && Dnumber.length === 4) {
+    //     //  getDistributorById(Dnumber);
+    //     get(Dnumber);
+    //   } else {
+    //     get(Dnumber);
+    //   }
+    // });
     // if (localStorage.getItem('callDispositionStatus') === 'Disposed') {
     //   // removeFromQueue(agent.AgentSipId, '9002');
     //   addToQueue(agent.AgentSipId, '9002');

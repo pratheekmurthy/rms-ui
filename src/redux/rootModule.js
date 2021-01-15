@@ -6,6 +6,7 @@ import {
   urlMatchFound,
   userData,
   agentCurrentStatus,
+  searchDistributor
 } from './reducers';
 
 export default function getWeatherModule() {
@@ -20,7 +21,8 @@ export default function getWeatherModule() {
       crumbs,
       urlMatchFound,
       userData,
-      agentCurrentStatus
+      agentCurrentStatus,
+      searchDistributor
     }
     // This module uses redux-saga middleware
     // This property will be be used by the SagaExtension

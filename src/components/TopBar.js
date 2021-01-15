@@ -23,7 +23,7 @@ import NestedMenu from './NestedMenu';
 import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { setLoggedIn } from 'src/redux/action';
+import { setLoggedIn,setSearchDistributor} from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 
@@ -83,7 +83,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
+const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
   const [searchText, setSearchText] = useState('');
@@ -91,15 +91,15 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
     setSearchText(evt.target.value);
     console.log('search', evt.target.value);
     localStorage.setItem('search', evt.target.value);
-    changeValue();
+    // changeValue();
     // alert(evt.target.value);
     // getDistributorById(evt.target.value);
   };
-  const changeValue = () => {
-    var x = window.open('', 'myWindow', 'width=200,height=100');
-    x.localStorage.setItem('mytime', Date.now());
-    x.close();
-  };
+  // const changeValue = () => {
+  //   var x = window.open('', 'myWindow', 'width=200,height=100');
+  //   x.localStorage.setItem('mytime', Date.now());
+  //   x.close();
+  // };
   async function logoutUser() {
     try {
       await Axios.get('/auth/user/logout');
@@ -194,9 +194,13 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
     </AppBar>
   );
 };
+const mapStateToProps = state => ({
+  searchDist: state.searchDistributor
+});
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(setLoggedIn(false))
+  logout: () => dispatch(setLoggedIn(false)),
+  searchDist: val => dispatch(setSearchDistributor(val))
 });
 
 TopBar.propTypes = {
@@ -205,4 +209,4 @@ TopBar.propTypes = {
   logout: PropTypes.func
 };
 
-export default connect(null, mapDispatchToProps)(TopBar);
+export default connect(null,mapStateToProps, mapDispatchToProps)(TopBar);
