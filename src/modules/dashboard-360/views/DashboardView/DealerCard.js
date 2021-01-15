@@ -20,8 +20,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import CallIcon from '@material-ui/icons/Call';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { getAddressFromObj } from '../../utils/util-functions';
-import SearchIcon from '@material-ui/icons/Search';
-import DistributorSelectModal from './DistributorSelectModal'
+
 const useStyles = makeStyles(theme => ({
   maxW50: {
     maxWidth: '50%',

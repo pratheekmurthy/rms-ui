@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => {
   };
 });
 
-const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurrentStatusAction,setSearchDistributor,searchDistributor, ...props }) => {
+const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurrentStatusAction,setSearchDistributor,searchDistributor}) => {
   const classes = useStyles();
   const reduxState = useSelector((state) => state)
   const [tab, setTab] = useState(0);
@@ -203,7 +203,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   const agentServiceURL = 'http://192.168.3.45:42004/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
-  const [searchValue, setSearchValue] = useState('');
+  
 
   function getDLF() {
     // console.log("ALF is callled")
@@ -879,7 +879,7 @@ axios(config)
       get()
     }
     },[reduxState.searchDistributor])
-    
+
   var createTicket = () => {};
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>

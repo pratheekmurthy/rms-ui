@@ -83,7 +83,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopBar = ({ className, onMobileNavOpen, logout, searchDist, props,  ...rest }) => {
+const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
   const [searchText, setSearchText] = useState('');
