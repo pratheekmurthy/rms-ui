@@ -225,7 +225,7 @@ const Inbound = () => {
 
     let config = {
       method: 'get',
-      url: 'http://192.168.3.45:42005/service/dashboardcount?AccessKeys=123',
+      url: 'http://127.0.0.1:42005/service/dashboardcount?AccessKeys=123',
       headers: {}
     };
 
@@ -242,7 +242,7 @@ const Inbound = () => {
 
 
   }
-  const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
+const SOCKETENDPOINT = 'http://127.0.0.1:42002/';
 
   useEffect(() => {
 

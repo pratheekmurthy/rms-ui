@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -26,7 +26,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { setLoggedIn,setSearchDistributor} from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-
+import {SET_SEARCH_DISTRIBUTOR} from 'src/redux/constants'
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -83,23 +83,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => {
+const TopBar = ({ className, onMobileNavOpen, logout, searchDist, props,  ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
   const [searchText, setSearchText] = useState('');
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
-    console.log('search', evt.target.value);
-    localStorage.setItem('search', evt.target.value);
-    // changeValue();
-    // alert(evt.target.value);
-    // getDistributorById(evt.target.value);
+    // searchDist(evt.target.value) 
   };
-  // const changeValue = () => {
-  //   var x = window.open('', 'myWindow', 'width=200,height=100');
-  //   x.localStorage.setItem('mytime', Date.now());
-  //   x.close();
-  // };
+  const distributorID = evt => {
+    console.log("searchText",searchText)
+    searchDist(searchText) 
+    // setSearchText(evt.target.value);
+    // searchDist(evt.target.value) 
+  };
   async function logoutUser() {
     try {
       await Axios.get('/auth/user/logout');
@@ -127,6 +124,7 @@ const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => 
             inputProps={{ 'aria-label': 'search' }}
             onChange={updateSearchText}
             value={searchText}
+            onBlur={distributorID}
           />
         </div>
         <Box flexGrow={1} />
@@ -195,7 +193,8 @@ const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => 
   );
 };
 const mapStateToProps = state => ({
-  searchDist: state.searchDistributor
+//  console.log("state", state)
+searchTextDist: state.searchDistributor
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -206,7 +205,8 @@ const mapDispatchToProps = dispatch => ({
 TopBar.propTypes = {
   className: PropTypes.string,
   onMobileNavOpen: PropTypes.func,
-  logout: PropTypes.func
+  logout: PropTypes.func,
+  searchDist:PropTypes.func
 };
 
-export default connect(null,mapStateToProps, mapDispatchToProps)(TopBar);
+export default connect(mapStateToProps, mapDispatchToProps)(TopBar);
