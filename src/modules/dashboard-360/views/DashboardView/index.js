@@ -571,7 +571,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
     }
   }
 
-  ///socket start 
+  ///socket start
   if (user.userType === 'Agent') {
     socket.on('AstriskEvent', data => {
       // console.log('AstriskEvent', data);
@@ -653,8 +653,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
       }
     });
   }
-
-
 
   ///socket ends
 
@@ -873,25 +871,25 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                 </Box>
               ) : (
                 <Box mt={2}>
-                <Card>
-                  <CardHeader
-                    title={
-                      'My last five interactions (' + agent.AgentSipId + ')'
-                    }
-                  />
-                  {ALF.length ? (
-                    <div>
-                      <BasicTable
-                        columns={lastFiveCallData}
-                        records={ALF.slice(0, 3)}
-                        redirectLink="/dash360/admin/agentlastfive"
-                        redirectLabel="View All"
-                      />
-                    </div>
-                  ) : (
-                    <CommonAlert />
-                  )}
-                </Card>
+                  <Card>
+                    <CardHeader
+                      title={
+                        'My last five interactions (' + agent.AgentSipId + ')'
+                      }
+                    />
+                    {ALF.length ? (
+                      <div>
+                        <BasicTable
+                          columns={lastFiveCallData}
+                          records={ALF.slice(0, 3)}
+                          redirectLink="/dash360/admin/agentlastfive"
+                          redirectLabel="View All"
+                        />
+                      </div>
+                    ) : (
+                      <CommonAlert />
+                    )}
+                  </Card>
                 </Box>
               )}
             </Grid>
@@ -966,10 +964,10 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
             </Box>
           </DialogTitle>
           <DialogContent dividers>
-            {rootData[0].data ? (
+            {
               <CreateTicket
                 dealerDetails={
-                  rootData[0].data[0]
+                  rootData[0].data ? rootData[0].data[0] : {}
                   // rootData[0].data[0].length ?
                   // ...rootData[0].data[0]: "",
                   // lastOrderReference: rootData[2].data
@@ -1107,9 +1105,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
                   setCreatedTime(cretime);
                 }}
               />
-            ) : (
-              ''
-            )}
+            }
           </DialogContent>
           <DialogActions>
             <Button
@@ -1126,7 +1122,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction }) => {
               Create
             </Button>
             <Button
-              onClick={() => setShowCreateTicket(false)}
               color="primary"
               size="small"
               variant="outlined"

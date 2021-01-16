@@ -29,6 +29,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import LinkIcon from '@material-ui/icons/Link';
 import AddIcon from '@material-ui/icons/Add';
 import CreateTicket from '../create-ticket';
+import { useSelector } from 'react-redux';
 import FilterTicket from '../filter-ticket';
 import EditIcon from '@material-ui/icons/Edit';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -158,6 +159,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function TicketDashboard(props) {
+  const userData = useSelector(state => state.userData);
   const classes = useStyles();
   const [ticket, setTicket] = useState({});
   const [clickChild, setClickChild] = useState();
@@ -248,6 +250,14 @@ export default function TicketDashboard(props) {
     setCategory(category);
   };
 
+  const handleSubCategoryChange = event => {
+    setSubCategory(subCategory);
+  };
+
+  const handleSubCategoryItemChange = event => {
+    setSubCategoryItem(subCategoryItem);
+  };
+
   const [status, setStatus] = React.useState({});
   const handleStatusChange = event => {
     setStatus(status);
@@ -258,7 +268,58 @@ export default function TicketDashboard(props) {
   const [filter, openFilter] = React.useState(false);
   const [tickets, setTickets] = useState([]);
   const [openEdit, setOpenEdit] = React.useState();
+  const [createAccess, setCreateAccess] = useState(-1);
+  const [viewAccess, setViewAccess] = useState(-1);
+  const [assignAccess, setAssignAccess] = useState(-1);
+  const [editAccess, setEditAccess] = useState(-1);
 
+  useEffect(() => {
+    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        /* alert(JSON.stringify(repos.data));
+        alert(
+          JSON.stringify(
+            repos.data.filter(access => access.functionalityId === '1')
+          )
+        ); */
+        setCreateAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '1')[0]
+              .accessLevelId
+          )
+        );
+        setViewAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '2')[0]
+              .accessLevelId
+          )
+        );
+        setEditAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '3')[0]
+              .accessLevelId
+          )
+        );
+        setAssignAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '4')[0]
+              .accessLevelId
+          )
+        );
+
+        /*  if (parseInt(viewAccess) < 0) {
+          alert('You do not have view access to this Page!');
+        }
+        if (parseInt(editAccess) < 0) {
+          alert('You do not have edit access to this Page!');
+        }
+        if (parseInt(assignAccess) < 0) {
+          alert('You do not have assign access to this Page!');
+        } */
+      });
+  }, []);
   const handleClickOpenEdit = () => {
     setOpenEdit(true);
   };
@@ -404,7 +465,11 @@ export default function TicketDashboard(props) {
         {tickets
           .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
           .filter(tkt => tkt.distributorId.includes(distributorId))
-          .filter(tkt => tkt.distributorName.includes(distributorName))
+          .filter(tkt =>
+            tkt.distributorName
+              .toLowerCase()
+              .includes(distributorName.toLowerCase())
+          )
 
           .filter(tkt =>
             status.label === 'All'
@@ -416,6 +481,16 @@ export default function TicketDashboard(props) {
               ? tkt.category === tkt.category
               : tkt.category === category.label
           )
+          /*  .filter(tkt =>
+            subCategory.label === 'All'
+              ? tkt.subCategory === tkt.subCategory
+              : tkt.subCategory === subCategory.label
+          )
+          .filter(tkt =>
+            subCategoryItem.label === 'All'
+              ? tkt.subCategoryItem || '' === tkt.subCategoryItem || ''
+              : tkt.subCategoryItem || '' === subCategoryItem.label || ''
+          ) */
           .filter(tkt =>
             media.label === 'All'
               ? tkt.media === tkt.media
@@ -440,6 +515,7 @@ export default function TicketDashboard(props) {
                     ? classes.listSelectedItemClass
                     : classes.listItemClass
                 }
+                onClick={() => viewTicket(ticket)}
               >
                 <ListItemText>
                   <div className={classes.textBold}>
@@ -451,10 +527,7 @@ export default function TicketDashboard(props) {
                         {ticket.status.substring(0, 1)}
                       </Avatar>
 
-                      <span
-                        className={classes.ticketMargin}
-                        onClick={() => viewTicket(ticket)}
-                      >
+                      <span className={classes.ticketMargin}>
                         {ticket.ticketNumber}
                       </span>
                     </ListItemIcon>
@@ -909,7 +982,9 @@ export default function TicketDashboard(props) {
                       .filter(tkt => tkt.ticketNumber.includes(ticketNumber))
                       .filter(tkt => tkt.distributorId.includes(distributorId))
                       .filter(tkt =>
-                        tkt.distributorName.includes(distributorName)
+                        tkt.distributorName
+                          .toLowerCase()
+                          .includes(distributorName.toLowerCase())
                       )
 
                       .filter(tkt =>
@@ -922,6 +997,20 @@ export default function TicketDashboard(props) {
                           ? tkt.category === tkt.category
                           : tkt.category === category.label
                       )
+                      .filter(tkt =>
+                        subCategory.label === 'All'
+                          ? tkt.subCategory === tkt.subCategory
+                          : tkt.subCategory === subCategory.label
+                      )
+                      /* .filter(tkt =>
+                        subCategoryItem.label === 'All'
+                          ? tkt.subCategoryItem ||
+                            '' === tkt.subCategoryItem ||
+                            ''
+                          : tkt.subCategoryItem ||
+                            '' === subCategoryItem.label ||
+                            ''
+                      ) */
                       .filter(tkt =>
                         media.label === 'All'
                           ? tkt.media === tkt.media
@@ -1001,7 +1090,7 @@ export default function TicketDashboard(props) {
                         color="textPrimary"
                         style={{ marginLeft: 10 }}
                       >
-                        Edit Ticket
+                        {activeTicket.ticketNumber}
                       </Typography>
                     </Box>
                   </DialogTitle>
@@ -1018,17 +1107,21 @@ export default function TicketDashboard(props) {
                     />
                   </DialogContent>
                   <DialogActions>
-                    <Button
-                      onClick={() => {
-                        createTicket();
-                        setOpenEdit(false);
-                      }}
-                      color="primary"
-                      variant="contained"
-                      size="small"
-                    >
-                      Update
-                    </Button>
+                    {editAccess === -1 && assignAccess === -1 ? (
+                      ''
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          createTicket();
+                          setOpenEdit(false);
+                        }}
+                        color="primary"
+                        variant="contained"
+                        size="small"
+                      >
+                        Update
+                      </Button>
+                    )}
                     <Button
                       onClick={handleCloseEdit}
                       color="primary"

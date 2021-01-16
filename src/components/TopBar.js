@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import config from '../modules/ticketing/views/config.json';
 import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -84,9 +86,47 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
+  const userData = useSelector(state => state.userData);
+  const [createAccess, setCreateAccess] = useState(-1);
+  const [viewAccess, setViewAccess] = useState(-1);
+  const [assignAccess, setAssignAccess] = useState(-1);
+  const [editAccess, setEditAccess] = useState(-1);
+  const [role, setRole] = useState(-1);
   const classes = useStyles();
   const [notifications] = useState([]);
   const [searchText, setSearchText] = useState('');
+  useEffect(() => {
+    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        setRole(repos.role);
+        setCreateAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '1')[0]
+              .accessLevelId
+          )
+        );
+        setViewAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '2')[0]
+              .accessLevelId
+          )
+        );
+        setEditAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '3')[0]
+              .accessLevelId
+          )
+        );
+        setAssignAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '4')[0]
+              .accessLevelId
+          )
+        );
+      });
+  }, []);
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
     console.log('search', evt.target.value);
@@ -142,11 +182,15 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
               Telephony
             </Link>
           </Typography>
-          <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/ticketing/ticket-dashboard" className="color-white">
-              Ticketing
-            </Link>
-          </Typography>
+          {viewAccess === -1 ? (
+            ''
+          ) : (
+            <Typography className={classes.title} variant="h5" noWrap>
+              <Link to="/ticketing/ticket-dashboard" className="color-white">
+                Ticketing
+              </Link>
+            </Typography>
+          )}
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/surveys/home" className="color-white">
               Surveys
@@ -155,13 +199,17 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/campaign/dashboard" className="color-white">
               Campaign
-             </Link>
-          </Typography>
-          <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/ticketing/setup" className="color-white">
-              Tkt-Setup
             </Link>
           </Typography>
+          {role === 'Admin' ? (
+            <Typography className={classes.title} variant="h5" noWrap>
+              <Link to="/ticketing/setup" className="color-white">
+                Tkt-Setup
+              </Link>
+            </Typography>
+          ) : (
+            ''
+          )}
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/ticketing/ticket-report" className="color-white">
               Tkt-Dashboard

@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import config from '../config.json';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { purple, orange, green, grey } from '@material-ui/core/colors';
 
 import { Grid, Typography, Box, Paper } from '@material-ui/core';
 import MediaConfig from './mediaconfig';
@@ -48,7 +51,8 @@ TabPanel.propTypes = {
 function a11yProps(index) {
   return {
     id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`
+    'aria-controls': `vertical-tabpanel-${index}`,
+    alignItems: 'flex-start'
   };
 }
 
@@ -58,7 +62,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     height: 'auto',
-    margin: 15
+    margin: 15,
+    alignContent: 'flex-start'
   },
 
   paper: {
@@ -67,21 +72,41 @@ const useStyles = makeStyles(theme => ({
 
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
-    color: 'blue'
+    color: 'blue',
+    width: '100%',
+    alignItems: 'stretch'
   },
 
   tab: {
-    justifySelf: 'left'
+    '&:hover': {
+      width: '100%',
+      backgroundColor: green[100]
+    }
+  },
+  tabSelected: {
+    alignItems: 'flex-start'
   }
 }));
 
 export default function TicketDashboard() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const userData = useSelector(state => state.userData);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        if (repos.role !== 'Admin') {
+          alert('You do not have access to this Page!');
+        }
+      });
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -97,7 +122,7 @@ export default function TicketDashboard() {
                   onChange={handleChange}
                   aria-label="Vertical tabs example"
                   className={classes.tabs}
-                  alignItems="flex-start"
+                  wrapper
                 >
                   <Tab
                     className={classes.tab}
