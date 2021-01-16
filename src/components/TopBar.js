@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -17,16 +17,14 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/modules/dashboard-360/components/Logo';
-import NestedMenu from './NestedMenu';
 import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { setLoggedIn,setSearchDistributor} from 'src/redux/action';
+import { setLoggedIn, setSearchDistributor } from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-import {SET_SEARCH_DISTRIBUTOR} from 'src/redux/constants'
+
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -57,7 +55,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   title: {
-    // flexGrow: 1,
     fontWeight: 500,
     marginRight: 15,
     fontSize: '0.96rem',
@@ -89,13 +86,10 @@ const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => 
   const [searchText, setSearchText] = useState('');
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
-    // searchDist(evt.target.value) 
   };
   const distributorID = evt => {
-    console.log("searchText",searchText)
-    searchDist(searchText) 
-    // setSearchText(evt.target.value);
-    // searchDist(evt.target.value) 
+    console.log("searchText", searchText)
+    searchDist(searchText)
   };
   async function logoutUser() {
     try {
@@ -129,7 +123,6 @@ const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => 
         </div>
         <Box flexGrow={1} />
         <Hidden mdDown>
-          {/* <NestedMenu style={{ marginRight: 200 }} /> */}
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
               Dashboard
@@ -193,8 +186,7 @@ const TopBar = ({ className, onMobileNavOpen, logout, searchDist, ...rest }) => 
   );
 };
 const mapStateToProps = state => ({
-//  console.log("state", state)
-searchTextDist: state.searchDistributor
+  searchtextdist: state.searchDistributor
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -206,7 +198,7 @@ TopBar.propTypes = {
   className: PropTypes.string,
   onMobileNavOpen: PropTypes.func,
   logout: PropTypes.func,
-  searchDist:PropTypes.func
+  searchDist: PropTypes.func
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

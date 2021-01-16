@@ -38,13 +38,9 @@ import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 import { setDistributorOrders } from '../../redux/action';
 import { setSearchDistributor } from '../../../../redux/action';
-import { searchDistributor } from '../../../../redux/action';
 import DispositionForm from './DispositionForm';
-import TimerComp from './TimerComp';
 import socketIOClient from 'socket.io-client';
-import { get, update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
-import { agentCurrentStatus } from 'src/redux/reducers';
 import DistributorSelectPopup from './DistributorSelectModal';
 
 const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
@@ -104,7 +100,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
-  const [expanded, setExpanded] = React.useState('panel1');
   const [showCreateTicket, setShowCreateTicket] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
@@ -166,9 +161,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     executiveMobile: ''
   });
   const [ticket, setTicket] = useState({});
-  const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
-  const [file, setFile] = useState('');
   const [currentCall, setCurrentCall] = useState({
     callUniqueId: '',
     callType: '',
@@ -303,7 +296,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
 
     axios(config)
       .then(function (response) {
-        // console.log("addQueue",JSON.stringify(response.data));
+       
       })
       .catch(function (error) {
         console.log(error);
@@ -398,7 +391,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
         // console.log(JSON.stringify(response.data));
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
-          var callStatusId = JSON.stringify(response.data[0]._id);
+          // var callStatusId = JSON.stringify(response.data[0]._id);
 
           // console.log('callStatusId', callStatusId);
 
@@ -468,12 +461,12 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     setmobile(event.target.value);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
   async function disProfileByNum(mobile) {
 
@@ -958,8 +951,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
                       tabNames={['Tickets', 'Incentives', 'E-Wallet']}
                       setCurrent={val => setTab(val)}
                     />
-                    <CustomTabPanel value={tab} index={0}>
-                      <TicketsList />
+                    <CustomTabPanel value={tab} index={0} >
+                      <TicketsList/>
                     </CustomTabPanel>
                   </Card>
                   <br />
@@ -1296,7 +1289,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
               size="small"
               variant="outlined"
               autoFocus
-              onClick={() => setShowCreateTicket(false)}
+
             >
               Cancel
             </Button>

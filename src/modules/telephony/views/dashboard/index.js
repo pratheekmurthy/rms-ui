@@ -273,7 +273,7 @@ const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
           >
             <Grid container item xs={9} spacing={1}>
               {InboundDataList.map((array, index) => (
-                <Grid item lg={3} sm={6}>
+                <Grid item lg={3} sm={6} key={index}>
                   <Card>
                     <CardContent className={classes.cardcontent}>
                       <List key={index} className={classes.list}>

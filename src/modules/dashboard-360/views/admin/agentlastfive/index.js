@@ -16,7 +16,9 @@ import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
-    maxHeight: 628
+    maxHeight: 628,
+    paddingLeft: "16px",
+    paddingRight: "16px",
   }
 }));
 function Invoices({
@@ -38,34 +40,34 @@ function Invoices({
   const orderIdPrev = useRef(orderId);
 
   const agentServiceURL = 'http://192.168.3.45:42004/'
-  function getALF(){
-    // console.log("ALF is callled")
+  function getALF() {
+
     const axios = require('axios');
-let data = '';
+    let data = '';
 
-let config = {
-  method: 'get',
-  url: agentServiceURL +'crm/interactions/getByAgentSIPID?SipID='+localStorage.getItem('AgentSIPID')+'',
-  headers: { },
-  data : data
-};
+    let config = {
+      method: 'get',
+      url: agentServiceURL + 'crm/interactions/getByAgentSIPID?SipID=' + localStorage.getItem('AgentSIPID') + '',
+      headers: {},
+      data: data
+    };
 
-axios(config)
-.then( async (response) => {
-  var ALFDATA = response.data;
-  console.log('ALFDATA', ALFDATA)
- ALFDATA = ALFDATA.reverse();
- setagentdisposedCalls(ALFDATA)
-})
+    axios(config)
+      .then(async (response) => {
+        var ALFDATA = response.data;
+        console.log('ALFDATA', ALFDATA)
+        ALFDATA = ALFDATA.reverse();
+        setagentdisposedCalls(ALFDATA)
+      })
 
-.catch((error) => {
-  console.log(error);
-});
+      .catch((error) => {
+        console.log(error);
+      });
 
   }
 
   useEffect(() => {
-    
+
     getALF()
     if (!distributorInvoices || orderIdPrev !== orderId) {
       (async function getDetails() {
@@ -97,10 +99,10 @@ axios(config)
           All Disposed Calls
         </Typography>
       </Box>
-     {agentdisposedCalls.length ?<DownloadReport
-      DownloadData={agentdisposedCalls}
-      
-      />:<></>}
+      {agentdisposedCalls.length ? <DownloadReport
+        DownloadData={agentdisposedCalls}
+
+      /> : <></>}
       <DataGrid
         page={page}
         onPageChange={params => {
@@ -119,11 +121,11 @@ axios(config)
       />
     </div>
   ) : // </Card>
-  showLoader ? (
-    <MainLoader />
-  ) : (
-    <CommonAlert style={{ margin: 20 }} />
-  );
+    showLoader ? (
+      <MainLoader />
+    ) : (
+        <CommonAlert style={{ margin: 20 }} />
+      );
 }
 
 Invoices.propTypes = {

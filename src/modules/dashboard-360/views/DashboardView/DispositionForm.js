@@ -1,21 +1,19 @@
 import { Field, Form, Formik } from 'formik';
 import React, { useRef, useState } from 'react';
-import { TextField, RadioGroup, Select } from 'formik-material-ui';
+import { TextField, RadioGroup } from 'formik-material-ui';
 import { useEffect } from 'react';
 import {
   Button,
   FormControl,
   FormControlLabel,
   Grid,
-  Hidden,
-  InputLabel,
   makeStyles,
   Radio
 } from '@material-ui/core';
 import * as yup from 'yup';
 import config from '../../../ticketing/views/config.json';
 import { Autocomplete } from '@material-ui/lab';
-import { AlternateEmailTwoTone } from '@material-ui/icons';
+// import { AlternateEmailTwoTone } from '@material-ui/icons';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
     width: '100%'
@@ -64,9 +62,9 @@ export default function DispositionForm(props) {
       if (!unmounted) {
         body.data[0]
           ? setCategory({
-              label: body.data[0].category,
-              value: body.data[0]._id
-            })
+            label: body.data[0].category,
+            value: body.data[0]._id
+          })
           : setCategory({});
 
         setCategories(
@@ -100,9 +98,9 @@ export default function DispositionForm(props) {
 
         body.data[0]
           ? setTicketType({
-              label: body.data[0].ticketType,
-              value: body.data[0]._id
-            })
+            label: body.data[0].ticketType,
+            value: body.data[0]._id
+          })
           : setTicketType({});
       }
     }
@@ -128,9 +126,9 @@ export default function DispositionForm(props) {
 
         body.data[0]
           ? setSubCategory({
-              label: body.data[0].subCategory,
-              value: body.data[0]._id
-            })
+            label: body.data[0].subCategory,
+            value: body.data[0]._id
+          })
           : setSubCategory({});
 
         setLoading(false);
@@ -162,9 +160,9 @@ export default function DispositionForm(props) {
 
         body.data[0]
           ? setSubCategoryItem({
-              label: body.data[0].subCategoryItem,
-              value: body.data[0]._id
-            })
+            label: body.data[0].subCategoryItem,
+            value: body.data[0]._id
+          })
           : setSubCategoryItem({});
       }
     }
@@ -216,10 +214,10 @@ export default function DispositionForm(props) {
     };
 
     axios(config)
-      .then(function(response) {
-        console.log("update",JSON.stringify(response.data));
+      .then(function (response) {
+        console.log("update", JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -249,13 +247,13 @@ export default function DispositionForm(props) {
       localStorage.getItem('breakStatus')
     );
     updateAgentCallStatus({
-      callStatusId:localStorage.getItem('callStatusId'),
-      callUniqueId:localStorage.getItem('callUniqueId'),
-      callType:localStorage.getItem('callType'),
-      callStatus:localStorage.getItem('callStatus'),
-      callEvent:localStorage.getItem('callEvent'),
-      callDispositionStatus:localStorage.getItem('callDispositionStatus'),
-      callerNumber:localStorage.getItem('callerNumber')
+      callStatusId: localStorage.getItem('callStatusId'),
+      callUniqueId: localStorage.getItem('callUniqueId'),
+      callType: localStorage.getItem('callType'),
+      callStatus: localStorage.getItem('callStatus'),
+      callEvent: localStorage.getItem('callEvent'),
+      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+      callerNumber: localStorage.getItem('callerNumber')
     })
     updateCallData(localStorage.getItem('callUniqueId'), {
       tickettype: formRef.current.values.tickettype.label,
@@ -268,7 +266,7 @@ export default function DispositionForm(props) {
 
     })
 
-    
+
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
@@ -439,8 +437,8 @@ export default function DispositionForm(props) {
                 />
               </Grid>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
             {subCategoryItems.length > 0 ? (
               <Grid item>
                 <FormControl
@@ -489,8 +487,8 @@ export default function DispositionForm(props) {
                 </FormControl>
               </Grid>
             ) : (
-              <></>
-            )}
+                <></>
+              )}
             <Grid item>
               <Field
                 className={classes.fieldContainer}
@@ -520,7 +518,7 @@ export default function DispositionForm(props) {
           </Grid>
           <br />
 
-          <Button color="primary" variant="contained"  disabled={localStorage.getItem('callStatus') === 'connected'? true:false} onClick={handleSubmit}>
+          <Button color="primary" variant="contained" disabled={localStorage.getItem('callStatus') === 'connected' ? true : false} onClick={handleSubmit}>
             Submit
           </Button>
         </Form>

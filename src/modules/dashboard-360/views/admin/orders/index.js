@@ -8,21 +8,6 @@ import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
-
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid
-  
-} from '@material-ui/core';
-import {
   getDealerOrderDetails,
   getSingleOrderDetails
 } from '../../DashboardView/apiCalls';
@@ -80,10 +65,10 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
         </Typography>
       </Box>
       <DownloadReport
-      DownloadData={distributorOrders}
-      
+        DownloadData={distributorOrders}
+
       />
-        
+
       <DataGrid
         page={page}
         onPageChange={params => {
@@ -99,14 +84,14 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
           id: order.OrderNumber
         }))}
       />
-    
+
     </div>
   ) : // </Card>
-  showLoader ? (
-    <MainLoader />
-  ) : (
-    <CommonAlert style={{ margin: 20 }} />
-  );
+    showLoader ? (
+      <MainLoader />
+    ) : (
+        <CommonAlert style={{ margin: 20 }} />
+      );
 }
 
 Orders.propTypes = {

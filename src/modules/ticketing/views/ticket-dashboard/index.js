@@ -434,6 +434,7 @@ export default function TicketDashboard(props) {
           .map(ticket => (
             <>
               <ListItem
+              key={ticket.ticketNumber}
                 alignItems="flex-start"
                 className={
                   ticket.ticketNumber === activeTicket.ticketNumber

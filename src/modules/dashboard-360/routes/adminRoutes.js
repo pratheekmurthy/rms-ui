@@ -1,4 +1,3 @@
-import agentlastfive from '../views/admin/agentlastfive';
 import invoices from '../views/admin/invoices';
 import Orders from '../views/admin/orders';
 import Dashboard from '../views/DashboardView/index';
