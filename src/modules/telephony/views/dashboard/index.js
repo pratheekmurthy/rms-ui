@@ -15,6 +15,10 @@ import {
   CardContent,
   Box
 } from '@material-ui/core';
+import {
+  GET_INBOUND_DASHBOARD_DATA,  
+  GET_INTERACTION_BY_AGENT_SIP_ID
+} from 'src/modules/dashboard-360/utils/endpoints';
 import CallIcon from '@material-ui/icons/Call';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
@@ -82,7 +86,6 @@ const useStyles = makeStyles(theme => ({
 
 const Inbound = () => {
   const classes = useStyles();
-  const agentServiceURL = 'http://192.168.3.45:42004/'
   const [agentdisposedCalls, setagentdisposedCalls] = useState([])
   const [Inbound, setInbound] = useState(
     {
@@ -197,7 +200,7 @@ const Inbound = () => {
     let data = '';
     let config = {
       method: 'get',
-      url: agentServiceURL + 'crm/interactions/getByDistributerID?distributerID=' + localStorage.getItem('distributer_id') + '',
+      url: GET_INTERACTION_BY_AGENT_SIP_ID  + localStorage.getItem('AgentSIPID') + '',
       headers: {},
       data: data
     };
@@ -225,7 +228,7 @@ const Inbound = () => {
 
     let config = {
       method: 'get',
-      url: 'http://192.168.3.45:42005/service/dashboardcount?AccessKeys=123',
+      url: GET_INBOUND_DASHBOARD_DATA,
       headers: {}
     };
 
@@ -242,7 +245,7 @@ const Inbound = () => {
 
 
   }
-const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
+const SOCKETENDPOINT = 'http://14.98.23.204:42002/';
 
   useEffect(() => {
 

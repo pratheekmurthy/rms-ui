@@ -15,6 +15,14 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
+import {
+  PUT_BREAK_AGENT,
+  GET_INTERACTION_BY_DISTRIBUTOR_ID,
+  GET_INTERACTION_BY_AGENT_SIP_ID,
+  UPDATE_CURRENT_STATUS,
+  GET_CURRENT_STATUS_BY_AGENT_SIP_ID,
+  ORIGINATE_CALL_WITH_SIP_ID
+} from 'src/modules/dashboard-360/utils/endpoints';
 import { ExpandMore } from '@material-ui/icons';
 import Input from '@material-ui/core/Input';
 
@@ -53,7 +61,7 @@ import { get, update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import { agentCurrentStatus } from 'src/redux/reducers';
 
-const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
+const SOCKETENDPOINT = 'http://14.98.23.204:42002';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 
@@ -200,7 +208,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   });
   const [ALF, setALF] = useState([]);
   const [DLF, setDLF] = useState([]);
-  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const agentServiceURL = '/agentservice/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
   
@@ -211,9 +219,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     let data = '';
     let config = {
       method: 'get',
-      url:
-        agentServiceURL +
-        'crm/interactions/getByDistributerID?distributerID=' +
+      url:GET_INTERACTION_BY_DISTRIBUTOR_ID +
         localStorage.getItem('distributer_id') +
         '',
       headers: {},
@@ -239,9 +245,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
 
     let config = {
       method: 'get',
-      url:
-        agentServiceURL +
-        'crm/interactions/getByAgentSIPID?SipID=' +
+      url: GET_INTERACTION_BY_AGENT_SIP_ID +
         agent.AgentSipId +
         '',
       headers: {},
@@ -290,7 +294,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     localStorage.setItem('breakStatus', breakStatus)
    }
 
-  var APIENDPOINT = 'http://192.168.3.45:42002';
+  var APIENDPOINT = 'http://14.98.23.204:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -381,7 +385,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     };
     var config = {
       method: 'put',
-      url: agentServiceURL + 'crm/currentstatuses/' + updateData.callStatusId,
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -402,9 +406,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
 
     var config = {
       method: 'get',
-      url:
-        agentServiceURL +
-        'crm/currentstatuses/agentSipID?agentSipID=' +
+      url:GET_CURRENT_STATUS_BY_AGENT_SIP_ID +
         agentSipID,
       headers: {}
     };
@@ -452,8 +454,8 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
   const onClick = event => {
     console.log('mobile', mobile);
     if (mobile.length === 10) {
-      console.log('valid number', SOCKETENDPOINT +
-        'ami/actions/orginatecall?sipAgentID=SIP%2F' +
+      console.log('valid number', ORIGINATE_CALL_WITH_SIP_ID +
+        'sipAgentID=SIP%2F' +
         agent.AgentSipId +
         '&NumbertobeCalled=5' +
         mobile);
@@ -462,7 +464,7 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
 
       let config = {
         method: 'get',
-        url: SOCKETENDPOINT + "ami/actions/orginatecall?sipAgentID=SIP%2F" + agent.AgentSipId + "&NumbertobeCalled=5" + mobile,
+        url: ORIGINATE_CALL_WITH_SIP_ID + "sipAgentID=SIP%2F" + agent.AgentSipId + "&NumbertobeCalled=5" + mobile,
         headers: {}
       };
 
@@ -742,7 +744,7 @@ var data = JSON.stringify({"agentID":agent.AgentId,"agentSIPID":agent.AgentSipId
 
 var config = {
   method: 'post',
-  url: 'http://192.168.3.45:42004/crm/agentbreakservices',
+  url: PUT_BREAK_AGENT,
   headers: { 
     'Content-Type': 'application/json'
   },
