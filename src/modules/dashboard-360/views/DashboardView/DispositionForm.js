@@ -3,6 +3,10 @@ import React, { useRef, useState } from 'react';
 import { TextField, RadioGroup, Select } from 'formik-material-ui';
 import { useEffect } from 'react';
 import {
+  UPDATE_CALL_STATUS,
+  UPDATE_CURRENT_STATUS,
+} from 'src/modules/dashboard-360/utils/endpoints';
+import {
   Button,
   FormControl,
   FormControlLabel,
@@ -33,7 +37,7 @@ export default function DispositionForm(props) {
   });
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const agentServiceURL = 'http://14.98.23.204:42004/';
   const [category, setCategory] = useState({
     value: '',
     label: ''
@@ -176,10 +180,11 @@ export default function DispositionForm(props) {
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     let data = JSON.stringify(dispostionData);
+    console.log('updateCAllData', data)
 
     let config = {
       method: 'post',
-      url: agentServiceURL + 'crm/interactions/' + uniqueid,
+      url: UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -208,7 +213,7 @@ export default function DispositionForm(props) {
     };
     var config = {
       method: 'put',
-      url: agentServiceURL + 'crm/currentstatuses/' + updateData.callStatusId,
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
