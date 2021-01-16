@@ -15,8 +15,6 @@ import {
   makeStyles,
   Typography
 } from '@material-ui/core';
-<<<<<<< HEAD
-=======
 import {
   PUT_BREAK_AGENT,
   GET_INTERACTION_BY_DISTRIBUTOR_ID,
@@ -26,7 +24,6 @@ import {
   ORIGINATE_CALL_WITH_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
 import { ExpandMore } from '@material-ui/icons';
->>>>>>> 5729fe377e91f755e69b2475ce5c3114600724f2
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import Page from 'src/components/Page';
@@ -55,12 +52,8 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
 
-<<<<<<< HEAD
-const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
-=======
 const SOCKETENDPOINT = 'http://14.98.23.204:42002';
 
->>>>>>> 5729fe377e91f755e69b2475ce5c3114600724f2
 const socket = socketIOClient(SOCKETENDPOINT);
 const useStyles = makeStyles(theme => {
   return {
@@ -730,26 +723,6 @@ const Dashboard = ({ distributorOrders, setDistributorOrdersAction, setAgentCurr
     );
 
     var axios = require('axios');
-<<<<<<< HEAD
-    var data = JSON.stringify({ "agentID": agent.AgentId, "agentSIPID": agent.AgentSipId, "breakStatus": localStorage.getItem('breakStatus') });
-
-    var config = {
-      method: 'post',
-      url: 'http://192.168.3.45:42004/crm/agentbreakservices',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: data
-    };
-
-    axios(config)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-=======
 var data = JSON.stringify({"agentID":agent.AgentId,"agentSIPID":agent.AgentSipId,"breakStatus":localStorage.getItem('breakStatus')});
 
 var config = {
@@ -760,7 +733,6 @@ var config = {
   },
   data : data
 };
->>>>>>> 5729fe377e91f755e69b2475ce5c3114600724f2
 
 
 
