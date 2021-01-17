@@ -1,12 +1,11 @@
 import { Box, Breadcrumbs, Grid } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HomeIcon from '@material-ui/icons/Home';
 
 function CustomBreadcrumbs({ activatedRoute, crumbs, urlMatchFound }) {
   const [breadCrumbLinks, setbreadCrumbLinks] = useState([]);
-  const match = useRouteMatch();
   useEffect(() => {
     if (urlMatchFound) {
       setbreadCrumbLinks(crumbs.get(activatedRoute));

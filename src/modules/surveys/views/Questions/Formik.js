@@ -27,6 +27,7 @@ import Axios from 'axios';
 import Page from 'src/components/Page';
 import DeleteIcon from '@material-ui/icons/Delete';
 import MultiOptions from './InputTypes/MultiOptions';
+import { CRUD_QUESTIONS } from '../../utils/endpoints';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -96,7 +97,7 @@ const FormFormik = props => {
 
   async function postQuestions() {
     try {
-      await Axios.post('/survey/survey/questions', input);
+      await Axios.post(CRUD_QUESTIONS, input);
       props.history.push({
         pathname: '/surveys/questions',
         state: 'create'
