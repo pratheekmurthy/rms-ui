@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/core';
+import React from 'react';
 import { useLocation } from 'react-router';
 import RouteSwitch from 'src/components/RouteSwitch';
-import TopBar from 'src/components/TopBar';
-import NavBar from '../DashboardLayout/NavBar';
+
 
 const MainLayout = ({ routes }) => {
 
@@ -23,7 +21,7 @@ const MainLayout = ({ routes }) => {
         routes={routes}
         redirectPath={isAdmin ? '/admin/dashboard' : ''}
       />
-      </>
+    </>
   );
 };
 

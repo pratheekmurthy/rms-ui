@@ -1,6 +1,5 @@
 import {
   Box,
-  Chip,
   Divider,
   List,
   ListItem,
@@ -48,9 +47,8 @@ const useStyles = makeStyles(theme => ({
 
 export default function TicketsList() {
   const classes = useStyles();
- const [apiTickets, setApiTickets] = useState([]);
- const [activeTicket, setActiveTicket] = useState({});
-const [tickets, setTickets] = useState([]);
+  const [activeTicket, setActiveTicket] = useState({});
+  const [tickets, setTickets] = useState([]);
 
   useEffect(() => {
     if (!activeTicket.ticketNumber) {
@@ -59,23 +57,18 @@ const [tickets, setTickets] = useState([]);
         const response = await fetch(config.APIS_URL + '/tickets');
         const body = await response.json();
         if (!unmounted) {
-          // console.log('ticket data', body.data);
-         
-          setApiTickets(body.data);
-            var result=[]
+          var result = []
           setTickets(body.data);
-            for(var i=0;i<2;i++) 
-            {
-             result.push(body.data[i])
-            } 
-            console.log('result', result);
-            setTickets(result)
+          for (var i = 0; i < 2; i++) {
+            result.push(body.data[i])
+          }
+          setTickets(result)
           if (body.data[0]) {
             setActiveTicket(body.data[0]);
           } else {
             setActiveTicket();
           }
-          //  setLoading(false);
+
         }
       }
       getItems();
@@ -86,10 +79,10 @@ const [tickets, setTickets] = useState([]);
   }, []);
   function getTicketList() {
     return (
-      <List className={classes.root}>
-        {tickets.map(ticket => (
-          <>
-            <ListItem alignItems="flex-start">
+      <List to="/#" className={classes.root}>
+        {tickets.map((ticket, i) => (
+          <div key={i}>
+            <ListItem alignItems="flex-start" >
               <ListItemText
                 primary={
                   <Box
@@ -104,10 +97,8 @@ const [tickets, setTickets] = useState([]);
                       >
                         {ticket.status.substring(0, 1)}
                       </Avatar>
-                      <Link>{ticket.ticketNumber}</Link>
+                      <Link to="/#">{ticket.ticketNumber}</Link>
                     </ListItemIcon>
-
-                   
                   </Box>
                 }
                 secondary={
@@ -120,11 +111,7 @@ const [tickets, setTickets] = useState([]);
                     >
                       {ticket.ticketSubject}
                     </Typography>
-                    {/* <span className={classes.secondaryText}>
-                        {' '}
-                        — I moved my business to new location, Please update my
-                        address
-                      </span> */}
+
                     <br />
                     <Typography
                       component="span"
@@ -140,7 +127,7 @@ const [tickets, setTickets] = useState([]);
               />
             </ListItem>
             <Divider component="li" />
-          </>
+          </div>
         ))}
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2} alignItems="center">
@@ -157,59 +144,6 @@ const [tickets, setTickets] = useState([]);
   }
   return (
     <div>{getTicketList()}</div>
-    // <List className={classes.root}>
-    //   <ListItem alignItems="flex-start">
-    //     <ListItemText
-    //       primary={
-    //         <Box
-    //           display="flex"
-    //           justifyContent="space-between"
-    //           alignItems="center"
-    //         >
-    //           <Link>#1234</Link>
-    //           <Box my={1}>
-    //             <Chip label="Escalated" color="secondary" />
-    //           </Box>
-    //         </Box>
-    //       }
-    //       secondary={
-    //         <>
-    //           <Typography
-    //             component="span"
-    //             variant="body2"
-    //             className={classes.inline}
-    //             color="textPrimary"
-    //           >
-    //             Profile -&gt; Profile Update
-    //           </Typography>
-    //           <span className={classes.secondaryText}>
-    //             {' '}
-    //             — I moved my business to new location, Please update my address
-    //           </span>
-    //           <br />
-    //           <Typography
-    //             component="span"
-    //             variant="subtitle2"
-    //             className={`${classes.floatRight} ${classes.secondaryText}`}
-    //           >
-    //             23/11/2020
-    //           </Typography>
-    //         </>
-    //       }
-    //     />
-    //   </ListItem>
-    //   <Divider component="li" />
 
-    //   <Divider />
-    //   <Box display="flex" justifyContent="flex-end" p={2} alignItems="center">
-    //     <Link
-    //       to="/ticketing/ticket-dashboard"
-    //       className={classes.linkContainer}
-    //     >
-    //       View All
-    //       <ArrowRightIcon />
-    //     </Link>
-    //   </Box>
-    // </List>
   );
 }

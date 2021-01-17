@@ -46,7 +46,6 @@ const DisInboundTable = (props) => {
     const classes = useStyles();
     const [page, setPage] = useState(1);
     const [agentdisposedCalls, setagentdisposedCalls] = useState([])
-    const agentServiceURL = 'http://192.168.3.45:42004/'
     useEffect(() => {
         if (props.agentdisposedCalls.length) {
             setagentdisposedCalls(props.agentdisposedCalls)
