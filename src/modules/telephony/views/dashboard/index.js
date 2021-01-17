@@ -15,6 +15,10 @@ import {
   CardContent,
   Box
 } from '@material-ui/core';
+import {
+  GET_INBOUND_DASHBOARD_DATA,  
+  GET_INTERACTION_BY_AGENT_SIP_ID
+} from 'src/modules/dashboard-360/utils/endpoints';
 import CallIcon from '@material-ui/icons/Call';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
@@ -34,7 +38,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { grey } from '@material-ui/core/colors';
 
 import socketIOClient from 'socket.io-client';
+import DaterangeReport from './DaterangeReport';
+import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
+import DispositionTable from './DispositionTable';
+import { DataGrid } from '@material-ui/data-grid';
+import {
 
+  lastFiveCallData
+} from 'src/modules/dashboard-360/utils/columns-config';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -75,6 +86,7 @@ const useStyles = makeStyles(theme => ({
 
 const Inbound = () => {
   const classes = useStyles();
+  const [agentdisposedCalls, setagentdisposedCalls] = useState([])
   const [Inbound, setInbound] = useState(
     {
       "callarrived": 0,
@@ -182,44 +194,72 @@ const Inbound = () => {
     //   label: 'I/B Answer Level (SL-10)'
     // }
   ];
+  function getALF(startDate, endDate) {
 
-  function getIBdata(){
+    const axios = require('axios');
+    let data = '';
+    let config = {
+      method: 'get',
+      url: GET_INTERACTION_BY_AGENT_SIP_ID  + localStorage.getItem('AgentSIPID') + '',
+      headers: {},
+      data: data
+    };
+
+    axios(config)
+      .then(async (response) => {
+        var ALFDATA = response.data;
+        ALFDATA = ALFDATA.reverse();
+        var filteredData = ALFDATA.filter(data => data.created.substring(0, 10) >= startDate.toISOString().substring(0, 10) && data.created.substring(0, 10) <= endDate.toISOString().substring(0, 10))
+        setagentdisposedCalls(filteredData)
+        return filteredData;
+      })
+
+      .catch((error) => {
+        console.log(error);
+      });
+
+
+  }
+  function handleChange() {
+    setagentdisposedCalls([])
+  }
+  function getIBdata() {
     const axios = require('axios');
 
     let config = {
       method: 'get',
-      url: 'http://192.168.3.45:42005/service/dashboardcount?AccessKeys=123',
+      url: GET_INBOUND_DASHBOARD_DATA,
       headers: {}
     };
 
     axios(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
+
         var data = response.data;
-        console.log("data", data[0])
+
         setInbound(data[0][0])
       })
       .catch((error) => {
         console.log(error);
       });
-      
+
 
   }
-const SOCKETENDPOINT = 'http://192.168.3.45:42002/';
+const SOCKETENDPOINT = 'http://14.98.23.204:42002/';
 
   useEffect(() => {
-    console.log("data inside the useEffect");
-getIBdata();
-const socket = socketIOClient(SOCKETENDPOINT);
 
-socket.on('AstriskEvent', data => {
-  if (data.Event === 'Bridge'&& data.Bridgestate === 'Link') {
-    getIBdata()
-  }
-  if (data.Event === 'Hangup') {
-    getIBdata()
-  }
-})
+    getIBdata();
+    const socket = socketIOClient(SOCKETENDPOINT);
+
+    socket.on('AstriskEvent', data => {
+      if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
+        getIBdata()
+      }
+      if (data.Event === 'Hangup') {
+        getIBdata()
+      }
+    })
 
   }, [])
 
@@ -256,6 +296,19 @@ socket.on('AstriskEvent', data => {
                   </Card>
                 </Grid>
               ))}
+
+              <DaterangeReport
+                getALF={getALF}
+                handleChange={handleChange}
+              />
+              <Grid item lg={3} sm={6}>
+                <br />
+                {agentdisposedCalls.length > 0 ? <DownloadReport
+                  DownloadData={agentdisposedCalls}
+
+                /> : <></>}
+              </Grid>
+
             </Grid>
             <Grid item xs={3}>
               <Accordion>
@@ -303,7 +356,9 @@ socket.on('AstriskEvent', data => {
             </Grid>
           </Grid>
         </Box>
+
       </div>
+      {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> : <></>}
     </>
   );
 };

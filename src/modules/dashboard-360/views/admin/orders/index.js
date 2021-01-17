@@ -8,15 +8,33 @@ import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
 import {
+
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid
+  
+} from '@material-ui/core';
+import {
   getDealerOrderDetails,
   getSingleOrderDetails
 } from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
     maxHeight: 628,
-    maxWidth: '100%'
+    maxWidth: '100%',
+    paddingLeft: "16px",
+    paddingRight: "16px",
   }
 }));
 function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
@@ -61,6 +79,11 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
           All Orders
         </Typography>
       </Box>
+      <DownloadReport
+      DownloadData={distributorOrders}
+      
+      />
+        
       <DataGrid
         page={page}
         onPageChange={params => {
@@ -76,6 +99,7 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
           id: order.OrderNumber
         }))}
       />
+    
     </div>
   ) : // </Card>
   showLoader ? (

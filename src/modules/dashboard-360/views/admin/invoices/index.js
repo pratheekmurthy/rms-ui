@@ -12,10 +12,13 @@ import {
   getSingleInvoiceDetails
 } from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
+import DownloadReport from '../../DashboardView/DownloadReport';
 
 const style = makeStyles(() => ({
   dgContainer: {
-    maxHeight: 628
+    maxHeight: 628,
+    paddingLeft: "16px",
+paddingRight: "16px",
   }
 }));
 function Invoices({
@@ -36,7 +39,9 @@ function Invoices({
   const orderIdPrev = useRef(orderId);
 
   useEffect(() => {
+    
     if (!distributorInvoices || orderIdPrev !== orderId) {
+     
       (async function getDetails() {
         try {
           const res = await (orderId
@@ -66,6 +71,10 @@ function Invoices({
           All Invoices
         </Typography>
       </Box>
+      {distributorInvoices.length?<DownloadReport
+      DownloadData={distributorInvoices}
+      
+      />:<></>}
       <DataGrid
         page={page}
         onPageChange={params => {

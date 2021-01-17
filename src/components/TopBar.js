@@ -25,10 +25,10 @@ import NestedMenu from './NestedMenu';
 import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import { setLoggedIn } from 'src/redux/action';
+import { setLoggedIn, setSearchDistributor } from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-
+import { SET_SEARCH_DISTRIBUTOR } from 'src/redux/constants';
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -85,7 +85,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
+const TopBar = ({
+  className,
+  onMobileNavOpen,
+  logout,
+  searchDist,
+  ...rest
+}) => {
   const userData = useSelector(state => state.userData);
   const [createAccess, setCreateAccess] = useState(-1);
   const [viewAccess, setViewAccess] = useState(-1);
@@ -129,16 +135,13 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
   }, []);
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
-    console.log('search', evt.target.value);
-    localStorage.setItem('search', evt.target.value);
-    changeValue();
-    // alert(evt.target.value);
-    // getDistributorById(evt.target.value);
+    // searchDist(evt.target.value)
   };
-  const changeValue = () => {
-    var x = window.open('', 'myWindow', 'width=200,height=100');
-    x.localStorage.setItem('mytime', Date.now());
-    x.close();
+  const distributorID = evt => {
+    console.log('searchText', searchText);
+    searchDist(searchText);
+    // setSearchText(evt.target.value);
+    // searchDist(evt.target.value)
   };
   async function logoutUser() {
     try {
@@ -167,6 +170,7 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
             inputProps={{ 'aria-label': 'search' }}
             onChange={updateSearchText}
             value={searchText}
+            onBlur={distributorID}
           />
         </div>
         <Box flexGrow={1} />
@@ -242,15 +246,21 @@ const TopBar = ({ className, onMobileNavOpen, logout, ...rest }) => {
     </AppBar>
   );
 };
+const mapStateToProps = state => ({
+  //  console.log("state", state)
+  searchTextDist: state.searchDistributor
+});
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(setLoggedIn(false))
+  logout: () => dispatch(setLoggedIn(false)),
+  searchDist: val => dispatch(setSearchDistributor(val))
 });
 
 TopBar.propTypes = {
   className: PropTypes.string,
   onMobileNavOpen: PropTypes.func,
-  logout: PropTypes.func
+  logout: PropTypes.func,
+  searchDist: PropTypes.func
 };
 
-export default connect(null, mapDispatchToProps)(TopBar);
+export default connect(mapStateToProps, mapDispatchToProps)(TopBar);

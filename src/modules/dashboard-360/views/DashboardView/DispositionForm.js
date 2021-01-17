@@ -3,6 +3,10 @@ import React, { useRef, useState } from 'react';
 import { TextField, RadioGroup, Select } from 'formik-material-ui';
 import { useEffect } from 'react';
 import {
+  UPDATE_CALL_STATUS,
+  UPDATE_CURRENT_STATUS,
+} from 'src/modules/dashboard-360/utils/endpoints';
+import {
   Button,
   FormControl,
   FormControlLabel,
@@ -33,7 +37,7 @@ export default function DispositionForm(props) {
   });
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.45:42004/';
+  const agentServiceURL = 'http://14.98.23.204:42004/';
   const [category, setCategory] = useState({
     value: '',
     label: ''
@@ -176,10 +180,11 @@ export default function DispositionForm(props) {
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     let data = JSON.stringify(dispostionData);
+    console.log('updateCAllData', data)
 
     let config = {
       method: 'post',
-      url: agentServiceURL + 'crm/interactions/' + uniqueid,
+      url: UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -193,6 +198,34 @@ export default function DispositionForm(props) {
       })
       .catch(error => {
         console.log('dispostionFrom', error);
+      });
+  }
+
+  function updateAgentCallStatus(updateData) {
+    var axios = require('axios');
+    var data = {
+      agentCallStatus: updateData.callStatus,
+      agentCallEvent: updateData.callEvent,
+      agentCallUniqueId: updateData.callUniqueId,
+      agentCallType: updateData.callType,
+      agentCallDispositionStatus: updateData.callDispositionStatus,
+      callerNumber: updateData.callerNumber
+    };
+    var config = {
+      method: 'put',
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+
+    axios(config)
+      .then(function(response) {
+        console.log("update",JSON.stringify(response.data));
+      })
+      .catch(function(error) {
+        console.log(error);
       });
   }
   function handleSubmit(e) {
@@ -217,8 +250,18 @@ export default function DispositionForm(props) {
       localStorage.getItem('callStatus'),
       localStorage.getItem('callEvent'),
       localStorage.getItem('callDispositionStatus'),
-      localStorage.getItem('callerNumber')
+      localStorage.getItem('callerNumber'),
+      localStorage.getItem('breakStatus')
     );
+    updateAgentCallStatus({
+      callStatusId:localStorage.getItem('callStatusId'),
+      callUniqueId:localStorage.getItem('callUniqueId'),
+      callType:localStorage.getItem('callType'),
+      callStatus:localStorage.getItem('callStatus'),
+      callEvent:localStorage.getItem('callEvent'),
+      callDispositionStatus:localStorage.getItem('callDispositionStatus'),
+      callerNumber:localStorage.getItem('callerNumber')
+    })
     updateCallData(localStorage.getItem('callUniqueId'), {
       tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
@@ -229,6 +272,8 @@ export default function DispositionForm(props) {
       distributerID: localStorage.getItem('distributer_id')
 
     })
+
+    
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (

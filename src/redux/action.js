@@ -4,7 +4,9 @@ import {
   SET_ACCOUNT_TYPE,
   SET_ACTIVATED_ROUTE,
   SET_NEW_CRUMB,
-  SET_URL_MATCH_FOUND
+  SET_URL_MATCH_FOUND,
+  SET_AGENT_CURRENT_STATUS,
+  SET_SEARCH_DISTRIBUTOR
 } from './constants';
 
 export const setLoggedIn = isLoggedIn => {
@@ -42,6 +44,21 @@ export const setNewCrumb = ({ key, value }) => {
 export const setUrlMatchFound = val => {
   return {
     type: SET_URL_MATCH_FOUND,
+    payload: val
+  };
+};
+
+export const setAgentCurrentStatus = val => {
+  console.log("val", val)
+  return {
+    type: SET_AGENT_CURRENT_STATUS,
+    payload: val
+  };
+};
+export const setSearchDistributor = val => {
+  console.log("val", val)
+  return {
+    type: SET_SEARCH_DISTRIBUTOR,
     payload: val
   };
 };
