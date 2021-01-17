@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Grid } from '@material-ui/core';
 import { TextField } from 'formik-material-ui';
 import * as Yup from 'yup';
 
 const RatingInput = ({ submit, isEdit, question }) => {
   const [inputsData] = useState(isEdit ? question : {});
   const [initState, setinitState] = useState(null);
+  const [isCsatSet, setisCsatField] = useState(false);
   useEffect(() => {
     if (isEdit) {
       setinitState({
@@ -27,6 +28,14 @@ const RatingInput = ({ submit, isEdit, question }) => {
     inputsData.label = label;
     submit(inputsData);
   };
+
+  function setRatingAsCsatScore(val, setFieldValue) {
+    if (val.target.checked) {
+      setFieldValue('name', 'CSAT');
+    }
+    setisCsatField(val.target.checked);
+  }
+
   return (
     !!initState && (
       <>
@@ -44,7 +53,7 @@ const RatingInput = ({ submit, isEdit, question }) => {
             label: Yup.string().required('Label required')
           })}
         >
-          {({ submitForm, isSubmitting }) => (
+          {({ submitForm, isSubmitting, setFieldValue }) => (
             <Form>
               <Grid
                 container
@@ -76,11 +85,24 @@ const RatingInput = ({ submit, isEdit, question }) => {
                       id="name"
                       type="text"
                       label="Rating Name"
-                      disabled={isEdit}
+                      disabled={isEdit || isCsatSet}
                       autoComplete="off"
                     />
                   </Grid>
                 </Grid>
+                {!isEdit && (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={isCsatSet}
+                        onChange={val =>
+                          setRatingAsCsatScore(val, setFieldValue)
+                        }
+                      />
+                    }
+                    label="Is For CSAT Score Calculation"
+                  />
+                )}
                 {isSubmitting}
                 <br />
                 <Button
