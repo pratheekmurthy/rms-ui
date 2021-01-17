@@ -71,7 +71,6 @@ class Home extends Component {
 
   // Send and handle delete survey request
   async sendDeleteApiRequest(surveyId) {
-    console.log('sendign api request for', surveyId);
     try {
       await Axios.delete(`${CRUD_SURVEY}/${surveyId}`);
       this.setDeleteApiResponse('success');
