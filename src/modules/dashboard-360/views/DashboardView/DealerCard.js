@@ -65,6 +65,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function DealerCard({ dealerDetails }) {
+  console.log("dealerDetails",dealerDetails)
   const classes = useStyles();
   const {
     distributor_name,

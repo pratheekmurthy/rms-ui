@@ -19,9 +19,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/modules/dashboard-360/components/Logo';
-import NestedMenu from './NestedMenu';
 import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -59,7 +57,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   title: {
-    // flexGrow: 1,
     fontWeight: 500,
     marginRight: 15,
     fontSize: '0.96rem',
@@ -135,13 +132,10 @@ const TopBar = ({
   }, []);
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
-    // searchDist(evt.target.value)
   };
   const distributorID = evt => {
     console.log('searchText', searchText);
     searchDist(searchText);
-    // setSearchText(evt.target.value);
-    // searchDist(evt.target.value)
   };
   async function logoutUser() {
     try {
@@ -175,7 +169,6 @@ const TopBar = ({
         </div>
         <Box flexGrow={1} />
         <Hidden mdDown>
-          {/* <NestedMenu style={{ marginRight: 200 }} /> */}
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
               Dashboard
@@ -247,8 +240,7 @@ const TopBar = ({
   );
 };
 const mapStateToProps = state => ({
-  //  console.log("state", state)
-  searchTextDist: state.searchDistributor
+  searchtextdist: state.searchDistributor
 });
 
 const mapDispatchToProps = dispatch => ({

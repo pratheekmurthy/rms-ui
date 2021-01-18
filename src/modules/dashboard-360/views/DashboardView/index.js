@@ -25,9 +25,7 @@ import {
 } from 'src/modules/dashboard-360/utils/endpoints';
 import { ExpandMore } from '@material-ui/icons';
 import Input from '@material-ui/core/Input';
-
 import PropTypes from 'prop-types';
-
 import Page from 'src/components/Page';
 import CustomTabs from 'src/modules/dashboard-360/components/CustomTabs';
 import CustomTabPanel from 'src/modules/dashboard-360/components/CustomTabPanel';
@@ -38,7 +36,6 @@ import {
   orderColumns,
   lastFiveCallData
 } from 'src/modules/dashboard-360/utils/columns-config';
-
 import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
 import { connect, useSelector } from 'react-redux';
@@ -47,24 +44,18 @@ import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 import CallIcon from '@material-ui/icons/Call';
 import DealerCard from './DealerCard';
 import TicketsList from './TicketsList';
-
 import dealerAPICalls from './apiCalls';
-
 import { setDistributorOrders } from '../../redux/action';
 import { setSearchDistributor } from '../../../../redux/action';
 import { searchDistributor } from '../../../../redux/action';
 import DispositionForm from './DispositionForm';
-import TimerComp from './TimerComp';
-
 import socketIOClient from 'socket.io-client';
-import { get, update } from 'lodash';
 import { setAgentCurrentStatus } from 'src/redux/action';
-import { agentCurrentStatus } from 'src/redux/reducers';
+import DistributorSelectPopup from './DistributorSelectModal';
 
 const SOCKETENDPOINT = 'http://14.98.23.204:42002';
 
 const socket = socketIOClient(SOCKETENDPOINT);
-
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -79,7 +70,6 @@ const useStyles = makeStyles(theme => {
     dialogActions: {
       padding: '0 1.5rem 1rem'
     },
-
     modal: {
       alignItems: 'center',
       width: '100%',
@@ -127,7 +117,6 @@ const Dashboard = ({
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
-  const [expanded, setExpanded] = React.useState('panel1');
   const [showCreateTicket, setShowCreateTicket] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [ticketNumber, setTicketNumber] = useState('');
@@ -140,10 +129,8 @@ const Dashboard = ({
   const [ticketSubject, setTicketSubject] = useState('');
   const [ticketDescription, setTicketDescription] = useState('');
   const [remarks, setRemarks] = useState('');
-
   const [ticketTypes, setTicketTypes] = useState([]);
   const [ticketType, setTicketType] = useState({});
-
   const [medium, setMedium] = useState([]);
   const [media, setMedia] = useState({
     value: '',
@@ -191,9 +178,7 @@ const Dashboard = ({
     executiveMobile: ''
   });
   const [ticket, setTicket] = useState({});
-  const [loading, setLoading] = useState(true);
   const [createdTime, setCreatedTime] = useState();
-  const [file, setFile] = useState('');
   const [currentCall, setCurrentCall] = useState({
     callUniqueId: '',
     callType: '',
@@ -216,9 +201,12 @@ const Dashboard = ({
   const agentServiceURL = '/agentservice/';
   const [disForm, setdisForm] = useState({});
   const [mobile, setmobile] = useState('');
-
+  const [
+    showDistributorDetailsModal,
+    setShowDistributorDetailsModal
+  ] = useState(false);
+  const [distributorModal, setDistributorModal] = useState({});
   function getDLF() {
-    // console.log("ALF is callled")
     const axios = require('axios');
     let data = '';
     let config = {
@@ -246,7 +234,6 @@ const Dashboard = ({
   function getALF() {
     const axios = require('axios');
     let data = '';
-
     let config = {
       method: 'get',
       url: GET_INTERACTION_BY_AGENT_SIP_ID + agent.AgentSipId + '',
@@ -260,7 +247,6 @@ const Dashboard = ({
         ALFDATA = ALFDATA.reverse();
         setALF(ALFDATA);
       })
-
       .catch(error => {
         console.log(error);
       });
@@ -324,9 +310,7 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {
-        // console.log("addQueue",JSON.stringify(response.data));
-      })
+      .then(function(response) {})
       .catch(function(error) {
         console.log(error);
       });
@@ -417,7 +401,7 @@ const Dashboard = ({
         // console.log(JSON.stringify(response.data));
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
-          var callStatusId = JSON.stringify(response.data[0]._id);
+          // var callStatusId = JSON.stringify(response.data[0]._id);
 
           // console.log('callStatusId', callStatusId);
 
@@ -494,15 +478,14 @@ const Dashboard = ({
     setmobile(event.target.value);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  // };
+  // const handleOpen = () => {
+  //   setOpen(true);
+  // };
 
   async function disProfileByNum(mobile) {
-    // console.log("disProfileByNum", mobile);
     mobile = mobile.substring(1);
     const axios = require('axios');
 
@@ -525,13 +508,15 @@ const Dashboard = ({
     // });
     // console.log("res", response)
     const response = await axios.get(config.url);
-    // console.log("res", response)
     if (response.data.status === '1') {
-      // console.log("response", response.data)
       var data1 = response.data.data;
       if (data1.length) {
-        console.log('data1', data1);
-        get(data1[0].distributor_id);
+        if (data1.length > 1) {
+          multipleDistributorDetails(data1, true);
+          setShowDistributorDetailsModal(true);
+        } else {
+          get(data1[0].distributor_id);
+        }
         localStorage.setItem('distributer_id', data1[0].distributor_id);
       }
     }
@@ -539,9 +524,10 @@ const Dashboard = ({
 
     // return data;
   }
-
+  function multipleDistributorDetails(distData, popUp) {
+    setDistributorModal({ distrtbutorDetails: distData, modalValue: popUp });
+  }
   async function get(distributor_id) {
-    console.log('distributor_id', distributor_id);
     try {
       const response = await Promise.allSettled(dealerAPICalls(distributor_id));
       setRootData(
@@ -1305,13 +1291,7 @@ const Dashboard = ({
             >
               Create
             </Button>
-            <Button
-              color="primary"
-              size="small"
-              variant="outlined"
-              autoFocus
-              onClick={() => setShowCreateTicket(false)}
-            >
+            <Button color="primary" size="small" variant="outlined" autoFocus>
               Cancel
             </Button>
           </DialogActions>
