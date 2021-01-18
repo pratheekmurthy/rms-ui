@@ -21,30 +21,44 @@ function AccessConfig() {
     }
   }));
   const accessLevels = [
-    { value: '-1', label: 'None' },
-    { value: '0', label: 'Self' },
-    { value: '1', label: 'All' }
-  ];
-  const accessTypes = [
     { value: '-1', label: 'No Access' },
-    { value: '0', label: 'Read Only Access' },
-    { value: '1', label: 'Full Acess' }
+    { value: '0', label: 'Self Tickets Only' },
+    { value: '1', label: "Self Team's Tickets Only" },
+    { value: '2', label: "Self Department's Tickets Only" },
+    { value: '3', label: 'Access to All Tickets' }
+  ];
+  const functionalities = [
+    { value: '1', label: 'Create Ticket' },
+    { value: '2', label: 'View Ticket' },
+    { value: '3', label: 'Edit Ticket' },
+    { value: '4', label: 'Assign Ticket' }
   ];
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
   const [loading, setLoading] = useState(true);
 
-  const [department, setDepartment] = useState({ value: -1, label: 'None' });
-  const [team, setTeam] = useState({ value: -1, label: 'None' });
-  const [access, setAccess] = useState({ value: 1, label: 'Full Acess' });
+  const [accessLevel, setAccessLevel] = useState({
+    value: '',
+    label: ''
+  });
+  const [accessLevelUpdate, setAccessLevelUpdate] = useState({
+    value: '',
+    label: ''
+  });
+  const [access, setAccess] = useState({});
+  const [accesses, setAccesses] = useState([]);
+  const [apiAccesses, setApiAccesses] = useState([]);
+  const [functionality, setFunctionality] = useState({
+    value: '',
+    label: ''
+  });
+  const [functionalityUpdate, setFunctionalityUpdate] = useState({
+    value: '',
+    label: ''
+  });
   const [roles, setRoles] = useState([]);
   const [role, setRole] = useState({});
-  const handleChange = event => {
-    setChecked(event.target.checked);
-  };
-  const [newRow, setNewRow] = useState({ access: '', active: true });
-  const [apiAccesses, setApiAccesses] = useState([]);
-  const [accesses, setAccesses] = useState([]);
+  const [newRow, setNewRow] = useState({});
   const [isEditing, setIsEditing] = useState(-1);
   const [updatedRow, setUpdatedRow] = useState({ access: '', active: false });
   useEffect(() => {
@@ -73,102 +87,108 @@ function AccessConfig() {
       unmounted = true;
     };
   }, []);
-  const updateRow = () => {
-    const val = JSON.stringify(updatedRow.access);
-
-    if (val.length === 2) {
-      alert('Please enter value');
-    } else {
-      setIsEditing(-1);
-      const apiUrl = config.APIS_URL + '/accesses';
-      var apiParam = {
-        method: 'PUT',
-        headers: updatedRow
-      };
-      fetch(apiUrl, apiParam)
-        .then(res => res.json())
-        .then(repos => {
-          setApiAccesses([]);
-        });
-    }
-  };
-
-  const addRow = e => {
-    const val = JSON.stringify(newRow.access);
-
-    if (val.length === 2) {
-      alert('Please enter value');
-    } else {
-      const apiUrl = config.APIS_URL + '/accesses';
-      var apiParam = {
-        method: 'POST',
-        headers: {
-          access: newRow.access,
-          active: newRow.active
-        }
-      };
-      fetch(apiUrl, apiParam)
-        .then(res => res.json())
-        .then(repos => {
-          setApiAccesses([]);
-          setNewRow({ access: '', active: true });
-        });
-    }
-  };
 
   useEffect(() => {
-    const apiUrl = config.APIS_URL + '/accesses';
+    const apiUrl = config.APIS_URL + '/access/' + role.value;
     fetch(apiUrl)
       .then(res => res.json())
       .then(repos => {
         setApiAccesses(repos.data);
-        setAccesses(apiAccesses);
+        setAccesses(repos.data);
+        setFunctionalityUpdate({
+          value: functionalities[0].functionalityId,
+          label: functionalities[0].functionality
+        });
+        setAccessLevelUpdate({
+          value: accessLevels[0].accessLevelId,
+          label: accessLevels[0].accessLevel
+        });
       });
-  }, [apiAccesses]);
+  }, [role.value, apiAccesses]);
+
+  const addRow = e => {
+    const apiUrl = config.APIS_URL + '/access';
+    var apiParam = {
+      method: 'POST',
+      headers: newRow
+    };
+    fetch(apiUrl, apiParam)
+      .then(res => res.json())
+      .then(repos => {
+        setApiAccesses([]);
+        setNewRow({
+          roleId: role.value,
+          role: role.label,
+          functionalityId: functionalities[0].value,
+          functionality: functionalities[0].label,
+          accessLevelId: accessLevels[0].value,
+          accessLevel: accessLevels[0].label,
+          active: true
+        });
+        setFunctionality(functionalities[0]);
+        setAccessLevel(accessLevels[0]);
+      });
+  };
+
+  const updateRow = () => {
+    setIsEditing(-1);
+    const apiUrl = config.APIS_URL + '/access';
+    var apiParam = {
+      method: 'PUT',
+      headers: updatedRow
+    };
+    fetch(apiUrl, apiParam)
+      .then(res => res.json())
+      .then(repos => {
+        setApiAccesses([]);
+      });
+  };
 
   useEffect(() => {
     setUpdatedRow(isEditing === '-1' ? {} : accesses[isEditing]);
+    setFunctionalityUpdate(
+      accesses[isEditing]
+        ? {
+            value: accesses[isEditing].functionalityId,
+            label: accesses[isEditing].functionality
+          }
+        : {}
+    );
+    setAccessLevelUpdate(
+      accesses[isEditing]
+        ? {
+            value: accesses[isEditing].accessLevelId,
+            label: accesses[isEditing].accessLevel
+          }
+        : {}
+    );
   }, [isEditing]);
 
-  useEffect(() => {}, [accesses]);
-
-  const handleFormChange = (index, event) => {
+  const handleFunctionalityChange = (index, event) => {
     setUpdatedRow({
       id: accesses[index]._id,
-      form: event.target.value,
-      department: updatedRow.department,
-      team: updatedRow.team,
-      access: updatedRow.access,
+      roleId: role.value,
+      role: role.label,
+      functionalityId: event.target.value,
+      functionality: functionalities.filter(
+        functionality => functionality.value === event.target.value
+      )[0].label,
+      accessLevelId: updatedRow.accessLevelId,
+      accessLevel: updatedRow.accessLevel,
       active: updatedRow.active
     });
   };
-  const handleDepartmentChange = (index, event) => {
+  const handleAccessLevelChange = (index, event) => {
     setUpdatedRow({
       id: accesses[index]._id,
-      form: updatedRow.form,
-      department: event.target.value,
-      team: updatedRow.team,
-      access: updatedRow.access,
-      active: updatedRow.active
-    });
-  };
-  const handleTeamChange = (index, event) => {
-    setUpdatedRow({
-      id: accesses[index]._id,
-      form: updatedRow.form,
-      department: updatedRow.department,
-      team: event.target.value,
-      access: updatedRow.access,
-      active: updatedRow.active
-    });
-  };
-  const handleAccessChange = (index, event) => {
-    setUpdatedRow({
-      id: accesses[index]._id,
-      form: updatedRow.form,
-      department: updatedRow.department,
-      team: updatedRow.team,
-      access: event.target.value,
+      roleId: role.value,
+      role: role.label,
+      functionalityId: updatedRow.functionalityId,
+      functionality: updatedRow.functionality,
+      accessLevelId: event.target.value,
+      accessLevel: accessLevels.filter(
+        accessLevel => accessLevel.value === event.target.value
+      )[0].label,
       active: updatedRow.active
     });
   };
@@ -176,10 +196,12 @@ function AccessConfig() {
   const handleActiveChange = (index, event) => {
     setUpdatedRow({
       id: accesses[index]._id,
-      form: updatedRow.form,
-      department: updatedRow.department,
-      team: updatedRow.team,
-      access: updatedRow.access,
+      roleId: role.value,
+      role: role.label,
+      functionalityId: updatedRow.functionalityId,
+      functionality: updatedRow.functionality,
+      accessLevelId: updatedRow.accessLevelId,
+      accessLevel: updatedRow.accessLevel,
       active: event.target.checked
     });
   };
@@ -200,13 +222,15 @@ function AccessConfig() {
                 name: 'roles',
                 id: 'roles'
               }}
-              value={role.value}
+              defaultValue={role.value}
               onChange={e => {
                 setRole({
                   value: e.target.value,
                   label: roles.filter(role => role.value === e.target.value)[0]
                     .label
                 });
+                setApiAccesses([]);
+                setIsEditing(-1);
               }}
             >
               {roles.map(({ label, value }) => (
@@ -221,52 +245,43 @@ function AccessConfig() {
       <Table className={classes.table} aria-label="simple table">
         <TableRow>
           <TableCell>Sl. No.</TableCell>
-          <TableCell>Form</TableCell>
-          <TableCell>Department</TableCell>
-          <TableCell>Team</TableCell>
-          <TableCell>Access</TableCell>
+          <TableCell>Functionality</TableCell>
+          <TableCell>Access Level</TableCell>
           <TableCell style={{ textAlign: 'center' }}>Active</TableCell>
           <TableCell></TableCell>
         </TableRow>
         <TableRow>
           <TableCell></TableCell>
           <TableCell>
-            <TextField
-              label="Form"
-              id="outlined-size-small"
-              value={newRow.form}
-              onChange={e =>
+            <Select
+              native
+              label="functionalities"
+              inputProps={{
+                name: 'functionalities',
+                id: 'functionalities'
+              }}
+              value={functionality.value}
+              onChange={e => {
                 setNewRow({
-                  form: e.target.value,
-                  department: newRow.department,
-                  team: newRow.team,
-                  access: newRow.access,
+                  roleId: role.value,
+                  role: role.label,
+                  functionalityId: e.target.value,
+                  functionality: functionalities.filter(
+                    functionality => functionality.value === e.target.value
+                  )[0].label,
+                  accessLevelId: newRow.accessLevelId,
+                  accessLevel: newRow.accessLevel,
                   active: newRow.active
-                })
-              }
-              variant="outlined"
-              size="small"
-            />
-          </TableCell>
-          <TableCell>
-            <Select
-              native
-              label="departments"
-              inputProps={{
-                name: 'departments',
-                id: 'departments'
-              }}
-              value={department.value}
-              onChange={e => {
-                setDepartment({
+                });
+                setFunctionality({
                   value: e.target.value,
-                  label: accessLevels.filter(
-                    level => level.value === e.target.value
+                  label: functionalities.filter(
+                    functionality => functionality.value === e.target.value
                   )[0].label
                 });
               }}
             >
-              {accessLevels.map(({ value, label }) => (
+              {functionalities.map(({ value, label }) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
@@ -276,47 +291,33 @@ function AccessConfig() {
           <TableCell>
             <Select
               native
-              label="teams"
+              label="accesslevel"
               inputProps={{
-                name: 'teams',
-                id: 'teams'
+                name: 'accesslevel',
+                id: 'accesslevel'
               }}
-              value={team.value}
+              value={accessLevel.value}
               onChange={e => {
-                setTeam({
+                setAccessLevel({
                   value: e.target.value,
                   label: accessLevels.filter(
                     level => level.value === e.target.value
                   )[0].label
                 });
-              }}
-            >
-              {accessLevels.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
-          </TableCell>
-          <TableCell>
-            <Select
-              native
-              label="access"
-              inputProps={{
-                name: 'access',
-                id: 'access'
-              }}
-              value={access.value}
-              onChange={e => {
-                setAccess({
-                  value: e.target.value,
-                  label: accessTypes.filter(
+                setNewRow({
+                  roleId: role.value,
+                  role: role.label,
+                  functionalityId: newRow.functionalityId,
+                  functionality: newRow.functionality,
+                  accessLevelId: e.target.value,
+                  accessLevel: accessLevels.filter(
                     level => level.value === e.target.value
-                  )[0].label
+                  )[0].label,
+                  active: newRow.active
                 });
               }}
             >
-              {accessTypes.map(({ value, label }) => (
+              {accessLevels.map(({ value, label }) => (
                 <option key={value} value={value}>
                   {label}
                 </option>
@@ -327,10 +328,12 @@ function AccessConfig() {
             <Checkbox
               onChange={e =>
                 setNewRow({
-                  form: newRow.form,
-                  department: newRow.department,
-                  team: newRow.team,
-                  access: newRow.access,
+                  roleId: role.value,
+                  role: role.label,
+                  functionalityId: newRow.functionalityId,
+                  functionality: newRow.functionality,
+                  accessLevelId: newRow.accessLevelId,
+                  accessLevel: newRow.accessLevel,
                   active: e.target.checked
                 })
               }
@@ -355,58 +358,63 @@ function AccessConfig() {
               <TableCell>{idx + 1}</TableCell>
               <TableCell>
                 {isEditing === idx ? (
-                  <TextField
-                    label="Form"
-                    id="outlined-size-small"
-                    defaultValue={item.form}
-                    onChange={e => handleFormChange(idx, e)}
-                    variant="outlined"
-                    size="small"
-                  />
+                  <Select
+                    native
+                    label="functionalities"
+                    inputProps={{
+                      name: 'functionalities',
+                      id: 'functionalities'
+                    }}
+                    defaultValue={item.functionalityId}
+                    onChange={e => {
+                      setFunctionalityUpdate({
+                        value: e.target.value,
+                        label: functionalities.filter(
+                          functionality =>
+                            functionality.value === e.target.value
+                        )[0].label
+                      });
+                      handleFunctionalityChange(idx, e);
+                    }}
+                  >
+                    {functionalities.map(({ value, label }) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
                 ) : (
-                  item.form
+                  item.functionality
                 )}
               </TableCell>
               <TableCell>
                 {isEditing === idx ? (
-                  <TextField
-                    label="Department"
-                    id="outlined-size-small"
-                    defaultValue={item.department}
-                    onChange={e => handleDepartmentChange(idx, e)}
-                    variant="outlined"
-                    size="small"
-                  />
+                  <Select
+                    native
+                    label="accesslevels"
+                    inputProps={{
+                      name: 'accesslevels',
+                      id: 'accesslevels'
+                    }}
+                    defaultValue={item.accessLevelId}
+                    onChange={e => {
+                      setAccessLevelUpdate({
+                        value: e.target.value,
+                        label: accessLevels.filter(
+                          level => level.value === e.target.value
+                        )[0].label
+                      });
+                      handleAccessLevelChange(idx, e);
+                    }}
+                  >
+                    {accessLevels.map(({ value, label }) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
                 ) : (
-                  item.department
-                )}
-              </TableCell>
-              <TableCell>
-                {isEditing === idx ? (
-                  <TextField
-                    label="Team"
-                    id="outlined-size-small"
-                    defaultValue={item.team}
-                    onChange={e => handleTeamChange(idx, e)}
-                    variant="outlined"
-                    size="small"
-                  />
-                ) : (
-                  item.team
-                )}
-              </TableCell>
-              <TableCell>
-                {isEditing === idx ? (
-                  <TextField
-                    label="Access"
-                    id="outlined-size-small"
-                    defaultValue={item.access}
-                    onChange={e => handleAccessChange(idx, e)}
-                    variant="outlined"
-                    size="small"
-                  />
-                ) : (
-                  item.access
+                  item.accessLevel
                 )}
               </TableCell>
               <TableCell style={{ textAlign: 'center' }}>

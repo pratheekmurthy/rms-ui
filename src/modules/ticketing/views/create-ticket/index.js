@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useState, useEffect } from 'react';
@@ -38,6 +39,10 @@ const useStyles = makeStyles(theme => ({
 export default function CreateTicket(props, dealerDetails) {
   const classes = useStyles();
 
+  const [createAccess, setCreateAccess] = useState(-1);
+  const [viewAccess, setViewAccess] = useState(-1);
+  const [assignAccess, setAssignAccess] = useState(-1);
+  const [editAccess, setEditAccess] = useState(-1);
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
@@ -148,6 +153,59 @@ export default function CreateTicket(props, dealerDetails) {
     }
   };
   useEffect(() => {
+    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        /* alert(JSON.stringify(repos.data));
+        alert(
+          JSON.stringify(
+            repos.data.filter(access => access.functionalityId === '1')
+          )
+        ); */
+        setCreateAccess(
+          parseInt(
+            repos.data.filter(access => access.functionalityId === '1')[0]
+              .accessLevelId
+          )
+        );
+        setViewAccess(
+          repos.data.filter(access => access.functionalityId === '2')[0]
+            .accessLevelId
+        );
+        setEditAccess(
+          repos.data.filter(access => access.functionalityId === '3')[0]
+            .accessLevelId
+        );
+        setAssignAccess(
+          repos.data.filter(access => access.functionalityId === '4')[0]
+            .accessLevelId
+        );
+
+        if (!props.ticket_id) {
+          if (
+            parseInt(
+              repos.data.filter(access => access.functionalityId === '1')[0]
+                .accessLevelId
+            ) < 0
+          ) {
+            alert('You do not have access to create a ticket!');
+            props.setOpen(false);
+          }
+        }
+
+        /*  if (parseInt(viewAccess) < 0) {
+          alert('You do not have view access to this Page!');
+        }
+        if (parseInt(editAccess) < 0) {
+          alert('You do not have edit access to this Page!');
+        }
+        if (parseInt(assignAccess) < 0) {
+          alert('You do not have assign access to this Page!');
+        } */
+      });
+  }, []);
+  useEffect(() => {
     props.setClick(createTicket);
   }, [
     ticketNumber,
@@ -162,11 +220,11 @@ export default function CreateTicket(props, dealerDetails) {
     subCategory,
     remarks
   ]);
+  const userData = useSelector(state => state.userData);
   useEffect(() => {
-    
     if (!props.ticket_id) {
-      setCreatedByName(localStorage.getItem("AgentName"))
-     setCreatedById(localStorage.getItem('AgentEmail'))
+      setCreatedByName(localStorage.getItem('AgentName'));
+      setCreatedById(localStorage.getItem('AgentEmail'));
       if (props.formtype === 'telephony') {
         setDistributorMobile(props.dealerDetails.mob_no);
         setDistributorEmail(props.dealerDetails.email_id);
@@ -206,6 +264,8 @@ export default function CreateTicket(props, dealerDetails) {
       let month = (newDate.getMonth() + 1).toString();
       let year = newDate.getFullYear().toString();
       setTicketNumber('TKT' + year + month + date + result);
+      setCreatedByName(userData.username);
+      setCreatedById(userData.email);
       setCreatedTime(
         new Date().toLocaleString(undefined, {
           timeZone: 'Asia/Kolkata'
@@ -453,7 +513,7 @@ export default function CreateTicket(props, dealerDetails) {
       );
       const body = await response.json();
 
-      if (!unmounted) {
+      if (!unmounted && body.data) {
         setSubCategoryItems(
           body.data.map(({ _id, subCategoryItem }) => ({
             label: subCategoryItem,
@@ -971,6 +1031,7 @@ export default function CreateTicket(props, dealerDetails) {
                 native: true
               }}
               variant="outlined"
+              InputLabelProps={{ shrink: true }}
               style={{ width: '31%' }}
               value={subCategory.value}
               onChange={e => {
@@ -1001,6 +1062,7 @@ export default function CreateTicket(props, dealerDetails) {
               select
               size="small"
               label="Sub categories Items"
+              InputLabelProps={{ shrink: true }}
               SelectProps={{
                 native: true
               }}
@@ -1064,6 +1126,7 @@ export default function CreateTicket(props, dealerDetails) {
             disabled={loading}
             size="small"
             label="Priority"
+            InputLabelProps={{ shrink: true }}
             SelectProps={{
               native: true
             }}
@@ -1093,6 +1156,7 @@ export default function CreateTicket(props, dealerDetails) {
             select
             size="small"
             label="Status"
+            InputLabelProps={{ shrink: true }}
             SelectProps={{
               native: true
             }}
@@ -1273,6 +1337,7 @@ export default function CreateTicket(props, dealerDetails) {
             select
             size="small"
             label="Source Media"
+            InputLabelProps={{ shrink: true }}
             SelectProps={{
               native: true
             }}
@@ -1306,6 +1371,7 @@ export default function CreateTicket(props, dealerDetails) {
             id="snid"
             size="small"
             label={media.idLabel || 'Source Id'}
+            disabled
             variant="outlined"
             style={{ width: '32%' }}
             value={createdById}
@@ -1319,6 +1385,7 @@ export default function CreateTicket(props, dealerDetails) {
             size="small"
             label={media.nameLabel || 'Source Name'}
             variant="outlined"
+            disabled
             style={{ width: '31.4%' }}
             value={createdByName}
             onChange={e => {
@@ -1331,6 +1398,7 @@ export default function CreateTicket(props, dealerDetails) {
             select
             size="small"
             label="Department"
+            InputLabelProps={{ shrink: true }}
             SelectProps={{
               native: true
             }}
@@ -1358,6 +1426,7 @@ export default function CreateTicket(props, dealerDetails) {
             select
             size="small"
             label="Team"
+            InputLabelProps={{ shrink: true }}
             variant="outlined"
             style={{ width: '32%' }}
             value={team.value}
@@ -1382,6 +1451,7 @@ export default function CreateTicket(props, dealerDetails) {
             select
             size="small"
             label="Executive"
+            InputLabelProps={{ shrink: true }}
             variant="outlined"
             style={{ width: '31.4%' }}
             value={executive.value}
