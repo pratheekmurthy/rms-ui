@@ -5,6 +5,8 @@ import {
   Card,
   Container,
   Grid,
+  IconButton,
+  Snackbar,
   Typography
 } from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
@@ -15,7 +17,10 @@ import { Link } from 'react-router-dom';
 import CommonAlert from 'src/components/CommonAlert';
 import Page from 'src/components/Page';
 import Spinner from 'src/components/Spinner';
+import { CRUD_SURVEY, GET_SURVEYS } from '../../utils/endpoints';
 import gridConfig from '../../utils/grid-configs';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = theme => {
   return {
@@ -31,16 +36,17 @@ const useStyles = theme => {
 class Home extends Component {
   constructor(props) {
     super(props);
-    const x = 10;
     this.state = {
       surveys: [],
-      loading: true
+      loading: true,
+      deleteApiResponse: ''
     };
+    this.setDeleteApiResponse = this.setDeleteApiResponse.bind(this);
   }
 
   async componentDidMount() {
     try {
-      const res = await Axios.get('/survey/surveys');
+      const res = await Axios.get(GET_SURVEYS);
       this.setState(prevState => ({
         ...prevState,
         loading: false,
@@ -55,12 +61,34 @@ class Home extends Component {
     }
   }
 
+  // set value for snackbar type and visibility
+  setDeleteApiResponse(val) {
+    this.setState(prevState => ({
+      ...prevState,
+      deleteApiResponse: val
+    }));
+  }
+
+  // Send and handle delete survey request
+  async sendDeleteApiRequest(surveyId) {
+    try {
+      await Axios.delete(`${CRUD_SURVEY}/${surveyId}`);
+      this.setDeleteApiResponse('success');
+      this.setState(prevState => ({
+        ...prevState,
+        surveys: prevState.surveys.filter(s => s.surveyId !== surveyId)
+      }));
+    } catch (error) {
+      this.setDeleteApiResponse('error');
+    }
+  }
+
   render() {
     const {
       classes,
       location: { state: { surveyOperation } = {} }
     } = this.props;
-    const { error, loading } = this.state;
+    const { error, loading, deleteApiResponse } = this.state;
     return loading ? (
       <Spinner />
     ) : (
@@ -113,7 +141,22 @@ class Home extends Component {
                     <CommonAlert />
                   ) : (
                     <DataGrid
-                      columns={gridConfig.surveyTable}
+                      columns={gridConfig.surveyTable.concat([
+                        {
+                          headerName: 'Actions',
+                          field: 'actions',
+                          flex: 1,
+                          renderCell: rowData => (
+                            <IconButton
+                              onClick={() =>
+                                this.sendDeleteApiRequest(rowData.row.surveyId)
+                              }
+                            >
+                              <DeleteIcon color="secondary" />
+                            </IconButton>
+                          )
+                        }
+                      ])}
                       rows={(this.state.surveys || []).map(survey => ({
                         ...survey,
                         id: survey._id
@@ -125,6 +168,22 @@ class Home extends Component {
             </Grid>
           </Grid>
         </Container>
+        {(deleteApiResponse === 'success' || deleteApiResponse === 'error') && (
+          <Snackbar
+            open
+            autoHideDuration={6000}
+            onClose={() => this.setDeleteApiResponse('')}
+          >
+            <Alert
+              onClose={() => this.setDeleteApiResponse('')}
+              severity={deleteApiResponse}
+            >
+              {deleteApiResponse === 'success' && 'Survey Deleted Successfully'}
+              {deleteApiResponse === 'error' &&
+                'Something Went Wrong! Please try again.'}
+            </Alert>
+          </Snackbar>
+        )}
       </Page>
     );
   }
