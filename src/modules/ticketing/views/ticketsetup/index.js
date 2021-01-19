@@ -102,7 +102,7 @@ export default function TicketDashboard() {
     fetch(apiUrl)
       .then(res => res.json())
       .then(repos => {
-        if (repos.role !== 'Admin') {
+        if (repos.role.role !== 'Admin') {
           alert('You do not have access to this Page!');
         }
       });

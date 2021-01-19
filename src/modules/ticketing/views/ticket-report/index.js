@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import config from '../config.json';
+import { useSelector } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Paper, Typography, Divider, Box } from '@material-ui/core';
 import CategoryBarChart from './category-bar-chart';
@@ -39,6 +41,34 @@ const useStyles = makeStyles(theme => ({
 
 export default function TicketReport() {
   const classes = useStyles();
+  const [reportsAccess, setReportsAccess] = useState(-1);
+  const userData = useSelector(state => state.userData);
+
+  useEffect(() => {
+    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(repos => {
+        if (
+          parseInt(
+            (
+              repos.data.filter(
+                access => access.functionalityId === '5'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
+          ) === -1
+        ) {
+          alert('You do not have access to this Page!');
+        } else {
+          setReportsAccess(
+            parseInt(
+              repos.data.filter(access => access.functionalityId === '5')[0] ||
+                { accessLevelId: -1 }.accessLevelId
+            )
+          );
+        }
+      });
+  }, []);
 
   const days = [
     {

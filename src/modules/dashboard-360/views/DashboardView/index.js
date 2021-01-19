@@ -1144,7 +1144,7 @@ const Dashboard = ({
                   //   ? rootData[2].data[0].OrderNumber
                   //   : ''
                 }
-                setOpen={open => setOpen(open)}
+                setOpen={open => setShowCreateTicket(open)}
                 disForm={disForm}
                 setClick={click => (createTicket = click)}
                 ticket={ticket}
@@ -1291,7 +1291,13 @@ const Dashboard = ({
             >
               Create
             </Button>
-            <Button color="primary" size="small" variant="outlined" autoFocus>
+            <Button
+              color="primary"
+              size="small"
+              onClick={() => setShowCreateTicket(false)}
+              variant="outlined"
+              autoFocus
+            >
               Cancel
             </Button>
           </DialogActions>

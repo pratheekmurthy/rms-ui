@@ -93,6 +93,7 @@ const TopBar = ({
   const [createAccess, setCreateAccess] = useState(-1);
   const [viewAccess, setViewAccess] = useState(-1);
   const [assignAccess, setAssignAccess] = useState(-1);
+  const [reportsAccess, setReportsAccess] = useState(-1);
   const [editAccess, setEditAccess] = useState(-1);
   const [role, setRole] = useState(-1);
   const classes = useStyles();
@@ -103,29 +104,50 @@ const TopBar = ({
     fetch(apiUrl)
       .then(res => res.json())
       .then(repos => {
-        setRole(repos.role);
+        setRole(repos.role.role);
         setCreateAccess(
           parseInt(
-            repos.data.filter(access => access.functionalityId === '1')[0]
-              .accessLevelId
+            (
+              repos.data.filter(
+                access => access.functionalityId === '1'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
           )
         );
         setViewAccess(
           parseInt(
-            repos.data.filter(access => access.functionalityId === '2')[0]
-              .accessLevelId
+            (
+              repos.data.filter(
+                access => access.functionalityId === '2'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
           )
         );
         setEditAccess(
           parseInt(
-            repos.data.filter(access => access.functionalityId === '3')[0]
-              .accessLevelId
+            (
+              repos.data.filter(
+                access => access.functionalityId === '3'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
           )
         );
         setAssignAccess(
           parseInt(
-            repos.data.filter(access => access.functionalityId === '4')[0]
-              .accessLevelId
+            (
+              repos.data.filter(
+                access => access.functionalityId === '4'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
+          )
+        );
+        setReportsAccess(
+          parseInt(
+            (
+              repos.data.filter(
+                access => access.functionalityId === '5'
+              )[0] || { accessLevelId: -1 }
+            ).accessLevelId
           )
         );
       });
@@ -207,11 +229,15 @@ const TopBar = ({
           ) : (
             ''
           )}
-          <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/ticketing/ticket-report" className="color-white">
-              Tkt-Dashboard
-            </Link>
-          </Typography>
+          {reportsAccess === -1 ? (
+            ''
+          ) : (
+            <Typography className={classes.title} variant="h5" noWrap>
+              <Link to="/ticketing/ticket-report" className="color-white">
+                Tkt-Dashboard
+              </Link>
+            </Typography>
+          )}
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}

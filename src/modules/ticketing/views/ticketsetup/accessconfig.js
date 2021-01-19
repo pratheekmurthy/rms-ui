@@ -31,7 +31,8 @@ function AccessConfig() {
     { value: '1', label: 'Create Ticket' },
     { value: '2', label: 'View Ticket' },
     { value: '3', label: 'Edit Ticket' },
-    { value: '4', label: 'Assign Ticket' }
+    { value: '4', label: 'Assign Ticket' },
+    { value: '5', label: 'View Reports' }
   ];
   const classes = useStyles();
   const [checked, setChecked] = React.useState(true);
