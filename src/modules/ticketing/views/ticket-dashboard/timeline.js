@@ -23,71 +23,68 @@ const useStyles = makeStyles(theme => ({
 export default function CustomizedTimeline(props) {
   const classes = useStyles();
   const [ticketHistory, setTicketHistory] = useState([]);
-useEffect(()=>{
- 
-  setTicketHistory(props.setTicketHistory);
-},[])
+  useEffect(() => {
+    setTicketHistory(props.setTicketHistory);
+  }, []);
   function getHistory() {
-    for(var i=0; i<ticketHistory.length; i++){
-      if(i%2==0){
-       
-        return(
-       <TimelineItem>
-        <TimelineOppositeContent>
-          <Typography variant="body2" color="textSecondary">
-            6:30 pm
-          </Typography>
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot></TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>
-          <Paper elevation={3} className={classes.paper}>
-            <Typography variant="h6" component="h1">
-              Closed
-            </Typography>
-            <Typography>Closed the Ticket</Typography>
-          </Paper>
-        </TimelineContent>
-      </TimelineItem>
-        )
-      }
-      else{
-        
-         return(<TimelineItem>
-        <TimelineOppositeContent>
-          <Typography variant="body2" color="textSecondary">
-            4:30 pm
-          </Typography>
-        </TimelineOppositeContent>
-        <TimelineSeparator>
-          <TimelineDot color="primary"></TimelineDot>
-          <TimelineConnector />
-        </TimelineSeparator>
-        <TimelineContent>
-          <Paper elevation={3} className={classes.paper}>
-            <Typography variant="h6" component="h1">
-              Resolved
-            </Typography>
-            <Typography>Ticket issue resolved</Typography>
-          </Paper>
-        </TimelineContent>
-      </TimelineItem>
-
-         )
+    for (var i = 0; i < ticketHistory.length; i++) {
+      if (i % 2 == 0) {
+        return (
+          <TimelineItem>
+            <TimelineOppositeContent>
+              <Typography variant="body2" color="textSecondary">
+                6:30 pm
+              </Typography>
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot></TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Closed
+                </Typography>
+                <Typography>Closed the Ticket</Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+        );
+      } else {
+        return (
+          <TimelineItem>
+            <TimelineOppositeContent>
+              <Typography variant="body2" color="textSecondary">
+                4:30 pm
+              </Typography>
+            </TimelineOppositeContent>
+            <TimelineSeparator>
+              <TimelineDot color="primary"></TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Resolved
+                </Typography>
+                <Typography>Ticket issue resolved</Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+        );
       }
     }
-   
   }
   return (
     <div>
       <Timeline align="alternate">
-        {/* {getHistory()} */}
         {ticketHistory.map((item, index) =>
           index % 2 ? (
             <TimelineItem>
               <TimelineOppositeContent>
+                <Typography variant="body2" color="textSecondary">
+                  {item.updatedByName}
+                </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {new Date(item.updatedAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'
@@ -110,6 +107,9 @@ useEffect(()=>{
           ) : (
             <TimelineItem>
               <TimelineOppositeContent>
+                <Typography variant="body2" color="textSecondary">
+                  {item.updatedByName}
+                </Typography>
                 <Typography variant="body2" color="textSecondary">
                   {new Date(item.updatedAt).toLocaleString(undefined, {
                     timeZone: 'Asia/Kolkata'

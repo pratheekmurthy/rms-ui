@@ -1144,7 +1144,10 @@ const Dashboard = ({
                   //   ? rootData[2].data[0].OrderNumber
                   //   : ''
                 }
-                setOpen={open => setShowCreateTicket(open)}
+                setOpen={open => {
+                  setShowCreateTicket(open);
+                  setOpen(open);
+                }}
                 disForm={disForm}
                 setClick={click => (createTicket = click)}
                 ticket={ticket}

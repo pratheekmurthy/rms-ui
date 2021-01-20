@@ -43,6 +43,7 @@ export default function CreateTicket(props, dealerDetails) {
   const [viewAccess, setViewAccess] = useState(-1);
   const [assignAccess, setAssignAccess] = useState(-1);
   const [editAccess, setEditAccess] = useState(-1);
+  const [roleAccess, setRoleAccess] = useState();
   const [ticketNumber, setTicketNumber] = useState('');
   const [distributorName, setDistributorName] = useState('');
   const [distributorId, setDistributorId] = useState('');
@@ -181,6 +182,8 @@ export default function CreateTicket(props, dealerDetails) {
           repos.data.filter(access => access.functionalityId === '4')[0]
             .accessLevelId
         );
+        setRoleAccess(repos.role);
+        getDepartments();
 
         if (!props.ticket_id) {
           if (
@@ -192,6 +195,18 @@ export default function CreateTicket(props, dealerDetails) {
             alert('You do not have access to create a ticket!');
             props.setOpen(false);
           }
+          setDepartment({
+            label: repos.role.department,
+            value: repos.role.departmentId
+          });
+          setTeam({
+            label: repos.role.team,
+            value: repos.role.teamId
+          });
+          setExecutive({
+            label: repos.role.executive,
+            value: repos.role.executiveId
+          });
         }
 
         /*  if (parseInt(viewAccess) < 0) {
@@ -218,9 +233,11 @@ export default function CreateTicket(props, dealerDetails) {
     executive,
     team,
     subCategory,
-    remarks
+    remarks,
+    roleAccess
   ]);
   const userData = useSelector(state => state.userData);
+
   useEffect(() => {
     if (!props.ticket_id) {
       setCreatedByName(localStorage.getItem('AgentName'));
@@ -611,20 +628,20 @@ export default function CreateTicket(props, dealerDetails) {
       unmounted = true;
     };
   }, []);
-  useEffect(() => {
+  const getDepartments = () => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(config.APIS_URL + '/departments');
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket_id) {
+        /*  if (!props.ticket_id) {
           body.data[0]
             ? setDepartment({
                 label: body.data[0].department,
                 value: body.data[0]._id
               })
             : setDepartment({});
-        }
+        } */
 
         setDepartments(
           body.data.map(({ _id, department }) => ({
@@ -639,7 +656,7 @@ export default function CreateTicket(props, dealerDetails) {
     return () => {
       unmounted = true;
     };
-  }, []);
+  };
 
   useEffect(() => {
     let unmounted = false;
@@ -649,7 +666,7 @@ export default function CreateTicket(props, dealerDetails) {
       );
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket_id) {
+        if (!props.ticket_id && roleAccess.departmentId !== department.value) {
           body.data[0]
             ? setTeam({
                 label: body.data[0].team,
@@ -709,7 +726,11 @@ export default function CreateTicket(props, dealerDetails) {
       );
       const body = await response.json();
       if (!unmounted) {
-        if (!props.ticket_id) {
+        if (
+          !props.ticket_id &&
+          roleAccess.departmentId !== department.value &&
+          roleAccess.teamId !== team.value
+        ) {
           body.data[0]
             ? setExecutive({
                 label: body.data[0].executiveName,
@@ -1405,6 +1426,13 @@ export default function CreateTicket(props, dealerDetails) {
             style={{ width: '31%' }}
             variant="outlined"
             value={department.value}
+            disabled={
+              assignAccess < 3 &&
+              !(
+                assignAccess === 2 &&
+                roleAccess.departmentId === department.value
+              )
+            }
             onChange={e => {
               setDepartment({
                 value: e.target.value,
@@ -1430,6 +1458,10 @@ export default function CreateTicket(props, dealerDetails) {
             variant="outlined"
             style={{ width: '32%' }}
             value={team.value}
+            disabled={
+              assignAccess < 2 &&
+              !(assignAccess === 1 && roleAccess.teamId === team.value)
+            }
             onChange={e => {
               setTeam({
                 value: e.target.value,
@@ -1455,6 +1487,12 @@ export default function CreateTicket(props, dealerDetails) {
             variant="outlined"
             style={{ width: '31.4%' }}
             value={executive.value}
+            disabled={
+              assignAccess < 1 &&
+              !(
+                assignAccess === 0 && roleAccess.executiveId === executive.value
+              )
+            }
             onChange={e => {
               setExecutive({
                 value: e.target.value,
