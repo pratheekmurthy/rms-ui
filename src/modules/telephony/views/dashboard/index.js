@@ -198,9 +198,10 @@ const Inbound = () => {
 
     const axios = require('axios');
     let data = '';
+    let u= 'http://localhost:42004'
     let config = {
       method: 'get',
-      url: GET_INTERACTION_BY_AGENT_SIP_ID  + localStorage.getItem('AgentSIPID') + '',
+      url: u + GET_INTERACTION_BY_AGENT_SIP_ID  + localStorage.getItem('AgentSIPID') + '',
       headers: {},
       data: data
     };
@@ -245,7 +246,7 @@ const Inbound = () => {
 
 
   }
-const SOCKETENDPOINT = 'http://14.98.23.204:42002/';
+const SOCKETENDPOINT = 'http://localhost:42002/';
 
   useEffect(() => {
 

@@ -26,9 +26,9 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        IndusViva
+        Grassroots
       </Link>{' '}
-      {2020}
+      {2021}
       {'.'}
     </Typography>
   );
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => ({
     height: '100vh'
   },
   image: {
-    backgroundImage: 'url(/static/images/indusviva.png)',
+    // backgroundImage: 'url()',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light'
@@ -83,14 +83,22 @@ const useStyles = makeStyles(theme => ({
 function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const classes = useStyles();
   const [error, setError] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [enable, setEnable] = useState(true);
   async function authenticate(values) {
     setError('');
     try {
-      const res = await Axios.post('/auth/user/login', values);
+      const url='http://localhost:4000/auth/apiM/login'
+      // const url='http://192.168.3.45:42009/user/login'
+      console.log("values", values)
+      const res = await Axios.post(url, values);
+      console.log("login api", res.data)
       const obj = res.data.userDetails;
-
+      const { accessToken } = res.data;
+      localStorage.setItem("jwtToken", accessToken);
       setUserDetailsMain(obj);
-      setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
+      setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
       setLoggedInMain(true);
       setError(false);
@@ -98,6 +106,27 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setLoggedInMain(false);
       setError(true);
     }
+  }
+ 
+  async function getOtp (e){
+ 
+console.log("values", username)
+ 
+console.log("password", password)
+var userData = {
+    userName: username,
+    password: e.target.value,
+  }
+const url='http://localhost:4000/auth/apiM/sendOTP'
+  
+
+const res = await Axios.post(url, userData);
+console.log("login api", res.data)
+setEnable(false)
+    
+   
+  
+   
   }
 
   return (
@@ -128,11 +157,12 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
             </div>
             <Formik
               initialValues={{
-                email: 'admin@admin.com',
-                password: 'abcabcabc',
+                email: '',
+                password: '',
                 role: 'Agent',
                 AgentType: 'Inbound',
-                AgentSIPID: '9999'
+                AgentSIPID: '9999', 
+                OTP:''
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -141,9 +171,13 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   .required('Email is required'),
                 password: Yup.string()
                   .max(255)
-                  .required('Password is required')
+                  .required('Password is required'),
+                OTP: Yup.string()
+                  .max(255)
+                  .required('OTP is required')
               })}
               onSubmit={values => {
+
                 console.log('values', values);
                 localStorage.setItem('AgentType', values.AgentType);
                 localStorage.setItem('role', values.role);
@@ -152,6 +186,17 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);
               }}
+              onBlur={e =>{ 
+                console.log("onblur")
+                if(e.target.name === "password")
+              {
+          setPassword(e.target.value)
+              }
+              if(e.target.name === "email")
+              {
+          setUsername(e.target.value)
+              }
+             }}
             >
               {({
                 errors,
@@ -169,7 +214,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     label="Email Address"
                     margin="normal"
                     name="email"
-                    onBlur={handleBlur}
+                    onBlur={e => {
+                      setUsername(e.target.value)
+                      // getOtp()
+                    }}
                     onChange={handleChange}
                     type="email"
                     value={values.email}
@@ -182,14 +230,17 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     label="Password"
                     margin="normal"
                     name="password"
-                    onBlur={handleBlur}
+                    onBlur={e => {
+                      setPassword(e.target.value)
+                      getOtp(e)
+                      }}
                     onChange={handleChange}
                     type="password"
                     value={values.password}
                     variant="outlined"
                   />
 
-                  <TextField
+                  {/* <TextField
                     error={Boolean(touched.role && errors.role)}
                     fullWidth
                     helperText={touched.role && errors.role}
@@ -201,8 +252,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     type="text"
                     value={values.role}
                     variant="outlined"
-                  />
-                  <TextField
+                  /> */}
+                  {/* <TextField
                     error={Boolean(touched.AgentType && errors.AgentType)}
                     fullWidth
                     helperText={touched.AgentType && errors.AgentType}
@@ -214,8 +265,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     type="text"
                     value={values.AgentType}
                     variant="outlined"
-                  />
-                  <TextField
+                  /> */}
+                  {/* <TextField
                     error={Boolean(touched.AgentSIPID && errors.AgentSIPID)}
                     fullWidth
                     helperText={touched.AgentSIPID && errors.AgentSIPID}
@@ -227,8 +278,21 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     type="text"
                     value={values.AgentSIPID}
                     variant="outlined"
+                  /> */}
+                    <TextField
+                    error={Boolean(touched.OTP && errors.OTP)}
+                    fullWidth
+                    helperText={touched.OTP && errors.OTP}
+                    label="OTP"
+                    margin="normal"
+                    name="OTP"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    type="text"
+                    value={values.OTP}
+                    variant="outlined"
+                    disabled={enable}
                   />
-
                   {!!error && (
                     <Box my={1}>
                       <Typography color="secondary">

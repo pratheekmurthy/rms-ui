@@ -13,7 +13,8 @@ import {
   Divider,
   Grid,
   makeStyles,
-  Typography
+  Typography,
+
 } from '@material-ui/core';
 import {
   PUT_BREAK_AGENT,
@@ -24,6 +25,7 @@ import {
   ORIGINATE_CALL_WITH_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
 import { ExpandMore } from '@material-ui/icons';
+import FAQ from './FAQ'
 import Input from '@material-ui/core/Input';
 import PropTypes from 'prop-types';
 import Page from 'src/components/Page';
@@ -40,10 +42,10 @@ import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
 import { connect, useSelector } from 'react-redux';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
-import CreateTicket from 'src/modules/ticketing/views/create-ticket';
+// import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 import CallIcon from '@material-ui/icons/Call';
 import DealerCard from './DealerCard';
-import TicketsList from './TicketsList';
+// import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 import { setDistributorOrders } from '../../redux/action';
 import { setSearchDistributor } from '../../../../redux/action';
@@ -53,7 +55,7 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
 
-const SOCKETENDPOINT = 'http://14.98.23.204:42002';
+const SOCKETENDPOINT = 'http://localhost:42002';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 const useStyles = makeStyles(theme => {
@@ -184,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: '',
+    callDispositionStatus: 'NotDisposed',
     callerNumber: '',
     breakStatus: ''
   });
@@ -234,9 +236,10 @@ const Dashboard = ({
   function getALF() {
     const axios = require('axios');
     let data = '';
+    let u = 'http://localhost:42004'
     let config = {
       method: 'get',
-      url: GET_INTERACTION_BY_AGENT_SIP_ID + agent.AgentSipId + '',
+      url: u + GET_INTERACTION_BY_AGENT_SIP_ID + agent.AgentSipId + '',
       headers: {},
       data: data
     };
@@ -268,7 +271,7 @@ const Dashboard = ({
       callType: callType,
       callStatus: callStatus,
       callEvent: callEvent,
-      callDispositionStatus: callDispositionStatus,
+      callDispositionStatus: "NotDisposed",
       callerNumber: callerNumber,
       breakStatus: breakStatus
     });
@@ -282,7 +285,7 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'http://14.98.23.204:42002';
+  var APIENDPOINT = 'http://localhost:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -310,8 +313,8 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {})
-      .catch(function(error) {
+      .then(function (response) { })
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -346,10 +349,10 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {
-        // console.log("Removed Queue",JSON.stringify(response.data));
+      .then(function (response) {
+
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -359,6 +362,7 @@ const Dashboard = ({
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   function updateAgentCallStatus(updateData) {
+    console.log("updateData", updateData)
     var axios = require('axios');
     var data = {
       agentCallStatus: updateData.callStatus,
@@ -371,7 +375,7 @@ const Dashboard = ({
     };
     var config = {
       method: 'put',
-      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url: "http://localhost:42004" + UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -379,17 +383,17 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         console.log('update', JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
 
   function getAgentCallStatus(agentSipID) {
     var axios = require('axios');
-
+    var u = 'https://192.168.3.45:42004'
     var config = {
       method: 'get',
       url: GET_CURRENT_STATUS_BY_AGENT_SIP_ID + agentSipID,
@@ -397,13 +401,11 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {
-        // console.log(JSON.stringify(response.data));
+      .then(function (response) {
+
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
-          // var callStatusId = JSON.stringify(response.data[0]._id);
 
-          // console.log('callStatusId', callStatusId);
 
           setCurrentCallDetails(
             response.data[0]._id,
@@ -431,7 +433,7 @@ const Dashboard = ({
           });
         }
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -442,10 +444,10 @@ const Dashboard = ({
       console.log(
         'valid number',
         ORIGINATE_CALL_WITH_SIP_ID +
-          'sipAgentID=SIP%2F' +
-          agent.AgentSipId +
-          '&NumbertobeCalled=5' +
-          mobile
+        'sipAgentID=SIP%2F' +
+        agent.AgentSipId +
+        '&NumbertobeCalled=5' +
+        mobile
       );
 
       const axios = require('axios');
@@ -478,12 +480,7 @@ const Dashboard = ({
     setmobile(event.target.value);
   };
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
-  // const handleOpen = () => {
-  //   setOpen(true);
-  // };
+
 
   async function disProfileByNum(mobile) {
     mobile = mobile.substring(1);
@@ -495,18 +492,7 @@ const Dashboard = ({
       headers: {}
     };
 
-    // const response =      await axios(config)
-    // .then((response) => {
-    //   console.log(JSON.stringify(response.data));
-    //   if (response.data.status === "1") {
-    //     console.log("response", response.data)
 
-    //   }
-    // })
-    // .catch((error) => {
-    //   console.log(error);
-    // });
-    // console.log("res", response)
     const response = await axios.get(config.url);
     if (response.data.status === '1') {
       var data1 = response.data.data;
@@ -520,9 +506,7 @@ const Dashboard = ({
         localStorage.setItem('distributer_id', data1[0].distributor_id);
       }
     }
-    // const data = await response.json();
 
-    // return data;
   }
   function multipleDistributorDetails(distData, popUp) {
     setDistributorModal({ distrtbutorDetails: distData, modalValue: popUp });
@@ -545,103 +529,14 @@ const Dashboard = ({
   ///socket start
   if (user.userType === 'Agent') {
     socket.on('AstriskEvent', data => {
-      // console.log('AstriskEvent', data);
+
 
       if (data.Event === 'Bridge') {
-        // console.log('Bridge', data)
-        // getInitialData();
-        // localStorage.clear()
-        //   if (
-        //     data.CallerID2 === agent.AgentSipId &&
-        //     data.Bridgestate === 'Link'
-        //   ) {
-        //     if(localStorage.getItem('callEvent') !== 'Bridge'){
-        //       removeFromQueue(agent.AgentSipId, '9002');
-        //     // removeFromQueue(agent.AgentSipId, '9002');
-        //     console.log('Normal Bridge', data);
-        //     // console.log('inside the bridge event current call', this.currentCall);
-        //     setCurrentCallDetails(
-        //       localStorage.getItem('callStatusId'),
-        //       data.Uniqueid1,
-        //       agent.AgentType,
-        //       'connected',
-        //       'Bridge',
-        //       'NotDisposed',
-        //       data.CallerID1
-        //     );
-        //     updateAgentCallStatus({
-        //       callStatusId: localStorage.getItem('callStatusId'),
-        //       callUniqueId: localStorage.getItem('callUniqueId'),
-        //       callType: localStorage.getItem('callType'),
-        //       callStatus: 'connected',
-        //       callEvent: 'Bridge',
-        //       callDispositionStatus: 'NotDisposed',
-        //       callerNumber: localStorage.getItem('callerNumber')
-        //     });
-        //     // disProfileByNum(localStorage.getItem("callerNumber"));
-        //   }
-        // }
-        //   var Channel1 = data.Channel1;
-        //   // if(str.includes("world")){}
-        //   // console.log("mobile", '5'+mobile)
-        //   if (
-        //     data.Bridgestate === 'Link' &&
-        //     Channel1.includes('SIP/' + agent.AgentSipId + '')
-        //   ) {
-        //     if(localStorage.getItem('callEvent') !== 'Bridge'){
-        //       removeFromQueue(agent.AgentSipId, '9002');
-        //     console.log('Link wala Bridge', data);
-        //     // console.log('inside the bridge event current call', this.currentCall);
-        //     var callerNumber = data.CallerID1;
-        //     // callerNumber = callerNumber.substring(1);
-        //     setCurrentCallDetails(
-        //       localStorage.getItem('callStatusId'),
-        //       data.Uniqueid1,
-        //       agent.AgentType,
-        //       'connected',
-        //       'Bridge',
-        //       'NotDisposed',
-        //       callerNumber
-        //     );
-        //     updateAgentCallStatus({
-        //       callStatusId: localStorage.getItem('callStatusId'),
-        //       callUniqueId: localStorage.getItem('callUniqueId'),
-        //       callType: localStorage.getItem('callType'),
-        //       callStatus: 'connected',
-        //       callEvent: 'Bridge',
-        //       callDispositionStatus: 'NotDisposed',
-        //       callerNumber: localStorage.getItem('callerNumber')
-        //     });
-        //     // disProfileByNum(localStorage.getItem("callerNumber"));
-        //   }
-        // }
+
       }
 
       if (data.Event === 'Hangup') {
-        // console.log('Hangup', data)
-        //     if (data.ConnectedLineNum === agent.AgentSipId) {
-        //       if(localStorage.getItem('callEvent') !== 'Hangup' ){
-        //         console.log('Hangup', data);
-        //         setCurrentCallDetails(
-        //           localStorage.getItem('callStatusId'),
-        //           localStorage.getItem('callUniqueId'),
-        //           localStorage.getItem('callType'),
-        //           'disconnected',
-        //           'Hangup',
-        //           localStorage.getItem('callDispositionStatus'),
-        //           localStorage.getItem('callerNumber')
-        //         );
-        //           updateAgentCallStatus({
-        //   callStatusId: localStorage.getItem('callStatusId'),
-        //   callUniqueId: localStorage.getItem('callUniqueId'),
-        //   callType: localStorage.getItem('callType'),
-        //   callStatus: 'disconnected',
-        //   callEvent: 'Hangup',
-        //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-        //   callerNumber: localStorage.getItem('callerNumber')
-        // });
-        //       }
-        //     }
+
       }
       var Channel1 = data.Channel1;
       var unlinkcounter = 0;
@@ -654,33 +549,14 @@ const Dashboard = ({
           localStorage.getItem('callEvent') === 'Bridge' &&
           unlinkcounter === 1
         ) {
-          // console.log('Bridge Unlink', data);
-          //         console.log('Unlink wala hai', data);
-          //         setCurrentCallDetails(
-          //           localStorage.getItem('callStatusId'),
-          //           localStorage.getItem('callUniqueId'),
-          //           localStorage.getItem('callType'),
-          //           'disconnected',
-          //           'Hangup',
-          //           localStorage.getItem('callDispositionStatus'),
-          //           localStorage.getItem('callerNumber')
-          //         );
-          //           updateAgentCallStatus({
-          //   callStatusId: localStorage.getItem('callStatusId'),
-          //   callUniqueId: localStorage.getItem('callUniqueId'),
-          //   callType: localStorage.getItem('callType'),
-          //   callStatus: 'disconnected',
-          //   callEvent: 'Hangup',
-          //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-          //   callerNumber: localStorage.getItem('callerNumber')
-          // });
+
         }
       }
     });
   }
 
   function breakService(e) {
-    // alert('Clicked on Break');
+
     console.log('Break', localStorage.getItem('breakStatus'));
     var BreakStatus = localStorage.getItem('breakStatus');
     if (BreakStatus === 'NA') {
@@ -744,10 +620,10 @@ const Dashboard = ({
     };
 
     axios(config)
-      .then(function(response) {
+      .then(function (response) {
         console.log(JSON.stringify(response.data));
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -832,22 +708,14 @@ const Dashboard = ({
     console.log('data second useEffect', currentCall);
     console.log('currentCall.callerNumber', currentCall.callerNumber);
 
-    // updateAgentCallStatus({
-    //     callStatusId: localStorage.getItem('callStatusId'),
-    //     callUniqueId: localStorage.getItem('callUniqueId'),
-    //     callType: localStorage.getItem('callType'),
-    //     callStatus: localStorage.getItem('callStatus'),
-    //     callEvent: localStorage.getItem('callEvent'),
-    //     callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-    //     callerNumber: localStorage.getItem('callerNumber')
-    //   });
+
     if (
       currentCall.callerNumber !== '' &&
       currentCall.callDispositionStatus === 'NotDisposed'
     ) {
       disProfileByNum(currentCall.callerNumber);
       getDLF();
-      // removeFromQueue(agent.AgentSipId, '9002');
+
     }
     getALF();
   }, [
@@ -857,6 +725,7 @@ const Dashboard = ({
   ]);
 
   useEffect(() => {
+    console.log("currentCall", currentCall)
     if (reduxState.searchDistributor.length >= 4) {
       get(reduxState.searchDistributor);
     } else {
@@ -864,454 +733,197 @@ const Dashboard = ({
     }
   }, [reduxState.searchDistributor]);
 
-  var createTicket = () => {};
+
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
-      {currentCall.callStatus === 'connected' ? (
-        <div>
-          {/* <div className={classes.timerComp}>
-            <TimerComp />
-          </div> */}
-          <Box
-            alignItems="center"
-            display="flex"
-            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
-          >
-            <CallIcon />
+      {/* {currentCall.callStatus === 'connected' ? ( */}
+      <div>
+
+        <Box
+          alignItems="center"
+          display="flex"
+          className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+        >
+          <CallIcon />
             &nbsp;
             <Typography display="inline">
-              {currentCall.callType} Call In Progress
+            {currentCall.callType} Call In Progress
             </Typography>
-          </Box>{' '}
-        </div>
-      ) : null}
+        </Box>{' '}
+      </div>
+      {/* ) : null} */}
       {currentCall.callDispositionStatus === 'NotDisposed' &&
-      currentCall.callStatus === 'disconnected' ? (
-        <div>
-          {/* <div className={classes.timerComp}>
-            <TimerComp />
-          </div> */}
-          <Box
-            alignItems="center"
-            display="flex"
-            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
-          >
-            <CallIcon />
+        currentCall.callStatus === 'disconnected' ? (
+          <div>
+
+            <Box
+              alignItems="center"
+              display="flex"
+              className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
+            >
+              <CallIcon />
             &nbsp;
             <Typography display="inline">
-              {currentCall.callType} Call Is Disconnected
+                {currentCall.callType} Call Is Disconnected
             </Typography>
-          </Box>{' '}
-        </div>
-      ) : null}
+            </Box>{' '}
+          </div>
+        ) : null}
       <CustomBreadcrumbs />
       {agent.AgentType === 'Outbound' &&
-      localStorage.getItem('callDispositionStatus') === 'Disposed' &&
-      localStorage.getItem('callStatus') === 'disconnected' &&
-      localStorage.getItem('breakStatus') === 'OUT' ? (
-        <div>
-          <Input value={mobile} onChange={onChange} margin="dense" />
-          <CallIcon onClick={onClick} />
-          {/* <Button
-            variant="contained"
-            className="jr-btn bg-light-green jr-btn-label left  text-white"
-            onClick={onClick}
-          >
-            {/* <QueuePlayNext /> */}
-          {/* <span><CallIcon  onClick={onClick} /></span>
-          </Button> */}
-        </div>
-      ) : null}
+        localStorage.getItem('callDispositionStatus') === 'Disposed' &&
+        localStorage.getItem('callStatus') === 'disconnected' &&
+        localStorage.getItem('breakStatus') === 'OUT' ? (
+          <div>
+            <Input value={mobile} onChange={onChange} margin="dense" />
+            <CallIcon onClick={onClick} />
+
+          </div>
+        ) : null}
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
-              <Grid container direction="column" spacing={2}>
-                <Grid item>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => setShowCreateTicket(true)}
-                  >
-                    Create Ticket
-                  </Button>
-                  &nbsp;&nbsp;
-                  {currentCall.callDispositionStatus === 'Disposed' &&
-                  currentCall.callStatus === 'disconnected' ? (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      style={{ color: 'white' }}
-                      onClick={e => breakService(e)}
-                    >
-                      {currentCall.breakStatus === 'IN' ? (
-                        <label>Break IN</label>
-                      ) : (
-                        <label>Break OUT</label>
-                      )}
-                    </Button>
-                  ) : null}
-                </Grid>
-                <Grid item>
-                  <Card>
-                    <CustomTabs
-                      variant="fullWidth"
-                      indicatorColor="primary"
-                      textColor="primary"
-                      tabNames={['Tickets', 'Incentives', 'E-Wallet']}
-                      setCurrent={val => setTab(val)}
-                    />
-                    <CustomTabPanel value={tab} index={0}>
-                      <TicketsList />
-                    </CustomTabPanel>
-                  </Card>
-                  <br />
-                  <Card>
-                    <CardHeader title={'Distributor last five interactions'} />
-                    {DLF.length ? (
-                      <div>
-                        <BasicTable
-                          columns={lastFiveCallData}
-                          records={ALF.slice(0, 3)}
-                          redirectLink="/dash360/admin/distributerDisposedCallList"
-                          redirectLabel="View All"
-                        />
-                      </div>
-                    ) : (
-                      <CommonAlert text="Unable to get distributor details" />
-                    )}
-                  </Card>
-                </Grid>
+
+              <Grid item>
+
+
+                <Button
+                  color="secondary"
+                  variant="contained"
+                  style={{ color: 'white' }}
+                  onClick={e => breakService(e)}
+                >
+
+                  <label>Break IN</label>
+
+                </Button>
+
               </Grid>
+
+
             </Grid>
 
-            <Grid item lg={3} md={6} xs={12}>
-              {rootData[0].data ? (
-                <DealerCard
-                  dealerDetails={{
-                    ...rootData[0].data[0],
-                    lastOrderReference: rootData[2].data
-                      ? rootData[2].data[0] || { OrderNumber: '' }.OrderNumber
-                      : ''
-                  }}
-                />
-              ) : (
-                <CommonAlert text="Unable to get distributor details" />
-              )}
-              {currentCall.callDispositionStatus === 'NotDisposed' &&
-              user.userType === 'Agent' ? (
-                <Box mt={2}>
-                  <Card>
-                    <CardHeader title="Disposition Details" />
-                    <Divider />
-                    <CardContent>
-                      <DispositionForm
-                        agentSipID={agent.AgentSipId}
-                        setCurrentCallDetails={setCurrentCallDetails}
-                        addToQueue={addToQueue}
-                        removeFromQueue={removeFromQueue}
-                        getALF={getALF}
-                        disForm={disForm}
-                        setdisForm={form => {
-                          setdisForm(form);
-                        }}
-                        category={category}
-                        setCategory={cat => {
-                          setCategory(cat);
-                        }}
-                        ticketType={ticketType}
-                        setTicketType={tkstyp => {
-                          setTicketType(tkstyp);
-                        }}
-                        subCategory={subCategory}
-                        setSubCategory={subcat => {
-                          setSubCategory(subcat);
-                        }}
-                        subCategoryItem={subCategoryItem}
-                        setSubCategoryItem={subcatitem => {
-                          setSubCategoryItem(subcatitem);
-                        }}
-                        remarks={remarks}
-                        setRemarks={rks => {
-                          setRemarks(rks);
+
+
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item lg={6} md={6} xs={12}>
+              <Grid item>
+                <Card>
+                  <CardHeader title={'Distributor details'} />
+                  {rootData[0].data ? (
+                    <div>
+                      <DealerCard
+                        dealerDetails={{
+                          ...rootData[0].data[0],
+                          lastOrderReference: rootData[2].data
+                            ? rootData[2].data[0] || { OrderNumber: '' }.OrderNumber
+                            : ''
                         }}
                       />
-                    </CardContent>
-                  </Card>
-                </Box>
-              ) : (
-                <Box mt={2}>
-                  <Card>
-                    <CardHeader
-                      title={
-                        'My last five interactions (' + agent.AgentSipId + ')'
-                      }
-                    />
-                    {ALF.length ? (
-                      <div>
-                        <BasicTable
-                          columns={lastFiveCallData}
-                          records={ALF.slice(0, 3)}
-                          redirectLink="/dash360/admin/agentlastfive"
-                          redirectLabel="View All"
-                        />
-                      </div>
-                    ) : (
+                    </div>
+                  ) : (
                       <CommonAlert text="Unable to get distributor details" />
                     )}
-                  </Card>
-                </Box>
-              )}
+                </Card>
+                <br />
+                <Card>
+                  <CardHeader title={'Distributor last five interactions'} />
+                  {DLF.length ? (
+                    <div>
+                      <BasicTable
+                        columns={lastFiveCallData}
+                        records={ALF.slice(0, 3)}
+                        redirectLink="/dash360/admin/distributerDisposedCallList"
+                        redirectLabel="View All"
+                      />
+                    </div>
+                  ) : (
+                      <CommonAlert text="Unable to get distributor details" />
+                    )}
+                </Card>
+              </Grid>
             </Grid>
-            <Grid item lg={5} xs={12}>
+            <Grid item lg={6} md={6} xs={12}>
+
               <Card>
-                <CardHeader title="Orders" />
-                {rootData[2].data ? (
-                  <BasicTable
-                    columns={orderColumns}
-                    records={rootData[2].data.slice(0, 3)}
-                    redirectLink="/dash360/admin/orders"
-                    redirectLabel="View All"
-                  />
-                ) : (
-                  <CommonAlert text="Unable to get distributor details" />
-                )}
+                <CardHeader title="Disposition Details" />
+                <Divider />
+                {currentCall.callDispositionStatus === 'NotDisposed' &&
+                  user.userType === 'Agent' ? (<CardContent>
+                    <DispositionForm
+                      agentSipID={agent.AgentSipId}
+                      setCurrentCallDetails={setCurrentCallDetails}
+                      addToQueue={addToQueue}
+                      removeFromQueue={removeFromQueue}
+                      getALF={getALF}
+                      disForm={disForm}
+                      setdisForm={form => {
+                        setdisForm(form);
+                      }}
+                      category={category}
+                      setCategory={cat => {
+                        setCategory(cat);
+                      }}
+                      ticketType={ticketType}
+                      setTicketType={tkstyp => {
+                        setTicketType(tkstyp);
+                      }}
+                      subCategory={subCategory}
+                      setSubCategory={subcat => {
+                        setSubCategory(subcat);
+                      }}
+                      subCategoryItem={subCategoryItem}
+                      setSubCategoryItem={subcatitem => {
+                        setSubCategoryItem(subcatitem);
+                      }}
+                      remarks={remarks}
+                      setRemarks={rks => {
+                        setRemarks(rks);
+                      }}
+                    />
+                  </CardContent>
+                  ) : (
+                    <CommonAlert text="Unable to get disposition details" />
+                  )}
               </Card>
+
+
               <br />
               <Card>
-                <CardHeader title="Invoices" />
-                {rootData[3].data ? (
-                  <div>
-                    <BasicTable
-                      columns={invoicesColumns}
-                      records={rootData[3].data.slice(0, 3)}
-                      redirectLink="/dash360/admin/invoices"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
-                  <CommonAlert text="Unable to get distributor details" />
-                )}
-              </Card>
-              {/* <br />
-              <Card>
-                <CardHeader title={"My last five interactions ("+agent.AgentSipId+")"} />
+                <CardHeader
+                  title={
+                    'My last five interactions (' + agent.AgentSipId + ')'
+                  }
+                />
                 {ALF.length ? (
                   <div>
                     <BasicTable
-                      columns={AgentLastFiveColumns}
+                      columns={lastFiveCallData}
                       records={ALF.slice(0, 3)}
                       redirectLink="/dash360/admin/agentlastfive"
                       redirectLabel="View All"
                     />
                   </div>
                 ) : (
-                    <CommonAlert />
+                    <CommonAlert text="Unable to get distributor details" />
                   )}
-              </Card> */}
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid container spacing={3}>
+            <Grid item lg={12} md={12} xs={12}>
+              <FAQ />
             </Grid>
           </Grid>
         </Container>
       </Page>
-      {showCreateTicket ? (
-        <Dialog
-          open
-          fullWidth
-          maxWidth="md"
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            <Box component="span" className={classes.drawerHeader}>
-              <EditIcon />
-              <Typography
-                variant="h4"
-                color="textPrimary"
-                style={{ marginLeft: 10 }}
-              >
-                Create Ticket
-              </Typography>
-            </Box>
-          </DialogTitle>
-          <DialogContent dividers>
-            {
-              <CreateTicket
-                dealerDetails={
-                  rootData[0].data ? rootData[0].data[0] : {}
-                  // rootData[0].data[0].length ?
-                  // ...rootData[0].data[0]: "",
-                  // lastOrderReference: rootData[2].data
-                  //   ? rootData[2].data[0].OrderNumber
-                  //   : ''
-                }
-                setOpen={open => {
-                  setShowCreateTicket(open);
-                  setOpen(open);
-                }}
-                disForm={disForm}
-                setClick={click => (createTicket = click)}
-                ticket={ticket}
-                formtype="telephony"
-                setTicket={ticket => setTicket(ticket)}
-                ticketNumber={ticketNumber}
-                setTicketNumber={tks => {
-                  setTicketNumber(tks);
-                }}
-                distributorName={distributorName}
-                setDistributorName={disname => {
-                  setDistributorName(disname);
-                }}
-                distributorId={distributorId}
-                setDistributorId={disid => {
-                  setDistributorId(disid);
-                }}
-                distributorEmail={distributorEmail}
-                setDistributorEmail={disemail => {
-                  setDistributorEmail(disemail);
-                }}
-                distributorMobile={distributorMobile}
-                setDistributorMobile={dismob => {
-                  setDistributorMobile(dismob);
-                }}
-                createdByName={createdByName}
-                setCreatedByName={crename => {
-                  setCreatedByName(crename);
-                }}
-                createdById={createdById}
-                setCreatedById={creid => {
-                  setCreatedById(creid);
-                }}
-                ticketSubject={ticketSubject}
-                setTicketSubject={tktsub => {
-                  setTicketSubject(tktsub);
-                }}
-                ticketDescription={ticketDescription}
-                setTicketDescription={tktdisp => {
-                  setTicketDescription(tktdisp);
-                }}
-                remarks={remarks}
-                setRemarks={rks => {
-                  setRemarks(rks);
-                }}
-                ticketTypes={ticketTypes}
-                setTicketTypes={tkstyps => {
-                  setTicketTypes(tkstyps);
-                }}
-                ticketType={ticketType}
-                setTicketType={tkstyp => {
-                  setTicketType(tkstyp);
-                }}
-                medium={medium}
-                setMedium={mdm => {
-                  setMedium(mdm);
-                }}
-                media={media}
-                setMedia={media => {
-                  setMedia(media);
-                }}
-                categories={categories}
-                setCategories={catgs => {
-                  setCategories(catgs);
-                }}
-                category={category}
-                setCategory={cat => {
-                  setCategory(cat);
-                }}
-                subCategories={subCategories}
-                setSubCategories={subcats => {
-                  setSubCategories(subcats);
-                }}
-                subCategory={subCategory}
-                setSubCategory={subcat => {
-                  setSubCategory(subcat);
-                }}
-                subCategoryItems={subCategoryItems}
-                setSubCategoryItems={subcatitems => {
-                  setSubCategoryItems(subcatitems);
-                }}
-                subCategoryItem={subCategoryItem}
-                setSubCategoryItem={subcatitem => {
-                  setSubCategoryItem(subcatitem);
-                }}
-                departments={departments}
-                setDepartments={deps => {
-                  setDepartments(deps);
-                }}
-                department={department}
-                setDepartment={dept => {
-                  setDepartment(dept);
-                }}
-                teams={teams}
-                setTeams={tms => {
-                  setTeams(tms);
-                }}
-                team={team}
-                setTeam={tm => {
-                  setTeam(tm);
-                }}
-                priorities={priorities}
-                setPriorities={prts => {
-                  setPriorities(prts);
-                }}
-                priority={priority}
-                setPriority={prt => {
-                  setPriority(prt);
-                }}
-                statuses={statuses}
-                setStatuses={stses => {
-                  setStatuses(stses);
-                }}
-                status={status}
-                setStatus={sts => {
-                  setStatus(sts);
-                }}
-                executives={executives}
-                setExecutives={exts => {
-                  setExecutives(exts);
-                }}
-                executive={executive}
-                setExecutive={ext => {
-                  setExecutive(ext);
-                }}
-                createdTime={createdTime}
-                setCreatedTime={cretime => {
-                  setCreatedTime(cretime);
-                }}
-              />
-            }
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                createTicket();
-                setOpen(false);
-              }}
-              //  onClick={() => setShowCreateTicket(false)}
-              color="primary"
-              variant="contained"
-              size="small"
-              //  onClick={handleOpen}
-            >
-              Create
-            </Button>
-            <Button
-              color="primary"
-              size="small"
-              onClick={() => setShowCreateTicket(false)}
-              variant="outlined"
-              autoFocus
-            >
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-      ) : (
-        ''
-      )}
+
     </div>
   ) : (
-    <MainLoader />
-  );
+      <MainLoader />
+    );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),

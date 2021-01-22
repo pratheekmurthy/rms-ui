@@ -35,7 +35,7 @@ export default function DispositionForm(props) {
   });
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://14.98.23.204:42004/';
+  const agentServiceURL = 'http://localhost:42004/';
   const [category, setCategory] = useState({
     value: '',
     label: ''
@@ -178,11 +178,12 @@ export default function DispositionForm(props) {
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     let data = JSON.stringify(dispostionData);
-    console.log('updateCAllData', data)
+    console.log('updateCAllData', data, uniqueid)
 
     let config = {
       method: 'post',
-      url: UPDATE_CALL_STATUS + uniqueid,
+
+      url:'http://localhost:42004'+ UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -210,8 +211,9 @@ export default function DispositionForm(props) {
       callerNumber: updateData.callerNumber
     };
     var config = {
+
       method: 'put',
-      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url: 'https://localhost:42004'+UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },

@@ -161,7 +161,12 @@ const TopBar = ({
   };
   async function logoutUser() {
     try {
-      await Axios.get('/auth/user/logout');
+      // axios
+      // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
+      const userData= localStorage.jwtToken
+
+      const url='http://localhost:4000/auth/apiM/logout'
+      await Axios.delete(url, { headers: { "authorization": userData } });
       logout();
     } catch (err) {
       console.log(err);
@@ -171,7 +176,7 @@ const TopBar = ({
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
-          <Logo />
+          {/* <Logo /> */}
         </RouterLink>
         <div className={classes.search}>
           <div className={classes.searchIcon}>
@@ -204,40 +209,9 @@ const TopBar = ({
           {viewAccess === -1 ? (
             ''
           ) : (
-            <Typography className={classes.title} variant="h5" noWrap>
-              <Link to="/ticketing/ticket-dashboard" className="color-white">
-                Ticketing
-              </Link>
-            </Typography>
+            <></>
           )}
-          <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/surveys/home" className="color-white">
-              Surveys
-            </Link>
-          </Typography>
-          <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/campaign/dashboard" className="color-white">
-              Campaign
-            </Link>
-          </Typography>
-          {role === 'Admin' ? (
-            <Typography className={classes.title} variant="h5" noWrap>
-              <Link to="/ticketing/setup" className="color-white">
-                Tkt-Setup
-              </Link>
-            </Typography>
-          ) : (
-            ''
-          )}
-          {reportsAccess === -1 ? (
-            ''
-          ) : (
-            <Typography className={classes.title} variant="h5" noWrap>
-              <Link to="/ticketing/ticket-report" className="color-white">
-                Tkt-Dashboard
-              </Link>
-            </Typography>
-          )}
+          
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}

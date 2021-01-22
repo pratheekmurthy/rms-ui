@@ -39,7 +39,7 @@ function Invoices({
 
   const orderIdPrev = useRef(orderId);
 
-  const agentServiceURL = 'http://14.98.23.204:42004/';
+  const agentServiceURL = 'http://localhost:42004/';
   function getALF() {
     const axios = require('axios');
     let data = '';

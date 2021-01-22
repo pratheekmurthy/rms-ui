@@ -11,7 +11,8 @@ import {
   Divider,
   Grid,
   Tooltip,
-  Typography
+  Typography,
+  CardHeader,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import React, { useState } from 'react';
@@ -86,7 +87,7 @@ export default function DealerCard({ dealerDetails }) {
   } = dealerDetails;
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'http://14.98.23.204:42002/';
+  const SOCKETENDPOINT = 'http://localhost:42002/';
   const getIconColor = () => {
     return 'primary';
   };
@@ -119,7 +120,9 @@ export default function DealerCard({ dealerDetails }) {
   }
   return (
     <Card>
+     
       <CardContent>
+     
         <Grid container justify="center" className="position-relative">
           <Tooltip
             title="View More Details"
@@ -132,11 +135,11 @@ export default function DealerCard({ dealerDetails }) {
             />
           </Tooltip>
           {localStorage.getItem('AgentType') === 'Outbound' &&
-          localStorage.getItem('callDispositionStatus') === 'Disposed' &&
-          localStorage.getItem('callStatus') === 'disconnected' &&
-          localStorage.getItem('breakStatus') === 'OUT' ? (
-            <CallIcon onClick={() => makeCall(mob_no)} />
-          ) : null}
+            localStorage.getItem('callDispositionStatus') === 'Disposed' &&
+            localStorage.getItem('callStatus') === 'disconnected' &&
+            localStorage.getItem('breakStatus') === 'OUT' ? (
+              <CallIcon onClick={() => makeCall(mob_no)} />
+            ) : null}
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> */}
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
@@ -201,6 +204,10 @@ export default function DealerCard({ dealerDetails }) {
           </Grid>
         </Grid>
       </CardContent>
+     
+     
+     
+     
       {showFullDetailsModal && (
         <Dialog
           open
@@ -337,98 +344,7 @@ export default function DealerCard({ dealerDetails }) {
         </Dialog>
       )}
 
-      {/* <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Display Name
-                </Typography>
-                <span>{distributor_name}</span>
-              </Box>
-            }
-          />
-        </ListItem> */}
 
-      {/* <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Email Id
-                </Typography>
-                <span>{email_id}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Last Interaction ID
-                </Typography>
-                <span>{lastInteractionId}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Last Interaction Date
-                </Typography>
-                <span>{lastInteractionDate}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Last Order Reference
-                </Typography>
-                <span>#{lastOrderReference}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Rank
-                </Typography>
-                <span>{distributor_rank}</span>
-              </Box>
-            }
-          />
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <ListItemText
-            primary={
-              <Box display="flex" flexDirection="row" alignItems="center">
-                <Typography variant="h5" className={classes.maxW50}>
-                  Membership Date
-                </Typography>
-                <span>{Joiningdate}</span>
-              </Box>
-            }
-          />
-        </ListItem> */}
-      {/* </List> */}
     </Card>
   );
 }

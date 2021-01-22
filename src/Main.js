@@ -27,6 +27,7 @@ function Main({
     (async function checkLoggedInState() {
       try {
         // localStorage.clear();
+        const url='http://localhost:4000/auth/apiM/login'
         const res = await Axios.post('/auth/user/login', {});
         const obj = res.data.userObj;
         setUserDetailsMain(obj);
