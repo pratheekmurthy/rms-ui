@@ -20,6 +20,8 @@ import {
 } from '../../../redux/action';
 import Axios from 'axios';
 import { ADMIN, USER } from 'src/redux/constants';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+// import Typography from '@material-ui/core/Typography';
 
 function Copyright() {
   return (
@@ -34,12 +36,23 @@ function Copyright() {
   );
 }
 
+const theme = createMuiTheme();
+
+theme.typography.h6 = {
+  fontSize: '1rem',
+  '@media (min-width:600px)': {
+    fontSize: '1rem',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '1rem',
+  },
+};
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh'
   },
   image: {
-    // backgroundImage: 'url()',
+    backgroundImage: 'url(/static/images/merittrack.jpg)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light'
@@ -279,6 +292,9 @@ setEnable(false)
                     value={values.AgentSIPID}
                     variant="outlined"
                   /> */}
+                {enable===false ? <ThemeProvider theme={theme}>
+  <Typography variant="h6">OTP Sent Sucessfully</Typography>
+</ThemeProvider>:<></>}
                     <TextField
                     error={Boolean(touched.OTP && errors.OTP)}
                     fullWidth
