@@ -176,7 +176,7 @@ const TopBar = ({
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
-          <Logo />
+          {/* <Logo /> */}
         </RouterLink>
         <div className={classes.search}>
           <div className={classes.searchIcon}>

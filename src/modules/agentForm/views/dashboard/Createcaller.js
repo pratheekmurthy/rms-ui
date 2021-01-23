@@ -26,41 +26,65 @@ const useStyle = makeStyles(() => ({
 export default function DispositionForm(props) {
   const config="http://192.168.3.45:8083/"
   const [initialValue] = useState({
-    tickettype: '',
-    category: '',
-    subcategory: '',
-    comments: '',
-    type: '',
-    subcategoryitem: '',
-    enable: false
+    issuetype: '',
+    devicetype: '',
+    connectivitytype: '',
+    speedtype: '',
+    ostype: '',
+    solution: '',
+    issuedescription:'',
+    CallerName:'',
+    callerapplication:'',
+    enable: false,
+    status:''
   });
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
-  const [category, setCategory] = useState({
-    value: '',
-    label: ''
-  });
-  const [categories, setCategories] = useState([]);
+ 
+  
   const [loading, setLoading] = useState(true);
-  const [ticketTypes, setTicketTypes] = useState([]);
-  const [ticketType, setTicketType] = useState({
-    ticketTypeId: '',
-    ticketType: ''
-  });
-  const [subCategories, setSubCategories] = useState([]);
-  const [subCategory, setSubCategory] = useState({
-    value: '',
-    label: ''
-  });
-  const [subCategoryItems, setSubCategoryItems] = useState([]);
-  const [subCategoryItem, setSubCategoryItem] = useState({
-    value: '',
-    label: ''
-  });
-  const issuetype ={
+ 
+
+  const devicetype =[
+    {
+      id:'1', value:'Mobile',
+    },
+    {
+      id:'2', value:'Laptop/ Desktop',
+    }
+  ]
     
-  }
+  const ostype =[
+    {
+      id:'1', value:'Android',
+    },
+    {
+      id:'2', value:'Win-7 / 8/10 '
+    },
+    {
+      id:'3', value:'MAC / Linux,'
+    }
+  ]
+  const connectivitytype =[
+    {
+      id:'1', value:'Hotspot',
+    },
+    {
+      id:'2', value:'DataCard',
+    }
+  ]
+  const issuetype =[
+   
+  ]
+  const speedtype =[
+    {
+      id:'1', value:'Less than 2 MBPS',
+    },
+    {
+      id:'2', value:'More than 2 MBPS',
+    }
+  ]
   // useEffect(() => {
   //   let unmounted = false;
   //   async function getItems() {
@@ -117,68 +141,7 @@ export default function DispositionForm(props) {
   //     unmounted = true;
   //   };
   // }, []);
-  const getSubCategories = cat => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(
-        config.APIS_URL + '/subcategories/' + cat.value
-      );
-      const body = await response.json();
-      if (!unmounted) {
-        setSubCategories(
-          body.data.map(({ _id, subCategory }) => ({
-            label: subCategory,
-            value: _id
-          }))
-        );
-
-        body.data[0]
-          ? setSubCategory({
-            label: body.data[0].subCategory,
-            value: body.data[0]._id
-          })
-          : setSubCategory({});
-
-        setLoading(false);
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  };
-  const getSubCategoryItems = (cat, sct) => {
-    let unmounted = false;
-    async function getItems() {
-      //  alert(JSON.stringify(cat))
-      const response = await fetch(
-        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct.value
-      );
-      const body = await response.json();
-
-      if (!unmounted) {
-        setSubCategoryItems(
-          body.data.map(({ _id, subCategoryItem }) => ({
-            label: subCategoryItem,
-            value: _id
-          }))
-        );
-
-        setLoading(false);
-
-        body.data[0]
-          ? setSubCategoryItem({
-            label: body.data[0].subCategoryItem,
-            value: body.data[0]._id
-          })
-          : setSubCategoryItem({});
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  };
+  
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     let data = JSON.stringify(dispostionData);
@@ -234,48 +197,41 @@ export default function DispositionForm(props) {
   }
   function handleSubmit(e) {
     console.log('formRef', formRef.current.values);
-    console.log('dispostion', {
-      tickettype: formRef.current.values.tickettype.label,
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type
-    });
+    
     // props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
-    props.removeFromQueue(props.AgentSipId, '9002');
-    props.addToQueue(props.agentSipID, '9002');
+    // props.removeFromQueue(props.AgentSipId, '9002');
+    // props.addToQueue(props.agentSipID, '9002');
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(
-      localStorage.getItem('callStatusId'),
-      localStorage.getItem('callUniqueId'),
-      localStorage.getItem('callType'),
-      localStorage.getItem('callStatus'),
-      localStorage.getItem('callEvent'),
-      localStorage.getItem('callDispositionStatus'),
-      localStorage.getItem('callerNumber'),
-      localStorage.getItem('breakStatus')
-    );
-    updateAgentCallStatus({
-      callStatusId: localStorage.getItem('callStatusId'),
-      callUniqueId: localStorage.getItem('callUniqueId'),
-      callType: localStorage.getItem('callType'),
-      callStatus: localStorage.getItem('callStatus'),
-      callEvent: localStorage.getItem('callEvent'),
-      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-      callerNumber: localStorage.getItem('callerNumber')
-    })
-    updateCallData(localStorage.getItem('callUniqueId'), {
-      tickettype: formRef.current.values.tickettype.label,
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type,
-      distributerID: localStorage.getItem('distributer_id')
+    // props.setCurrentCallDetails(
+    //   localStorage.getItem('callStatusId'),
+    //   localStorage.getItem('callUniqueId'),
+    //   localStorage.getItem('callType'),
+    //   localStorage.getItem('callStatus'),
+    //   localStorage.getItem('callEvent'),
+    //   localStorage.getItem('callDispositionStatus'),
+    //   localStorage.getItem('callerNumber'),
+    //   localStorage.getItem('breakStatus')
+    // );
+    // updateAgentCallStatus({
+    //   callStatusId: localStorage.getItem('callStatusId'),
+    //   callUniqueId: localStorage.getItem('callUniqueId'),
+    //   callType: localStorage.getItem('callType'),
+    //   callStatus: localStorage.getItem('callStatus'),
+    //   callEvent: localStorage.getItem('callEvent'),
+    //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+    //   callerNumber: localStorage.getItem('callerNumber')
+    // })
+    // updateCallData(localStorage.getItem('callUniqueId'), {
+    //   tickettype: formRef.current.values.tickettype.label,
+    //   category: formRef.current.values.category.label,
+    //   subcategory: formRef.current.values.subcategory.label,
+    //   subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //   comments: formRef.current.values.comments,
+    //   type: formRef.current.values.type,
+    //   distributerID: localStorage.getItem('distributer_id')
 
-    })
+    // })
 
 
   }
@@ -311,6 +267,8 @@ export default function DispositionForm(props) {
           .object()
           .required('Please select a Internet Speed ')
           .typeError('Please select a valid  Internet Speed'),
+          CallerName: yup.string().required('Please Enter Caller Name'),
+          callerapplication: yup.string().required('Please Enter Caller Application'),
           issuedescription: yup.string().required('Please Enter Issue Description'),
     solution: yup.string().required('Please Enter Response /Solution Provided')
       })}
@@ -346,18 +304,14 @@ export default function DispositionForm(props) {
 
              <Autocomplete
                options={issuetype}
-               getOptionLabel={option => option.label}
+               getOptionLabel={option => option.value}
                // style={{ width: 400, overflow: "hidden" }}
                getOptionSelected={(option, value) => value.id === option.id}
                key={autoCompleteKey}
-            //    onChange={(event, value) => {
-            //      setFieldValue('subcategory', value);
-            //      props.setSubCategory(value);
-            //      getSubCategoryItems(
-            //        formRef.current.values.category.value,
-            //        value
-            //      );
-            //    }}
+               onChange={(event, value) => {
+                 setFieldValue('issuetype', value);
+                 
+               }}
                renderInput={params => (
                  <Field
                    component={TextField}
@@ -377,18 +331,18 @@ export default function DispositionForm(props) {
 
              <Autocomplete
                options={devicetype}
-               getOptionLabel={option => option.label}
+               getOptionLabel={option => option.value}
                // style={{ width: 400, overflow: "hidden" }}
                getOptionSelected={(option, value) => value.id === option.id}
                key={autoCompleteKey}
-            //    onChange={(event, value) => {
-            //      setFieldValue('subcategory', value);
-            //      props.setSubCategory(value);
-            //      getSubCategoryItems(
-            //        formRef.current.values.category.value,
-            //        value
-            //      );
-            //    }}
+               onChange={(event, value) => {
+                 setFieldValue('devicetype', value);
+                //  props.setSubCategory(value);
+                //  getSubCategoryItems(
+                //    formRef.current.values.category.value,
+                //    value
+                //  );
+               }}
                renderInput={params => (
                  <Field
                    component={TextField}
@@ -408,18 +362,14 @@ export default function DispositionForm(props) {
 
              <Autocomplete
                options={ostype}
-               getOptionLabel={option => option.label}
+               getOptionLabel={option => option.value}
                // style={{ width: 400, overflow: "hidden" }}
                getOptionSelected={(option, value) => value.id === option.id}
                key={autoCompleteKey}
-            //    onChange={(event, value) => {
-            //      setFieldValue('subcategory', value);
-            //      props.setSubCategory(value);
-            //      getSubCategoryItems(
-            //        formRef.current.values.category.value,
-            //        value
-            //      );
-            //    }}
+               onChange={(event, value) => {
+                 setFieldValue('ostype', value);
+                 
+               }}
                renderInput={params => (
                  <Field
                    component={TextField}
@@ -438,18 +388,14 @@ export default function DispositionForm(props) {
 
              <Autocomplete
                options={connectivitytype}
-               getOptionLabel={option => option.label}
+               getOptionLabel={option => option.value}
                // style={{ width: 400, overflow: "hidden" }}
                getOptionSelected={(option, value) => value.id === option.id}
                key={autoCompleteKey}
-            //    onChange={(event, value) => {
-            //      setFieldValue('subcategory', value);
-            //      props.setSubCategory(value);
-            //      getSubCategoryItems(
-            //        formRef.current.values.category.value,
-            //        value
-            //      );
-            //    }}
+               onChange={(event, value) => {
+                 setFieldValue('connectivitytype', value);
+                 
+               }}
                renderInput={params => (
                  <Field
                    component={TextField}
@@ -468,18 +414,14 @@ export default function DispositionForm(props) {
 
              <Autocomplete
                options={speedtype}
-               getOptionLabel={option => option.label}
+               getOptionLabel={option => option.value}
                // style={{ width: 400, overflow: "hidden" }}
                getOptionSelected={(option, value) => value.id === option.id}
                key={autoCompleteKey}
-            //    onChange={(event, value) => {
-            //      setFieldValue('subcategory', value);
-            //      props.setSubCategory(value);
-            //      getSubCategoryItems(
-            //        formRef.current.values.category.value,
-            //        value
-            //      );
-            //    }}
+               onChange={(event, value) => {
+                 setFieldValue('speedtype', value);
+                
+               }}
                renderInput={params => (
                  <Field
                    component={TextField}
@@ -518,7 +460,7 @@ export default function DispositionForm(props) {
           
         
             <Grid item>
-              <Field component={RadioGroup} name="type" row>
+              <Field component={RadioGroup} name="status" row>
                 {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
                   value="open"

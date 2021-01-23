@@ -54,7 +54,7 @@ import DispositionForm from './DispositionForm';
 import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
-
+import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
 const SOCKETENDPOINT = 'http://localhost:42002';
 
 const socket = socketIOClient(SOCKETENDPOINT);
@@ -835,7 +835,7 @@ const Dashboard = ({
 
           </Grid>
           <Grid container spacing={3}>
-            <Grid item lg={6} md={6} xs={12}>
+            <Grid item lg={4} md={4} xs={12}>
               <Grid item>
                 <Card>
                   <CardHeader title={'Caller details'} />
@@ -872,7 +872,17 @@ const Dashboard = ({
                 </Card>
               </Grid>
             </Grid>
-            <Grid item lg={6} md={6} xs={12}>
+            <Grid item lg={4} md={4} xs={12}>
+
+<Card>
+  <CardHeader title="Caller Details" />
+  <Divider />
+  <CardContent>
+            <CreateCaller/>
+            </CardContent> 
+            </Card>    
+            </Grid>
+            <Grid item lg={4} md={4} xs={12}>
 
               <Card>
                 <CardHeader title="Disposition Details" />
