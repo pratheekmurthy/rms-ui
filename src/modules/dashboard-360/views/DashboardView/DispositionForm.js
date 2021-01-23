@@ -58,11 +58,11 @@ export default function DispositionForm(props) {
     value: '',
     label: ''
   });
-  const url ="http://192.168.3.45:8083"
+  const url ="http://localhost:42007"
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
-      const response = await fetch(url + '/categories');
+      const response = await fetch(url + '/level1');
       const body = await response.json();
 
       if (!unmounted) {
@@ -88,40 +88,16 @@ export default function DispositionForm(props) {
       unmounted = true;
     };
   }, []);
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(url + '/tickettypes');
-      const body = await response.json();
-      if (!unmounted) {
-        setTicketTypes(
-          body.data.map(({ _id, ticketType }) => ({
-            label: ticketType,
-            value: _id
-          }))
-        );
-        setLoading(false);
-
-        body.data[0]
-          ? setTicketType({
-            label: body.data[0].ticketType,
-            value: body.data[0]._id
-          })
-          : setTicketType({});
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
+  
   const getSubCategories = cat => {
+
     let unmounted = false;
     async function getItems() {
       const response = await fetch(
-        url + '/subcategories/' + cat.value
+        url + '/level2/' + cat.value
       );
       const body = await response.json();
+      console.log("bosy",body)
       if (!unmounted) {
         setSubCategories(
           body.data.map(({ _id, subCategory }) => ({
@@ -150,7 +126,7 @@ export default function DispositionForm(props) {
     async function getItems() {
       //  alert(JSON.stringify(cat))
       const response = await fetch(
-        url+ '/subcategoryitems/' + cat + '/' + sct.value
+        url+ '/level3/' + cat + '/' + sct.value
       );
       const body = await response.json();
 
@@ -312,35 +288,7 @@ export default function DispositionForm(props) {
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
-            <Grid item>
-              <FormControl
-                variant="outlined"
-                className={classes.fieldContainer}
-              >
-           
-                <Autocomplete
-                  options={ticketTypes}
-                  getOptionLabel={option => option.label}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) => value.id === option.id}
-                  key={option => option.id}
-                  onChange={(event, value) => {
-                    setFieldValue('tickettype', value);
-                    props.setTicketType(value);
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select a Type"
-                      variant="outlined"
-                      name="tickettype"
-                    />
-                  )}
-                  name="tickettype"
-                />
-              </FormControl>
-            </Grid>
+            
             <Grid item>
               <FormControl
                 variant="outlined"

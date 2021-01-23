@@ -186,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: '',
+    callDispositionStatus: 'NotDisposed',
     callerNumber: '',
     breakStatus: ''
   });
