@@ -64,7 +64,7 @@ export default function FAQ({ }) {
                     id="panel1a-header"
                 >
                     <Typography className={classes.heading}>
-                        Question 1
+                        FAQ Sample 1
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -78,7 +78,7 @@ export default function FAQ({ }) {
                     id="panel1a-header"
                 >
                     <Typography className={classes.heading}>
-                        Question 2
+                    FAQ Sample 2
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -92,7 +92,7 @@ export default function FAQ({ }) {
                     id="panel1a-header"
                 >
                     <Typography className={classes.heading}>
-                        Question 3
+                    FAQ Sample 3
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
