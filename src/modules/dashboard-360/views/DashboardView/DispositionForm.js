@@ -458,11 +458,11 @@ export default function DispositionForm(props) {
             </Grid>
             <Grid item>
               <Field component={RadioGroup} name="type" row>
-                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
+                {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
-                  value="raisedIssue"
+                  value="open"
                   control={<Radio />}
-                  label="Raised Issue"
+                  label="Open"
                 />
                 <FormControlLabel
                   value="closed"
