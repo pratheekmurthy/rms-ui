@@ -9,6 +9,7 @@ import { setAccountType, setLoggedIn, setUserDetails } from './redux/action';
 import { ADMIN, USER } from './redux/constants';
 import routes from './routes';
 
+
 function Main({
   isLoggedIn,
   classes,
@@ -26,13 +27,54 @@ function Main({
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
-        // localStorage.clear();
-        const url='http://localhost:4000/auth/apiM/login'
-        const res = await Axios.post('/auth/user/login', {});
-        const obj = res.data.userObj;
-        setUserDetailsMain(obj);
-        setAccountTypeMain(obj.role === 'admin' ? ADMIN : USER);
-        setLoggedInMain(true);
+        if (localStorage.getItem('jwtToken')) {
+          console.log('inside the jwt')
+          var obj = {
+            UserID: 4,
+            AllowPublic: 0,
+            UserName: 'chaitra@grassrootsbpo.in',
+            EmployeeName: 'Chaitra (GRSSL)',
+            EmailID: 'c77e0350859f6255b2739876d6641a24247ece422294b75e99983defa2b70c44',
+            OTP: 262732,
+            tenetID: '1',
+            tenentId: 1,
+            tenentName: 'Grassroots',
+            roleids: '7',
+            role: 'Agent',
+            modules: 'Dashboard 360'
+          }
+          setUserDetailsMain(obj)
+          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+          setLoggedInMain(true);
+
+
+         var test = await Axios.post('localhost:4000/auth/apiM/verifyClient',{},{ headers: { Authorization:localStorage.getItem('jwtToken') } })
+          .then(response=> console.log(response))
+          .catch(error => console.log(error));
+ 
+
+
+          // var axios = require('axios');
+
+          // var config = {
+          //   method: 'post',
+          //   url: 'localhost:4000/auth/apiM/verifyClient',
+          //   headers: {
+          //     'Authorization': 'Bearer ' + localStorage.getItem('jwtToken')
+          //   }
+          // };
+
+          // axios(config)
+          //   .then(function (response) {
+          //     console.log(JSON.stringify(response.data));
+          //   })
+          //   .catch(function (error) {
+          //     console.log(error);
+          //   });
+
+        } else {
+          setLoggedInMain(false);
+        }
       } catch (error) {
         setLoggedInMain(false);
       } finally {
@@ -66,8 +108,8 @@ function Main({
       </div>
     </>
   ) : (
-    <RouteSwitch routes={filteredRoutes} isRoot redirectPath="/auth/login" />
-  );
+        <RouteSwitch routes={filteredRoutes} isRoot redirectPath="/auth/login" />
+      );
 }
 
 const mapStateToProps = state => ({

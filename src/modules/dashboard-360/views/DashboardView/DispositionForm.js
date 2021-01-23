@@ -185,7 +185,7 @@ export default function DispositionForm(props) {
     let config = {
       method: 'post',
 
-      url:'http://localhost:42004'+ UPDATE_CALL_STATUS + uniqueid,
+      url:UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -215,7 +215,7 @@ export default function DispositionForm(props) {
     var config = {
 
       method: 'put',
-      url: 'https://localhost:42004'+UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -242,8 +242,8 @@ export default function DispositionForm(props) {
     });
     // props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
-    props.removeFromQueue(props.AgentSipId, '9002');
-    props.addToQueue(props.agentSipID, '9002');
+    // props.removeFromQueue(props.AgentSipId, '9002');
+    // props.addToQueue(props.agentSipID, '9002');
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(
       localStorage.getItem('callStatusId'),
@@ -458,11 +458,11 @@ export default function DispositionForm(props) {
             </Grid>
             <Grid item>
               <Field component={RadioGroup} name="type" row>
-                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
+                {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
-                  value="raisedIssue"
+                  value="open"
                   control={<Radio />}
-                  label="Raised Issue"
+                  label="Open"
                 />
                 <FormControlLabel
                   value="closed"

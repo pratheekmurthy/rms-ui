@@ -326,24 +326,7 @@ const SOCKETENDPOINT = 'http://localhost:42002/';
              <Grid  container spacing={3}>
              <Grid item lg={6} md={6} xs={12}>
               <Grid item>
-              <div>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>
-                        Create caller details
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    {/* <Typography>Details</Typography> */}
-                    {/* <AgentTable/> */}
-                    <CreateCaller/>
-                </AccordionDetails>
-            </Accordion>
-               </div>
+            
               </Grid>
               </Grid>
              </Grid>
