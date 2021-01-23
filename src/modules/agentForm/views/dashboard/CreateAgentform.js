@@ -336,18 +336,25 @@ export default function DispositionForm(props) {
             <Grid item>
                <Field
                 className={classes.fieldContainer}
-                name="Agent Contact Number"
+                name="Agentcontact"
                 component={TextField}
                 variant="outlined"
                 multiline
                 
-                label="AgentNumber"
+                label="Agent Contact Number"
               />
             </Grid>
-              
-        
-         
-         
+            <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="location"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="Location"
+              />
+            </Grid>
           </Grid>
           <br />
 

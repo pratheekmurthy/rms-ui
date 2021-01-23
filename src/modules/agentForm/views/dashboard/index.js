@@ -13,6 +13,8 @@ import {
   AccordionDetails,
   Card,
   CardContent,
+  Container,
+  CardHeader,
   Box
 } from '@material-ui/core';
 import {
@@ -48,7 +50,7 @@ import {
 } from 'src/modules/dashboard-360/utils/columns-config';
 import CreateAgent from './CreateAgentform'
 import AgentTable from './AgentTable'
-import CreateCaller from './Createcaller'
+// import CreateCaller from './Createcaller'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -268,73 +270,37 @@ const SOCKETENDPOINT = 'http://localhost:42002/';
   }, [])
 
   return (
-    <>
-      <div className={classes.root}>
-        {/* <Box css={{ margin: '0.5rem' }}> */}
-          {/* <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="flex-start"
-            spacing={1}
-          > */}
-           <Grid container spacing={3}>
-             <Grid item lg={6} md={6} xs={12}>
-              <Grid item>
-              <div>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>
-                        Create Agents
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    {/* <Typography>Details</Typography> */}
+    // <>
+    <Container maxWidth={false}>
+        <div className={classes.root}>
+      <Grid container spacing={3}>
+       
+        <Grid item xs={12} sm={4}>
+        <div>
+       
+        <Card>
+                  <CardHeader title={'Create Agent'} />
                     <CreateAgent/>
-                </AccordionDetails>
-            </Accordion>
+                    </Card>
+                  
                </div>
-              </Grid>
-              </Grid>
-              <Grid item lg={6} md={6} xs={12}>
-              <Grid item>
-              <div>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography className={classes.heading}>
-                        View Agents
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    {/* <Typography>Details</Typography> */}
-                    {/* <CreateCaller/> */}
-                    <AgentTable/>
-                </AccordionDetails>
-            </Accordion>
+          {/* <Paper className={classes.paper}>xs=12 sm=6</Paper> */}
+        </Grid>
+        <Grid item xs={12} sm={8}>
+        <div>
+        <Card>
+                  <CardHeader title={'Agent Details'} />
+        <AgentTable/>
+           </Card>
                </div>
-              </Grid>
-              </Grid>
-             </Grid>
-             <Grid  container spacing={3}>
-             <Grid item lg={6} md={6} xs={12}>
-              <Grid item>
-            
-              </Grid>
-              </Grid>
-             </Grid>
-        {/* </Box> */}
-
-      </div>
-     
-    </>
+         
+        </Grid>
+      
+      </Grid>
+    </div>
+  
+     </Container>
+    // </>
   );
 };
 

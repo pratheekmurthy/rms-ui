@@ -58,6 +58,9 @@ export default function DispositionForm(props) {
     value: '',
     label: ''
   });
+  const issuetype ={
+    
+  }
   // useEffect(() => {
   //   let unmounted = false;
   //   async function getItems() {
@@ -288,24 +291,28 @@ export default function DispositionForm(props) {
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-        tickettype: yup
+        issuetype: yup
           .object()
-          .required('Please select a Type')
-          .typeError('Please select a valid Type'),
-        category: yup
+          .required('Please select a Issue Type')
+          .typeError('Please select a valid Issue Type'),
+        devicetype: yup
           .object()
-          .required('Please select a  category')
-          .typeError('Please select a valid  category'),
-        subcategory: yup
+          .required('Please select a  Device Type')
+          .typeError('Please select a valid  Device Type'),
+        ostype: yup
           .object()
-          .required('Please select a  subcategory')
-          .typeError('Please select a valid  subcategory'),
-        subcategoryitem: yup
+          .required('Please select a OS Type ')
+          .typeError('Please select a valid  OS Type'),
+        connectivitytype: yup
           .object()
-          .required('Please select a  subcategoryitem')
-          .typeError('Please select a valid  subcategoryitem'),
-        comments: yup.string().required('Please Enter Comments'),
-        type: yup.string().required('Please Enter type')
+          .required('Please select a  Internet Connectivity Type')
+          .typeError('Please select a valid  Internet Connectivity Type'),
+        speedtype: yup
+          .object()
+          .required('Please select a Internet Speed ')
+          .typeError('Please select a valid  Internet Speed'),
+          issuedescription: yup.string().required('Please Enter Issue Description'),
+    solution: yup.string().required('Please Enter Response /Solution Provided')
       })}
     >
       {({ setFieldValue }) => (
@@ -314,48 +321,217 @@ export default function DispositionForm(props) {
           <Grid item>
               <Field
                 className={classes.fieldContainer}
-                name="Agent Name"
+                name="CallerName"
                 component={TextField}
                 variant="outlined"
                 multiline
                 
-                label="AgentName"
+                label="Caller Name"
               />
               </Grid>
                <Grid item>
                <Field
                 className={classes.fieldContainer}
-                name="Agent Email"
+                name="callerapplication"
                 component={TextField}
                 variant="outlined"
                 multiline
                 
-                label="AgentEmail"
+                label="Caller Application"
+              />
+            </Grid>
+
+            <Grid item>
+            
+
+             <Autocomplete
+               options={issuetype}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+            //    onChange={(event, value) => {
+            //      setFieldValue('subcategory', value);
+            //      props.setSubCategory(value);
+            //      getSubCategoryItems(
+            //        formRef.current.values.category.value,
+            //        value
+            //      );
+            //    }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Issue Type"
+                   variant="outlined"
+                   name="issuetype"
+                 />
+               )}
+               name="issuetype"
+             />
+           </Grid>
+
+
+           <Grid item>
+             
+
+             <Autocomplete
+               options={devicetype}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+            //    onChange={(event, value) => {
+            //      setFieldValue('subcategory', value);
+            //      props.setSubCategory(value);
+            //      getSubCategoryItems(
+            //        formRef.current.values.category.value,
+            //        value
+            //      );
+            //    }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Device Type"
+                   variant="outlined"
+                   name="devicetype"
+                 />
+               )}
+               name="devicetype"
+             />
+           </Grid>
+
+
+           <Grid item>
+             
+
+             <Autocomplete
+               options={ostype}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+            //    onChange={(event, value) => {
+            //      setFieldValue('subcategory', value);
+            //      props.setSubCategory(value);
+            //      getSubCategoryItems(
+            //        formRef.current.values.category.value,
+            //        value
+            //      );
+            //    }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a OS Type"
+                   variant="outlined"
+                   name="ostype"
+                 />
+               )}
+               name="ostype"
+             />
+           </Grid>
+
+           <Grid item>
+             
+
+             <Autocomplete
+               options={connectivitytype}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+            //    onChange={(event, value) => {
+            //      setFieldValue('subcategory', value);
+            //      props.setSubCategory(value);
+            //      getSubCategoryItems(
+            //        formRef.current.values.category.value,
+            //        value
+            //      );
+            //    }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Internet Connectivity Type"
+                   variant="outlined"
+                   name="connectivitytype"
+                 />
+               )}
+               name="connectivitytype"
+             />
+           </Grid>
+
+           <Grid item>
+             
+
+             <Autocomplete
+               options={speedtype}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+            //    onChange={(event, value) => {
+            //      setFieldValue('subcategory', value);
+            //      props.setSubCategory(value);
+            //      getSubCategoryItems(
+            //        formRef.current.values.category.value,
+            //        value
+            //      );
+            //    }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Internet Speed"
+                   variant="outlined"
+                   name="speedtype"
+                 />
+               )}
+               name="speedtype"
+             />
+           </Grid>
+
+           <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="issuedescription"
+                component={TextField}
+                variant="outlined"
+                multiline
+                rows={2}
+                label="Issue Description"
               />
             </Grid>
             <Grid item>
                <Field
                 className={classes.fieldContainer}
-                name="Agent Contact Number"
+                name="solution"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
-                label="AgentNumber"
-              />
-            </Grid>
-            <Grid item>
-               <Field
-                className={classes.fieldContainer}
-                name="Location"
-                component={TextField}
-                variant="outlined"
-                multiline
-                
-                label="location"
+                rows={2}
+                label="Response /Solution Provided"
               />
             </Grid>
           
+        
+            <Grid item>
+              <Field component={RadioGroup} name="type" row>
+                {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
+                <FormControlLabel
+                  value="open"
+                  control={<Radio />}
+                  label="Open"
+                />
+                <FormControlLabel
+                  value="closed"
+                  control={<Radio />}
+                  label="Closed"
+                />
+              </Field>
+            </Grid>
          
           </Grid>
           <br />
