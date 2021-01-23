@@ -58,68 +58,67 @@ export default function DispositionForm(props) {
     value: '',
     label: ''
   });
-  const url ="http://192.168.3.45:8083"
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(url + '/categories');
-      const body = await response.json();
+  // useEffect(() => {
+  //   let unmounted = false;
+  //   async function getItems() {
+  //     const response = await fetch(config.APIS_URL + '/categories');
+  //     const body = await response.json();
 
-      if (!unmounted) {
-        body.data[0]
-          ? setCategory({
-            label: body.data[0].category,
-            value: body.data[0]._id
-          })
-          : setCategory({});
+  //     if (!unmounted) {
+  //       body.data[0]
+  //         ? setCategory({
+  //           label: body.data[0].category,
+  //           value: body.data[0]._id
+  //         })
+  //         : setCategory({});
 
-        setCategories(
-          body.data.map(({ _id, category }) => ({
-            label: category,
-            value: _id
-          }))
-        );
-        setLoading(false);
-      }
-    }
-    getItems();
+  //       setCategories(
+  //         body.data.map(({ _id, category }) => ({
+  //           label: category,
+  //           value: _id
+  //         }))
+  //       );
+  //       setLoading(false);
+  //     }
+  //   }
+  //   getItems();
 
-    return () => {
-      unmounted = true;
-    };
-  }, []);
-  useEffect(() => {
-    let unmounted = false;
-    async function getItems() {
-      const response = await fetch(url + '/tickettypes');
-      const body = await response.json();
-      if (!unmounted) {
-        setTicketTypes(
-          body.data.map(({ _id, ticketType }) => ({
-            label: ticketType,
-            value: _id
-          }))
-        );
-        setLoading(false);
+  //   return () => {
+  //     unmounted = true;
+  //   };
+  // }, []);
+  // useEffect(() => {
+  //   let unmounted = false;
+  //   async function getItems() {
+  //     const response = await fetch(config.APIS_URL + '/tickettypes');
+  //     const body = await response.json();
+  //     if (!unmounted) {
+  //       setTicketTypes(
+  //         body.data.map(({ _id, ticketType }) => ({
+  //           label: ticketType,
+  //           value: _id
+  //         }))
+  //       );
+  //       setLoading(false);
 
-        body.data[0]
-          ? setTicketType({
-            label: body.data[0].ticketType,
-            value: body.data[0]._id
-          })
-          : setTicketType({});
-      }
-    }
-    getItems();
-    return () => {
-      unmounted = true;
-    };
-  }, []);
+  //       body.data[0]
+  //         ? setTicketType({
+  //           label: body.data[0].ticketType,
+  //           value: body.data[0]._id
+  //         })
+  //         : setTicketType({});
+  //     }
+  //   }
+  //   getItems();
+  //   return () => {
+  //     unmounted = true;
+  //   };
+  // }, []);
   const getSubCategories = cat => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(
-        url + '/subcategories/' + cat.value
+        config.APIS_URL + '/subcategories/' + cat.value
       );
       const body = await response.json();
       if (!unmounted) {
@@ -150,7 +149,7 @@ export default function DispositionForm(props) {
     async function getItems() {
       //  alert(JSON.stringify(cat))
       const response = await fetch(
-        url+ '/subcategoryitems/' + cat + '/' + sct.value
+        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct.value
       );
       const body = await response.json();
 
@@ -312,165 +311,52 @@ export default function DispositionForm(props) {
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
-            <Grid item>
-              <FormControl
-                variant="outlined"
-                className={classes.fieldContainer}
-              >
-           
-                <Autocomplete
-                  options={ticketTypes}
-                  getOptionLabel={option => option.label}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) => value.id === option.id}
-                  key={option => option.id}
-                  onChange={(event, value) => {
-                    setFieldValue('tickettype', value);
-                    props.setTicketType(value);
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select a Type"
-                      variant="outlined"
-                      name="tickettype"
-                    />
-                  )}
-                  name="tickettype"
-                />
-              </FormControl>
-            </Grid>
-            <Grid item>
-              <FormControl
-                variant="outlined"
-                className={classes.fieldContainer}
-              >
-               
-
-                <Autocomplete
-                  options={categories}
-                  getOptionLabel={option => option.label}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) =>
-                    value.label === option.label
-                  }
-                  key={autoCompleteKey}
-                  onChange={(event, value) => {
-                    setFieldValue('category', value);
-
-                    props.setCategory(value);
-
-                    getSubCategories(value);
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select a category"
-                      variant="outlined"
-                      name="category"
-                    />
-                  )}
-                  name="category"
-                />
-              </FormControl>
-            </Grid>
-            {subCategories.length > 0 ? (
-              <Grid item>
-             
-
-                <Autocomplete
-                  options={subCategories}
-                  getOptionLabel={option => option.label}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) => value.id === option.id}
-                  key={autoCompleteKey}
-                  onChange={(event, value) => {
-                    setFieldValue('subcategory', value);
-                    props.setSubCategory(value);
-                    getSubCategoryItems(
-                      formRef.current.values.category.value,
-                      value
-                    );
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select a sub category"
-                      variant="outlined"
-                      name="subcategory"
-                    />
-                  )}
-                  name="subcategory"
-                />
-              </Grid>
-            ) : (
-                <></>
-              )}
-            {subCategoryItems.length > 0 ? (
-              <Grid item>
-                <FormControl
-                  variant="outlined"
-                  className={classes.fieldContainer}
-                >
-              
-
-                  <Autocomplete
-                    options={subCategoryItems}
-                    getOptionLabel={option => option.label}
-                    // style={{ width: 400, overflow: "hidden" }}
-                    getOptionSelected={(option, value) =>
-                      value.id === option.id
-                    }
-                    key={autoCompleteKey}
-                    onChange={(event, value) => {
-                      setFieldValue('subcategoryitem', value);
-                      props.setSubCategoryItem(value);
-                    }}
-                    renderInput={params => (
-                      <Field
-                        component={TextField}
-                        {...params}
-                        label="Select a sub category item"
-                        variant="outlined"
-                        name="subcategoryitem"
-                      />
-                    )}
-                    name="subcategoryitem"
-                  />
-                </FormControl>
-              </Grid>
-            ) : (
-                <></>
-              )}
-            <Grid item>
+          <Grid item>
               <Field
                 className={classes.fieldContainer}
-                name="comments"
+                name="Agent Name"
                 component={TextField}
                 variant="outlined"
                 multiline
-                rows={2}
-                label="Comments"
+                
+                label="AgentName"
+              />
+              </Grid>
+               <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="Agent Email"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="AgentEmail"
               />
             </Grid>
             <Grid item>
-              <Field component={RadioGroup} name="type" row>
-                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
-                <FormControlLabel
-                  value="raisedIssue"
-                  control={<Radio />}
-                  label="Raised Issue"
-                />
-                <FormControlLabel
-                  value="closed"
-                  control={<Radio />}
-                  label="Closed"
-                />
-              </Field>
+               <Field
+                className={classes.fieldContainer}
+                name="Agent Contact Number"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="AgentNumber"
+              />
             </Grid>
+            <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="Location"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="location"
+              />
+            </Grid>
+          
+         
           </Grid>
           <br />
 

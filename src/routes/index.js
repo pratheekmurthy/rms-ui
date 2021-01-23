@@ -36,19 +36,19 @@ export default [
     crumb: 'Telephony',
     requiresAuth: true
   },
-
+  {
+    path: '/agent',
+    routes: agentRoutes,
+    key: 'dashboardagent',
+    component:agentform,
+    requiresAuth: true
+  },
   {
     path: '/auth',
     routes: authRoutes,
     key: 'auth',
     component: auth,
     requiresAuth: false
-  },
-  {
-    path: '/agent',
-    routes: agentform,
-    key: 'agentform',
-    component:agentform,
-    requiresAuth: false
   }
+  
 ];

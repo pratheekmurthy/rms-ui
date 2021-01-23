@@ -1,14 +1,13 @@
-import { distributorOrders, distributorInvoices } from './reducers';
-import { searchDistributor } from '../../../redux/reducers';
-export default function getDashboardModule() {
+// import { distributorOrders, distributorInvoices } from './reducers';
+
+export default function getAgentModule() {
   return {
     // Unique id of the module
-    id: 'dash360',
+    id: 'dashboardagent',
     // Maps the Store key to the reducer
     reducerMap: {
-      distributorOrders,
-      distributorInvoices,
-      searchDistributor
+      // distributorOrders,
+      // distributorInvoices
     }
     // This module uses redux-saga middleware
     // This property will be be used by the SagaExtension

@@ -311,6 +311,50 @@ export default function DispositionForm(props) {
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
+          <Grid item>
+              <Field
+                className={classes.fieldContainer}
+                name="Agent Name"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="AgentName"
+              />
+              </Grid>
+               <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="Agent Email"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="AgentEmail"
+              />
+            </Grid>
+            <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="Agent Contact Number"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="AgentNumber"
+              />
+            </Grid>
+            <Grid item>
+               <Field
+                className={classes.fieldContainer}
+                name="Location"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="location"
+              />
+            </Grid>
             <Grid item>
               <FormControl
                 variant="outlined"
@@ -331,12 +375,12 @@ export default function DispositionForm(props) {
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a Type"
+                      label="Select a Issue Type"
                       variant="outlined"
-                      name="tickettype"
+                      name="issuetype"
                     />
                   )}
-                  name="tickettype"
+                  name="issuetype"
                 />
               </FormControl>
             </Grid>
@@ -366,16 +410,16 @@ export default function DispositionForm(props) {
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a category"
+                      label="Select OS type"
                       variant="outlined"
-                      name="category"
+                      name="ostype"
                     />
                   )}
-                  name="category"
+                  name="ostype"
                 />
               </FormControl>
             </Grid>
-            {subCategories.length > 0 ? (
+           
               <Grid item>
              
 
@@ -397,18 +441,44 @@ export default function DispositionForm(props) {
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a sub category"
+                      label="Select a Internet Connectivity Type"
                       variant="outlined"
-                      name="subcategory"
+                      name="internettype"
                     />
                   )}
-                  name="subcategory"
+                  name="internettype"
                 />
               </Grid>
-            ) : (
-                <></>
-              )}
-            {subCategoryItems.length > 0 ? (
+              <Grid item>
+             
+
+             <Autocomplete
+               options={subCategories}
+               getOptionLabel={option => option.label}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+               onChange={(event, value) => {
+                 setFieldValue('subcategory', value);
+                 props.setSubCategory(value);
+                 getSubCategoryItems(
+                   formRef.current.values.category.value,
+                   value
+                 );
+               }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Status"
+                   variant="outlined"
+                   name="Status"
+                 />
+               )}
+               name="Status"
+             />
+           </Grid>
+           
               <Grid item>
                 <FormControl
                   variant="outlined"
@@ -432,44 +502,70 @@ export default function DispositionForm(props) {
                       <Field
                         component={TextField}
                         {...params}
-                        label="Select a sub category item"
+                        label="Select a Device Type"
                         variant="outlined"
-                        name="subcategoryitem"
+                        name="devicetype"
                       />
                     )}
-                    name="subcategoryitem"
+                    name="devicetype"
                   />
                 </FormControl>
               </Grid>
-            ) : (
-                <></>
-              )}
-            <Grid item>
+              <Grid item>
+                <FormControl
+                  variant="outlined"
+                  className={classes.fieldContainer}
+                >
+              
+
+                  <Autocomplete
+                    options={subCategoryItems}
+                    getOptionLabel={option => option.label}
+                    // style={{ width: 400, overflow: "hidden" }}
+                    getOptionSelected={(option, value) =>
+                      value.id === option.id
+                    }
+                    key={autoCompleteKey}
+                    onChange={(event, value) => {
+                      setFieldValue('subcategoryitem', value);
+                      props.setSubCategoryItem(value);
+                    }}
+                    renderInput={params => (
+                      <Field
+                        component={TextField}
+                        {...params}
+                        label="Select a Internet Speed"
+                        variant="outlined"
+                        name="InternetSpeed"
+                      />
+                    )}
+                    name="InternetSpeed"
+                  />
+                </FormControl>
+              </Grid>   
+              <Grid item>
               <Field
                 className={classes.fieldContainer}
-                name="comments"
+                name="IssueDescription"
                 component={TextField}
                 variant="outlined"
                 multiline
                 rows={2}
-                label="Comments"
+                label="Issue Description"
               />
             </Grid>
             <Grid item>
-              <Field component={RadioGroup} name="type" row>
-                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
-                <FormControlLabel
-                  value="raisedIssue"
-                  control={<Radio />}
-                  label="Raised Issue"
-                />
-                <FormControlLabel
-                  value="closed"
-                  control={<Radio />}
-                  label="Closed"
-                />
-              </Field>
+              <Field
+                className={classes.fieldContainer}
+                name="SolutionProvided"
+                component={TextField}
+                variant="outlined"
+                multiline
+                rows={2}
+                label="Response /Solution Provided"
+              />
             </Grid>
+         
           </Grid>
           <br />
 

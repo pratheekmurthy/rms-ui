@@ -206,6 +206,11 @@ const TopBar = ({
               Telephony
             </Link>
           </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/agent/dashboard" className="color-white">
+              Agents
+            </Link>
+          </Typography>
           {viewAccess === -1 ? (
             ''
           ) : (

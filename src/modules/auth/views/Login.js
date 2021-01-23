@@ -102,7 +102,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url='http://localhost:4000/auth/apiM/login'
+      const url = 'http://localhost:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
       console.log("values", values)
       const res = await Axios.post(url, values);
@@ -120,26 +120,27 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setError(true);
     }
   }
- 
-  async function getOtp (e){
- 
-console.log("values", username)
- 
-console.log("password", password)
-var userData = {
-    userName: username,
-    password: e.target.value,
-  }
-const url='http://localhost:4000/auth/apiM/sendOTP'
-  
 
-const res = await Axios.post(url, userData);
-console.log("login api", res.data)
-setEnable(false)
-    
-   
-  
-   
+  async function getOtp(e) {
+
+    console.log("values", username)
+
+    console.log("password", password)
+    var userData = {
+      userName: username,
+      password: e.target.value,
+    }
+    const url = 'http://localhost:4000/auth/apiM/sendOTP'
+
+
+    const res = await Axios.post(url, userData);
+    console.log("login api", res.data)
+    if (res.data.statusCode === 200) {
+      setEnable(false)
+    }
+
+
+
   }
 
   return (
@@ -174,8 +175,8 @@ setEnable(false)
                 password: '',
                 role: 'Agent',
                 AgentType: 'Inbound',
-                AgentSIPID: '9999', 
-                OTP:''
+                AgentSIPID: '9999',
+                OTP: ''
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -199,17 +200,15 @@ setEnable(false)
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);
               }}
-              onBlur={e =>{ 
+              onBlur={e => {
                 console.log("onblur")
-                if(e.target.name === "password")
-              {
-          setPassword(e.target.value)
-              }
-              if(e.target.name === "email")
-              {
-          setUsername(e.target.value)
-              }
-             }}
+                if (e.target.name === "password") {
+                  setPassword(e.target.value)
+                }
+                if (e.target.name === "email") {
+                  setUsername(e.target.value)
+                }
+              }}
             >
               {({
                 errors,
@@ -246,7 +245,7 @@ setEnable(false)
                     onBlur={e => {
                       setPassword(e.target.value)
                       getOtp(e)
-                      }}
+                    }}
                     onChange={handleChange}
                     type="password"
                     value={values.password}
@@ -292,10 +291,10 @@ setEnable(false)
                     value={values.AgentSIPID}
                     variant="outlined"
                   /> */}
-                {enable===false ? <ThemeProvider theme={theme}>
-  <Typography variant="h6">OTP Sent Sucessfully</Typography>
-</ThemeProvider>:<></>}
-                    <TextField
+                  {enable === false ? <ThemeProvider theme={theme}>
+                    <Typography variant="h6">OTP Sent Sucessfully</Typography>
+                  </ThemeProvider> : <></>}
+                  <TextField
                     error={Boolean(touched.OTP && errors.OTP)}
                     fullWidth
                     helperText={touched.OTP && errors.OTP}
