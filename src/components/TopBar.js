@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import config from '../modules/ticketing/views/config.json';
+// import config from '../modules/ticketing/views/config.json';
 import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
@@ -100,57 +100,57 @@ const TopBar = ({
   const [notifications] = useState([]);
   const [searchText, setSearchText] = useState('');
   useEffect(() => {
-    const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(repos => {
-        setRole(repos.role.role);
-        setCreateAccess(
-          parseInt(
-            (
-              repos.data.filter(
-                access => access.functionalityId === '1'
-              )[0] || { accessLevelId: -1 }
-            ).accessLevelId
-          )
-        );
-        setViewAccess(
-          parseInt(
-            (
-              repos.data.filter(
-                access => access.functionalityId === '2'
-              )[0] || { accessLevelId: -1 }
-            ).accessLevelId
-          )
-        );
-        setEditAccess(
-          parseInt(
-            (
-              repos.data.filter(
-                access => access.functionalityId === '3'
-              )[0] || { accessLevelId: -1 }
-            ).accessLevelId
-          )
-        );
-        setAssignAccess(
-          parseInt(
-            (
-              repos.data.filter(
-                access => access.functionalityId === '4'
-              )[0] || { accessLevelId: -1 }
-            ).accessLevelId
-          )
-        );
-        setReportsAccess(
-          parseInt(
-            (
-              repos.data.filter(
-                access => access.functionalityId === '5'
-              )[0] || { accessLevelId: -1 }
-            ).accessLevelId
-          )
-        );
-      });
+    // const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
+    // fetch(apiUrl)
+    //   .then(res => res.json())
+    //   .then(repos => {
+    //     setRole(repos.role.role);
+    //     setCreateAccess(
+    //       parseInt(
+    //         (
+    //           repos.data.filter(
+    //             access => access.functionalityId === '1'
+    //           )[0] || { accessLevelId: -1 }
+    //         ).accessLevelId
+    //       )
+    //     );
+    //     setViewAccess(
+    //       parseInt(
+    //         (
+    //           repos.data.filter(
+    //             access => access.functionalityId === '2'
+    //           )[0] || { accessLevelId: -1 }
+    //         ).accessLevelId
+    //       )
+    //     );
+    //     setEditAccess(
+    //       parseInt(
+    //         (
+    //           repos.data.filter(
+    //             access => access.functionalityId === '3'
+    //           )[0] || { accessLevelId: -1 }
+    //         ).accessLevelId
+    //       )
+    //     );
+    //     setAssignAccess(
+    //       parseInt(
+    //         (
+    //           repos.data.filter(
+    //             access => access.functionalityId === '4'
+    //           )[0] || { accessLevelId: -1 }
+    //         ).accessLevelId
+    //       )
+    //     );
+    //     setReportsAccess(
+    //       parseInt(
+    //         (
+    //           repos.data.filter(
+    //             access => access.functionalityId === '5'
+    //           )[0] || { accessLevelId: -1 }
+    //         ).accessLevelId
+    //       )
+    //     );
+    //   });
   }, []);
   const updateSearchText = evt => {
     setSearchText(evt.target.value);
@@ -176,7 +176,7 @@ const TopBar = ({
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
-          {/* <Logo /> */}
+          <Logo />
         </RouterLink>
         <div className={classes.search}>
           <div className={classes.searchIcon}>
