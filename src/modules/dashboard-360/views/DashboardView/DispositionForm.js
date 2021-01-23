@@ -58,67 +58,68 @@ export default function DispositionForm(props) {
     value: '',
     label: ''
   });
-  // useEffect(() => {
-  //   let unmounted = false;
-  //   async function getItems() {
-  //     const response = await fetch(config.APIS_URL + '/categories');
-  //     const body = await response.json();
+  const url ="http://192.168.3.45:8083"
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(url + '/categories');
+      const body = await response.json();
 
-  //     if (!unmounted) {
-  //       body.data[0]
-  //         ? setCategory({
-  //           label: body.data[0].category,
-  //           value: body.data[0]._id
-  //         })
-  //         : setCategory({});
+      if (!unmounted) {
+        body.data[0]
+          ? setCategory({
+            label: body.data[0].category,
+            value: body.data[0]._id
+          })
+          : setCategory({});
 
-  //       setCategories(
-  //         body.data.map(({ _id, category }) => ({
-  //           label: category,
-  //           value: _id
-  //         }))
-  //       );
-  //       setLoading(false);
-  //     }
-  //   }
-  //   getItems();
+        setCategories(
+          body.data.map(({ _id, category }) => ({
+            label: category,
+            value: _id
+          }))
+        );
+        setLoading(false);
+      }
+    }
+    getItems();
 
-  //   return () => {
-  //     unmounted = true;
-  //   };
-  // }, []);
-  // useEffect(() => {
-  //   let unmounted = false;
-  //   async function getItems() {
-  //     const response = await fetch(config.APIS_URL + '/tickettypes');
-  //     const body = await response.json();
-  //     if (!unmounted) {
-  //       setTicketTypes(
-  //         body.data.map(({ _id, ticketType }) => ({
-  //           label: ticketType,
-  //           value: _id
-  //         }))
-  //       );
-  //       setLoading(false);
+    return () => {
+      unmounted = true;
+    };
+  }, []);
+  useEffect(() => {
+    let unmounted = false;
+    async function getItems() {
+      const response = await fetch(url + '/tickettypes');
+      const body = await response.json();
+      if (!unmounted) {
+        setTicketTypes(
+          body.data.map(({ _id, ticketType }) => ({
+            label: ticketType,
+            value: _id
+          }))
+        );
+        setLoading(false);
 
-  //       body.data[0]
-  //         ? setTicketType({
-  //           label: body.data[0].ticketType,
-  //           value: body.data[0]._id
-  //         })
-  //         : setTicketType({});
-  //     }
-  //   }
-  //   getItems();
-  //   return () => {
-  //     unmounted = true;
-  //   };
-  // }, []);
+        body.data[0]
+          ? setTicketType({
+            label: body.data[0].ticketType,
+            value: body.data[0]._id
+          })
+          : setTicketType({});
+      }
+    }
+    getItems();
+    return () => {
+      unmounted = true;
+    };
+  }, []);
   const getSubCategories = cat => {
     let unmounted = false;
     async function getItems() {
       const response = await fetch(
-        config.APIS_URL + '/subcategories/' + cat.value
+        url + '/subcategories/' + cat.value
       );
       const body = await response.json();
       if (!unmounted) {
@@ -149,7 +150,7 @@ export default function DispositionForm(props) {
     async function getItems() {
       //  alert(JSON.stringify(cat))
       const response = await fetch(
-        config.APIS_URL + '/subcategoryitems/' + cat + '/' + sct.value
+        url+ '/subcategoryitems/' + cat + '/' + sct.value
       );
       const body = await response.json();
 
@@ -184,7 +185,7 @@ export default function DispositionForm(props) {
     let config = {
       method: 'post',
 
-      url:'http://localhost:42004'+ UPDATE_CALL_STATUS + uniqueid,
+      url:UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -214,7 +215,7 @@ export default function DispositionForm(props) {
     var config = {
 
       method: 'put',
-      url: 'https://localhost:42004'+UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -241,8 +242,8 @@ export default function DispositionForm(props) {
     });
     // props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
-    props.removeFromQueue(props.AgentSipId, '9002');
-    props.addToQueue(props.agentSipID, '9002');
+    // props.removeFromQueue(props.AgentSipId, '9002');
+    // props.addToQueue(props.agentSipID, '9002');
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(
       localStorage.getItem('callStatusId'),
@@ -457,11 +458,11 @@ export default function DispositionForm(props) {
             </Grid>
             <Grid item>
               <Field component={RadioGroup} name="type" row>
-                <FormControlLabel value="FCR" control={<Radio />} label="FCR" />
+                {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
-                  value="raisedIssue"
+                  value="open"
                   control={<Radio />}
-                  label="Raised Issue"
+                  label="Open"
                 />
                 <FormControlLabel
                   value="closed"

@@ -186,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: 'NotDisposed',
+    callDispositionStatus: '',
     callerNumber: '',
     breakStatus: ''
   });
@@ -236,10 +236,9 @@ const Dashboard = ({
   function getALF() {
     const axios = require('axios');
     let data = '';
-    let u = 'http://localhost:42004'
     let config = {
       method: 'get',
-      url: u + GET_INTERACTION_BY_AGENT_SIP_ID + agent.AgentSipId + '',
+      url: GET_INTERACTION_BY_AGENT_SIP_ID + agent.AgentSipId + '',
       headers: {},
       data: data
     };
@@ -271,7 +270,7 @@ const Dashboard = ({
       callType: callType,
       callStatus: callStatus,
       callEvent: callEvent,
-      callDispositionStatus: "NotDisposed",
+      callDispositionStatus: callDispositionStatus,
       callerNumber: callerNumber,
       breakStatus: breakStatus
     });
@@ -375,7 +374,7 @@ const Dashboard = ({
     };
     var config = {
       method: 'put',
-      url: "http://localhost:42004" + UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url:  UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -392,8 +391,8 @@ const Dashboard = ({
   }
 
   function getAgentCallStatus(agentSipID) {
+    console.log('calling the', agentSipID)
     var axios = require('axios');
-    var u = 'https://192.168.3.45:42004'
     var config = {
       method: 'get',
       url: GET_CURRENT_STATUS_BY_AGENT_SIP_ID + agentSipID,
@@ -405,7 +404,6 @@ const Dashboard = ({
 
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
-
 
           setCurrentCallDetails(
             response.data[0]._id,
@@ -483,7 +481,7 @@ const Dashboard = ({
 
 
   async function disProfileByNum(mobile) {
-    mobile = mobile.substring(1);
+   
     const axios = require('axios');
 
     let config = {
@@ -563,21 +561,21 @@ const Dashboard = ({
       console.log('Inside the NA');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '9002');
+        addToQueue(agent.AgentSipId, '5000');
       }
     }
     if (BreakStatus === 'IN') {
       console.log('Inside the IN');
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '9002');
+        addToQueue(agent.AgentSipId, '5000');
       }
     }
     if (BreakStatus === 'OUT') {
       console.log('Inside the OUT');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        removeFromQueue(agent.AgentSipId, '9002');
+        removeFromQueue(agent.AgentSipId, '5000');
       }
     }
 
@@ -645,15 +643,57 @@ const Dashboard = ({
       )
     );
     setLoadingDetails(false);
-
-    socket.on('AstriskEventBridgeOutbound', data => {
-      var Channel1 = data.Channel1;
-      var agentExtension = Channel1.substring(4, 8);
+    socket.on('ringing1', data => {
+      
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
-        console.log('AstriskEventBridgeOutbound', data);
+        console.log('ringing1', data)
+      //   console.log('AstriskEventBridgeOutbound', data);
+     
+        // setCurrentCallDetails(
+        //   localStorage.getItem('callStatusId'),
+        //   data.Uniqueid,
+        //   agent.AgentType,
+        //   'connected',
+        //   'Bridge',
+        //   'NotDisposed',
+        //   '',
+        //   localStorage.getItem('breakStatus')
+        // );
+      }
+    });
+
+    socket.on('ringing2', data => {
+     
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        console.log('ringing2', data)
+        localStorage.setItem('callUniqueId', data.event.Uniqueid)
+      // //   console.log('AstriskEventBridgeOutbound', data);
+ 
+      //   setCurrentCallDetails(
+      //     localStorage.getItem('callStatusId'),
+      //     localStorage.getItem('callUniqueId'),
+      //     agent.AgentType,
+      //     'connected',
+      //     'Bridge',
+      //     'NotDisposed',
+      //     data.contactNumber,
+      //     localStorage.getItem('breakStatus')
+      //   );
+      }
+    });
+    socket.on('connected', data => {
+      // console.log('connected', data)
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // getInitialData();
+        // console.log('AstriskEventBridgeInbound', data);
         setCurrentCallDetails(
           localStorage.getItem('callStatusId'),
-          data.Uniqueid1,
+          localStorage.getItem('callUniqueId'),
           agent.AgentType,
           'connected',
           'Bridge',
@@ -661,30 +701,17 @@ const Dashboard = ({
           data.CallerID1,
           localStorage.getItem('breakStatus')
         );
+        // removeFromQueue(agent.AgentSipId, '5000');
       }
     });
-    socket.on('AstriskEventBridgeInbound', data => {
-      if (data.CallerID2 === agent.AgentSipId) {
-        console.log('AstriskEventBridgeInbound', data);
-        setCurrentCallDetails(
-          localStorage.getItem('callStatusId'),
-          data.Uniqueid1,
-          agent.AgentType,
-          'connected',
-          'Bridge',
-          'NotDisposed',
-          data.CallerID1,
-          localStorage.getItem('breakStatus')
-        );
-        removeFromQueue(agent.AgentSipId, '9002');
-      }
-    });
-    socket.on('AstriskEventHangup', data => {
-      var str = data.Channel;
-      var agentsipid = str.substring(4, 8);
-      console.log('agentsipid', agentsipid);
-      if (agentsipid === agent.AgentSipId) {
-        console.log('AstriskEventHangup', data);
+    socket.on('hangup', data => {
+      console.log('hangup', data);
+      // var str = data.Channel;
+      // var agentsipid = str.substring(4, 8);
+      // console.log('agentsipid', agentsipid);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // console.log('AstriskEventHangup', data);
         setCurrentCallDetails(
           localStorage.getItem('callStatusId'),
           localStorage.getItem('callUniqueId'),
@@ -698,9 +725,9 @@ const Dashboard = ({
       }
     });
     return () => {
-      socket.off('AstriskEventBridgeOutbound');
-      socket.off('AstriskEventBridgeInbound');
-      socket.off('AstriskEventHangup');
+      socket.off('ringing');
+      socket.off('connected');
+      socket.off('hangup');
     };
   }, []);
 
@@ -736,7 +763,7 @@ const Dashboard = ({
 
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
-      {/* {currentCall.callStatus === 'connected' ? ( */}
+      {currentCall.callStatus === 'connected' ? (
       <div>
 
         <Box
@@ -751,7 +778,7 @@ const Dashboard = ({
             </Typography>
         </Box>{' '}
       </div>
-      {/* ) : null} */}
+       ) : null} 
       {currentCall.callDispositionStatus === 'NotDisposed' &&
         currentCall.callStatus === 'disconnected' ? (
           <div>
@@ -811,7 +838,7 @@ const Dashboard = ({
             <Grid item lg={6} md={6} xs={12}>
               <Grid item>
                 <Card>
-                  <CardHeader title={'Distributor details'} />
+                  <CardHeader title={'Caller details'} />
                   {rootData[0].data ? (
                     <div>
                       <DealerCard
@@ -824,12 +851,12 @@ const Dashboard = ({
                       />
                     </div>
                   ) : (
-                      <CommonAlert text="Unable to get distributor details" />
+                      <CommonAlert text="Unable to get caller details" />
                     )}
                 </Card>
                 <br />
                 <Card>
-                  <CardHeader title={'Distributor last five interactions'} />
+                  <CardHeader title={'Caller last five interactions'} />
                   {DLF.length ? (
                     <div>
                       <BasicTable
@@ -840,7 +867,7 @@ const Dashboard = ({
                       />
                     </div>
                   ) : (
-                      <CommonAlert text="Unable to get distributor details" />
+                      <CommonAlert text="Unable to get Caller details" />
                     )}
                 </Card>
               </Grid>
