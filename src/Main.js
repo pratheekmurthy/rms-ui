@@ -28,50 +28,31 @@ function Main({
     (async function checkLoggedInState() {
       try {
         if (localStorage.getItem('jwtToken')) {
-          console.log('inside the jwt')
-          var obj = {
-            UserID: 4,
-            AllowPublic: 0,
-            UserName: 'chaitra@grassrootsbpo.in',
-            EmployeeName: 'Chaitra (GRSSL)',
-            EmailID: 'c77e0350859f6255b2739876d6641a24247ece422294b75e99983defa2b70c44',
-            OTP: 262732,
-            tenetID: '1',
-            tenentId: 1,
-            tenentName: 'Grassroots',
-            roleids: '7',
-            role: 'Agent',
-            modules: 'Dashboard 360'
-          }
-          setUserDetailsMain(obj)
-          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
           setLoggedInMain(true);
-
-
-         var test = await Axios.post('localhost:4000/auth/apiM/verifyClient',{},{ headers: { Authorization:localStorage.getItem('jwtToken') } })
-          .then(response=> console.log(response))
+         var test = await Axios.post('http://localhost:4000/auth/apiM/verifyClient',{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+          .then(response=> {
+            console.log('respose', response) 
+            var result= response.data.userDetails
+            var obj = {
+              UserID:result.UserID,
+              AllowPublic: result.AllowPublic,
+              UserName:result.UserName,
+              EmployeeName: result.EmployeeName,
+              EmailID: result.EmailID,
+              OTP: result.OTP,
+              tenetID: result.tenetID,
+              tenentId:result.tenentId,
+              tenentName: result.tenentName,
+              roleids: result.roleids,
+              role: result.role,
+              modules: result.modules,
+              External_num:result.External_num
+            }
+             setUserDetailsMain(obj)
+             localStorage.setItem('AgentSIPID', obj.External_num);
+          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+          })
           .catch(error => console.log(error));
- 
-
-
-          // var axios = require('axios');
-
-          // var config = {
-          //   method: 'post',
-          //   url: 'localhost:4000/auth/apiM/verifyClient',
-          //   headers: {
-          //     'Authorization': 'Bearer ' + localStorage.getItem('jwtToken')
-          //   }
-          // };
-
-          // axios(config)
-          //   .then(function (response) {
-          //     console.log(JSON.stringify(response.data));
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
-
         } else {
           setLoggedInMain(false);
         }
