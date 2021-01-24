@@ -324,7 +324,7 @@ export default function DispositionForm(props) {
                 />
               </FormControl>
             </Grid>
-            {subCategories.length > 0 ? (
+            { subCategories.length> 0 ? (
               <Grid item>
              
 
@@ -404,7 +404,42 @@ export default function DispositionForm(props) {
                 label="Comments"
               />
             </Grid>
+            {/* {formRef.current.values.type.label === 'Open' ? (<Grid item>
+            <FormControl
+                  variant="outlined"
+                  className={classes.fieldContainer}
+                >
+              
+
+                  <Autocomplete
+                    options={subCategoryItems}
+                    getOptionLabel={option => option.label}
+                    // style={{ width: 400, overflow: "hidden" }}
+                    getOptionSelected={(option, value) =>
+                      value.id === option.id
+                    }
+                    key={autoCompleteKey}
+                    onChange={(event, value) => {
+                      setFieldValue('subcategoryitem', value);
+                      props.setSubCategoryItem(value);
+                    }}
+                    renderInput={params => (
+                      <Field
+                        component={TextField}
+                        {...params}
+                        label="Select a L1"
+                        variant="outlined"
+                        name="L1"
+                      />
+                    )}
+                    name="L1"
+                  />
+                </FormControl>
+
+            </Grid>):(<></>)
+} */}
             <Grid item>
+             
               <Field component={RadioGroup} name="type" row>
                 {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
