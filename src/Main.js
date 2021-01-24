@@ -29,6 +29,7 @@ function Main({
       try {
         if (localStorage.getItem('jwtToken')) {
           console.log('inside the jwt')
+          
           var obj = {
             UserID: 4,
             AllowPublic: 0,

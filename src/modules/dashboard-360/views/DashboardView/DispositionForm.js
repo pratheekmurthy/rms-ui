@@ -286,6 +286,24 @@ export default function DispositionForm(props) {
         console.log(error);
       });
   }
+  function transfercall(Channel){
+    var axios = require('axios');
+
+var config = {
+  method: 'get',
+  url: 'http://localhost:42002/ami/actions/atxfer?Channel='+Channel+'&NumbertobeCalled=58049292477',
+  headers: { }
+};
+
+axios(config)
+.then(function (response) {
+  console.log(JSON.stringify(response.data));
+})
+.catch(function (error) {
+  console.log(error);
+});
+
+  }
   function handleSubmit(e) {
     console.log('formRef', formRef.current.values);
     console.log('dispostion', {
@@ -296,6 +314,7 @@ export default function DispositionForm(props) {
       comments: formRef.current.values.comments,
       type: formRef.current.values.type
     });
+
     // props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
     props.removeFromQueue(props.AgentSipId, '5000');
@@ -385,8 +404,8 @@ export default function DispositionForm(props) {
         .typeError('Please select a valid  Internet Speed'), 
       L1Name: yup
         .object()
-        .required('Please select a L1')
-        .typeError('Please select a L1'),
+        .required('Please select a L2')
+        .typeError('Please select a L2'),
 
         CallerName: yup.string().required('Please Enter Caller Name'),
         callerapplication: yup.string().required('Please Enter Caller Application'),
@@ -686,6 +705,7 @@ export default function DispositionForm(props) {
                     key={autoCompleteKey}
                     onChange={(event, value) => {
                       setFieldValue('L1Name', value);
+                      transfercall(localStorage.getItem('channel'))
                     
                     }}
                     renderInput={params => (

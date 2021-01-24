@@ -110,6 +110,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       const obj = res.data.userDetails;
       const { accessToken } = res.data;
       localStorage.setItem("jwtToken", accessToken);
+      localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
       setLoggedInMain(true);
@@ -195,7 +196,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                 console.log('values', values);
                 localStorage.setItem('AgentType', values.AgentType);
                 localStorage.setItem('role', values.role);
-                localStorage.setItem('AgentSIPID', values.AgentSIPID);
+              
 
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);

@@ -429,6 +429,7 @@ const Dashboard = ({
             AgentSIPID: agent.AgentSipId,
             breakStatus: response.data[0].breakStatus
           });
+          localStorage.setItem('channel', response.data[0].channel);
         }
       })
       .catch(function (error) {
@@ -822,7 +823,7 @@ const Dashboard = ({
                     style={{ color: 'white' }}
                     onClick={(e) => breakService(e)}
                   >
-                    {currentCall.breakStatus === 'IN' ? <label>Break IN</label> : <label>Break OUT</label>}
+                    {currentCall.breakStatus === 'IN' ? <label>Break OUT</label> : <label>Break IN</label>}
                   </Button> : null}
                 {/* <Button
                   color="secondary"
