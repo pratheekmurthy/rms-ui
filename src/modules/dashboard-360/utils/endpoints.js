@@ -1,9 +1,9 @@
-export const GET_DEALER_PROFILE = '/boapi/profileID';
-export const GET_DEALER_JOINING_DETAILS = '/boapi/distjoining';
-export const GET_DEALER_ORDERS = '/boapi/orders';
-export const GET_DEALER_SINGLE_ORDERS = '/boapi/order';
-export const GET_DEALER_INVOICES = '/boapi/invoice';
-export const GET_DEALER_KYC = '/boapi/kycstatus';
+export const GET_DEALER_PROFILE = 'http://14.98.23.204/boapi/profileID';
+export const GET_DEALER_JOINING_DETAILS = 'http://14.98.23.204/boapi/distjoining';
+export const GET_DEALER_ORDERS = 'http://14.98.23.204/boapi/orders';
+export const GET_DEALER_SINGLE_ORDERS = 'http://14.98.23.204/boapi/order';
+export const GET_DEALER_INVOICES = 'http://14.98.23.204/boapi/invoice';
+export const GET_DEALER_KYC = 'http://14.98.23.204/boapi/kycstatus';
 export const PUT_BREAK_AGENT = 'http://localhost:42004/crm/agentbreakservices';
 export const GET_INTERACTION_BY_DISTRIBUTOR_ID = 'http://localhost:42004/crm/interactions/getByDistributerID?distributerID=';
 export const GET_INTERACTION_BY_AGENT_SIP_ID = 'http://localhost:42004/crm/interactions/getByAgentSIPID?SipID=';
