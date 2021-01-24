@@ -4,9 +4,9 @@ const Logo = props => {
   return (
     <img
       alt="Logo"
-      src="/static/merittrac.jpg"
+      src="/static/merittrac.png"
       {...props}
-      style={{ height: '50px', width: '110px' }}
+      style={{ height: '50px', width: '50px' }}
     />
   );
 };
