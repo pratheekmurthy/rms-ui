@@ -68,23 +68,7 @@ const useStyles = makeStyles(theme => ({
 export default function DealerCard({ dealerDetails }) {
   console.log('dealerDetails', dealerDetails);
   const classes = useStyles();
-  const {
-    distributor_name,
-    distributor_id,
-    // lastInteractionId,
-    // lastInteractionDate,
-    // lastOrderReference,
-    distributor_rank,
-    Joiningdate,
-    distributor_status,
-    email_id,
-    display_name,
-    mob_no,
-    pan_no,
-    adhar_no,
-    phone_no,
-    SelfDOB
-  } = dealerDetails;
+
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
   const SOCKETENDPOINT = 'http://localhost:42002/';
@@ -138,12 +122,14 @@ export default function DealerCard({ dealerDetails }) {
             localStorage.getItem('callDispositionStatus') === 'Disposed' &&
             localStorage.getItem('callStatus') === 'disconnected' &&
             localStorage.getItem('breakStatus') === 'OUT' ? (
-              <CallIcon onClick={() => makeCall(mob_no)} />
+              // <CallIcon onClick={() => makeCall(mob_no)} />
+              <div></div>
             ) : null}
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> */}
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
-              {display_name}
+              {/* {display_name} */}
+              Vikram Singh
             </Typography>
 
             <Typography
@@ -152,13 +138,14 @@ export default function DealerCard({ dealerDetails }) {
               component="p"
               align="center"
             >
-              {email_id}
+              {/* {email_id} */}
+              v.singh2210@gmail.com
               <br />
-              {distributor_rank}
+              {/* {distributor_rank} */}
               <br />
-              Member From - {Joiningdate}
+              {/* Member From -  */}
             </Typography>
-            <Box style={{ marginTop: '0.5rem' }}>
+            {/* <Box style={{ marginTop: '0.5rem' }}>
               <Tooltip title="Verified">
                 <Chip
                   color="primary"
@@ -182,9 +169,9 @@ export default function DealerCard({ dealerDetails }) {
                   className={` ${classes.rootChip} `}
                 />
               </Tooltip>
-            </Box>
+            </Box> */}
           </Box>
-          <Grid container spacing={4} className={classes.mt1}>
+          {/* <Grid container spacing={4} className={classes.mt1}>
             <Grid item xs={6} className={classes.container1}>
               <Grid container direction="column" alignItems="flex-end">
                 <Typography gutterBottom variant="h5" align="center">
@@ -201,7 +188,7 @@ export default function DealerCard({ dealerDetails }) {
                 <Link to="/dash360/orders/1234">#1234</Link>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid> */}
         </Grid>
       </CardContent>
      
@@ -218,15 +205,15 @@ export default function DealerCard({ dealerDetails }) {
           <Divider light />
           <DialogContent>
             <Typography variant="h6">
-              {display_name}
-              <Tooltip title={distributor_status}>
+              {/* {display_name} */}
+              <Tooltip title='active'>
                 <CheckCircleIcon
                   color={getIconColor()}
                   style={{ marginBottom: -3, marginLeft: 5 }}
                 />
               </Tooltip>
             </Typography>
-            <Typography color="textSecondary">{distributor_id}</Typography>
+            <Typography color="textSecondary">id</Typography>
             {/* <Typography color="textSecondary" display="inline" variant="p">
               Distributor Name:
             </Typography>
@@ -246,7 +233,7 @@ export default function DealerCard({ dealerDetails }) {
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {email_id}
+                    v.singh2210@gmail.com
                     </Typography>
                   </Grid>
                 </Grid>
@@ -256,30 +243,30 @@ export default function DealerCard({ dealerDetails }) {
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {mob_no}
+                     {localStorage.getItem('callerNumber')}
                     </Typography>
                   </Grid>
                 </Grid>
-                <Grid item container>
+                {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Phone Number:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {phone_no || '-'}
+                      
                     </Typography>
                   </Grid>
-                </Grid>
-                <Grid item container>
+                </Grid> */}
+                {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Billing Address:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {getAddressFromObj(dealerDetails)}
+               
                     </Typography>
                   </Grid>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Box style={{ flexBasis: '100%' }}>
                 <br />
@@ -291,44 +278,44 @@ export default function DealerCard({ dealerDetails }) {
                 <Box style={{ flexBasis: '100%' }} marginTop={2} />
                 <Grid item container>
                   <Grid item xs={5}>
-                    <Typography variant="h5">Distributor Name:</Typography>
+                    <Typography variant="h5">Caller Name:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {distributor_name}
+                      Vikram Singh
                     </Typography>
                   </Grid>
                 </Grid>
-                <Grid item container>
+                {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Aadhar Number:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {adhar_no}
+                   
                     </Typography>
                   </Grid>
-                </Grid>
-                <Grid item container>
+                </Grid> */}
+                {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">PAN Number:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {pan_no}
-                    </Typography>
+                      {/* {pan_no} */}
+                    {/* </Typography>
                   </Grid>
-                </Grid>
-                <Grid item container>
+                </Grid> */}
+                {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Date Of Birth:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                      {SelfDOB.substring(0, 10)}
+                     
                     </Typography>
                   </Grid>
-                </Grid>
+                </Grid>  */}
               </Grid>
             </Grid>
           </DialogContent>

@@ -271,8 +271,8 @@ export default function DispositionForm(props) {
     });
     // props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
-    // props.removeFromQueue(props.AgentSipId, '9002');
-    // props.addToQueue(props.agentSipID, '9002');
+    props.removeFromQueue(props.AgentSipId, '5000');
+    props.addToQueue(props.agentSipID, '5000');
     // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(
       localStorage.getItem('callStatusId'),
