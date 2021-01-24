@@ -176,7 +176,7 @@ const TopBar = ({
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
-          <Logo />
+          {/* <Logo /> */}
         </RouterLink>
         <div className={classes.search}>
           <div className={classes.searchIcon}>
@@ -204,6 +204,11 @@ const TopBar = ({
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/telephony/dashboard" className="color-white">
               Telephony
+            </Link>
+          </Typography>
+          <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/agent/dashboard" className="color-white">
+              Agents
             </Link>
           </Typography>
           {viewAccess === -1 ? (
