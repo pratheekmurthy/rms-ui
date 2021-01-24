@@ -1,6 +1,7 @@
 import routes from 'src/modules/dashboard-360/routes';
 import React from 'react';
 import telephonyRoutes from '../modules/telephony/routes';
+import faqRoutes from '../modules/FAQ/routes';
 
 import authRoutes from '../modules/auth/routes';
 
@@ -13,9 +14,14 @@ export const telephony = React.lazy(() =>
   import('src/modules/telephony/views/index')
 );
 
+export const faq = React.lazy(() =>
+  import('src/modules/FAQ/views/index')
+);
+
 export const agentform = React.lazy(() =>
   import('src/modules/agentForm/views/index')
 );
+
 export const auth = React.lazy(() => import('src/modules/auth/views/index'));
 
 export default [
@@ -34,6 +40,15 @@ export default [
     key: 'telephony',
     component: telephony,
     crumb: 'Telephony',
+    requiresAuth: true
+  },
+   
+  {
+    path: '/faq',
+    routes: faqRoutes,
+    key: 'faq',
+    component: faq,
+    crumb: 'faq',
     requiresAuth: true
   },
   {
