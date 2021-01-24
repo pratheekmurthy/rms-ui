@@ -42,7 +42,7 @@ export default function DispositionForm(props) {
     issuedescription:'',
     CallerName:'',
     callerapplication:'',
-    
+    L1Name:'',
     status:''
   });
   const devicetype =[
@@ -87,6 +87,23 @@ export default function DispositionForm(props) {
       id:'2', value:'More than 2 MBPS',
     }
   ]
+  const L1Name =[
+    {
+      id:'1', value:'Chaitra',
+    },
+    {
+      id:'2', value:'Priya',
+    },
+    {
+      id:'3', value:'Suma',
+    },
+    {
+      id:'4', value:'Latha',
+    },
+    {
+      id:'5', value:'Sonu',
+    }
+  ]
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
@@ -111,7 +128,17 @@ export default function DispositionForm(props) {
     value: '',
     label: ''
   });
+  const [selected, setSelected] = useState(false);
   const url ="http://192.168.3.45:5001"
+  const handleChange = (e,s) => {
+    // console.log("change",e.target.defaultValue)
+    if(e.target.defaultValue === "transfercall")
+    {
+      setSelected(true);
+    }
+    else{
+    setSelected(false);
+  }};
   useEffect(() => {
     let unmounted = false;
     async function getItems() {
@@ -355,7 +382,12 @@ export default function DispositionForm(props) {
       speedtype: yup
         .object()
         .required('Please select a Internet Speed ')
-        .typeError('Please select a valid  Internet Speed'),
+        .typeError('Please select a valid  Internet Speed'), 
+      L1Name: yup
+        .object()
+        .required('Please select a L1')
+        .typeError('Please select a L1'),
+
         CallerName: yup.string().required('Please Enter Caller Name'),
         callerapplication: yup.string().required('Please Enter Caller Application'),
         issuedescription: yup.string().required('Please Enter Issue Description'),
@@ -637,7 +669,7 @@ export default function DispositionForm(props) {
                 label="Comments"
               />
             </Grid>
-            {/* {formRef.current.values.type.label === 'Open' ? (<Grid item>
+            {selected === true ? (<Grid item item xs={4} sm={4}>
             <FormControl
                   variant="outlined"
                   className={classes.fieldContainer}
@@ -645,16 +677,16 @@ export default function DispositionForm(props) {
               
 
                   <Autocomplete
-                    options={subCategoryItems}
-                    getOptionLabel={option => option.label}
+                    options={L1Name}
+                    getOptionLabel={option => option.value}
                     // style={{ width: 400, overflow: "hidden" }}
                     getOptionSelected={(option, value) =>
                       value.id === option.id
                     }
                     key={autoCompleteKey}
                     onChange={(event, value) => {
-                      setFieldValue('subcategoryitem', value);
-                      props.setSubCategoryItem(value);
+                      setFieldValue('L1Name', value);
+                    
                     }}
                     renderInput={params => (
                       <Field
@@ -662,15 +694,15 @@ export default function DispositionForm(props) {
                         {...params}
                         label="Select a L1"
                         variant="outlined"
-                        name="L1"
+                        name="L1Name"
                       />
                     )}
-                    name="L1"
+                    name="L1Name"
                   />
                 </FormControl>
 
             </Grid>):(<></>)
-} */}
+}
             <Grid item>
              
               <Field component={RadioGroup} name="type" row>
@@ -679,16 +711,20 @@ export default function DispositionForm(props) {
                   value="open"
                   control={<Radio />}
                   label="Open"
+                  onChange={handleChange} 
                 />
                 <FormControlLabel
                   value="closed"
                   control={<Radio />}
                   label="Closed"
+                  onChange={handleChange} 
+                 
                 />
                  <FormControlLabel
                   value="transfercall"
                   control={<Radio />}
                   label="Transfer Call"
+                  onChange={handleChange} 
                 />
               </Field>
             </Grid>
