@@ -36,7 +36,15 @@ export default function DispositionForm(props) {
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
- 
+  const AgentType =[
+    {
+      id:'1', value:'L1',
+    },
+    {
+      id:'2', value:'L2',
+    },
+   
+  ]
   
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
@@ -95,40 +103,7 @@ export default function DispositionForm(props) {
     console.log('formRef', formRef.current.values);
    
  
-    localStorage.setItem('callDispositionStatus', 'Disposed');
-    props.removeFromQueue(props.AgentSipId, '9002');
-    props.addToQueue(props.agentSipID, '9002');
-    // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(
-      localStorage.getItem('callStatusId'),
-      localStorage.getItem('callUniqueId'),
-      localStorage.getItem('callType'),
-      localStorage.getItem('callStatus'),
-      localStorage.getItem('callEvent'),
-      localStorage.getItem('callDispositionStatus'),
-      localStorage.getItem('callerNumber'),
-      localStorage.getItem('breakStatus')
-    );
-    updateAgentCallStatus({
-      callStatusId: localStorage.getItem('callStatusId'),
-      callUniqueId: localStorage.getItem('callUniqueId'),
-      callType: localStorage.getItem('callType'),
-      callStatus: localStorage.getItem('callStatus'),
-      callEvent: localStorage.getItem('callEvent'),
-      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-      callerNumber: localStorage.getItem('callerNumber')
-    })
-    updateCallData(localStorage.getItem('callUniqueId'), {
-      tickettype: formRef.current.values.tickettype.label,
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type,
-      distributerID: localStorage.getItem('distributer_id')
-
-    })
-
+   
 
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
@@ -143,7 +118,10 @@ export default function DispositionForm(props) {
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-      
+        AgentType: yup
+        .object()
+        .required('Please select a Agent Type')
+        .typeError('Please select a valid Agent Type'),
         AgentName: yup.string().required('Please Enter Agent Name'),
         AgentEmail: yup.string().required('Please Enter Agent Email'),
         Agentcontact: yup.string().required('Please Enter Agent Contact Number'),
@@ -196,6 +174,39 @@ export default function DispositionForm(props) {
                 
                 label="Location"
               />
+            </Grid>
+            <Grid item >
+            <FormControl
+                  variant="outlined"
+                  className={classes.fieldContainer}
+                >
+              
+
+                  <Autocomplete
+                    options={AgentType}
+                    getOptionLabel={option => option.value}
+                    // style={{ width: 400, overflow: "hidden" }}
+                    getOptionSelected={(option, value) =>
+                      value.id === option.id
+                    }
+                    key={autoCompleteKey}
+                    onChange={(event, value) => {
+                      setFieldValue('AgentType', value);
+                    
+                    }}
+                    renderInput={params => (
+                      <Field
+                        component={TextField}
+                        {...params}
+                        label="Select Agent Type"
+                        variant="outlined"
+                        name="AgentType"
+                      />
+                    )}
+                    name="AgentType"
+                  />
+                </FormControl>
+
             </Grid>
           </Grid>
           <br />
