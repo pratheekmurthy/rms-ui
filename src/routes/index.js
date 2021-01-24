@@ -56,6 +56,7 @@ export default [
     routes: agentRoutes,
     key: 'dashboardagent',
     component:agentform,
+    crumb: 'Agents',
     requiresAuth: true
   },
   {
