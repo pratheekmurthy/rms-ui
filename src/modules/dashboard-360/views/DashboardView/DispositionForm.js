@@ -32,8 +32,61 @@ export default function DispositionForm(props) {
     comments: '',
     type: '',
     subcategoryitem: '',
-    enable: false
+    enable: false,
+    issuetype: '',
+    devicetype: '',
+    connectivitytype: '',
+    speedtype: '',
+    ostype: '',
+    solution: '',
+    issuedescription:'',
+    CallerName:'',
+    callerapplication:'',
+    
+    status:''
   });
+  const devicetype =[
+    {
+      id:'1', value:'Mobile',
+    },
+    {
+      id:'2', value:'Laptop/ Desktop',
+    }
+  ]
+    
+  const ostype =[
+    {
+      id:'1', value:'Android',
+    },
+    {
+      id:'2', value:'Win-7 / 8/10 '
+    },
+    {
+      id:'3', value:'MAC / Linux,'
+    }
+  ]
+  const connectivitytype =[
+    {
+      id:'1', value:'Hotspot',
+    },
+    {
+      id:'2', value:'DataCard',
+    },
+    {
+      id:'3', value:'Broadband',
+    }
+  ]
+  const issuetype =[
+   
+  ]
+  const speedtype =[
+    {
+      id:'1', value:'Less than 2 MBPS',
+    },
+    {
+      id:'2', value:'More than 2 MBPS',
+    }
+  ]
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
@@ -282,14 +335,62 @@ export default function DispositionForm(props) {
           .required('Please select a  subcategoryitem')
           .typeError('Please select a valid  subcategoryitem'),
         comments: yup.string().required('Please Enter Comments'),
-        type: yup.string().required('Please Enter type')
+        type: yup.string().required('Please Enter type'),
+        issuetype: yup
+        .object()
+        .required('Please select a Issue Type')
+        .typeError('Please select a valid Issue Type'),
+      devicetype: yup
+        .object()
+        .required('Please select a  Device Type')
+        .typeError('Please select a valid  Device Type'),
+      ostype: yup
+        .object()
+        .required('Please select a OS Type ')
+        .typeError('Please select a valid  OS Type'),
+      connectivitytype: yup
+        .object()
+        .required('Please select a  Internet Connectivity Type')
+        .typeError('Please select a valid  Internet Connectivity Type'),
+      speedtype: yup
+        .object()
+        .required('Please select a Internet Speed ')
+        .typeError('Please select a valid  Internet Speed'),
+        CallerName: yup.string().required('Please Enter Caller Name'),
+        callerapplication: yup.string().required('Please Enter Caller Application'),
+        issuedescription: yup.string().required('Please Enter Issue Description'),
+  solution: yup.string().required('Please Enter Response /Solution Provided')
       })}
     >
       {({ setFieldValue }) => (
         <Form>
-          <Grid container spacing={2} direction="column">
-            
-            <Grid item>
+          <Grid container spacing={2} direction="row">
+          <Grid item xs={4} sm={4}>
+              <Field
+                className={classes.fieldContainer}
+                name="CallerName"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="Caller Name"
+              />
+              </Grid>
+               <Grid item xs={4} sm={4}>
+               <Field
+                className={classes.fieldContainer}
+                name="callerapplication"
+                component={TextField}
+                variant="outlined"
+                multiline
+                
+                label="Caller Application"
+              />
+            </Grid>
+
+          
+
+           <Grid item xs={4} sm={4}>
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
@@ -315,7 +416,7 @@ export default function DispositionForm(props) {
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a category"
+                      label="Select a Issue Type"
                       variant="outlined"
                       name="category"
                     />
@@ -325,7 +426,7 @@ export default function DispositionForm(props) {
               </FormControl>
             </Grid>
             { subCategories.length> 0 ? (
-              <Grid item>
+              <Grid item xs={4} sm={4}>
              
 
                 <Autocomplete
@@ -346,7 +447,7 @@ export default function DispositionForm(props) {
                     <Field
                       component={TextField}
                       {...params}
-                      label="Select a sub category"
+                      label="Select a Type1"
                       variant="outlined"
                       name="subcategory"
                     />
@@ -358,7 +459,7 @@ export default function DispositionForm(props) {
                 <></>
               )}
             {subCategoryItems.length > 0 ? (
-              <Grid item>
+              <Grid item xs={4} sm={4}>
                 <FormControl
                   variant="outlined"
                   className={classes.fieldContainer}
@@ -381,7 +482,7 @@ export default function DispositionForm(props) {
                       <Field
                         component={TextField}
                         {...params}
-                        label="Select a sub category item"
+                        label="Select a Type2"
                         variant="outlined"
                         name="subcategoryitem"
                       />
@@ -393,7 +494,139 @@ export default function DispositionForm(props) {
             ) : (
                 <></>
               )}
-            <Grid item>
+           <Grid item xs={4} sm={4}>
+             
+
+             <Autocomplete
+               options={devicetype}
+               getOptionLabel={option => option.value}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+               onChange={(event, value) => {
+                 setFieldValue('devicetype', value);
+                //  props.setSubCategory(value);
+                //  getSubCategoryItems(
+                //    formRef.current.values.category.value,
+                //    value
+                //  );
+               }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Device Type"
+                   variant="outlined"
+                   name="devicetype"
+                 />
+               )}
+               name="devicetype"
+             />
+           </Grid>
+
+
+           <Grid item xs={4} sm={4}>
+             
+
+             <Autocomplete
+               options={ostype}
+               getOptionLabel={option => option.value}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+               onChange={(event, value) => {
+                 setFieldValue('ostype', value);
+                 
+               }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a OS Type"
+                   variant="outlined"
+                   name="ostype"
+                 />
+               )}
+               name="ostype"
+             />
+           </Grid>
+
+           <Grid item xs={4} sm={4}>
+             
+
+             <Autocomplete
+               options={connectivitytype}
+               getOptionLabel={option => option.value}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+               onChange={(event, value) => {
+                 setFieldValue('connectivitytype', value);
+                 
+               }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Internet Connectivity Type"
+                   variant="outlined"
+                   name="connectivitytype"
+                 />
+               )}
+               name="connectivitytype"
+             />
+           </Grid>
+
+           <Grid item xs={4} sm={4}>
+             
+
+             <Autocomplete
+               options={speedtype}
+               getOptionLabel={option => option.value}
+               // style={{ width: 400, overflow: "hidden" }}
+               getOptionSelected={(option, value) => value.id === option.id}
+               key={autoCompleteKey}
+               onChange={(event, value) => {
+                 setFieldValue('speedtype', value);
+                
+               }}
+               renderInput={params => (
+                 <Field
+                   component={TextField}
+                   {...params}
+                   label="Select a Internet Speed"
+                   variant="outlined"
+                   name="speedtype"
+                 />
+               )}
+               name="speedtype"
+             />
+           </Grid>
+
+           <Grid item xs={4} sm={4}>
+               <Field
+                className={classes.fieldContainer}
+                name="issuedescription"
+                component={TextField}
+                variant="outlined"
+                multiline
+                rows={2}
+                label="Issue Description"
+              />
+            </Grid>
+            <Grid item xs={4} sm={4}>
+               <Field
+                className={classes.fieldContainer}
+                name="solution"
+                component={TextField}
+                variant="outlined"
+                multiline
+                rows={2}
+                label="Response /Solution Provided"
+              />
+            </Grid>
+          
+            <Grid item xs={4} sm={4}>
               <Field
                 className={classes.fieldContainer}
                 name="comments"
@@ -451,6 +684,11 @@ export default function DispositionForm(props) {
                   value="closed"
                   control={<Radio />}
                   label="Closed"
+                />
+                 <FormControlLabel
+                  value="transfercall"
+                  control={<Radio />}
+                  label="Transfer Call"
                 />
               </Field>
             </Grid>

@@ -186,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: '',
+    callDispositionStatus: 'NotDisposed',
     callerNumber: '',
     breakStatus: ''
   });
@@ -870,19 +870,30 @@ const Dashboard = ({
                       <CommonAlert text="Unable to get Caller details" />
                     )}
                 </Card>
+                <br/>
+                <Card>
+                <CardHeader
+                  title={
+                    'My last five interactions (' + agent.AgentSipId + ')'
+                  }
+                />
+                {ALF.length ? (
+                  <div>
+                    <BasicTable
+                      columns={lastFiveCallData}
+                      records={ALF.slice(0, 3)}
+                      redirectLink="/dash360/admin/agentlastfive"
+                      redirectLabel="View All"
+                    />
+                  </div>
+                ) : (
+                    <CommonAlert text="Unable to get distributor details" />
+                  )}
+              </Card>
               </Grid>
             </Grid>
-            <Grid item lg={4} md={4} xs={12}>
-
-<Card>
-  <CardHeader title="Caller Details" />
-  <Divider />
-  <CardContent>
-            <CreateCaller/>
-            </CardContent> 
-            </Card>    
-            </Grid>
-            <Grid item lg={4} md={4} xs={12}>
+            
+            <Grid item lg={8} md={8} xs={12}>
 
               <Card>
                 <CardHeader title="Disposition Details" />
@@ -928,25 +939,7 @@ const Dashboard = ({
 
 
               <br />
-              <Card>
-                <CardHeader
-                  title={
-                    'My last five interactions (' + agent.AgentSipId + ')'
-                  }
-                />
-                {ALF.length ? (
-                  <div>
-                    <BasicTable
-                      columns={lastFiveCallData}
-                      records={ALF.slice(0, 3)}
-                      redirectLink="/dash360/admin/agentlastfive"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
-                    <CommonAlert text="Unable to get distributor details" />
-                  )}
-              </Card>
+         
             </Grid>
           </Grid>
           <Grid container spacing={3}>
