@@ -215,7 +215,7 @@ const Dashboard = ({
       method: 'get',
       url:
         GET_INTERACTION_BY_DISTRIBUTOR_ID +
-        localStorage.getItem('distributer_id') +
+        localStorage.getItem('callerNumber') +
         '',
       headers: {},
       data: data
@@ -301,9 +301,9 @@ const Dashboard = ({
       method: 'get',
       url:
         APIENDPOINT +
-        '/ami/actions/addq?Interface=SIP%2F' +
+        '/ami/actions/addq?Interface=Local/5' +
         agentId +
-        '&Queue=' +
+        '@from-internal&Queue=' +
         queue +
         '',
       headers: {
@@ -339,9 +339,9 @@ const Dashboard = ({
         APIENDPOINT +
         '/ami/actions/rmq?Queue=' +
         queue +
-        '&Interface=SIP%2F' +
+        '&Interface=Local/5' +
         agentId +
-        '',
+        '@from-internal',
       headers: {
         'Content-Type': 'application/json'
       }
@@ -429,6 +429,7 @@ const Dashboard = ({
             AgentSIPID: agent.AgentSipId,
             breakStatus: response.data[0].breakStatus
           });
+          localStorage.setItem('channel', response.data[0].channel);
         }
       })
       .catch(function (error) {
@@ -482,28 +483,28 @@ const Dashboard = ({
 
   async function disProfileByNum(mobile) {
    
-    const axios = require('axios');
+    // const axios = require('axios');
 
-    let config = {
-      method: 'get',
-      url: '/bo/boapi/profile?mobilenumber=' + mobile,
-      headers: {}
-    };
+    // let config = {
+    //   method: 'get',
+    //   url: '/bo/boapi/profile?mobilenumber=' + mobile,
+    //   headers: {}
+    // };
 
 
-    const response = await axios.get(config.url);
-    if (response.data.status === '1') {
-      var data1 = response.data.data;
-      if (data1.length) {
-        if (data1.length > 1) {
-          multipleDistributorDetails(data1, true);
-          setShowDistributorDetailsModal(true);
-        } else {
-          get(data1[0].distributor_id);
-        }
-        localStorage.setItem('distributer_id', data1[0].distributor_id);
-      }
-    }
+    // const response = await axios.get(config.url);
+    // if (response.data.status === '1') {
+    //   var data1 = response.data.data;
+    //   if (data1.length) {
+    //     if (data1.length > 1) {
+    //       multipleDistributorDetails(data1, true);
+    //       setShowDistributorDetailsModal(true);
+    //     } else {
+    //       get(data1[0].distributor_id);
+    //     }
+    //     localStorage.setItem('distributer_id', data1[0].distributor_id);
+    //   }
+    // }
 
   }
   function multipleDistributorDetails(distData, popUp) {
@@ -671,6 +672,7 @@ const Dashboard = ({
       if (agentExtension === agent.AgentSipId) {
         console.log('ringing2', data)
         localStorage.setItem('callUniqueId', data.event.Uniqueid)
+        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
       // //   console.log('AstriskEventBridgeOutbound', data);
  
       //   setCurrentCallDetails(
@@ -691,6 +693,7 @@ const Dashboard = ({
       if (agentExtension === agent.AgentSipId) {
         // getInitialData();
         // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
         setCurrentCallDetails(
           localStorage.getItem('callStatusId'),
           localStorage.getItem('callUniqueId'),
@@ -815,7 +818,15 @@ const Dashboard = ({
               <Grid item>
 
 
-                <Button
+              {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected' ? <Button
+                    color="secondary"
+                    variant="contained"
+                    style={{ color: 'white' }}
+                    onClick={(e) => breakService(e)}
+                  >
+                    {currentCall.breakStatus === 'IN' ? <label>Break OUT</label> : <label>Break IN</label>}
+                  </Button> : null}
+                {/* <Button
                   color="secondary"
                   variant="contained"
                   style={{ color: 'white' }}
@@ -824,7 +835,7 @@ const Dashboard = ({
 
                   <label>Break IN</label>
 
-                </Button>
+                </Button> */}
 
               </Grid>
 
@@ -839,15 +850,15 @@ const Dashboard = ({
               <Grid item>
                 <Card>
                   <CardHeader title={'Caller details'} />
-                  {rootData[0].data ? (
+                  {currentCall.callDispositionStatus === 'NotDisposed' ? (
                     <div>
                       <DealerCard
-                        dealerDetails={{
-                          ...rootData[0].data[0],
-                          lastOrderReference: rootData[2].data
-                            ? rootData[2].data[0] || { OrderNumber: '' }.OrderNumber
-                            : ''
-                        }}
+                        // dealerDetails={{
+                        //   ...rootData[0].data[0],
+                        //   lastOrderReference: rootData[2].data
+                        //     ? rootData[2].data[0] || { OrderNumber: '' }.OrderNumber
+                        //     : ''
+                        // }}
                       />
                     </div>
                   ) : (
@@ -857,7 +868,7 @@ const Dashboard = ({
                 <br />
                 <Card>
                   <CardHeader title={'Caller last five interactions'} />
-                  {DLF.length ? (
+                  {DLF.length && currentCall.callDispositionStatus === 'NotDisposed'? (
                     <div>
                       <BasicTable
                         columns={lastFiveCallData}
@@ -902,6 +913,7 @@ const Dashboard = ({
                   user.userType === 'Agent' ? (<CardContent>
                     <DispositionForm
                       agentSipID={agent.AgentSipId}
+                      DLF={DLF}
                       setCurrentCallDetails={setCurrentCallDetails}
                       addToQueue={addToQueue}
                       removeFromQueue={removeFromQueue}

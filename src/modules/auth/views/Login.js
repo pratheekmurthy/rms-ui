@@ -115,6 +115,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
      
       localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
       localStorage.setItem('role',res.data.userDetails.role);
+      localStorage.setItem('Agenttype', 'L2');
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
       setLoggedInMain(true);
