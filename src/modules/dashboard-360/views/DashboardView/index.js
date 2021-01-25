@@ -215,7 +215,7 @@ const Dashboard = ({
       method: 'get',
       url:
         GET_INTERACTION_BY_DISTRIBUTOR_ID +
-        localStorage.getItem('distributer_id') +
+        localStorage.getItem('callerNumber') +
         '',
       headers: {},
       data: data
@@ -693,6 +693,7 @@ const Dashboard = ({
       if (agentExtension === agent.AgentSipId) {
         // getInitialData();
         // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
         setCurrentCallDetails(
           localStorage.getItem('callStatusId'),
           localStorage.getItem('callUniqueId'),
@@ -912,6 +913,7 @@ const Dashboard = ({
                   user.userType === 'Agent' ? (<CardContent>
                     <DispositionForm
                       agentSipID={agent.AgentSipId}
+                      DLF={DLF}
                       setCurrentCallDetails={setCurrentCallDetails}
                       addToQueue={addToQueue}
                       removeFromQueue={removeFromQueue}

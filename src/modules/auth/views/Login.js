@@ -105,12 +105,17 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       const url = 'http://localhost:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
       console.log("values", values)
+
       const res = await Axios.post(url, values);
       console.log("login api", res.data)
       const obj = res.data.userDetails;
       const { accessToken } = res.data;
+  
       localStorage.setItem("jwtToken", accessToken);
+     
       localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+      localStorage.setItem('role',res.data.userDetails.role);
+      localStorage.setItem('Agenttype', 'L2');
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
       setLoggedInMain(true);
@@ -174,9 +179,9 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
               initialValues={{
                 email: '',
                 password: '',
-                role: 'Agent',
+                role: '',
                 AgentType: 'Inbound',
-                AgentSIPID: '9448531031', 
+                AgentSIPID: '', 
                 OTP:''
               }}
               validationSchema={Yup.object().shape({
@@ -193,10 +198,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
               })}
               onSubmit={values => {
 
-                console.log('values', values);
+                // console.log('values', values);
                 localStorage.setItem('AgentType', values.AgentType);
                 localStorage.setItem('role', values.role);
-              
+               
 
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);

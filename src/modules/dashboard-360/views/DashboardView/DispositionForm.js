@@ -24,92 +24,118 @@ const useStyle = makeStyles(() => ({
   }
 }));
 export default function DispositionForm(props) {
-  const config="http://192.168.3.45:8083/"
-  const [initialValue] = useState({
+  const config = "http://192.168.3.45:8083/"
+  console.log('props.DLF', props.DLF)
+  var DLF = props.DLF;
+
+
+  const [initialValue, setInitialValue] = useState({
     tickettype: '',
-    category: '',
-    subcategory: '',
-    comments: '',
+    subcategory: {
+      label: "Hardware",
+      value: "600c738bf50bb21a5ea091a0"
+    },
+    category: {
+      label: "Complaints",
+      value: "600bc578997c4d29ff4e560a"
+    },
+    comments: 'TEST Comments',
     type: '',
-    subcategoryitem: '',
+    subcategoryitem: {
+      label: "Webcam Issue",
+      value: "600c7421f50bb21a5ea091a2"
+    },
     enable: false,
     issuetype: '',
-    devicetype: '',
-    connectivitytype: '',
-    speedtype: '',
-    ostype: '',
-    solution: '',
-    issuedescription:'',
-    CallerName:'',
-    callerapplication:'',
-    L1Name:'',
-    status:''
+    devicetype: {
+      id: "1",
+      value: "Mobile"
+    },
+    connectivitytype: {
+      id: "1",
+      value: "Hotspot"
+    },
+    speedtype: {
+      id: "2",
+      value: "More than 2 MBPS"
+    },
+    ostype: { id: "1", value: "Android" },
+    solution: 'TEST Solution',
+    issuedescription: 'Issue Discription',
+    CallerName: 'Vikram',
+    callerapplication: 'CA79788',
+    L1Name: '',
+    status: 'Status'
   });
-  const devicetype =[
+  if (DLF.length) {
+    // var i = initialValue;
+    // initialValue['CallerName']
+  }
+  const devicetype = [
     {
-      id:'1', value:'Mobile',
+      id: '1', value: 'Mobile',
     },
     {
-      id:'2', value:'Laptop/ Desktop',
+      id: '2', value: 'Laptop/ Desktop',
     }
   ]
-    
-  const ostype =[
+
+  const ostype = [
     {
-      id:'1', value:'Android',
+      id: '1', value: 'Android',
     },
     {
-      id:'2', value:'Win-7 / 8/10 '
+      id: '2', value: 'Win-7 / 8/10 '
     },
     {
-      id:'3', value:'MAC / Linux,'
+      id: '3', value: 'MAC / Linux,'
     }
   ]
-  const connectivitytype =[
+  const connectivitytype = [
     {
-      id:'1', value:'Hotspot',
+      id: '1', value: 'Hotspot',
     },
     {
-      id:'2', value:'DataCard',
+      id: '2', value: 'DataCard',
     },
     {
-      id:'3', value:'Broadband',
+      id: '3', value: 'Broadband',
     }
   ]
-  const issuetype =[
-   
+  const issuetype = [
+
   ]
-  const speedtype =[
+  const speedtype = [
     {
-      id:'1', value:'Less than 2 MBPS',
+      id: '1', value: 'Less than 2 MBPS',
     },
     {
-      id:'2', value:'More than 2 MBPS',
+      id: '2', value: 'More than 2 MBPS',
     }
   ]
-  const L1Name =[
+  const L1Name = [
     {
-      id:'1', value:'Chaitra',
+      id: '1', value: 'Chaitra',
     },
     {
-      id:'2', value:'Priya',
+      id: '2', value: 'Priya',
     },
     {
-      id:'3', value:'Suma',
+      id: '3', value: 'Suma',
     },
     {
-      id:'4', value:'Latha',
+      id: '4', value: 'Latha',
     },
     {
-      id:'5', value:'Sonu',
+      id: '5', value: 'Sonu',
     }
   ]
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
   const [category, setCategory] = useState({
-    value: '',
-    label: ''
+    value: 'Enquiry',
+    label: 'Enquiry'
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,18 +155,26 @@ export default function DispositionForm(props) {
     label: ''
   });
   const [selected, setSelected] = useState(false);
-  const url ="http://192.168.3.45:5001"
-  const handleChange = (e,s) => {
+  const url = "http://192.168.3.45:5001"
+  const handleChange = (e, s) => {
     // console.log("change",e.target.defaultValue)
-    if(e.target.defaultValue === "transfercall")
-    {
+    if (e.target.defaultValue === "transfercall") {
       setSelected(true);
     }
-    else{
-    setSelected(false);
-  }};
+    else {
+      setSelected(false);
+    }
+  };
   useEffect(() => {
     let unmounted = false;
+    console.log('initialValue', initialValue)
+    if (initialValue.category !== '') {
+      getSubCategories(initialValue.category);
+    }
+    if (initialValue.subcategory !== ''){
+      console.log("initialValue.subcategory", initialValue.subcategory)
+      getSubCategoryItems(initialValue.category,initialValue.subcategory);
+    }
     async function getItems() {
       const response = await fetch(url + '/level1');
       const body = await response.json();
@@ -168,7 +202,7 @@ export default function DispositionForm(props) {
       unmounted = true;
     };
   }, []);
-  
+
   const getSubCategories = cat => {
 
     let unmounted = false;
@@ -177,7 +211,7 @@ export default function DispositionForm(props) {
         url + '/level2/' + cat.value
       );
       const body = await response.json();
-      console.log("bosy",body)
+      console.log("bosy", body)
       if (!unmounted) {
         setSubCategories(
           body.data.map(({ _id, subCategory }) => ({
@@ -206,7 +240,7 @@ export default function DispositionForm(props) {
     async function getItems() {
       //  alert(JSON.stringify(cat))
       const response = await fetch(
-        url+ '/level3/' + cat + '/' + sct.value
+        url + '/level3/' + cat + '/' + sct.value
       );
       const body = await response.json();
 
@@ -241,7 +275,7 @@ export default function DispositionForm(props) {
     let config = {
       method: 'post',
 
-      url:UPDATE_CALL_STATUS + uniqueid,
+      url: UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -286,69 +320,85 @@ export default function DispositionForm(props) {
         console.log(error);
       });
   }
-  function transfercall(Channel){
+  function transfercall(Channel) {
     var axios = require('axios');
 
-var config = {
-  method: 'get',
-  url: 'http://localhost:42002/ami/actions/atxfer?Channel='+Channel+'&NumbertobeCalled=58049292477',
-  headers: { }
-};
+    var config = {
+      method: 'get',
+      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=58049292477',
+      headers: {}
+    };
 
-axios(config)
-.then(function (response) {
-  console.log(JSON.stringify(response.data));
-})
-.catch(function (error) {
-  console.log(error);
-});
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
 
   }
   function handleSubmit(e) {
     console.log('formRef', formRef.current.values);
-    console.log('dispostion', {
-      tickettype: formRef.current.values.tickettype.label,
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type
-    });
+    console.log('state',)
+    // console.log('dispostion', {
+    //   tickettype: formRef.current.values.tickettype.label,
+    //   category: formRef.current.values.category.label,
+    //   subcategory: formRef.current.values.subcategory.label,
+    //   subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //   comments: formRef.current.values.comments,
+    //   type: formRef.current.values.type,
+
+    // });
 
     // props.setdisForm(formRef.current.values);
-    localStorage.setItem('callDispositionStatus', 'Disposed');
-    props.removeFromQueue(props.AgentSipId, '5000');
-    props.addToQueue(props.agentSipID, '5000');
-    // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(
-      localStorage.getItem('callStatusId'),
-      localStorage.getItem('callUniqueId'),
-      localStorage.getItem('callType'),
-      localStorage.getItem('callStatus'),
-      localStorage.getItem('callEvent'),
-      localStorage.getItem('callDispositionStatus'),
-      localStorage.getItem('callerNumber'),
-      localStorage.getItem('breakStatus')
-    );
-    updateAgentCallStatus({
-      callStatusId: localStorage.getItem('callStatusId'),
-      callUniqueId: localStorage.getItem('callUniqueId'),
-      callType: localStorage.getItem('callType'),
-      callStatus: localStorage.getItem('callStatus'),
-      callEvent: localStorage.getItem('callEvent'),
-      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-      callerNumber: localStorage.getItem('callerNumber')
-    })
-    updateCallData(localStorage.getItem('callUniqueId'), {
-      tickettype: formRef.current.values.tickettype.label,
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type,
-      distributerID: localStorage.getItem('distributer_id')
+    // localStorage.setItem('callDispositionStatus', 'Disposed');
+    // props.removeFromQueue(props.AgentSipId, '5000');
+    // props.addToQueue(props.agentSipID, '5000');
+    // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
+    // props.setCurrentCallDetails(
+    //   localStorage.getItem('callStatusId'),
+    //   localStorage.getItem('callUniqueId'),
+    //   localStorage.getItem('callType'),
+    //   localStorage.getItem('callStatus'),
+    //   localStorage.getItem('callEvent'),
+    //   localStorage.getItem('callDispositionStatus'),
+    //   localStorage.getItem('callerNumber'),
+    //   localStorage.getItem('breakStatus')
+    // );
+    // updateAgentCallStatus({
+    //   callStatusId: localStorage.getItem('callStatusId'),
+    //   callUniqueId: localStorage.getItem('callUniqueId'),
+    //   callType: localStorage.getItem('callType'),
+    //   callStatus: localStorage.getItem('callStatus'),
+    //   callEvent: localStorage.getItem('callEvent'),
+    //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+    //   callerNumber: localStorage.getItem('callerNumber'),
 
-    })
+    // })
+    // updateCallData(localStorage.getItem('callUniqueId'), {
+    //   tickettype: formRef.current.values.tickettype.label,
+    //   category: formRef.current.values.category.label,
+    //   subcategory: formRef.current.values.subcategory.label,
+    //   subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //   comments: formRef.current.values.comments,
+    //   type: formRef.current.values.type,
+    //   distributerID: localStorage.getItem('distributer_id'),
+    //   CallerName:  formRef.current.values.CallerName,
+    //   callerapplication: formRef.current.values.callerapplication.label,
+    //   connectivitytype:  formRef.current.values.connectivitytype.value,
+    //   devicetype:  formRef.current.values.devicetype.value,
+    //   enable:  ""+formRef.current.values.enable+"",
+    //   issuedescription: formRef.current.values.issuedescription,
+    //   issuetype: formRef.current.values.issuetype,
+    //   ostype: formRef.current.values.ostype.value,
+    //   speedtype:  formRef.current.values.speedtype.value,
+    //   status:  formRef.current.values.status,
+    //   subcategoryitem:  formRef.current.values.subcategoryitem.value,
+    //   tickettype:  formRef.current.values.tickettype.label,
+    //   type: formRef.current.values.type,
+
+    // })
 
 
   }
@@ -383,85 +433,94 @@ axios(config)
         comments: yup.string().required('Please Enter Comments'),
         type: yup.string().required('Please Enter type'),
         issuetype: yup
-        .object()
-        .required('Please select a Issue Type')
-        .typeError('Please select a valid Issue Type'),
-      devicetype: yup
-        .object()
-        .required('Please select a  Device Type')
-        .typeError('Please select a valid  Device Type'),
-      ostype: yup
-        .object()
-        .required('Please select a OS Type ')
-        .typeError('Please select a valid  OS Type'),
-      connectivitytype: yup
-        .object()
-        .required('Please select a  Internet Connectivity Type')
-        .typeError('Please select a valid  Internet Connectivity Type'),
-      speedtype: yup
-        .object()
-        .required('Please select a Internet Speed ')
-        .typeError('Please select a valid  Internet Speed'), 
-      L1Name: yup
-        .object()
-        .required('Please select a L2')
-        .typeError('Please select a L2'),
+          .object()
+          .required('Please select a Issue Type')
+          .typeError('Please select a valid Issue Type'),
+        devicetype: yup
+          .object()
+          .required('Please select a  Device Type')
+          .typeError('Please select a valid  Device Type'),
+        ostype: yup
+          .object()
+          .required('Please select a OS Type ')
+          .typeError('Please select a valid  OS Type'),
+        connectivitytype: yup
+          .object()
+          .required('Please select a  Internet Connectivity Type')
+          .typeError('Please select a valid  Internet Connectivity Type'),
+        speedtype: yup
+          .object()
+          .required('Please select a Internet Speed ')
+          .typeError('Please select a valid  Internet Speed'),
+        L1Name: yup
+          .object()
+          .required('Please select a L2')
+          .typeError('Please select a L2'),
 
         CallerName: yup.string().required('Please Enter Caller Name'),
         callerapplication: yup.string().required('Please Enter Caller Application'),
         issuedescription: yup.string().required('Please Enter Issue Description'),
-  solution: yup.string().required('Please Enter Response /Solution Provided')
+        solution: yup.string().required('Please Enter Response /Solution Provided')
       })}
     >
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="row">
-          <Grid item xs={4} sm={4}>
+            <Grid item xs={4} sm={4}>
               <Field
                 className={classes.fieldContainer}
                 name="CallerName"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
+
                 label="Caller Name"
               />
-              </Grid>
-               <Grid item xs={4} sm={4}>
-               <Field
+            </Grid>
+            <Grid item xs={4} sm={4}>
+              <Field
                 className={classes.fieldContainer}
                 name="callerapplication"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
+
                 label="Caller Application"
               />
             </Grid>
 
-          
 
-           <Grid item xs={4} sm={4}>
+
+            <Grid item xs={4} sm={4}>
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
               >
-               
+
 
                 <Autocomplete
                   options={categories}
                   getOptionLabel={option => option.label}
                   // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) =>
-                    value.label === option.label
-                  }
+                  value={initialValue.category}
+                  getOptionSelected={(option, value) => {
+                    console.log('category', value);
+                    return value.label === option.label
+                  }}
                   key={autoCompleteKey}
                   onChange={(event, value) => {
-                    setFieldValue('category', value);
+                    console.log('value', value)
+                    if (value !== null) {
+                      setFieldValue('category', value);
 
-                    props.setCategory(value);
+                      props.setCategory(value);
 
-                    getSubCategories(value);
+                      getSubCategories(value);
+                      var i = initialValue
+                      i.category = value
+                      setInitialValue(i)
+                    }
+
                   }}
                   renderInput={params => (
                     <Field
@@ -476,28 +535,35 @@ axios(config)
                 />
               </FormControl>
             </Grid>
-            { subCategories.length> 0 ? (
+            {subCategories.length > 0 ? (
               <Grid item xs={4} sm={4}>
-             
+
 
                 <Autocomplete
                   options={subCategories}
                   getOptionLabel={option => option.label}
                   // style={{ width: 400, overflow: "hidden" }}
                   getOptionSelected={(option, value) => value.id === option.id}
+                  value={initialValue.subcategory}
                   key={autoCompleteKey}
                   onChange={(event, value) => {
-                    setFieldValue('subcategory', value);
-                    props.setSubCategory(value);
-                    getSubCategoryItems(
-                      formRef.current.values.category.value,
-                      value
-                    );
+                    if (value !== null) {
+                      setFieldValue('subcategory', value);
+                      props.setSubCategory(value);
+                      getSubCategoryItems(
+                        formRef.current.values.category.value,
+                        value
+                      );
+                      var i = initialValue
+                      i.subcategory = value
+                      setInitialValue(i)
+                    }
                   }}
                   renderInput={params => (
                     <Field
                       component={TextField}
                       {...params}
+                   
                       label="Select a Type1"
                       variant="outlined"
                       name="subcategory"
@@ -515,19 +581,26 @@ axios(config)
                   variant="outlined"
                   className={classes.fieldContainer}
                 >
-              
+
 
                   <Autocomplete
                     options={subCategoryItems}
                     getOptionLabel={option => option.label}
                     // style={{ width: 400, overflow: "hidden" }}
+                    value={initialValue.subCategoryItem}
                     getOptionSelected={(option, value) =>
                       value.id === option.id
                     }
                     key={autoCompleteKey}
+                    
                     onChange={(event, value) => {
-                      setFieldValue('subcategoryitem', value);
-                      props.setSubCategoryItem(value);
+                      if (value !== null) {
+                        setFieldValue('subcategoryitem', value);
+                        props.setSubCategoryItem(value);
+                        var i = initialValue
+                        i.subCategoryItem = value
+                        setInitialValue(i)
+                      }
                     }}
                     renderInput={params => (
                       <Field
@@ -545,117 +618,149 @@ axios(config)
             ) : (
                 <></>
               )}
-           <Grid item xs={4} sm={4}>
-             
-
-             <Autocomplete
-               options={devicetype}
-               getOptionLabel={option => option.value}
-               // style={{ width: 400, overflow: "hidden" }}
-               getOptionSelected={(option, value) => value.id === option.id}
-               key={autoCompleteKey}
-               onChange={(event, value) => {
-                 setFieldValue('devicetype', value);
-                //  props.setSubCategory(value);
-                //  getSubCategoryItems(
-                //    formRef.current.values.category.value,
-                //    value
-                //  );
-               }}
-               renderInput={params => (
-                 <Field
-                   component={TextField}
-                   {...params}
-                   label="Select a Device Type"
-                   variant="outlined"
-                   name="devicetype"
-                 />
-               )}
-               name="devicetype"
-             />
-           </Grid>
+            <Grid item xs={4} sm={4}>
 
 
-           <Grid item xs={4} sm={4}>
-             
+              <Autocomplete
+                options={devicetype}
+                getOptionLabel={option => option.value}
+                // style={{ width: 400, overflow: "hidden" }}
+                value={initialValue.devicetype}
+                getOptionSelected={(option, value) => value.id === option.id}
+                key={autoCompleteKey}
+                onChange={(event, value) => {
+                  if (value !== null) {
+                    setFieldValue('devicetype', value);
+                    var i = initialValue
+                    i.devicetype = value
+                    setInitialValue(i)
+                  }
+                  //  props.setSubCategory(value);
+                  //  getSubCategoryItems(
+                  //    formRef.current.values.category.value,
+                  //    value
+                  //  );
+                }}
+                renderInput={params => (
+                  <Field
+                    component={TextField}
+                    {...params}
+                    label="Select a Device Type"
+                    variant="outlined"
+                    name="devicetype"
+                  />
+                )}
+                name="devicetype"
+              />
+            </Grid>
 
-             <Autocomplete
-               options={ostype}
-               getOptionLabel={option => option.value}
-               // style={{ width: 400, overflow: "hidden" }}
-               getOptionSelected={(option, value) => value.id === option.id}
-               key={autoCompleteKey}
-               onChange={(event, value) => {
-                 setFieldValue('ostype', value);
+
+            <Grid item xs={4} sm={4}>
+
+
+              <Autocomplete
+                options={ostype}
+                getOptionLabel={option => option.value}
+                // style={{ width: 400, overflow: "hidden" }}
+                getOptionSelected={(option, value) => {
+                  return value.id === option.id
+                }}
+                value={initialValue.ostype}
+                key={autoCompleteKey}
+                onChange={(event, value) => {
+                  if (value !== null) {
+                    setFieldValue('ostype', value);
+                    console.log('asdfasf', initialValue)
+                    initialValue.ostype = value
+                    setInitialValue(initialValue)
+                  }
+                  //  var inivalues = initialValues;
+                  //  initialValues.ostype = value.label
+                  //  setInitialValue(initialValues)
+
+                }}
+                renderInput={params => (
+                  <Field
+                    component={TextField}
+                    {...params}
+                    label="Select a OS Type"
+                    variant="outlined"
+                    name="ostype"
+                  />
+                )}
+                name="ostype"
+              />
+            </Grid>
+
+            <Grid item xs={4} sm={4}>
+
+
+              <Autocomplete
+                options={connectivitytype}
+                getOptionLabel={option => option.value}
+                // style={{ width: 400, overflow: "hidden" }}
+                value={initialValue.connectivitytype}
+                getOptionSelected={(option, value) => value.id === option.id}
+                key={autoCompleteKey}
+                onChange={(event, value) => {
+                  if (value !== null) {
                  
-               }}
-               renderInput={params => (
-                 <Field
-                   component={TextField}
-                   {...params}
-                   label="Select a OS Type"
-                   variant="outlined"
-                   name="ostype"
-                 />
-               )}
-               name="ostype"
-             />
-           </Grid>
+                      setFieldValue('connectivitytype', value);
+                      var i = initialValue
+                      i.connectivitytype = value
+                      setInitialValue(i)
+                    }
+                  
 
-           <Grid item xs={4} sm={4}>
-             
+                }}
+                renderInput={params => (
+                  <Field
+                    component={TextField}
+                    {...params}
+                    label="Select a Internet Connectivity Type"
+                    variant="outlined"
+                    name="connectivitytype"
+                  />
+                )}
+                name="connectivitytype"
+              />
+            </Grid>
 
-             <Autocomplete
-               options={connectivitytype}
-               getOptionLabel={option => option.value}
-               // style={{ width: 400, overflow: "hidden" }}
-               getOptionSelected={(option, value) => value.id === option.id}
-               key={autoCompleteKey}
-               onChange={(event, value) => {
-                 setFieldValue('connectivitytype', value);
-                 
-               }}
-               renderInput={params => (
-                 <Field
-                   component={TextField}
-                   {...params}
-                   label="Select a Internet Connectivity Type"
-                   variant="outlined"
-                   name="connectivitytype"
-                 />
-               )}
-               name="connectivitytype"
-             />
-           </Grid>
+            <Grid item xs={4} sm={4}>
 
-           <Grid item xs={4} sm={4}>
-             
 
-             <Autocomplete
-               options={speedtype}
-               getOptionLabel={option => option.value}
-               // style={{ width: 400, overflow: "hidden" }}
-               getOptionSelected={(option, value) => value.id === option.id}
-               key={autoCompleteKey}
-               onChange={(event, value) => {
-                 setFieldValue('speedtype', value);
-                
-               }}
-               renderInput={params => (
-                 <Field
-                   component={TextField}
-                   {...params}
-                   label="Select a Internet Speed"
-                   variant="outlined"
-                   name="speedtype"
-                 />
-               )}
-               name="speedtype"
-             />
-           </Grid>
+              <Autocomplete
+                options={speedtype}
+                getOptionLabel={option => option.value}
+                // style={{ width: 400, overflow: "hidden" }}
+                value={initialValue.speedtype}
+                getOptionSelected={(option, value) => value.id === option.id}
+                key={autoCompleteKey}
+                onChange={(event, value) => {
+                  if (value !== null) {
+                    setFieldValue('speedtype', value);
+                    var i = initialValue
+                    i.speedtype = value
+                    setInitialValue(i)
+                    
+                  }
 
-           <Grid item xs={4} sm={4}>
-               <Field
+                }}
+                renderInput={params => (
+                  <Field
+                    component={TextField}
+                    {...params}
+                    label="Select a Internet Speed"
+                    variant="outlined"
+                    name="speedtype"
+                  />
+                )}
+                name="speedtype"
+              />
+            </Grid>
+
+            <Grid item xs={4} sm={4}>
+              <Field
                 className={classes.fieldContainer}
                 name="issuedescription"
                 component={TextField}
@@ -666,7 +771,7 @@ axios(config)
               />
             </Grid>
             <Grid item xs={4} sm={4}>
-               <Field
+              <Field
                 className={classes.fieldContainer}
                 name="solution"
                 component={TextField}
@@ -676,7 +781,7 @@ axios(config)
                 label="Response /Solution Provided"
               />
             </Grid>
-          
+
             <Grid item xs={4} sm={4}>
               <Field
                 className={classes.fieldContainer}
@@ -689,62 +794,65 @@ axios(config)
               />
             </Grid>
             {selected === true ? (<Grid item item xs={4} sm={4}>
-            <FormControl
-                  variant="outlined"
-                  className={classes.fieldContainer}
-                >
-              
+              <FormControl
+                variant="outlined"
+                className={classes.fieldContainer}
+              >
 
-                  <Autocomplete
-                    options={L1Name}
-                    getOptionLabel={option => option.value}
-                    // style={{ width: 400, overflow: "hidden" }}
-                    getOptionSelected={(option, value) =>
-                      value.id === option.id
-                    }
-                    key={autoCompleteKey}
-                    onChange={(event, value) => {
+
+                <Autocomplete
+                  options={L1Name}
+                  getOptionLabel={option => option.value}
+                  // style={{ width: 400, overflow: "hidden" }}
+                  getOptionSelected={(option, value) =>
+                    value.id === option.id
+                  }
+                  key={autoCompleteKey}
+                  onChange={(event, value) => {
+                    if (value !== null) {
                       setFieldValue('L1Name', value);
                       transfercall(localStorage.getItem('channel'))
-                    
-                    }}
-                    renderInput={params => (
-                      <Field
-                        component={TextField}
-                        {...params}
-                        label="Select a L1"
-                        variant="outlined"
-                        name="L1Name"
-                      />
-                    )}
-                    name="L1Name"
-                  />
-                </FormControl>
+                      
+                    }
 
-            </Grid>):(<></>)
-}
+                  }}
+                  renderInput={params => (
+                    <Field
+                      component={TextField}
+                      {...params}
+                      label="Select a L1"
+                      variant="outlined"
+                      name="L1Name"
+                    />
+                  )}
+                  name="L1Name"
+                />
+              </FormControl>
+
+            </Grid>) : (<></>)
+            }
             <Grid item>
-             
+
               <Field component={RadioGroup} name="type" row>
                 {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
                   value="open"
                   control={<Radio />}
                   label="Open"
-                  onChange={handleChange} 
+                  onChange={handleChange}
                 />
                 <FormControlLabel
                   value="closed"
                   control={<Radio />}
                   label="Closed"
-                  onChange={handleChange} 
-                 
+                  onChange={handleChange}
+
                 />
-                 <FormControlLabel
+                <FormControlLabel
                   value="transfercall"
                   control={<Radio />}
                   label="Transfer Call"
-                  onChange={handleChange} 
+                  onChange={handleChange}
                 />
               </Field>
             </Grid>
