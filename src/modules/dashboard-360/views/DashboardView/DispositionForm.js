@@ -30,7 +30,7 @@ export default function DispositionForm(props) {
 
 
   const [initialValue, setInitialValue] = useState({
-    tickettype: '',
+  
     subcategory: {
       label: "Hardware",
       value: "600c738bf50bb21a5ea091a0"
@@ -211,7 +211,8 @@ export default function DispositionForm(props) {
         url + '/level2/' + cat.value
       );
       const body = await response.json();
-      console.log("bosy", body)
+   
+    
       if (!unmounted) {
         setSubCategories(
           body.data.map(({ _id, subCategory }) => ({
@@ -219,14 +220,7 @@ export default function DispositionForm(props) {
             value: _id
           }))
         );
-
-        body.data[0]
-          ? setSubCategory({
-            label: body.data[0].subCategory,
-            value: body.data[0]._id
-          })
-          : setSubCategory({});
-
+       
         setLoading(false);
       }
     }
@@ -340,7 +334,8 @@ export default function DispositionForm(props) {
   }
   function handleSubmit(e) {
     console.log('formRef', formRef.current.values);
-    console.log('state',)
+ 
+    console.log('state',initialValue)
     // console.log('dispostion', {
     //   tickettype: formRef.current.values.tickettype.label,
     //   category: formRef.current.values.category.label,
@@ -414,10 +409,7 @@ export default function DispositionForm(props) {
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-        tickettype: yup
-          .object()
-          .required('Please select a Type')
-          .typeError('Please select a valid Type'),
+       
         category: yup
           .object()
           .required('Please select a  category')
@@ -513,12 +505,17 @@ export default function DispositionForm(props) {
                     if (value !== null) {
                       setFieldValue('category', value);
 
-                      props.setCategory(value);
-
+                  
+                   var i = initialValue
+                   i.category = value
+                   i.subcategory.value=""
+                   i.subcategory.label=""
+                   i.subcategoryitem.value=""
+                   i.subcategoryitem.label=""
+                   setSubCategories([])
                       getSubCategories(value);
-                      var i = initialValue
-                      i.category = value
                       setInitialValue(i)
+                      
                     }
 
                   }}
