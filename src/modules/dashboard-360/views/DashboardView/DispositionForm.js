@@ -27,50 +27,101 @@ export default function DispositionForm(props) {
   const config = "http://192.168.3.45:8083/"
   console.log('props.DLF', props.DLF)
   var DLF = props.DLF;
-
+  var APIENDPOINT = 'http://localhost:42002';
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  function addToQueue(agentId, queue) {
+    var axios = require('axios');
+    var data = JSON.stringify({
+      agentId: agentId,
+      queue: queue,
+      action: 'QueueAdd'
+    });
+  
+    var config = {
+      method: 'get',
+      url:
+        APIENDPOINT +
+        '/ami/actions/addq?Interface='+agentId+'&Queue=' +
+        queue +
+        '',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  
+    axios(config)
+      .then(function (response) { })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  function removeFromQueue(agentId, queue) {
+    var axios = require('axios');
+    console.log('remove', agentId)
+    var data = JSON.stringify({
+      agentId: agentId,
+      queue: queue,
+      action: 'QueueRemove'
+    });
+  
+    var config = {
+      method: 'get',
+      url:
+        APIENDPOINT +
+        '/ami/actions/rmq?Queue=' +
+        queue +
+        '&Interface='+agentId+'',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+  
+    axios(config)
+      .then(function (response) {
+  
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+  
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  
+  
 
   const [initialValue, setInitialValue] = useState({
   
-    subcategory: {
-      label: "Hardware",
-      value: "600c738bf50bb21a5ea091a0"
-    },
-    category: {
-      label: "Complaints",
-      value: "600bc578997c4d29ff4e560a"
-    },
-    comments: 'TEST Comments',
+    subcategory: '',
+    category: '',
+    comments: '',
     type: '',
-    subcategoryitem: {
-      label: "Webcam Issue",
-      value: "600c7421f50bb21a5ea091a2"
-    },
-    enable: false,
+    subcategoryitem:'',
+    enable: '',
     issuetype: '',
-    devicetype: {
-      id: "1",
-      value: "Mobile"
-    },
-    connectivitytype: {
-      id: "1",
-      value: "Hotspot"
-    },
-    speedtype: {
-      id: "2",
-      value: "More than 2 MBPS"
-    },
-    ostype: { id: "1", value: "Android" },
-    solution: 'TEST Solution',
-    issuedescription: 'Issue Discription',
-    CallerName: 'Vikram',
-    callerapplication: 'CA79788',
+    devicetype: '',
+    connectivitytype: '',
+    speedtype:'',
+    ostype: '',
+    solution: '',
+    issuedescription: '',
+    CallerName: '',
+    callerapplication: '',
     L1Name: '',
-    status: 'Status'
+    status: ''
   });
-  if (DLF.length) {
-    // var i = initialValue;
-    // initialValue['CallerName']
-  }
   const devicetype = [
     {
       id: '1', value: 'Mobile',
@@ -319,7 +370,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=58049292477',
+      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=5001',
       headers: {}
     };
 
@@ -336,64 +387,72 @@ export default function DispositionForm(props) {
     console.log('formRef', formRef.current.values);
  
     console.log('state',initialValue)
-    // console.log('dispostion', {
-    //   tickettype: formRef.current.values.tickettype.label,
-    //   category: formRef.current.values.category.label,
-    //   subcategory: formRef.current.values.subcategory.label,
-    //   subcategoryitem: formRef.current.values.subcategoryitem.label,
-    //   comments: formRef.current.values.comments,
-    //   type: formRef.current.values.type,
+    console.log('dispostion', {
+      // tickettype: formRef.current.values.tickettype.label,
+      category: formRef.current.values.category.label,
+      subcategory: formRef.current.values.subcategory.label,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
+      comments: formRef.current.values.comments,
+      type: formRef.current.values.type,
 
-    // });
+    });
 
-    // props.setdisForm(formRef.current.values);
-    // localStorage.setItem('callDispositionStatus', 'Disposed');
+    props.setdisForm(formRef.current.values);
+    localStorage.setItem('callDispositionStatus', 'Disposed');
+    if(localStorage.getItem('Agenttype') === 'L1'){
+      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+    }
+    if(localStorage.getItem('Agenttype') === 'L2'){
+      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+    }
     // props.removeFromQueue(props.AgentSipId, '5000');
     // props.addToQueue(props.agentSipID, '5000');
-    // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    // props.setCurrentCallDetails(
-    //   localStorage.getItem('callStatusId'),
-    //   localStorage.getItem('callUniqueId'),
-    //   localStorage.getItem('callType'),
-    //   localStorage.getItem('callStatus'),
-    //   localStorage.getItem('callEvent'),
-    //   localStorage.getItem('callDispositionStatus'),
-    //   localStorage.getItem('callerNumber'),
-    //   localStorage.getItem('breakStatus')
-    // );
-    // updateAgentCallStatus({
-    //   callStatusId: localStorage.getItem('callStatusId'),
-    //   callUniqueId: localStorage.getItem('callUniqueId'),
-    //   callType: localStorage.getItem('callType'),
-    //   callStatus: localStorage.getItem('callStatus'),
-    //   callEvent: localStorage.getItem('callEvent'),
-    //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-    //   callerNumber: localStorage.getItem('callerNumber'),
+    // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
+    props.setCurrentCallDetails(
+      localStorage.getItem('callStatusId'),
+      localStorage.getItem('callUniqueId'),
+      localStorage.getItem('callType'),
+      localStorage.getItem('callStatus'),
+      localStorage.getItem('callEvent'),
+      localStorage.getItem('callDispositionStatus'),
+      localStorage.getItem('callerNumber'),
+      localStorage.getItem('breakStatus')
+    );
+    updateAgentCallStatus({
+      callStatusId: localStorage.getItem('callStatusId'),
+      callUniqueId: localStorage.getItem('callUniqueId'),
+      callType: localStorage.getItem('callType'),
+      callStatus: localStorage.getItem('callStatus'),
+      callEvent: localStorage.getItem('callEvent'),
+      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+      callerNumber: localStorage.getItem('callerNumber'),
 
-    // })
-    // updateCallData(localStorage.getItem('callUniqueId'), {
-    //   tickettype: formRef.current.values.tickettype.label,
-    //   category: formRef.current.values.category.label,
-    //   subcategory: formRef.current.values.subcategory.label,
-    //   subcategoryitem: formRef.current.values.subcategoryitem.label,
-    //   comments: formRef.current.values.comments,
-    //   type: formRef.current.values.type,
-    //   distributerID: localStorage.getItem('distributer_id'),
-    //   CallerName:  formRef.current.values.CallerName,
-    //   callerapplication: formRef.current.values.callerapplication.label,
-    //   connectivitytype:  formRef.current.values.connectivitytype.value,
-    //   devicetype:  formRef.current.values.devicetype.value,
-    //   enable:  ""+formRef.current.values.enable+"",
-    //   issuedescription: formRef.current.values.issuedescription,
-    //   issuetype: formRef.current.values.issuetype,
-    //   ostype: formRef.current.values.ostype.value,
-    //   speedtype:  formRef.current.values.speedtype.value,
-    //   status:  formRef.current.values.status,
-    //   subcategoryitem:  formRef.current.values.subcategoryitem.value,
-    //   tickettype:  formRef.current.values.tickettype.label,
-    //   type: formRef.current.values.type,
+    })
+    updateCallData(localStorage.getItem('callUniqueId'), {
+      // tickettype: formRef.current.values.tickettype.label,
+      category: formRef.current.values.category.label,
+      subcategory: formRef.current.values.subcategory.label,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
+      comments: formRef.current.values.comments,
+      type: formRef.current.values.type,
+      distributerID: localStorage.getItem('distributer_id'),
+      CallerName:  formRef.current.values.CallerName,
+      callerapplication: formRef.current.values.callerapplication.label,
+      connectivitytype:  formRef.current.values.connectivitytype.value,
+      devicetype:  formRef.current.values.devicetype.value,
+      enable:  ""+formRef.current.values.enable+"",
+      issuedescription: formRef.current.values.issuedescription,
+      issuetype: formRef.current.values.issuetype,
+      ostype: formRef.current.values.ostype.value,
+      speedtype:  formRef.current.values.speedtype.value,
+      status:  formRef.current.values.status,
+      subcategoryitem:  formRef.current.values.subcategoryitem.value,
+      // tickettype:  formRef.current.values.tickettype.label,
+      type: formRef.current.values.type,
 
-    // })
+    })
 
 
   }
@@ -506,15 +565,15 @@ export default function DispositionForm(props) {
                       setFieldValue('category', value);
 
                   
-                   var i = initialValue
-                   i.category = value
-                   i.subcategory.value=""
-                   i.subcategory.label=""
-                   i.subcategoryitem.value=""
-                   i.subcategoryitem.label=""
-                   setSubCategories([])
-                      getSubCategories(value);
-                      setInitialValue(i)
+                  //  var i = initialValue
+                  //  i.category = value
+                  //  i.subcategory.value=""
+                  //  i.subcategory.label=""
+                  //  i.subcategoryitem.value=""
+                  //  i.subcategoryitem.label=""
+                  //  setSubCategories([])
+                  //     getSubCategories(value);
+                  //     setInitialValue(i)
                       
                     }
 

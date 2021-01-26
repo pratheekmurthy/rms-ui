@@ -93,6 +93,81 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+
+var APIENDPOINT = 'http://localhost:42002';
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function addToQueue(agentId, queue) {
+  var axios = require('axios');
+  var data = JSON.stringify({
+    agentId: agentId,
+    queue: queue,
+    action: 'QueueAdd'
+  });
+
+  var config = {
+    method: 'get',
+    url:
+      APIENDPOINT +
+      '/ami/actions/addq?Interface='+agentId+'&Queue=' +
+      queue +
+      '',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  axios(config)
+    .then(function (response) { })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function removeFromQueue(agentId, queue) {
+  var axios = require('axios');
+  var data = JSON.stringify({
+    agentId: agentId,
+    queue: queue,
+    action: 'QueueRemove'
+  });
+
+  var config = {
+    method: 'get',
+    url:
+      APIENDPOINT +
+      '/ami/actions/rmq?Queue=' +
+      queue +
+      '&Interface='+agentId+'',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  axios(config)
+    .then(function (response) {
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const classes = useStyles();
   const [error, setError] = useState('');
@@ -115,9 +190,16 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
      
       localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
       localStorage.setItem('role',res.data.userDetails.role);
-      localStorage.setItem('Agenttype', 'L2');
+      localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
       setUserDetailsMain(obj);
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+
+      if(res.data.userDetails.AgentType === 'L1'){
+        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+      }
+      if(res.data.userDetails.AgentType === 'L2'){
+        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+      }
       setLoggedInMain(true);
       setError(false);
       

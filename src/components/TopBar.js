@@ -82,6 +82,82 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+var APIENDPOINT = 'http://localhost:42002';
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function addToQueue(agentId, queue) {
+  var axios = require('axios');
+  var data = JSON.stringify({
+    agentId: agentId,
+    queue: queue,
+    action: 'QueueAdd'
+  });
+
+  var config = {
+    method: 'get',
+    url:
+      APIENDPOINT +
+      '/ami/actions/addq?Interface='+agentId+'&Queue=' +
+      queue +
+      '',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  axios(config)
+    .then(function (response) { })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function removeFromQueue(agentId, queue) {
+  var axios = require('axios');
+  console.log('remove', agentId)
+  var data = JSON.stringify({
+    agentId: agentId,
+    queue: queue,
+    action: 'QueueRemove'
+  });
+
+  var config = {
+    method: 'get',
+    url:
+      APIENDPOINT +
+      '/ami/actions/rmq?Queue=' +
+      queue +
+      '&Interface='+agentId+'',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  axios(config)
+    .then(function (response) {
+
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 const TopBar = ({
   className,
   onMobileNavOpen,
@@ -160,16 +236,25 @@ const TopBar = ({
     searchDist(searchText);
   };
   async function logoutUser() {
+  
     try {
+      if(localStorage.getItem('Agenttype') === 'L1'){
+        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+      }
+      if(localStorage.getItem('Agenttype') === 'L2'){
+        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+      }
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData= localStorage.jwtToken
 
       const url='http://localhost:4000/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
+
       localStorage.removeItem("jwtToken")
       localStorage.removeItem("AgentSIPID")
       localStorage.removeItem("role")
+
       logout();
     } catch (err) {
       console.log(err);
@@ -201,7 +286,7 @@ const TopBar = ({
         <Hidden mdDown>
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
-              Dashboard
+              Dashboard {localStorage.getItem('Agenttype'), localStorage.getItem('distributer_id')}
             </Link>
           </Typography>
           <Typography className={classes.title} variant="h5" noWrap>
