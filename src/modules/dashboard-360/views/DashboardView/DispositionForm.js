@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import {
   UPDATE_CALL_STATUS,
   UPDATE_CURRENT_STATUS,
+  GET_INTERACTION_BY_DISTRIBUTOR_ID,
+  GET_INTERACTION_BY_CALLER_NUMBER
 } from 'src/modules/dashboard-360/utils/endpoints';
 import {
   Button,
@@ -100,7 +102,6 @@ export default function DispositionForm(props) {
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   
-  
 
   const [initialValue, setInitialValue] = useState({
   
@@ -122,6 +123,36 @@ export default function DispositionForm(props) {
     L1Name: '',
     status: ''
   });
+  function getDLF() {
+    const axios = require('axios');
+    let data = '';
+    let config = {
+      method: 'get',
+      url:
+      GET_INTERACTION_BY_CALLER_NUMBER +
+        localStorage.getItem('callerNumber') +
+        '',
+      headers: {},
+      data: data
+    };
+
+    axios(config)
+      .then(async response => {
+        var DLFDATA = response.data;
+        DLFDATA = await DLFDATA.reverse();
+        console.log("DLFDATA INSIDE THE DIS FORM", DLFDATA)
+        if(DLFDATA.length){
+          console.log("DLFDATA INSIDE THE dispostionFormData", DLFDATA[0].dispostionFormData)
+          setInitialValue(DLFDATA[0].dispostionFormData)
+        }
+        // setDLF(DLFDATA);
+      })
+
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
   const devicetype = [
     {
       id: '1', value: 'Mobile',
@@ -208,6 +239,11 @@ export default function DispositionForm(props) {
   const [selected, setSelected] = useState(false);
   const url = "http://192.168.3.45:5001"
   const handleChange = (e, s) => {
+
+    updateCallData(localStorage.getItem('callUniqueId'), {
+      type: formRef.current.values.type,     
+      dispostionFormData: formRef.current.values             
+    })
     // console.log("change",e.target.defaultValue)
     if (e.target.defaultValue === "transfercall") {
       setSelected(true);
@@ -218,6 +254,7 @@ export default function DispositionForm(props) {
   };
   useEffect(() => {
     let unmounted = false;
+    getDLF()
     console.log('initialValue', initialValue)
     if (initialValue.category !== '') {
       getSubCategories(initialValue.category);
@@ -253,6 +290,10 @@ export default function DispositionForm(props) {
       unmounted = true;
     };
   }, []);
+
+  useEffect(() => {
+
+  }, [initialValue])
 
   const getSubCategories = cat => {
 
@@ -370,7 +411,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=5001',
+      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=37903239709',
       headers: {}
     };
 
@@ -431,7 +472,6 @@ export default function DispositionForm(props) {
 
     })
     updateCallData(localStorage.getItem('callUniqueId'), {
-      // tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
       subcategory: formRef.current.values.subcategory.label,
       subcategoryitem: formRef.current.values.subcategoryitem.label,
@@ -449,8 +489,8 @@ export default function DispositionForm(props) {
       speedtype:  formRef.current.values.speedtype.value,
       status:  formRef.current.values.status,
       subcategoryitem:  formRef.current.values.subcategoryitem.value,
-      // tickettype:  formRef.current.values.tickettype.label,
       type: formRef.current.values.type,
+      dispostionFormData: formRef.current.values
 
     })
 
@@ -564,6 +604,10 @@ export default function DispositionForm(props) {
                     if (value !== null) {
                       setFieldValue('category', value);
 
+                      updateCallData(localStorage.getItem('callUniqueId'), {
+                        type: formRef.current.values.type,     
+                        dispostionFormData: formRef.current.values             
+                      })
                   
                   //  var i = initialValue
                   //  i.category = value
@@ -605,6 +649,11 @@ export default function DispositionForm(props) {
                   onChange={(event, value) => {
                     if (value !== null) {
                       setFieldValue('subcategory', value);
+
+                      updateCallData(localStorage.getItem('callUniqueId'), {
+                        type: formRef.current.values.type,     
+                        dispostionFormData: formRef.current.values             
+                      })
                       props.setSubCategory(value);
                       getSubCategoryItems(
                         formRef.current.values.category.value,
@@ -653,6 +702,11 @@ export default function DispositionForm(props) {
                       if (value !== null) {
                         setFieldValue('subcategoryitem', value);
                         props.setSubCategoryItem(value);
+
+                      updateCallData(localStorage.getItem('callUniqueId'), {
+                        type: formRef.current.values.type,     
+                        dispostionFormData: formRef.current.values             
+                      })
                         var i = initialValue
                         i.subCategoryItem = value
                         setInitialValue(i)
@@ -687,6 +741,11 @@ export default function DispositionForm(props) {
                 onChange={(event, value) => {
                   if (value !== null) {
                     setFieldValue('devicetype', value);
+
+                    updateCallData(localStorage.getItem('callUniqueId'), {
+                      type: formRef.current.values.type,     
+                      dispostionFormData: formRef.current.values             
+                    })
                     var i = initialValue
                     i.devicetype = value
                     setInitialValue(i)
@@ -726,6 +785,11 @@ export default function DispositionForm(props) {
                 onChange={(event, value) => {
                   if (value !== null) {
                     setFieldValue('ostype', value);
+
+                    updateCallData(localStorage.getItem('callUniqueId'), {
+                      type: formRef.current.values.type,     
+                      dispostionFormData: formRef.current.values             
+                    })
                     console.log('asdfasf', initialValue)
                     initialValue.ostype = value
                     setInitialValue(initialValue)
@@ -762,6 +826,11 @@ export default function DispositionForm(props) {
                   if (value !== null) {
                  
                       setFieldValue('connectivitytype', value);
+
+                      updateCallData(localStorage.getItem('callUniqueId'), {
+                        type: formRef.current.values.type,     
+                        dispostionFormData: formRef.current.values             
+                      })
                       var i = initialValue
                       i.connectivitytype = value
                       setInitialValue(i)
@@ -795,6 +864,11 @@ export default function DispositionForm(props) {
                 onChange={(event, value) => {
                   if (value !== null) {
                     setFieldValue('speedtype', value);
+
+                    updateCallData(localStorage.getItem('callUniqueId'), {
+                      type: formRef.current.values.type,     
+                      dispostionFormData: formRef.current.values             
+                    })
                     var i = initialValue
                     i.speedtype = value
                     setInitialValue(i)
@@ -866,6 +940,11 @@ export default function DispositionForm(props) {
                   key={autoCompleteKey}
                   onChange={(event, value) => {
                     if (value !== null) {
+
+                      updateCallData(localStorage.getItem('callUniqueId'), {
+                        type: formRef.current.values.type,     
+                        dispostionFormData: formRef.current.values             
+                      })
                       setFieldValue('L1Name', value);
                       transfercall(localStorage.getItem('channel'))
                       

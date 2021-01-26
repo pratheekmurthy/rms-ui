@@ -251,9 +251,7 @@ const TopBar = ({
       const url='http://localhost:4000/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
 
-      localStorage.removeItem("jwtToken")
-      localStorage.removeItem("AgentSIPID")
-      localStorage.removeItem("role")
+      localStorage.clear();
 
       logout();
     } catch (err) {

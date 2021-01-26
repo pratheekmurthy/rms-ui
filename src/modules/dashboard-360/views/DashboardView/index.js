@@ -225,6 +225,7 @@ const Dashboard = ({
       .then(async response => {
         var DLFDATA = response.data;
         DLFDATA = DLFDATA.reverse();
+        console.log("DLF", DLFDATA)
         setDLF(DLFDATA);
       })
 
@@ -429,7 +430,10 @@ const Dashboard = ({
             AgentSIPID: agent.AgentSipId,
             breakStatus: response.data[0].breakStatus
           });
-          localStorage.setItem('channel', response.data[0].channel);
+          if(response.data[0].channel !== null || response.data[0].channel !== undefined){
+              // localStorage.setItem('channel', response.data[0].channel);
+          }
+        
         }
       })
       .catch(function (error) {
@@ -649,7 +653,8 @@ const Dashboard = ({
       // var Channel1 = data.Channel1;
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
-        console.log('ringing1', data)
+        console.log('ringing1', data);
+        localStorage.setItem('channel', data.event.Channel)
       //   console.log('AstriskEventBridgeOutbound', data);
      
         // setCurrentCallDetails(
@@ -687,6 +692,12 @@ const Dashboard = ({
       //   );
       }
     });
+    socket.on('transfercallnumber', data => {
+      if(localStorage.getItem('Agenttype') === 'L2'){
+        localStorage.setItem('callerNumber', data.contactnumber)
+      }
+
+    })
     socket.on('connected', data => {
       // console.log('connected', data)
       var agentExtension = data.agentNumber;
@@ -701,7 +712,7 @@ const Dashboard = ({
           'connected',
           'Bridge',
           'NotDisposed',
-          data.CallerID1,
+          localStorage.getItem('callerNumber'),
           localStorage.getItem('breakStatus')
         );
         // removeFromQueue(agent.AgentSipId, '5000');
@@ -731,6 +742,7 @@ const Dashboard = ({
       socket.off('ringing');
       socket.off('connected');
       socket.off('hangup');
+      socket.off('transfercallnumber');
     };
   }, []);
 
