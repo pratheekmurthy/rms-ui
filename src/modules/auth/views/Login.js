@@ -22,7 +22,7 @@ import Axios from 'axios';
 import { ADMIN, USER } from 'src/redux/constants';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 // import Typography from '@material-ui/core/Typography';
-
+import Logo from '../../dashboard-360/components/loginlogo'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -174,6 +174,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [enable, setEnable] = useState(true);
+  const [message, setMessage] = useState(true);
   async function authenticate(values) {
     setError('');
     try {
@@ -218,7 +219,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     console.log("password", password)
     var userData = {
       userName: username,
-      password: e.target.value,
+      password: password,
     }
     const url = 'http://localhost:4000/auth/apiM/sendOTP'
 
@@ -227,9 +228,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     console.log("login api", res.data)
     if (res.data.statusCode === 200) {
       setEnable(false)
+      setMessage(true)
     }
-
-
+    if (res.data.statusCode === 404) {
+      setMessage(false)
+    }
 
   }
 
@@ -251,6 +254,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       >
         <div className={`${classes.paper}`}>
           <div>
+          <div ><center><Logo /></center></div>
             <div className={classes.avatarWrapper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
@@ -318,6 +322,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     name="email"
                     onBlur={e => {
                       setUsername(e.target.value)
+                      setMessage(true)
                       // getOtp()
                     }}
                     onChange={handleChange}
@@ -334,7 +339,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     name="password"
                     onBlur={e => {
                       setPassword(e.target.value)
-                      getOtp(e)
+                      setMessage(true)
+                      // getOtp(e)
                     }}
                     onChange={handleChange}
                     type="password"
@@ -381,10 +387,13 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.AgentSIPID}
                     variant="outlined"
                   /> */}
-                  {enable === false ? <ThemeProvider theme={theme}>
+                 {enable === false ? <ThemeProvider theme={theme}>
                     <Typography variant="h6">OTP Sent Sucessfully</Typography>
                   </ThemeProvider> : <></>}
-                  <TextField
+                  {message === false ? <ThemeProvider theme={theme}>
+                    <Typography variant="h6">Invalid Username/Password</Typography>
+                  </ThemeProvider> : <></>}
+                  {enable === false ?    <TextField
                     error={Boolean(touched.OTP && errors.OTP)}
                     fullWidth
                     helperText={touched.OTP && errors.OTP}
@@ -397,7 +406,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     value={values.OTP}
                     variant="outlined"
                     disabled={enable}
-                  />
+                  />:<></>}
                   {!!error && (
                     <Box my={1}>
                       <Typography color="secondary">
@@ -405,8 +414,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                       </Typography>
                     </Box>
                   )}
-                  <Box my={2} mt={5}>
-                    <Button
+                   {enable === false ? <Button
                       color="primary"
                       fullWidth
                       size="large"
@@ -414,8 +422,16 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                       variant="contained"
                     >
                       Sign in now
-                    </Button>
-                  </Box>
+                    </Button> : <Button
+                        color="primary"
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                        onClick={(e) => getOtp(e)}
+                      >
+                       Generate OTP
+                    </Button>}
                 </form>
               )}
             </Formik>

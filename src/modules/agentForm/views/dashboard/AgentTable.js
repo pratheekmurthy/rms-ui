@@ -1,42 +1,89 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-
+import Axios from 'axios';
+import Editagent from './EditAgent'
 const columns = [
+
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'agentName', headerName: 'Agent name', width: 130 },
-  { field: 'agentnumber', headerName: 'Agent Number', width: 200 },
+  { field: 'EmployeeName', headerName: 'Agent name', width: 130 },
+  { field: 'External_num', headerName: 'Contact Number', width: 200 },
   {
-    field: 'email',
+    field: 'EmailID',
     headerName: 'Email',
     width: 200,
   },
   {
-    field: 'location',
+    field: 'Location',
     headerName: 'Location',
     width: 160,
-   
+
   },
   {
-    field: 'agenttype',
+    field: 'AgentType',
     headerName: 'Agent Type',
     width: 160,
-   
+
+  },
+  {
+    field: 'GroupName',
+    headerName: 'Groups',
+    width: 160,
+
   },
 ];
 
-const rows = [
-  { id: 1, agentName: 'Chaitra', agentnumber: '9448531031', email: 'chaitra@gmail.com' ,location:'Bangalore', agenttype:'L1'},
-  { id: 2, agentName: 'Suma', agentnumber: '7867371881', email: 'suma@gmail.com' ,location:'Mysore',agenttype:'L1'},
-  { id: 3, agentName: 'Latha', agentnumber: '6728838291', email: 'latha@gmail.com' ,location:'Bangalore', agenttype:'L1'},
-  { id: 4, agentName: 'Priya', agentnumber: '9737371873', email: 'priya@gmail.com' ,location:'Bangalore',agenttype:'L1'},
-  { id: 5, agentName: 'Sonu', agentnumber: '9767712828', email: 'sonu@gmail.com' ,location:'Mysore',agenttype:'L1'},
 
-];
 
 export default function DataGridDemo() {
+  const [agents, setAgents] = useState([]);
+  const [editform, setEditform] = useState(false);
+  const [editData, setEditData] = useState([]);
+
+  function TableData() {
+    const url = 'http://localhost:4000/admin/agent/viewAgent'
+
+    Axios.post(url)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data.data));
+        setAgents(response.data.data)
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  }
+  useEffect(() => {
+    TableData()
+
+
+  }, [])
   return (
     <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={rows} columns={columns} pageSize={5} checkboxSelection />
+      {agents.length > 0 ? <DataGrid rows={agents.map(calls => ({
+        ...calls,
+        id: calls.UserID
+      }))} columns={columns} pageSize={5} checkboxSelection
+        onSelectionChange={(newSelection) => {
+
+
+          const url = 'http://localhost:4000/admin/agent/getAgent'
+
+
+          Axios.post(url, newSelection)
+            .then(function (response) {
+              // console.log(JSON.stringify(response.data));
+              if (response.data.status === 200) {
+                setEditform(true)
+                setEditData(response.data.data)
+              }
+
+            })
+          // setSelection(newSelection.rowIds);
+        }} /> : <></>}
+      {editData.length > 0 ? <Editagent
+        EditData={editData}
+        TableData={TableData} /> : <></>}
     </div>
   );
 }

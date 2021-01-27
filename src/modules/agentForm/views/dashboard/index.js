@@ -21,36 +21,15 @@ import {
   GET_INBOUND_DASHBOARD_DATA,  
   GET_INTERACTION_BY_AGENT_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
-import CallIcon from '@material-ui/icons/Call';
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
-import AddIcCallIcon from '@material-ui/icons/AddIcCall';
-import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import QueueIcon from '@material-ui/icons/Queue';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import AvTimerIcon from '@material-ui/icons/AvTimer';
-import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
-import VoicemailIcon from '@material-ui/icons/Voicemail';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import QuestionAnswerRoundedIcon from '@material-ui/icons/QuestionAnswerRounded';
-import TimelapseRoundedIcon from '@material-ui/icons/TimelapseRounded';
-import Timer10RoundedIcon from '@material-ui/icons/Timer10Rounded';
-import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
-import StarsIcon from '@material-ui/icons/Stars';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import { grey } from '@material-ui/core/colors';
 
 import socketIOClient from 'socket.io-client';
-import DaterangeReport from './DaterangeReport';
-import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
-import DispositionTable from './DispositionTable';
-import { DataGrid } from '@material-ui/data-grid';
-import {
 
-  lastFiveCallData
-} from 'src/modules/dashboard-360/utils/columns-config';
+
 import CreateAgent from './CreateAgentform'
 import AgentTable from './AgentTable'
-import CreateCaller from './Createcaller'
+
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
