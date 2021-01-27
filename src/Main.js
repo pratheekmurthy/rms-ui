@@ -50,7 +50,8 @@ function Main({
             }
              setUserDetailsMain(obj)
              localStorage.setItem('AgentSIPID', obj.External_num);
-          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+             setAccountTypeMain(obj.role === 'Agent'||obj.role === 'Admin' ||obj.role === 'Group admin'? ADMIN : USER);
+          // setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
           })
           .catch(error => console.log(error));
         } else {
