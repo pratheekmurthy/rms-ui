@@ -15,8 +15,10 @@ import {
   Radio
 } from '@material-ui/core';
 import * as yup from 'yup';
+import Axios from 'axios';
 // import config from '../../../ticketing/views/config.json';g
 import { Autocomplete } from '@material-ui/lab';
+import { set } from 'lodash';
 // import { AlternateEmailTwoTone } from '@material-ui/icons';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
@@ -24,67 +26,70 @@ const useStyle = makeStyles(() => ({
   }
 }));
 export default function DispositionForm(props) {
-  const config="http://192.168.3.45:8083/"
-  const [initialValue] = useState({
-     
+  const config = "http://192.168.3.45:8083/"
+  const [initialValue, setInitialValue] = useState({
+
     AgentName: '',
     AgentEmail: '',
     Agentcontact: '',
     location: '',
-    enable: false
+    enable: false,
+    AgentType: {
+      value: "",
+      label: ""
+    },
+    Group:{
+      value: "",
+      label: ""
+    }
   });
+  const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
   const agentServiceURL = 'http://localhost:42004/';
-  const AgentType =[
+  const AgentType = [
     {
-      id:'1', value:'L1',
+      id: '1', value: 'L1',
     },
     {
-      id:'2', value:'L2',
+      id: '2', value: 'L2',
     },
-   
+
   ]
-  
-  function updateCallData(uniqueid, dispostionData) {
-    const axios = require('axios');
-    let data = JSON.stringify(dispostionData);
-    console.log('updateCAllData', data, uniqueid)
+  // const Groups = [
+  //   {
+  //     id: '1', value: 'Grassroots DD',
+  //   },
+  //   {
+  //     id: '2', value: 'Grassroots OMR',
+  //   },
+  //   {
+  //     id: '3', value: 'Grassroots Site1',
+  //   },
 
-    let config = {
-      method: 'post',
+  // ]
 
-      url:'http://localhost:42004'+ UPDATE_CALL_STATUS + uniqueid,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: data
-    };
 
-    axios(config)
-      .then(response => {
-        console.log('dispostionForm', JSON.stringify(response.data));
-        props.getALF();
-      })
-      .catch(error => {
-        console.log('dispostionFrom', error);
-      });
-  }
-
-  function updateAgentCallStatus(updateData) {
+  function updateAgentCallStatus(contactNumber) {
+    console.log("contactNumber",contactNumber)
     var axios = require('axios');
+    
     var data = {
-      agentCallStatus: updateData.callStatus,
-      agentCallEvent: updateData.callEvent,
-      agentCallUniqueId: updateData.callUniqueId,
-      agentCallType: updateData.callType,
-      agentCallDispositionStatus: updateData.callDispositionStatus,
-      callerNumber: updateData.callerNumber
+      agentCallDispositionStatus: "NotDisposed",
+      agentCallType: "Inbound",
+      agentCallUniqueId: "1610712538.46886",
+      agentCallEvent: "Bridge",
+      agentCallStatus: "disconnected",
+      agentID: "9998",
+      agentSipID: "9998",
+      contactNumber:contactNumber,
+      breakStatus: "OUT",
+     
     };
     var config = {
 
-      method: 'put',
-      url: 'https://localhost:42004'+UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      method: 'post',
+      url: 'https://localhost:42004/crm/currentstatuses',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -100,28 +105,109 @@ export default function DispositionForm(props) {
       });
   }
   function handleSubmit(e) {
+
     console.log('formRef', formRef.current.values);
-   
- 
-   
+    const data = {
+      "AgentName": formRef.current.values.AgentName,
+      "AgentEmail": formRef.current.values.AgentEmail,
+
+      "Agentcontact": formRef.current.values.Agentcontact,
+      "AgentType": formRef.current.values.AgentType.value,
+      "location": formRef.current.values.location,
+      "group": formRef.current.values.Group.group_name,
+    }
+    // const url = 'http://localhost:4000/admin/agent/addAgent'
+
+    // Axios.post(url, data)
+    //   .then(function (response) {
+    //     console.log(response);
+    //     if (response.data.status === 200) {
+    //       alert("Created Agent Successfully")
+    //       updateAgentCallStatus(formRef.current.values.Agentcontact)
+    //     }
+    //     else{
+    //       alert(response.data.message)
+    //     console.log( "formRef.current",formRef.current)
+       
+    //     }
+    //   })
+
+      setInitialValue({
+
+        AgentName: '',
+        AgentEmail: '',
+        Agentcontact: '',
+        location: '',
+       
+        AgentType: {
+          value: "",
+          label: "",
+          id:""
+        }
+      });
+     
+      formRef.current.values.AgentName = ""
+      formRef.current.values.AgentEmail = ""
+      formRef.current.values.Agentcontact = ""
+      formRef.current.values.location = ""
+      formRef.current.values.AgentType.label = ""
+      formRef.current.values.AgentType.value = ""
+      formRef.current.values.AgentType.id = ""
+      formRef.current.values.Group={ value: "",
+      label: ""}
+      console.log("initialValue", initialValue)
+     
+    e.preventDefault()
+  
 
   }
+
+
+
+
+  useEffect(() => {
+    console.log('formRef', formRef.current.values);
+    console.log("initialValue", initialValue)
+    const url = 'http://localhost:4000/admin/group/getGroup'
+
+    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+      .then(function (response) {
+        console.log(response);
+        if (response.data.status === 200) {
+          // roup=response.data.data
+          setGroups(response.data.data)
+        }
+        else{
+          alert(response.data.message)
+    
+       
+        }
+      })
+
+
+  }, [])
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
     <Formik
       validateOnBlur={false}
       initialValues={initialValue}
       disform={initialValue}
-      onSubmit={(e, { validate }) => {
+      onSubmit={(e, { validate }, { resetForm }) => {
+        console.log("e", e)
         handleSubmit(e);
         validate(e);
+        resetForm({ e: '' })
       }}
       innerRef={formRef}
       validationSchema={yup.object({
         AgentType: yup
-        .object()
-        .required('Please select a Agent Type')
-        .typeError('Please select a valid Agent Type'),
+          .object()
+          .required('Please select a Agent Type')
+          .typeError('Please select a valid Agent Type'),
+          Group: yup
+          .object()
+          .required('Please select a Group')
+          .typeError('Please select a Group'),
         AgentName: yup.string().required('Please Enter Agent Name'),
         AgentEmail: yup.string().required('Please Enter Agent Email'),
         Agentcontact: yup.string().required('Please Enter Agent Contact Number'),
@@ -131,81 +217,116 @@ export default function DispositionForm(props) {
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
-          <Grid item>
+            <Grid item>
               <Field
                 className={classes.fieldContainer}
                 name="AgentName"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
+                // value="AgentName"
                 label="Agent Name"
+
               />
-              </Grid>
-               <Grid item>
-               <Field
+            </Grid>
+            <Grid item>
+              <Field
                 className={classes.fieldContainer}
                 name="AgentEmail"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
                 label="Agent Email"
               />
             </Grid>
             <Grid item>
-               <Field
+              <Field
                 className={classes.fieldContainer}
                 name="Agentcontact"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
                 label="Agent Contact Number"
               />
             </Grid>
             <Grid item>
-               <Field
+              <Field
                 className={classes.fieldContainer}
                 name="location"
                 component={TextField}
                 variant="outlined"
                 multiline
-                
+
                 label="Location"
               />
             </Grid>
             <Grid item >
-            <FormControl
-                  variant="outlined"
-                  className={classes.fieldContainer}
-                >
-              
+              <FormControl
+                variant="outlined"
+                className={classes.fieldContainer}
+              >
 
-                  <Autocomplete
-                    options={AgentType}
-                    getOptionLabel={option => option.value}
-                    // style={{ width: 400, overflow: "hidden" }}
-                    getOptionSelected={(option, value) =>
-                      value.id === option.id
-                    }
-                    key={autoCompleteKey}
-                    onChange={(event, value) => {
-                      setFieldValue('AgentType', value);
-                    
-                    }}
-                    renderInput={params => (
-                      <Field
-                        component={TextField}
-                        {...params}
-                        label="Select Agent Type"
-                        variant="outlined"
-                        name="AgentType"
-                      />
-                    )}
-                    name="AgentType"
-                  />
-                </FormControl>
+
+                <Autocomplete
+                  options={Groups}
+                  getOptionLabel={option => option.group_name}
+                  // style={{ width: 400, overflow: "hidden" }}
+                  getOptionSelected={(option, value) =>
+                    value.id === option.id
+                  }
+                  key={autoCompleteKey}
+                  onChange={(event, value) => {
+
+                    setFieldValue('Group', value);
+
+                  }}
+                  renderInput={params => (
+                    <Field
+                      component={TextField}
+                      {...params}
+                      label="Select Groups"
+                      variant="outlined"
+                      name="Group"
+                    />
+                  )}
+                  name="Group"
+                />
+              </FormControl>
+
+            </Grid>
+
+            <Grid item >
+              <FormControl
+                variant="outlined"
+                className={classes.fieldContainer}
+              >
+
+
+                <Autocomplete
+                  options={AgentType}
+                  getOptionLabel={option => option.value}
+                  // style={{ width: 400, overflow: "hidden" }}
+                  getOptionSelected={(option, value) =>
+                    value.id === option.id
+                  }
+                  key={autoCompleteKey}
+                  onChange={(event, value) => {
+
+                    setFieldValue('AgentType', value);
+
+                  }}
+                  renderInput={params => (
+                    <Field
+                      component={TextField}
+                      {...params}
+                      label="Select Agent Type"
+                      variant="outlined"
+                      name="AgentType"
+                    />
+                  )}
+                  name="AgentType"
+                />
+              </FormControl>
 
             </Grid>
           </Grid>
