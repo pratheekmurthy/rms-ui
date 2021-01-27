@@ -6,6 +6,7 @@ import faqRoutes from '../modules/FAQ/routes';
 import authRoutes from '../modules/auth/routes';
 
 import agentRoutes from '../modules/agentForm/routes';
+import groupRoutes from '../modules/groupadminForm/routes';
 export const dash360 = React.lazy(() =>
   import('src/modules/dashboard-360/views')
 );
@@ -21,7 +22,9 @@ export const faq = React.lazy(() =>
 export const agentform = React.lazy(() =>
   import('src/modules/agentForm/views/index')
 );
-
+export const groupform = React.lazy(() =>
+  import('src/modules/groupadminForm/views/index')
+);
 export const auth = React.lazy(() => import('src/modules/auth/views/index'));
 
 export default [
@@ -57,6 +60,14 @@ export default [
     key: 'dashboardagent',
     component:agentform,
     crumb: 'Agents',
+    requiresAuth: true
+  },
+  {
+    path: '/group',
+    routes: groupRoutes,
+    key: 'dashboardgroup',
+    component:groupform,
+    crumb: 'Groups',
     requiresAuth: true
   },
   {

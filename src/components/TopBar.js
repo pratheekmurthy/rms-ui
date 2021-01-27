@@ -300,6 +300,11 @@ const TopBar = ({
               Agents
             </Link>
           </Typography>:<></>}
+          {localStorage.getItem("role")==="Admin"?  <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/group/dashboard" className="color-white">
+              Groups
+            </Link>
+          </Typography>:<></>}
           {viewAccess === -1 ? (
             ''
           ) : (

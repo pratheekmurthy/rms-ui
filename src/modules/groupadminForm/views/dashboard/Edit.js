@@ -84,7 +84,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
         console.log("formData", formData)
         const url = 'http://localhost:4000/admin/agent/updateAgent'
 
-        Axios.post(url, {formData},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+        Axios.post(url, formData)
             .then(function (response) {
                 console.log(response);
                 if (response.data.status === 200) {
@@ -179,7 +179,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                             />
                             <br />
                             <br />
-                          {localStorage.getItem('role')==="Admin" ? <TextField
+                            <TextField
                                 fullWidth
                                 label="Select Group"
                                 name="GroupName"
@@ -202,7 +202,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                 ))}
                                
 
-                            </TextField>:<></>}
+                            </TextField>
                             <br/>
                             <br/>
                             <TextField

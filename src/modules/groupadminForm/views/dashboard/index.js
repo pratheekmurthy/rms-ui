@@ -21,14 +21,14 @@ import {
   GET_INBOUND_DASHBOARD_DATA,  
   GET_INTERACTION_BY_AGENT_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
-import Axios from 'axios';
+
 import { grey } from '@material-ui/core/colors';
 
 import socketIOClient from 'socket.io-client';
 
 
-import CreateAgent from './CreateAgentform'
-import AgentTable from './AgentTable'
+import CreateGroup from './Createform'
+import GroupTable from './Table'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -70,27 +70,14 @@ const useStyles = makeStyles(theme => ({
 
 const AgentDashboard = () => {
   const classes = useStyles();
-  const [agents, setAgents] = useState([]);
+
 
   useEffect(() => {
 
  
 
   }, [])
-  function TableData() {
-    const url = 'http://localhost:4000/admin/agent/viewAgent'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
-      .then(function (response) {
-        // console.log(JSON.stringify(response.data.data));
-        setAgents(response.data.data)
-
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-  }
   return (
     // <>
     <Container maxWidth={false}>
@@ -101,9 +88,9 @@ const AgentDashboard = () => {
         <div>
        
          <Card>
-                  <CardHeader title={'Create Agent'} />
+                  <CardHeader title={'Create Group Admin'} />
                   <CardContent>
-                    <CreateAgent  TableData={TableData}/>
+                    <CreateGroup/>
                     </CardContent>
                     </Card>
                   
@@ -113,9 +100,9 @@ const AgentDashboard = () => {
         <Grid item xs={12} sm={8}>
         <div>
         <Card>
-                  <CardHeader title={'Agent Details'} />
+                  <CardHeader title={'Group Admin Details'} />
                   <CardContent>
-        <AgentTable/>
+        <GroupTable/>
         </CardContent>
            </Card>
                </div>
