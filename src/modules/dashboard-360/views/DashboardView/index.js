@@ -566,21 +566,21 @@ const Dashboard = ({
       console.log('Inside the NA');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '5000');
+        addToQueue(agent.AgentSipId, '7001');
       }
     }
     if (BreakStatus === 'IN') {
       console.log('Inside the IN');
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '5000');
+        addToQueue(agent.AgentSipId, '7001');
       }
     }
     if (BreakStatus === 'OUT') {
       console.log('Inside the OUT');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        removeFromQueue(agent.AgentSipId, '5000');
+        removeFromQueue(agent.AgentSipId, '7001');
       }
     }
 
@@ -860,7 +860,7 @@ const Dashboard = ({
           <Grid container spacing={3}>
             <Grid item lg={4} md={4} xs={12}>
               <Grid item>
-                <Card>
+                {/* <Card>
                   <CardHeader title={'Caller details'} />
                   {currentCall.callDispositionStatus === 'NotDisposed' ? (
                     <div>
@@ -876,9 +876,9 @@ const Dashboard = ({
                   ) : (
                       <CommonAlert text="Unable to get caller details" />
                     )}
-                </Card>
+                </Card> */}
                 <br />
-                <Card>
+                {/* <Card>
                   <CardHeader title={'Caller last five interactions'} />
                   {DLF.length && currentCall.callDispositionStatus === 'NotDisposed'? (
                     <div>
@@ -892,9 +892,9 @@ const Dashboard = ({
                   ) : (
                       <CommonAlert text="Unable to get Caller details" />
                     )}
-                </Card>
+                </Card> */}
                 <br/>
-                <Card>
+                {/* <Card>
                 <CardHeader
                   title={
                     'My last five interactions (' + agent.AgentSipId + ')'
@@ -912,11 +912,11 @@ const Dashboard = ({
                 ) : (
                     <CommonAlert text="Unable to get distributor details" />
                   )}
-              </Card>
+              </Card> */}
               </Grid>
             </Grid>
             
-            <Grid item lg={8} md={8} xs={12}>
+            <Grid item lg={12} md={12} xs={12}>
 
               <Card>
                 <CardHeader title="Disposition Details" />

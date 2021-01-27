@@ -239,10 +239,12 @@ const TopBar = ({
   
     try {
       if(localStorage.getItem('Agenttype') === 'L1'){
-        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+        // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
+        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
       }
       if(localStorage.getItem('Agenttype') === 'L2'){
-        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+        // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
+        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
       }
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
@@ -258,8 +260,9 @@ const TopBar = ({
       console.log(err);
     }
   }
+  var test = "green"
   return (
-    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
+    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}  style={{background:`${test}`}}>
       <Toolbar>
         <RouterLink to="/">
           <Logo />
@@ -284,7 +287,7 @@ const TopBar = ({
         <Hidden mdDown>
           <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
-              Dashboard {localStorage.getItem('Agenttype'), localStorage.getItem('distributer_id')}
+              Agent {localStorage.getItem('Agenttype')+' '+ localStorage.getItem('AgentSIPID')}
             </Link>
           </Typography>
           <Typography className={classes.title} variant="h5" noWrap>

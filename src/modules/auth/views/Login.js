@@ -195,10 +195,12 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
       if(res.data.userDetails.AgentType === 'L1'){
-        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
+        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
       }
       if(res.data.userDetails.AgentType === 'L2'){
-        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
+        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
       }
       setLoggedInMain(true);
       setError(false);

@@ -125,12 +125,15 @@ export default function DispositionForm(props) {
   });
   function getDLF() {
     const axios = require('axios');
+    let number =  localStorage.getItem('callerNumber');
+    // number = number.substr(number.length -10);
+    console.log('number', number)
     let data = '';
     let config = {
       method: 'get',
       url:
       GET_INTERACTION_BY_CALLER_NUMBER +
-        localStorage.getItem('callerNumber') +
+        number +
         '',
       headers: {},
       data: data
@@ -141,7 +144,7 @@ export default function DispositionForm(props) {
         var DLFDATA = response.data;
         DLFDATA = await DLFDATA.reverse();
         console.log("DLFDATA INSIDE THE DIS FORM", DLFDATA)
-        if(DLFDATA.length){
+        if(DLFDATA.length && localStorage.getItem('Agenttype') === 'L2'){
           console.log("DLFDATA INSIDE THE dispostionFormData", DLFDATA[0].dispostionFormData)
           setInitialValue(DLFDATA[0].dispostionFormData)
         }
@@ -411,7 +414,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=37903239709',
+      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
       headers: {}
     };
 
@@ -441,12 +444,12 @@ export default function DispositionForm(props) {
     props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if(localStorage.getItem('Agenttype') === 'L1'){
-      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
-      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
     }
     if(localStorage.getItem('Agenttype') === 'L2'){
-      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
-      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
     }
     // props.removeFromQueue(props.AgentSipId, '5000');
     // props.addToQueue(props.agentSipID, '5000');
@@ -923,13 +926,14 @@ export default function DispositionForm(props) {
                 label="Comments"
               />
             </Grid>
-            {selected === true ? (<Grid item item xs={4} sm={4}>
+
+            {/* {selected === true ? (<Grid item item xs={4} sm={4}>
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
               >
 
-
+   
                 <Autocomplete
                   options={L1Name}
                   getOptionLabel={option => option.value}
@@ -965,7 +969,7 @@ export default function DispositionForm(props) {
               </FormControl>
 
             </Grid>) : (<></>)
-            }
+            } */}
             <Grid item>
 
               <Field component={RadioGroup} name="type" row>
@@ -983,20 +987,32 @@ export default function DispositionForm(props) {
                   onChange={handleChange}
 
                 />
-                <FormControlLabel
+                {localStorage.getItem('callStatus') === 'connected' ?                 <FormControlLabel
                   value="transfercall"
                   control={<Radio />}
                   label="Transfer Call"
                   onChange={handleChange}
-                />
+                />: null}
+
               </Field>
             </Grid>
           </Grid>
           <br />
+          {selected === true ? 
 
+<Button color="primary" variant="contained"  onClick={(e) =>   transfercall(localStorage.getItem('channel'))}>
+Transfer
+</Button>
+                  
+                  : null}
+               <span>  </span>
+               <span> </span>
+               <span> </span>
+               <span> </span>
           <Button color="primary" variant="contained" disabled={localStorage.getItem('callStatus') === 'connected' ? true : false} onClick={handleSubmit}>
             Submit
           </Button>
+          
         </Form>
       )}
     </Formik>

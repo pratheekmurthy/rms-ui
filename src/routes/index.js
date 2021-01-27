@@ -30,7 +30,7 @@ export default [
     routes,
     key: 'dash360',
     component: dash360,
-    crumb: 'Dashboard 360',
+    crumb: 'Student Interaction',
     requiresAuth: true
   },
  
