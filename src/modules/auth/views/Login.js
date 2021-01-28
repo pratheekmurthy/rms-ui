@@ -94,7 +94,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-var APIENDPOINT = 'http://localhost:42002';
+var APIENDPOINT = 'https://mt2.granalytics.in';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url = 'http://localhost:4000/auth/apiM/login'
+      const url = 'https://mt3.granalytics.in/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
       console.log("values", values)
 
@@ -221,7 +221,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       userName: username,
       password: password,
     }
-    const url = 'http://localhost:4000/auth/apiM/sendOTP'
+    const url = 'https://mt3.granalytics.in/auth/apiM/sendOTP'
 
 
     const res = await Axios.post(url, userData);

@@ -199,7 +199,7 @@ const Inbound = () => {
 
     const axios = require('axios');
     let data = '';
-    let u= 'http://localhost:42004'
+    let u= 'https://mt1.granalytics.in'
     let config = {
       method: 'get',
       url: u + GET_INTERACTION_BY_AGENT_SIP_ID  + localStorage.getItem('AgentSIPID') + '',
@@ -247,7 +247,7 @@ const Inbound = () => {
 
 
   }
-const SOCKETENDPOINT = 'http://localhost:42002/';
+const SOCKETENDPOINT = 'https://mt2.granalytics.in/';
 
   useEffect(() => {
 

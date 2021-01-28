@@ -55,7 +55,7 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
-const SOCKETENDPOINT = 'http://localhost:42002';
+const SOCKETENDPOINT = 'https://mt2.granalytics.in';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 const useStyles = makeStyles(theme => {
@@ -285,11 +285,11 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'http://localhost:42002';
+  var APIENDPOINT = 'https://mt2.granalytics.in';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   function addToQueue(agentId, queue) {
     var axios = require('axios');
     var data = JSON.stringify({
@@ -297,21 +297,19 @@ const Dashboard = ({
       queue: queue,
       action: 'QueueAdd'
     });
-
+  
     var config = {
       method: 'get',
       url:
         APIENDPOINT +
-        '/ami/actions/addq?Interface=Local/5' +
-        agentId +
-        '@from-internal&Queue=' +
+        '/ami/actions/addq?Interface='+agentId+'&Queue=' +
         queue +
         '',
       headers: {
         'Content-Type': 'application/json'
       }
     };
-
+  
     axios(config)
       .then(function (response) { })
       .catch(function (error) {
@@ -321,46 +319,45 @@ const Dashboard = ({
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   function removeFromQueue(agentId, queue) {
     var axios = require('axios');
+    console.log('remove', agentId)
     var data = JSON.stringify({
       agentId: agentId,
       queue: queue,
       action: 'QueueRemove'
     });
-
+  
     var config = {
       method: 'get',
       url:
         APIENDPOINT +
         '/ami/actions/rmq?Queue=' +
         queue +
-        '&Interface=Local/5' +
-        agentId +
-        '@from-internal',
+        '&Interface='+agentId+'',
       headers: {
         'Content-Type': 'application/json'
       }
     };
-
+  
     axios(config)
       .then(function (response) {
-
+  
       })
       .catch(function (error) {
         console.log(error);
       });
   }
-
+  
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  
   function updateAgentCallStatus(updateData) {
     console.log("updateData", updateData)
     var axios = require('axios');
@@ -566,21 +563,42 @@ const Dashboard = ({
       console.log('Inside the NA');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '7001');
+        if(localStorage.getItem('Agenttype') === 'L1'){
+          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        }
+        if(localStorage.getItem('Agenttype') === 'L2'){
+          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        }
       }
     }
     if (BreakStatus === 'IN') {
       console.log('Inside the IN');
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
-        addToQueue(agent.AgentSipId, '7001');
+        if(localStorage.getItem('Agenttype') === 'L1'){
+          removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        }
+        if(localStorage.getItem('Agenttype') === 'L2'){
+          removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        }
       }
     }
     if (BreakStatus === 'OUT') {
       console.log('Inside the OUT');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        removeFromQueue(agent.AgentSipId, '7001');
+        if(localStorage.getItem('Agenttype') === 'L1'){
+          removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        }
+        if(localStorage.getItem('Agenttype') === 'L2'){
+          removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        }
       }
     }
 

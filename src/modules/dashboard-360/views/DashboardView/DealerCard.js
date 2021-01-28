@@ -71,7 +71,7 @@ export default function DealerCard({ dealerDetails }) {
 
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'http://localhost:42002/';
+  const SOCKETENDPOINT = 'https://mt2.granalytics.in/';
   const getIconColor = () => {
     return 'primary';
   };

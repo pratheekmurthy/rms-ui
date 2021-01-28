@@ -29,7 +29,7 @@ function Main({
       try {
         if (localStorage.getItem('jwtToken')) {
           setLoggedInMain(true);
-         var test = await Axios.post('http://localhost:4000/auth/apiM/verifyClient',{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+         var test = await Axios.post('https://mt3.granalytics.in/auth/apiM/verifyClient',{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
           .then(response=> {
             console.log('respose', response) 
             var result= response.data.userDetails

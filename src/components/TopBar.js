@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = 'http://localhost:42002';
+var APIENDPOINT = 'https://mt2.granalytics.in';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ const TopBar = ({
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData= localStorage.jwtToken
 
-      const url='http://localhost:4000/auth/apiM/logout'
+      const url='https://mt3.granalytics.in/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
 
       localStorage.clear();

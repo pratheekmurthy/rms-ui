@@ -46,7 +46,7 @@ export default function DispositionForm({...props}) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'https://mt1.granalytics.in/';
   const AgentType = [
     {
       id: '1', value: 'L1',
@@ -89,7 +89,7 @@ export default function DispositionForm({...props}) {
     var config = {
 
       method: 'post',
-      url: 'https://localhost:42004/crm/currentstatuses',
+      url: 'https://mt1.granalytics.in/crm/currentstatuses',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -193,7 +193,7 @@ export default function DispositionForm({...props}) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'http://localhost:4000/admin/group/getGroup'
+    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
 
     Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
