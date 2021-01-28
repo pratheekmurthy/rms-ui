@@ -36,7 +36,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
     const Data = props.EditData[0]
 
     const [formData, setFormData] = useState(Data);
-    const agentServiceURL = 'http://localhost:42004/';
+    const agentServiceURL = 'https://mt1.granalytics.in/';
 
     const handleChange = (e) => {
         console.log("target", e.target )
@@ -64,7 +64,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
         var config = {
     
           method: 'post',
-          url: 'http://localhost:42004/crm/currentstatuses',
+          url: 'https://mt1.granalytics.in/crm/currentstatuses',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -88,7 +88,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
     const handleSubmit = (e) => {
 
         console.log("formData", formData)
-        const url = 'http://localhost:4000/admin/agent/updateAgent'
+        const url = 'https://mt3.granalytics.in/admin/agent/updateAgent'
 
         Axios.post(url, {formData},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
             .then(function (response) {
@@ -122,7 +122,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
     }
     useEffect(() => {
-        const url = 'http://localhost:4000/admin/group/getGroup'
+        const url = 'https://mt3.granalytics.in/admin/group/getGroup'
     
         Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
           .then(function (response) {

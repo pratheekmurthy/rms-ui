@@ -46,7 +46,7 @@ export default function DispositionForm({...props}) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'https://mt1.granalytics.in/';
   const AgentType = [
     {
       id: '1', value: 'L1',
@@ -89,7 +89,7 @@ export default function DispositionForm({...props}) {
     var config = {
 
       method: 'post',
-      url: 'http://localhost:42004/crm/currentstatuses',
+      url: 'https://mt1.granalytics.in/crm/currentstatuses',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -121,21 +121,7 @@ export default function DispositionForm({...props}) {
       "AgentType": formRef.current.values.AgentType.value,
       "group": formRef.current.values.Group.group_name,
     }
-<<<<<<< HEAD
-    // const url = 'http://localhost:4000/admin/agent/addAgent'
-
-    // Axios.post(url, data)
-    //   .then(function (response) {
-    //     console.log(response);
-    //     if (response.data.status === 200) {
-    //       alert("Created Agent Successfully")
-    //       updateAgentCallStatus(formRef.current.values.Agentcontact)
-    //     }
-    //     else{
-    //       alert(response.data.message)
-    //     console.log( "formRef.current",formRef.current)
-=======
-    const url = 'http://localhost:4000/admin/agent/addAgent'
+    const url = 'https://mt3.granalytics.in/admin/agent/addAgent'
 
     Axios.post(url, {data},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
@@ -160,7 +146,6 @@ export default function DispositionForm({...props}) {
             "contactNumber":data.Agentcontact,
             "agenttype":data.AgentType
           }
->>>>>>> 7e4692aeb66b9b4f594f832dd46767f9ba6288f7
        
           pushAgentCurrentStatusData(result)
           props.TableData()
@@ -208,7 +193,7 @@ export default function DispositionForm({...props}) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'http://localhost:4000/admin/group/getGroup'
+    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
 
     Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {

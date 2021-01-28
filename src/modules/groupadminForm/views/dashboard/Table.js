@@ -29,7 +29,7 @@ export default function DataGridDemo() {
   const [editData, setEditData] = useState([]);
 
   function TableData() {
-    const url = 'http://localhost:4000/admin/groupdadmin/view'
+    const url = 'https://mt3.granalytics.in/admin/groupdadmin/view'
 
     Axios.post(url)
       .then(function (response) {
@@ -56,7 +56,7 @@ export default function DataGridDemo() {
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'http://localhost:4000/admin/agent/getAgent'
+          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)

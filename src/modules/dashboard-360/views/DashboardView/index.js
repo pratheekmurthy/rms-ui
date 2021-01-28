@@ -55,7 +55,7 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
-const SOCKETENDPOINT = 'http://localhost:42002';
+const SOCKETENDPOINT = 'https://mt2.granalytics.in';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 const useStyles = makeStyles(theme => {
@@ -186,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: 'NotDisposed',
+    callDispositionStatus: '',
     callerNumber: '',
     breakStatus: ''
   });
@@ -207,10 +207,7 @@ const Dashboard = ({
     showDistributorDetailsModal,
     setShowDistributorDetailsModal
   ] = useState(false);
-  const [dealerDetails, setdealerDetails] =  useState({
-    callNumber:'',
-    callerName:''
-  });
+  const [dealerDetails, setdealerDetails] =  useState({ });
   const [distributorModal, setDistributorModal] = useState({});
   function getDLF() {
     const axios = require('axios');
@@ -265,7 +262,7 @@ const Dashboard = ({
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42004/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
+      url: 'https://mt1.granalytics.in/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
       headers: {}
     };
 
@@ -313,7 +310,7 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'http://localhost:42002';
+  var APIENDPOINT = 'https://mt2.granalytics.in';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -592,12 +589,12 @@ const Dashboard = ({
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
-          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
-          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
+          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
-          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
-          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
+          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
         }
       }
     }
@@ -606,12 +603,12 @@ const Dashboard = ({
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
-          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
-          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
+          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
+          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
-          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
-          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
+          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
+          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
         }
       }
     }
@@ -620,12 +617,12 @@ const Dashboard = ({
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
-          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
-          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
+          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
+          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
-          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
-          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
+          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
+          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
         }
       }
     }
@@ -771,7 +768,7 @@ const Dashboard = ({
           localStorage.getItem('callerNumber'),
           localStorage.getItem('breakStatus')
         );
-        // removeFromQueue(agent.AgentSipId, '5000');
+        // removeFromQueue(agent.AgentSipId, '7001');
       }
     });
     socket.on('hangup', data => {
@@ -831,7 +828,7 @@ const Dashboard = ({
     currentCall.callStatus,
     currentCall.breakStatus
   ]);
-
+ 
   useEffect(() => {
     console.log("currentCall", currentCall)
     if (reduxState.searchDistributor.length >= 4) {
@@ -933,7 +930,7 @@ const Dashboard = ({
            
                     <div>
                       <DealerCard
-                        dealerDetails={rootData[1]}
+                        dealerDetails={dealerDetails}
                       />
                     </div>
         
@@ -966,14 +963,15 @@ const Dashboard = ({
                     <div>
                       <BasicTable
                         setRootData={setRootData}
+                        setdealerDetails={setdealerDetails}
                         columns={lastFiveCallData}
                         records={ALF.slice(0, 3)}
-                        redirectLink="/dash360/admin/agentlastfive"
-                        redirectLabel="View All"
+                        // redirectLink="/dash360/admin/agentlastfive"
+                        // redirectLabel="View All"
                       />
                     </div>
                   ) : (
-                      <CommonAlert text="Unable to get distributor details" />
+                      <CommonAlert text="N/A" />
                     )}
                 </Card> : null }
               </Grid>

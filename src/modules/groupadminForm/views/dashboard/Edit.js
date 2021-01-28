@@ -82,7 +82,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
     const handleSubmit = (e) => {
 
         console.log("formData", formData)
-        const url = 'http://localhost:4000/admin/agent/updateAgent'
+        const url = 'https://mt3.granalytics.in/admin/agent/updateAgent'
 
         Axios.post(url, formData)
             .then(function (response) {
@@ -97,7 +97,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
     }
     useEffect(() => {
-        const url = 'http://localhost:4000/admin/group/getGroup'
+        const url = 'https://mt3.granalytics.in/admin/group/getGroup'
     
         Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
           .then(function (response) {

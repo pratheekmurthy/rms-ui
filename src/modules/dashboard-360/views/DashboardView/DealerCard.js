@@ -67,28 +67,59 @@ const useStyles = makeStyles(theme => ({
 
 export default function DealerCard(props) {
   console.log('dealerDetails', props);
-  
+ const get = function(obj, key) {
+    return key.split(".").reduce(function(o, x) {
+        return (typeof o == "undefined" || o === null) ? o : o[x];
+    }, obj);
+}
   const classes = useStyles();
-
+const [state, setState] = useState(props)
 const [details, setdetails] = useState({
-  callNumber: "",
-callerName: ""
+  "CallerName": "",
+  "agentExtension": "",
+  "agentID": "",
+  "agenttype": "",
+  "asterixUniqueID": "",
+  "callType": "",
+  "callerNumber": "",
+  "callerapplication": "",
+  "campaignID": "",
+  "category": "",
+  "comments": "",
+  "connectivitytype": "",
+  "created": "",
+  "devicetype": "",
+   "distributerID": "",
+  "distributerName": "",
+  "enable": "",
+  "issuedescription": "",
+  "issuetype": "",
+  "ostype": "",
+  "rid": "",
+  "solution": "",
+  "speedtype": "",
+  "status": "",
+  "subcategory": "",
+  "subcategoryitem": "",
+  "tickettype": "",
+  "type": ""
 })
 if('dealerDetails' in props){
 console.log('props me hai', props.dealerDetails)
 var data =  props.dealerDetails;
-if(data.length){
-  console.log('clicked iteam', data[0])
-// setdetails(data[0])
-localStorage.setItem('callNumber', data[0].callNumber)
-localStorage.setItem('callerName', data[0].callerName)
-}
+// if(Object.keys(data).length !== 0){
+//   console.log('clicked iteam', data[0])
+// setdetails(data)
+// setState(data)
+// // localStorage.setItem('callNumber', data[0].callNumber)
+// // localStorage.setItem('callerName', data[0].callerName)
+// }
 }else{
   console.log('props me nahi hai', props)
 }
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'http://localhost:42002/';
+  const SOCKETENDPOINT = 'https://mt2.granalytics.in/';
   const getIconColor = () => {
     return 'primary';
   };
@@ -106,7 +137,7 @@ localStorage.setItem('callerName', data[0].callerName)
           SOCKETENDPOINT +
           'ami/actions/orginatecall?sipAgentID=Local/5' +
           localStorage.getItem('AgentSIPID') +
-          '@from-internal&NumbertobeCalled=59886151114' 
+          '@from-internal&NumbertobeCalled=5'+Number 
           ,
         headers: {}
       };
@@ -121,7 +152,8 @@ localStorage.setItem('callerName', data[0].callerName)
       console.log('Invalide number');
     }
   }
-  console.log('details', details)
+  console.log('details', get(props, 'dealerDetails.CallerName') )
+  console.log('state', state)
   return (
     <Card>
      
@@ -142,14 +174,22 @@ localStorage.setItem('callerName', data[0].callerName)
             localStorage.getItem('callDispositionStatus') === 'Disposed' &&
             localStorage.getItem('callStatus') === 'disconnected' &&
             localStorage.getItem('breakStatus') === 'OUT' ? (
-              <CallIcon onClick={() => makeCall(localStorage.getItem('callNumber'))} />
+              <CallIcon onClick={() => makeCall(get(props, 'dealerDetails.callerNumber') )} />
            
             ) : null}
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> */}
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
               {/* {display_name} */}
-             {localStorage.getItem('callerName')}
+             {/* {localStorage.getItem('callerName')} */}
+           Caller Name:  { get(props, 'dealerDetails.CallerName') }, 
+           {/* Caller Application:  { get(props, 'dealerDetails.callerapplication') }
+           Device Type:  { get(props, 'dealerDetails.devicetype') }        
+           Issue Type:  { get(props, 'dealerDetails.issuetype') },            
+           OS Type:  { get(props, 'dealerDetails.ostype') },               
+           Internet Connection Type:{ get(props, 'dealerDetails.connectivitytype') },
+           Internet Speed:  { get(props, 'dealerDetails.speedtype') } */}
+           
             </Typography>
 
             <Typography
@@ -158,8 +198,9 @@ localStorage.setItem('callerName', data[0].callerName)
               component="p"
               align="center"
             >
+               {/* Caller Application:  { get(props, 'dealerDetails.callerapplication') } */}
               {/* {email_id} */}
-              v.singh2210@gmail.com
+              {/* v.singh2210@gmail.com */}
               <br />
               {/* {distributor_rank} */}
               <br />
@@ -221,19 +262,19 @@ localStorage.setItem('callerName', data[0].callerName)
           onClose={() => setShowFullDetailsModal(false)}
           classes={{ paper: classes.dialog }}
         >
-          <DialogTitle>User Profile</DialogTitle>
+          <DialogTitle>Student L1 Disposition Details</DialogTitle>
           <Divider light />
           <DialogContent>
-            <Typography variant="h6">
+            {/* <Typography variant="h6"> */}
               {/* {display_name} */}
-              <Tooltip title='active'>
+              {/* <Tooltip title='active'>
                 <CheckCircleIcon
                   color={getIconColor()}
                   style={{ marginBottom: -3, marginLeft: 5 }}
                 />
               </Tooltip>
-            </Typography>
-            <Typography color="textSecondary">id</Typography>
+            </Typography> */}
+            {/* <Typography color="textSecondary">id</Typography> */}
             {/* <Typography color="textSecondary" display="inline" variant="p">
               Distributor Name:
             </Typography>
@@ -243,30 +284,69 @@ localStorage.setItem('callerName', data[0].callerName)
             <br />
             <Grid container wrap>
               <Grid container item xs={12} wrap>
-                <Box style={{ flexBasis: '100%' }}>
-                  <Typography variant="h4">Contact Details</Typography>
-                </Box>
                 <Box style={{ flexBasis: '100%' }} marginTop={2} />
                 <Grid item container>
                   <Grid item xs={5}>
-                    <Typography variant="h5">Email Id:</Typography>
+                    <Typography variant="h5"> Caller Application</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    v.singh2210@gmail.com
+                    { get(props, 'dealerDetails.callerapplication') }
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item container>
                   <Grid item xs={5}>
-                    <Typography variant="h5">Mobile Number:</Typography>
+                    <Typography variant="h5"> Device Type:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                     {localStorage.getItem('callerNumber')}
+                    { get(props, 'dealerDetails.devicetype') } 
                     </Typography>
                   </Grid>
                 </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Issue Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.issuetype') },
+                    </Typography>
+                  </Grid>
+                </Grid>                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">  OS Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.ostype') },   
+                    </Typography>
+                  </Grid>
+                </Grid>                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">  Internet Connection Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.connectivitytype') },
+                    </Typography>
+                  </Grid>
+                </Grid>                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5"> Device Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.speedtype') }
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                            
+                      
+         
+          
                 {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Phone Number:</Typography>
@@ -292,7 +372,7 @@ localStorage.setItem('callerName', data[0].callerName)
                 <br />
               </Box>
               <Grid container item xs={12}>
-                <Box style={{ flexBasis: '100%' }}>
+                {/* <Box style={{ flexBasis: '100%' }}>
                   <Typography variant="h4">Personal Details</Typography>
                 </Box>
                 <Box style={{ flexBasis: '100%' }} marginTop={2} />
@@ -305,7 +385,7 @@ localStorage.setItem('callerName', data[0].callerName)
                       Vikram Singh
                     </Typography>
                   </Grid>
-                </Grid>
+                </Grid> */}
                 {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Aadhar Number:</Typography>

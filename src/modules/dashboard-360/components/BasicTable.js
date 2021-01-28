@@ -37,15 +37,19 @@ const BasicTable = ({
   redirectLink,
   redirectLabel,
   setRootData,
+  setdealerDetails,
   ...rest
 }) => {
   const classes = useStyles();
   function showthedata(row){
     console.log('showthedata', row);
-    setRootData([[],[{
-       callNumber:row.callerNumber,
-         callerName:row.CallerName
-       }],[],[],[]])
+    setdealerDetails(row)
+
+    localStorage.setItem('L1ID',row.asterixUniqueID)
+    // setRootData([[],[{
+    //    callNumber:row.callerNumber,
+    //      callerName:row.CallerName
+    //    }],[],[],[]])
     // setCallerDetails({
     //   callNumber:row.callerNumber,
     //   callerName:row.CallerName

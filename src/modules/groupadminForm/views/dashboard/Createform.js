@@ -41,7 +41,7 @@ export default function DispositionForm(props) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'https://mt1.granalytics.in/';
 
   // const Groups = [
   //   {
@@ -103,7 +103,7 @@ export default function DispositionForm(props) {
       "groupslabel": formRef.current.values.Group,
     }
   
-    const url = 'http://localhost:4000/admin/groupdadmin/add'
+    const url = 'https://mt3.granalytics.in/admin/groupdadmin/add'
 console.log("data",data)
     Axios.post(url, data)
       .then(function (response) {
@@ -150,7 +150,7 @@ console.log("data",data)
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'http://localhost:4000/admin/group/getGroup'
+    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
 
     Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {

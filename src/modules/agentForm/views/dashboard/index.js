@@ -78,7 +78,7 @@ const AgentDashboard = () => {
 
   }, [])
   function TableData() {
-    const url = 'http://localhost:4000/admin/agent/viewAgent'
+    const url = 'https://mt3.granalytics.in/admin/agent/viewAgent'
 
     Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
       .then(function (response) {

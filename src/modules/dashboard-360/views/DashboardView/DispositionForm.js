@@ -29,7 +29,7 @@ export default function DispositionForm(props) {
   const config = "http://192.168.3.45:8083/"
   console.log('props.DLF', props.DLF)
   var DLF = props.DLF;
-  var APIENDPOINT = 'http://localhost:42002';
+  var APIENDPOINT = 'https://mt2.granalytics.in';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ export default function DispositionForm(props) {
   ]
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'https://mt1.granalytics.in/';
   const [category, setCategory] = useState({
     value: 'Enquiry',
     label: 'Enquiry'
@@ -240,7 +240,7 @@ export default function DispositionForm(props) {
     label: ''
   });
   const [selected, setSelected] = useState(false);
-  const url = "http://192.168.3.45:5001"
+  const url = "http://192.168.3.45:7002"
   const handleChange = (e, s) => {
 
     updateCallData(localStorage.getItem('callUniqueId'), {
@@ -414,7 +414,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=5001',
+      url: 'https://mt2.granalytics.in/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
       headers: {}
     };
 
@@ -443,15 +443,15 @@ export default function DispositionForm(props) {
   
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if(localStorage.getItem('Agenttype') === 'L1'){
-      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
-      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
+      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
     }
     if(localStorage.getItem('Agenttype') === 'L2'){
-      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
-      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
+      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
     }
-    // // props.removeFromQueue(props.AgentSipId, '5000');
-    // // props.addToQueue(props.agentSipID, '5000');
+    // // props.removeFromQueue(props.AgentSipId, '7001');
+    // // props.addToQueue(props.agentSipID, '7001');
     // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(
       localStorage.getItem('callStatusId'),
@@ -473,28 +473,94 @@ export default function DispositionForm(props) {
       callerNumber: localStorage.getItem('callerNumber'),
 
     })
-    updateCallData(localStorage.getItem('callUniqueId'), {
-    category: formRef.current.values.category.label,
-    subcategory: formRef.current.values.subcategory.label,
-    subcategoryitem: formRef.current.values.subcategoryitem.label,
-    comments: formRef.current.values.comments,
-    type: formRef.current.values.type,
-    distributerID: localStorage.getItem('distributer_id'),
-    CallerName:  formRef.current.values.CallerName,
-    callerapplication: formRef.current.values.callerapplication,
-    connectivitytype:  formRef.current.values.connectivitytype.value,
-    devicetype:  formRef.current.values.devicetype.value,
-    enable:  ""+formRef.current.values.enable+"",
-    issuedescription: formRef.current.values.issuedescription,
-    issuetype: formRef.current.values.issuetype,
-    ostype: formRef.current.values.ostype.value,
-    speedtype:  formRef.current.values.speedtype.value,
-    status:  formRef.current.values.status,
-    subcategoryitem:  formRef.current.values.subcategoryitem.label,
-    type: formRef.current.values.type,
-    dispostionFormData: formRef.current.values,
-    anydeskid: formRef.current.values.anydeskid
-    })
+    if(localStorage.getItem('Agenttype') === 'L1'){
+      updateCallData(localStorage.getItem('callUniqueId'), {
+        category: formRef.current.values.category.label,
+        subcategory: formRef.current.values.subcategory.label,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
+        comments: formRef.current.values.comments,
+        type: formRef.current.values.type,
+        distributerID: localStorage.getItem('distributer_id'),
+        CallerName:  formRef.current.values.CallerName,
+        callerapplication: formRef.current.values.callerapplication,
+        connectivitytype:  formRef.current.values.connectivitytype.value,
+        devicetype:  formRef.current.values.devicetype.value,
+        enable:  ""+formRef.current.values.enable+"",
+        issuedescription: formRef.current.values.issuedescription,
+        issuetype: formRef.current.values.issuetype,
+        ostype: formRef.current.values.ostype.value,
+        speedtype:  formRef.current.values.speedtype.value,
+        status:  formRef.current.values.status,
+        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        type: formRef.current.values.type,
+        dispostionFormData: formRef.current.values,
+        anydeskid: formRef.current.values.anydeskid,
+        L1ID:localStorage.getItem('callUniqueId')
+        })
+    }
+    if(localStorage.getItem('Agenttype') === 'L2'){
+      updateCallData(localStorage.getItem('callUniqueId'), {
+        category: formRef.current.values.category.label,
+        subcategory: formRef.current.values.subcategory.label,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
+        comments: formRef.current.values.comments,
+        type: formRef.current.values.type,
+        distributerID: localStorage.getItem('distributer_id'),
+        CallerName:  formRef.current.values.CallerName,
+        callerapplication: formRef.current.values.callerapplication,
+        connectivitytype:  formRef.current.values.connectivitytype.value,
+        devicetype:  formRef.current.values.devicetype.value,
+        enable:  ""+formRef.current.values.enable+"",
+        issuedescription: formRef.current.values.issuedescription,
+        issuetype: formRef.current.values.issuetype,
+        ostype: formRef.current.values.ostype.value,
+        speedtype:  formRef.current.values.speedtype.value,
+        status:  formRef.current.values.status,
+        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        type: formRef.current.values.type,
+        dispostionFormData: formRef.current.values,
+        anydeskid: formRef.current.values.anydeskid,
+        L1ID:localStorage.getItem('callUniqueId')
+        })
+        updateCallData(localStorage.getItem('L1ID'), {
+          L2ID:localStorage.getItem('callUniqueId'),
+          type: formRef.current.values.type,
+          agenttype:'L2'
+        })
+      
+    }
+    if(localStorage.getItem('Agenttype') === 'L3'){
+      updateCallData(localStorage.getItem('callUniqueId'), {
+        category: formRef.current.values.category.label,
+        subcategory: formRef.current.values.subcategory.label,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
+        comments: formRef.current.values.comments,
+        type: formRef.current.values.type,
+        distributerID: localStorage.getItem('distributer_id'),
+        CallerName:  formRef.current.values.CallerName,
+        callerapplication: formRef.current.values.callerapplication,
+        connectivitytype:  formRef.current.values.connectivitytype.value,
+        devicetype:  formRef.current.values.devicetype.value,
+        enable:  ""+formRef.current.values.enable+"",
+        issuedescription: formRef.current.values.issuedescription,
+        issuetype: formRef.current.values.issuetype,
+        ostype: formRef.current.values.ostype.value,
+        speedtype:  formRef.current.values.speedtype.value,
+        status:  formRef.current.values.status,
+        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        type: formRef.current.values.type,
+        dispostionFormData: formRef.current.values,
+        anydeskid: formRef.current.values.anydeskid,
+        L1ID:localStorage.getItem('callUniqueId')
+        })
+        updateCallData(localStorage.getItem('L2ID'), {
+          L2ID:localStorage.getItem('callUniqueId'),
+          type: formRef.current.values.type,
+          agenttype:'L3'
+        })
+      
+    }
+
    
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
