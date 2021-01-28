@@ -42,6 +42,7 @@ import DaterangeReport from './DaterangeReport';
 import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
 import DispositionTable from './DispositionTable';
 import { DataGrid } from '@material-ui/data-grid';
+import CurrentStatus from './CurrentStatus'
 import {
 
   lastFiveCallData
@@ -357,9 +358,10 @@ const SOCKETENDPOINT = 'http://localhost:42002/';
             </Grid>
           </Grid>
         </Box>
-
+        {/* <CurrentStatus/> */}
       </div>
       {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> : <></>}
+     
     </>
   );
 };

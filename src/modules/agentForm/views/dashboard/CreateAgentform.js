@@ -27,12 +27,12 @@ const useStyle = makeStyles(() => ({
 }));
 export default function DispositionForm({...props}) {
   const config = "http://192.168.3.45:8083/"
+ 
   const [initialValue, setInitialValue] = useState({
 
     AgentName: '',
     AgentEmail: '',
     Agentcontact: '',
-    location: '',
     enable: false,
     AgentType: {
       value: "",
@@ -104,6 +104,12 @@ export default function DispositionForm({...props}) {
         console.log(error);
       });
   }
+  async function pushAgentCurrentStatusData(data){
+    const url = agentServiceURL + 'crm/currentstatuses';
+    const result = await fetch(url, { method: 'post', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
+   console.log("result", result)
+    return await result.json();
+  }
   function handleSubmit(e) {
 
     console.log('formRef', formRef.current.values);
@@ -113,7 +119,6 @@ export default function DispositionForm({...props}) {
 
       "Agentcontact": formRef.current.values.Agentcontact,
       "AgentType": formRef.current.values.AgentType.value,
-      "location": formRef.current.values.location,
       "group": formRef.current.values.Group.group_name,
     }
     const url = 'http://localhost:4000/admin/agent/addAgent'
@@ -123,7 +128,26 @@ export default function DispositionForm({...props}) {
         console.log(response);
         if (response.data.status === 200) {
           alert("Created Agent Successfully")
-          updateAgentCallStatus(formRef.current.values.Agentcontact)
+          // updateAgentCallStatus(formRef.current.values.Agentcontact)
+          const result={
+            "agentCallDispositionStatus": "NA",
+            "agentCallType": "Inbound",
+            "agentCallUniqueId": "NA",
+            "agentCallEvent": "NewState",
+            "agentCallStatus": "ringing",
+            "agentID": data.Agentcontact,
+            "agentSipID": data.Agentcontact,
+            "breakStatus": "NA",
+            "newstateinbound": "",
+            "newstateoutbound": "NA",
+            "bridgeUniqueid1": "NA",
+            "bridgeUniqueid2": "NA",
+            "channel": "NA",
+            "contactNumber":data.Agentcontact,
+            "agenttype":data.AgentType
+          }
+       
+          pushAgentCurrentStatusData(result)
           props.TableData()
         }
         else{
@@ -250,17 +274,7 @@ export default function DispositionForm({...props}) {
                 label="Agent Contact Number"
               />
             </Grid>
-            <Grid item>
-              <Field
-                className={classes.fieldContainer}
-                name="location"
-                component={TextField}
-                variant="outlined"
-                multiline
-
-                label="Location"
-              />
-            </Grid>
+            
             {localStorage.getItem('role')=== "Admin"? <Grid item >
               <FormControl
                 variant="outlined"
