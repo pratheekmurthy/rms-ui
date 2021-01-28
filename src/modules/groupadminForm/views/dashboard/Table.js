@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import Axios from 'axios';
-import Editagent from './EditAgent'
+import Editgroup from './Edit'
 const columns = [
 
   // { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'EmployeeName', headerName: 'Agent name', width: 130 },
+  { field: 'EmployeeName', headerName: 'Group Admin name', width: 200 },
   { field: 'External_num', headerName: 'Contact Number', width: 200 },
   {
     field: 'EmailID',
     headerName: 'Email',
     width: 200,
   },
-  {
-    field: 'AgentType',
-    headerName: 'Agent Type',
-    width: 160,
-
-  },
+ 
   {
     field: 'GroupName',
     headerName: 'Groups',
@@ -34,9 +29,9 @@ export default function DataGridDemo() {
   const [editData, setEditData] = useState([]);
 
   function TableData() {
-    const url = 'https://mt3.granalytics.in/admin/agent/viewAgent'
+    const url = 'http://localhost:4000/admin/groupdadmin/view'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
+    Axios.post(url)
       .then(function (response) {
         // console.log(JSON.stringify(response.data.data));
         setAgents(response.data.data)
@@ -61,7 +56,7 @@ export default function DataGridDemo() {
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
+          const url = 'http://localhost:4000/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)
@@ -75,9 +70,9 @@ export default function DataGridDemo() {
             })
           // setSelection(newSelection.rowIds);
         }} /> : <></>}
-      {editData.length > 0 ? <Editagent
+      {/* {editData.length > 0 ? <Editgroup
         EditData={editData}
-        TableData={TableData} /> : <></>}
+        TableData={TableData} /> : <></>} */}
     </div>
   );
 }

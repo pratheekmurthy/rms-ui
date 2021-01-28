@@ -285,21 +285,26 @@ const TopBar = ({
         </div>
         <Box flexGrow={1} />
         <Hidden mdDown>
-          <Typography className={classes.title} variant="h5" noWrap>
+        {localStorage.getItem("role")==="Agent" ?  <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
               Agent {localStorage.getItem('Agenttype')+' '+ localStorage.getItem('AgentSIPID')}
             </Link>
-          </Typography>
-          {/* <Typography className={classes.title} variant="h5" noWrap>
+          </Typography>:<></>}
+          {localStorage.getItem("role")==="Admin" || localStorage.getItem("role")==="Group admin" ?  <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/telephony/dashboard" className="color-white">
               Telephony
             </Link>
-          </Typography>
-          <Typography className={classes.title} variant="h5" noWrap>
+          </Typography>:<></>}
+          {localStorage.getItem("role")==="Admin" || localStorage.getItem("role")==="Group admin" ?   <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/agent/dashboard" className="color-white">
               Agents
             </Link>
-          </Typography> */}
+          </Typography>:<></>}
+          {localStorage.getItem("role")==="Admin"?  <Typography className={classes.title} variant="h5" noWrap>
+            <Link to="/group/dashboard" className="color-white">
+              Groups
+            </Link>
+          </Typography>:<></>}
           {viewAccess === -1 ? (
             ''
           ) : (

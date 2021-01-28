@@ -25,19 +25,14 @@ const useStyle = makeStyles(() => ({
     width: '100%'
   }
 }));
-export default function DispositionForm({...props}) {
+export default function DispositionForm(props) {
   const config = "http://192.168.3.45:8083/"
- 
   const [initialValue, setInitialValue] = useState({
 
-    AgentName: '',
-    AgentEmail: '',
-    Agentcontact: '',
-    enable: false,
-    AgentType: {
-      value: "",
-      label: ""
-    },
+    GroupAdminName: '',
+    GroupAdminEmail: '',
+    groupcontact: '',
+   
     Group:{
       value: "",
       label: ""
@@ -46,16 +41,8 @@ export default function DispositionForm({...props}) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'https://mt1.granalytics.in/';
-  const AgentType = [
-    {
-      id: '1', value: 'L1',
-    },
-    {
-      id: '2', value: 'L2',
-    },
+  const agentServiceURL = 'http://localhost:42004/';
 
-  ]
   // const Groups = [
   //   {
   //     id: '1', value: 'Grassroots DD',
@@ -89,7 +76,7 @@ export default function DispositionForm({...props}) {
     var config = {
 
       method: 'post',
-      url: 'https://mt1.granalytics.in/crm/currentstatuses',
+      url: 'https://localhost:42004/crm/currentstatuses',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -104,51 +91,26 @@ export default function DispositionForm({...props}) {
         console.log(error);
       });
   }
-  async function pushAgentCurrentStatusData(data){
-    const url = agentServiceURL + 'crm/currentstatuses';
-    const result = await fetch(url, { method: 'post', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-   console.log("result", result)
-    return await result.json();
-  }
   function handleSubmit(e) {
 
     console.log('formRef', formRef.current.values);
     const data = {
-      "AgentName": formRef.current.values.AgentName,
-      "AgentEmail": formRef.current.values.AgentEmail,
+      "GName": formRef.current.values.GroupAdminName,
+      "GEmail": formRef.current.values.GroupAdminEmail,
 
-      "Agentcontact": formRef.current.values.Agentcontact,
-      "AgentType": formRef.current.values.AgentType.value,
-      "group": formRef.current.values.Group.group_name,
+      "Gcontact": formRef.current.values.groupcontact,
+     
+      "groupslabel": formRef.current.values.Group,
     }
-    const url = 'http://localhost:4000/admin/agent/addAgent'
-
-    Axios.post(url, {data},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+  
+    const url = 'http://localhost:4000/admin/groupdadmin/add'
+console.log("data",data)
+    Axios.post(url, data)
       .then(function (response) {
         console.log(response);
         if (response.data.status === 200) {
-          alert("Created Agent Successfully")
+          alert("Created Successfully")
           // updateAgentCallStatus(formRef.current.values.Agentcontact)
-          const result={
-            "agentCallDispositionStatus": "NA",
-            "agentCallType": "Inbound",
-            "agentCallUniqueId": "NA",
-            "agentCallEvent": "NewState",
-            "agentCallStatus": "ringing",
-            "agentID": data.Agentcontact,
-            "agentSipID": data.Agentcontact,
-            "breakStatus": "NA",
-            "newstateinbound": "",
-            "newstateoutbound": "NA",
-            "bridgeUniqueid1": "NA",
-            "bridgeUniqueid2": "NA",
-            "channel": "NA",
-            "contactNumber":data.Agentcontact,
-            "agenttype":data.AgentType
-          }
-       
-          pushAgentCurrentStatusData(result)
-          props.TableData()
         }
         else{
           alert(response.data.message)
@@ -159,25 +121,20 @@ export default function DispositionForm({...props}) {
 
       setInitialValue({
 
-        AgentName: '',
-        AgentEmail: '',
-        Agentcontact: '',
-        location: '',
+        GroupAdminName: '',
+        GroupAdminEmail: '',
+        groupcontact: '',
        
-        AgentType: {
+        Group:{
           value: "",
-          label: "",
-          id:""
+          label: ""
         }
       });
-     
-      formRef.current.values.AgentName = ""
-      formRef.current.values.AgentEmail = ""
-      formRef.current.values.Agentcontact = ""
-      formRef.current.values.location = ""
-      formRef.current.values.AgentType.label = ""
-      formRef.current.values.AgentType.value = ""
-      formRef.current.values.AgentType.id = ""
+  
+      formRef.current.values.GroupAdminName = ""
+      formRef.current.values.GroupAdminEmail = ""
+      formRef.current.values.groupcontact = ""
+    
       formRef.current.values.Group={ value: "",
       label: ""}
       console.log("initialValue", initialValue)
@@ -193,7 +150,7 @@ export default function DispositionForm({...props}) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
+    const url = 'http://localhost:4000/admin/group/getGroup'
 
     Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
@@ -225,57 +182,21 @@ export default function DispositionForm({...props}) {
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-        AgentType: yup
-          .object()
-          .required('Please select a Agent Type')
-          .typeError('Please select a valid Agent Type'),
+      
           Group: yup
           .object()
           .required('Please select a Group')
           .typeError('Please select a Group'),
-        AgentName: yup.string().required('Please Enter Agent Name'),
-        AgentEmail: yup.string().required('Please Enter Agent Email'),
-        Agentcontact: yup.string().required('Please Enter Agent Contact Number'),
-        location: yup.string().required('Please Enter Location'),
+          GroupAdminName: yup.string().required('Please Enter Group Admin Name'),
+          GroupAdminEmail: yup.string().required('Please Enter Group Admin Email'),
+          groupcontact: yup.string().required('Please Enter  Group Admin Contact Number'),
+       
       })}
     >
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
-            <Grid item>
-              <Field
-                className={classes.fieldContainer}
-                name="AgentName"
-                component={TextField}
-                variant="outlined"
-                multiline
-                // value="AgentName"
-                label="Agent Name"
-
-              />
-            </Grid>
-            <Grid item>
-              <Field
-                className={classes.fieldContainer}
-                name="AgentEmail"
-                component={TextField}
-                variant="outlined"
-                multiline
-                label="Agent Email"
-              />
-            </Grid>
-            <Grid item>
-              <Field
-                className={classes.fieldContainer}
-                name="Agentcontact"
-                component={TextField}
-                variant="outlined"
-                multiline
-                label="Agent Contact Number"
-              />
-            </Grid>
-            
-            {localStorage.getItem('role')=== "Admin"? <Grid item >
+          <Grid item >
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
@@ -308,42 +229,43 @@ export default function DispositionForm({...props}) {
                 />
               </FormControl>
 
-            </Grid>:<></>}
-
-           <Grid item >
-              <FormControl
-                variant="outlined"
-                className={classes.fieldContainer}
-              >
-
-
-                <Autocomplete
-                  options={AgentType}
-                  getOptionLabel={option => option.value}
-                  // style={{ width: 400, overflow: "hidden" }}
-                  getOptionSelected={(option, value) =>
-                    value.id === option.id
-                  }
-                  key={autoCompleteKey}
-                  onChange={(event, value) => {
-
-                    setFieldValue('AgentType', value);
-
-                  }}
-                  renderInput={params => (
-                    <Field
-                      component={TextField}
-                      {...params}
-                      label="Select Agent Type"
-                      variant="outlined"
-                      name="AgentType"
-                    />
-                  )}
-                  name="AgentType"
-                />
-              </FormControl>
-
             </Grid>
+            <Grid item>
+              <Field
+                className={classes.fieldContainer}
+                name="GroupAdminName"
+                component={TextField}
+                variant="outlined"
+                multiline
+                // value="AgentName"
+                label="Group Admin Name"
+
+              />
+            </Grid>
+            <Grid item>
+              <Field
+                className={classes.fieldContainer}
+                name="GroupAdminEmail"
+                component={TextField}
+                variant="outlined"
+                multiline
+                label="Group Admin Email"
+              />
+            </Grid>
+            <Grid item>
+              <Field
+                className={classes.fieldContainer}
+                name="groupcontact"
+                component={TextField}
+                variant="outlined"
+                multiline
+                label="Group Admin Contact Number"
+              />
+            </Grid>
+          
+          
+
+          
           </Grid>
           <br />
 

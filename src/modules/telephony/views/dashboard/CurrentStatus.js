@@ -1,26 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import Axios from 'axios';
-import Editagent from './EditAgent'
+// import Editagent from './EditAgent'
 const columns = [
 
   // { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'EmployeeName', headerName: 'Agent name', width: 130 },
-  { field: 'External_num', headerName: 'Contact Number', width: 200 },
+  { field: 'agentCallDispositionStatus', headerName: 'agentCallDispositionStatus', width: 130 },
+  { field: 'agentCallType', headerName: 'agentCallType', width: 200 },
   {
-    field: 'EmailID',
-    headerName: 'Email',
+    field: 'agentCallUniqueId',
+    headerName: 'agentCallUniqueId',
     width: 200,
   },
   {
-    field: 'AgentType',
-    headerName: 'Agent Type',
+    field: 'agentCallEvent',
+    headerName: 'agentCallEvent',
     width: 160,
 
   },
   {
-    field: 'GroupName',
-    headerName: 'Groups',
+    field: 'agentID',
+    headerName: 'agentID',
+    width: 160,
+
+  },
+  {
+    field: 'breakStatus',
+    headerName: 'breakStatus',
+    width: 160,
+
+  },
+  {
+    field: 'agenttype',
+    headerName: 'agenttype',
     width: 160,
 
   },
@@ -34,12 +46,14 @@ export default function DataGridDemo() {
   const [editData, setEditData] = useState([]);
 
   function TableData() {
-    const url = 'https://mt3.granalytics.in/admin/agent/viewAgent'
+    const url = 'https://localhost:42004/crm/currentstatuses'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
+    Axios.get(url)
       .then(function (response) {
-        // console.log(JSON.stringify(response.data.data));
-        setAgents(response.data.data)
+        console.log("table",response.data.items);
+      //   const filteredData=response.data.items
+      //  filteredData = ALFDATA.filter(data => data.= startDate.toISOString().substring(0, 10) )
+        setAgents(response.data.items)
 
       })
       .catch(function (error) {
@@ -56,12 +70,12 @@ export default function DataGridDemo() {
     <div style={{ height: 400, width: '100%' }}>
       {agents.length > 0 ? <DataGrid rows={agents.map(calls => ({
         ...calls,
-        id: calls.UserID
-      }))} columns={columns} pageSize={5} checkboxSelection
+        id: calls._id
+      }))} columns={columns} pageSize={5} 
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
+          const url = 'http://localhost:4000/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)
@@ -75,9 +89,7 @@ export default function DataGridDemo() {
             })
           // setSelection(newSelection.rowIds);
         }} /> : <></>}
-      {editData.length > 0 ? <Editagent
-        EditData={editData}
-        TableData={TableData} /> : <></>}
+    
     </div>
   );
 }

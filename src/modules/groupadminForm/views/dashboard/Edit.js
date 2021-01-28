@@ -36,7 +36,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
     const Data = props.EditData[0]
 
     const [formData, setFormData] = useState(Data);
-    const agentServiceURL = 'http://localhost:42004/';
+
 
     const handleChange = (e) => {
         console.log("target", e.target )
@@ -64,7 +64,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
         var config = {
     
           method: 'post',
-          url: 'https://mt1.granalytics.in/crm/currentstatuses',
+          url: 'https://localhost:42004/crm/currentstatuses',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -79,41 +79,16 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
             console.log(error);
           });
       }
-      async function pushAgentCurrentStatusData(data){
-        const url = agentServiceURL + 'crm/currentstatuses';
-        const result = await fetch(url, { method: 'post', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-       console.log("result", result)
-        return await result.json();
-      }
     const handleSubmit = (e) => {
 
         console.log("formData", formData)
-        const url = 'https://mt3.granalytics.in/admin/agent/updateAgent'
+        const url = 'http://localhost:4000/admin/agent/updateAgent'
 
-        Axios.post(url, {formData},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+        Axios.post(url, formData)
             .then(function (response) {
                 console.log(response);
                 if (response.data.status === 200) {
                     alert("Updated Agent Successfully")
-                    const result={
-                        "agentCallDispositionStatus": "NA",
-                        "agentCallType": "Inbound",
-                        "agentCallUniqueId": "NA",
-                        "agentCallEvent": "NewState",
-                        "agentCallStatus": "ringing",
-                        "agentID": formData.Agentcontact,
-                        "agentSipID": formData.Agentcontact,
-                        "breakStatus": "NA",
-                        "newstateinbound": "",
-                        "newstateoutbound": "NA",
-                        "bridgeUniqueid1": "NA",
-                        "bridgeUniqueid2": "NA",
-                        "channel": "NA",
-                        "contactNumber":formData.Agentcontact,
-                        "agenttype":formData.AgentType
-                      }
-                   
-                      pushAgentCurrentStatusData(result)
                     setShowModal(false)
                     props.TableData()
                     updateAgentCallStatus(formData.External_num)
@@ -122,7 +97,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
     }
     useEffect(() => {
-        const url = 'https://mt3.granalytics.in/admin/group/getGroup'
+        const url = 'http://localhost:4000/admin/group/getGroup'
     
         Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
           .then(function (response) {
@@ -191,8 +166,20 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                             />
                             <br />
                             <br />
-                           
-                          {localStorage.getItem('role')==="Admin" ? <TextField
+                            <TextField
+                                fullWidth
+                                label="Location"
+                                name="Location"
+                                onChange={handleChange}
+                                required
+
+                                SelectProps={{ native: true }}
+                                value={formData.Location}
+                                variant="outlined"
+                            />
+                            <br />
+                            <br />
+                            <TextField
                                 fullWidth
                                 label="Select Group"
                                 name="GroupName"
@@ -215,9 +202,9 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                 ))}
                                
 
-                            </TextField>:<></>}
-                            {/* <br/>
-                            <br/> */}
+                            </TextField>
+                            <br/>
+                            <br/>
                             <TextField
                                 fullWidth
                                 label="Select Agent Type"
