@@ -186,7 +186,7 @@ const Dashboard = ({
     callType: '',
     callStatus: '',
     callDetails: '',
-    callDispositionStatus: '',
+    callDispositionStatus: 'NotDisposed',
     callerNumber: '',
     breakStatus: ''
   });
@@ -982,7 +982,7 @@ const Dashboard = ({
             <Grid item lg={8} md={12} xs={12}>
 
               <Card>
-                <CardHeader title="Disposition Details" />
+                <CardHeader title="Interaction Details" />
                 <Divider />
                 {currentCall.callDispositionStatus === 'NotDisposed' &&
                   user.userType === 'Agent' ? (<CardContent>
@@ -1020,7 +1020,8 @@ const Dashboard = ({
                     />
                   </CardContent>
                   ) : (
-                    <CommonAlert text="Unable to get disposition details" />
+                    <></>
+                    // <CommonAlert text="Unable to get disposition details" />
                   )}
               </Card>
 

@@ -27,7 +27,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="https://www.grassrootsbpo.com/">
         Grassroots
       </Link>{' '}
       {2021}
@@ -193,7 +193,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       localStorage.setItem('role',res.data.userDetails.role);
       localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
       setUserDetailsMain(obj);
-      setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+      setAccountTypeMain(obj.role === 'Agent'||obj.role === 'Admin' ||obj.role === 'Group admin'? ADMIN : USER);
 
       if(res.data.userDetails.AgentType === 'L1'){
         // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)

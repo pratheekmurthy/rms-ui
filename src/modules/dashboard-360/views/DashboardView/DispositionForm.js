@@ -299,7 +299,7 @@ export default function DispositionForm(props) {
   }, [initialValue])
 
   const getSubCategories = cat => {
-
+     console.log("value", cat)
     let unmounted = false;
     async function getItems() {
       const response = await fetch(
@@ -440,8 +440,7 @@ export default function DispositionForm(props) {
       type: formRef.current.values.type,
 
     });
-
-    props.setdisForm(formRef.current.values);
+  
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if(localStorage.getItem('Agenttype') === 'L1'){
       removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
@@ -451,9 +450,9 @@ export default function DispositionForm(props) {
       removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
       addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
     }
-    // props.removeFromQueue(props.AgentSipId, '5000');
-    // props.addToQueue(props.agentSipID, '5000');
-    // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
+    // // props.removeFromQueue(props.AgentSipId, '5000');
+    // // props.addToQueue(props.agentSipID, '5000');
+    // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
     props.setCurrentCallDetails(
       localStorage.getItem('callStatusId'),
       localStorage.getItem('callUniqueId'),
@@ -475,29 +474,28 @@ export default function DispositionForm(props) {
 
     })
     updateCallData(localStorage.getItem('callUniqueId'), {
-      category: formRef.current.values.category.label,
-      subcategory: formRef.current.values.subcategory.label,
-      subcategoryitem: formRef.current.values.subcategoryitem.label,
-      comments: formRef.current.values.comments,
-      type: formRef.current.values.type,
-      distributerID: localStorage.getItem('distributer_id'),
-      CallerName:  formRef.current.values.CallerName,
-      callerapplication: formRef.current.values.callerapplication.label,
-      connectivitytype:  formRef.current.values.connectivitytype.value,
-      devicetype:  formRef.current.values.devicetype.value,
-      enable:  ""+formRef.current.values.enable+"",
-      issuedescription: formRef.current.values.issuedescription,
-      issuetype: formRef.current.values.issuetype,
-      ostype: formRef.current.values.ostype.value,
-      speedtype:  formRef.current.values.speedtype.value,
-      status:  formRef.current.values.status,
-      subcategoryitem:  formRef.current.values.subcategoryitem.value,
-      type: formRef.current.values.type,
-      dispostionFormData: formRef.current.values
-
+    category: formRef.current.values.category.label,
+    subcategory: formRef.current.values.subcategory.label,
+    subcategoryitem: formRef.current.values.subcategoryitem.label,
+    comments: formRef.current.values.comments,
+    type: formRef.current.values.type,
+    distributerID: localStorage.getItem('distributer_id'),
+    CallerName:  formRef.current.values.CallerName,
+    callerapplication: formRef.current.values.callerapplication,
+    connectivitytype:  formRef.current.values.connectivitytype.value,
+    devicetype:  formRef.current.values.devicetype.value,
+    enable:  ""+formRef.current.values.enable+"",
+    issuedescription: formRef.current.values.issuedescription,
+    issuetype: formRef.current.values.issuetype,
+    ostype: formRef.current.values.ostype.value,
+    speedtype:  formRef.current.values.speedtype.value,
+    status:  formRef.current.values.status,
+    subcategoryitem:  formRef.current.values.subcategoryitem.label,
+    type: formRef.current.values.type,
+    dispostionFormData: formRef.current.values,
+    anydeskid: formRef.current.values.anydeskid
     })
-
-
+   
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
@@ -550,7 +548,7 @@ export default function DispositionForm(props) {
           .object()
           .required('Please select a L2')
           .typeError('Please select a L2'),
-
+          anydeskid:yup.string().required('Please Enter Any Desk ID'),
         CallerName: yup.string().required('Please Enter Caller Name'),
         callerapplication: yup.string().required('Please Enter Caller Application'),
         issuedescription: yup.string().required('Please Enter Issue Description'),
@@ -614,6 +612,7 @@ export default function DispositionForm(props) {
                   
                    var i = initialValue
                    i.category = value
+                   getSubCategories(value)
                   //  i.subcategory.value=""
                   //  i.subcategory.label=""
                   //  i.subcategoryitem.value=""
@@ -814,7 +813,17 @@ export default function DispositionForm(props) {
                 name="ostype"
               />
             </Grid>
-
+            <Grid item xs={4} sm={4}>
+              <Field
+                className={classes.fieldContainer}
+                name="anydeskid"
+                component={TextField}
+                variant="outlined"
+                multiline
+                rows={2}
+                label="Any desk ID"
+              />
+            </Grid>
             <Grid item xs={4} sm={4}>
 
 

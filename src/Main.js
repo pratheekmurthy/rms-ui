@@ -23,7 +23,7 @@ function Main({
   );
 
   const [localLoggedInState, setLocalLoggedIn] = useState(false);
-
+  const [routeAccess, setRouteAccess] = useState(false);
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
@@ -50,7 +50,11 @@ function Main({
             }
              setUserDetailsMain(obj)
              localStorage.setItem('AgentSIPID', obj.External_num);
-          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+             setAccountTypeMain(obj.role === 'Agent'||obj.role === 'Admin' ||obj.role === 'Group admin'? ADMIN : USER);
+          // setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+          if(obj.role === 'Agent'){
+            setRouteAccess(true)
+          }
           })
           .catch(error => console.log(error));
         } else {
@@ -79,11 +83,17 @@ function Main({
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
           <div className={classes.content}>
-            <RouteSwitch
+            {/* <RouteSwitch
               routes={filteredRoutes}
               isRoot
               redirectPath="/dash360"
+            /> */}
+             <RouteSwitch
+              routes={filteredRoutes}
+              isRoot
+              redirectPath="/telephony"
             />
+
           </div>
         </div>
       </div>
