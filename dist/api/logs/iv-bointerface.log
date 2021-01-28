@@ -159,7 +159,7 @@
 {"level":30,"time":1608799912882,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":2,"res":{"statusCode":304},"responseTime":3.1253920011222363,"msg":"request completed"}
 {"level":30,"time":1608799912883,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":3,"res":{"statusCode":304},"responseTime":2.1145850010216236,"msg":"request completed"}
 {"level":30,"time":1608799912888,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":4,"req":{"method":"GET","url":"/documentation/static/swagger-ui-standalone-preset.js","hostname":"localhost:42003","remoteAddress":"127.0.0.1","remotePort":57939},"msg":"incoming request"}
-{"level":30,"time":1608799912889,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":4,"res":{"statusCode":304},"responseTime":1.086497001349926,"msg":"request completed"}
+{"level":30,"time":1608799912889,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":4,"res":{"statusCode":304},"responseTime":1.086495000349926,"msg":"request completed"}
 {"level":30,"time":1608799913576,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":5,"req":{"method":"GET","url":"/documentation/json","hostname":"localhost:42003","remoteAddress":"127.0.0.1","remotePort":57939},"msg":"incoming request"}
 {"level":30,"time":1608799913583,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":5,"res":{"statusCode":200},"responseTime":7.732960000634193,"msg":"request completed"}
 {"level":30,"time":1608799914148,"pid":43017,"hostname":"Shivaprasads-MacBook-Pro.local","reqId":6,"req":{"method":"GET","url":"/documentation/static/favicon-32x32.png","hostname":"localhost:42003","remoteAddress":"127.0.0.1","remotePort":57939},"msg":"incoming request"}

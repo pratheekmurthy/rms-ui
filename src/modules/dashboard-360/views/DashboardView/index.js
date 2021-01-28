@@ -55,7 +55,7 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
-const SOCKETENDPOINT = 'https://mt2.granalytics.in';
+const SOCKETENDPOINT = 'http://localhost:42002';
 
 const socket = socketIOClient(SOCKETENDPOINT);
 const useStyles = makeStyles(theme => {
@@ -207,6 +207,10 @@ const Dashboard = ({
     showDistributorDetailsModal,
     setShowDistributorDetailsModal
   ] = useState(false);
+  const [dealerDetails, setdealerDetails] =  useState({
+    callNumber:'',
+    callerName:''
+  });
   const [distributorModal, setDistributorModal] = useState({});
   function getDLF() {
     const axios = require('axios');
@@ -255,6 +259,30 @@ const Dashboard = ({
       });
   }
 
+  function getOpenTickets(agentType, status){
+ 
+    var axios = require('axios');
+
+    var config = {
+      method: 'get',
+      url: 'http://localhost:42004/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
+      headers: {}
+    };
+
+    axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        var ALFDATA = response.data;
+        console.log('calling the open tickets',ALFDATA)
+        // ALFDATA = ALFDATA.reverse();
+        setALF(ALFDATA);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
+  }
+
   function setCurrentCallDetails(
     callStatusId,
     callUniqueId,
@@ -285,11 +313,11 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'https://mt2.granalytics.in';
+  var APIENDPOINT = 'http://localhost:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
   function addToQueue(agentId, queue) {
     var axios = require('axios');
     var data = JSON.stringify({
@@ -297,19 +325,19 @@ const Dashboard = ({
       queue: queue,
       action: 'QueueAdd'
     });
-  
+
     var config = {
       method: 'get',
       url:
         APIENDPOINT +
-        '/ami/actions/addq?Interface='+agentId+'&Queue=' +
+        '/ami/actions/addq?Interface=' + agentId + '&Queue=' +
         queue +
         '',
       headers: {
         'Content-Type': 'application/json'
       }
     };
-  
+
     axios(config)
       .then(function (response) { })
       .catch(function (error) {
@@ -319,11 +347,11 @@ const Dashboard = ({
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
   function removeFromQueue(agentId, queue) {
     var axios = require('axios');
     console.log('remove', agentId)
@@ -332,32 +360,32 @@ const Dashboard = ({
       queue: queue,
       action: 'QueueRemove'
     });
-  
+
     var config = {
       method: 'get',
       url:
         APIENDPOINT +
         '/ami/actions/rmq?Queue=' +
         queue +
-        '&Interface='+agentId+'',
+        '&Interface=' + agentId + '',
       headers: {
         'Content-Type': 'application/json'
       }
     };
-  
+
     axios(config)
       .then(function (response) {
-  
+
       })
       .catch(function (error) {
         console.log(error);
       });
   }
-  
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+
   function updateAgentCallStatus(updateData) {
     console.log("updateData", updateData)
     var axios = require('axios');
@@ -372,7 +400,7 @@ const Dashboard = ({
     };
     var config = {
       method: 'put',
-      url:  UPDATE_CURRENT_STATUS + updateData.callStatusId,
+      url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -427,10 +455,10 @@ const Dashboard = ({
             AgentSIPID: agent.AgentSipId,
             breakStatus: response.data[0].breakStatus
           });
-          if(response.data[0].channel !== null || response.data[0].channel !== undefined){
-              // localStorage.setItem('channel', response.data[0].channel);
+          if (response.data[0].channel !== null || response.data[0].channel !== undefined) {
+            // localStorage.setItem('channel', response.data[0].channel);
           }
-        
+
         }
       })
       .catch(function (error) {
@@ -483,7 +511,7 @@ const Dashboard = ({
 
 
   async function disProfileByNum(mobile) {
-   
+
     // const axios = require('axios');
 
     // let config = {
@@ -563,13 +591,13 @@ const Dashboard = ({
       console.log('Inside the NA');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        if(localStorage.getItem('Agenttype') === 'L1'){
-          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        if (localStorage.getItem('Agenttype') === 'L1') {
+          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
+          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
         }
-        if(localStorage.getItem('Agenttype') === 'L2'){
-          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        if (localStorage.getItem('Agenttype') === 'L2') {
+          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
+          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
         }
       }
     }
@@ -577,13 +605,13 @@ const Dashboard = ({
       console.log('Inside the IN');
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
-        if(localStorage.getItem('Agenttype') === 'L1'){
-          removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        if (localStorage.getItem('Agenttype') === 'L1') {
+          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
+          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
         }
-        if(localStorage.getItem('Agenttype') === 'L2'){
-          removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        if (localStorage.getItem('Agenttype') === 'L2') {
+          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
+          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
         }
       }
     }
@@ -591,13 +619,13 @@ const Dashboard = ({
       console.log('Inside the OUT');
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
-        if(localStorage.getItem('Agenttype') === 'L1'){
-          removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+        if (localStorage.getItem('Agenttype') === 'L1') {
+          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 5000)
+          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
         }
-        if(localStorage.getItem('Agenttype') === 'L2'){
-          removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+        if (localStorage.getItem('Agenttype') === 'L2') {
+          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 5001)
+          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
         }
       }
     }
@@ -651,7 +679,17 @@ const Dashboard = ({
 
   ///socket ends
   useEffect(() => {
-    getALF();
+    // getALF();
+    if(localStorage.getItem('Agenttype') === 'L1'){
+      // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
+    }
+    if(localStorage.getItem('Agenttype') === 'L2'){
+      getOpenTickets('L1', 'open');
+    }
+    if(localStorage.getItem('Agenttype') === 'L3'){
+      getOpenTickets('L2', 'open');
+    }
+
     async function getInitialData() {
       try {
         const response = await getAgentCallStatus(agent.AgentSipId);
@@ -667,14 +705,14 @@ const Dashboard = ({
     );
     setLoadingDetails(false);
     socket.on('ringing1', data => {
-      
+
       // var Channel1 = data.Channel1;
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
         console.log('ringing1', data);
         localStorage.setItem('channel', data.event.Channel)
-      //   console.log('AstriskEventBridgeOutbound', data);
-     
+        //   console.log('AstriskEventBridgeOutbound', data);
+
         // setCurrentCallDetails(
         //   localStorage.getItem('callStatusId'),
         //   data.Uniqueid,
@@ -689,29 +727,29 @@ const Dashboard = ({
     });
 
     socket.on('ringing2', data => {
-     
+
       // var Channel1 = data.Channel1;
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
         console.log('ringing2', data)
         localStorage.setItem('callUniqueId', data.event.Uniqueid)
         localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
-      // //   console.log('AstriskEventBridgeOutbound', data);
- 
-      //   setCurrentCallDetails(
-      //     localStorage.getItem('callStatusId'),
-      //     localStorage.getItem('callUniqueId'),
-      //     agent.AgentType,
-      //     'connected',
-      //     'Bridge',
-      //     'NotDisposed',
-      //     data.contactNumber,
-      //     localStorage.getItem('breakStatus')
-      //   );
+        // //   console.log('AstriskEventBridgeOutbound', data);
+
+        //   setCurrentCallDetails(
+        //     localStorage.getItem('callStatusId'),
+        //     localStorage.getItem('callUniqueId'),
+        //     agent.AgentType,
+        //     'connected',
+        //     'Bridge',
+        //     'NotDisposed',
+        //     data.contactNumber,
+        //     localStorage.getItem('breakStatus')
+        //   );
       }
     });
     socket.on('transfercallnumber', data => {
-      if(localStorage.getItem('Agenttype') === 'L2'){
+      if (localStorage.getItem('Agenttype') === 'L2') {
         localStorage.setItem('callerNumber', data.contactnumber)
       }
 
@@ -777,7 +815,17 @@ const Dashboard = ({
       getDLF();
 
     }
-    getALF();
+    // getALF();
+    if(localStorage.getItem('Agenttype') === 'L1'){
+      // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
+    }
+    if(localStorage.getItem('Agenttype') === 'L2'){
+      getOpenTickets('L1', 'open');
+    }
+    if(localStorage.getItem('Agenttype') === 'L3'){
+      getOpenTickets('L2', 'open');
+    }
+
   }, [
     currentCall.callDispositionStatus,
     currentCall.callStatus,
@@ -797,21 +845,21 @@ const Dashboard = ({
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
       {currentCall.callStatus === 'connected' ? (
-      <div>
+        <div>
 
-        <Box
-          alignItems="center"
-          display="flex"
-          className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
-        >
-          <CallIcon />
+          <Box
+            alignItems="center"
+            display="flex"
+            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
+          >
+            <CallIcon />
             &nbsp;
             <Typography display="inline">
-            {currentCall.callType} Call In Progress
+              {currentCall.callType} Call In Progress
             </Typography>
-        </Box>{' '}
-      </div>
-       ) : null} 
+          </Box>{' '}
+        </div>
+      ) : null}
       {currentCall.callDispositionStatus === 'NotDisposed' &&
         currentCall.callStatus === 'disconnected' ? (
           <div>
@@ -848,14 +896,14 @@ const Dashboard = ({
               <Grid item>
 
 
-              {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected' ? <Button
-                    color="secondary"
-                    variant="contained"
-                    style={{ color: 'white' }}
-                    onClick={(e) => breakService(e)}
-                  >
-                    {currentCall.breakStatus === 'IN' ? <label>Break OUT</label> : <label>Break IN</label>}
-                  </Button> : null}
+                {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected' ? <Button
+                  color="secondary"
+                  variant="contained"
+                  style={{ color: 'white' }}
+                  onClick={(e) => breakService(e)}
+                >
+                  {currentCall.breakStatus === 'IN' ? <label>Break OUT</label> : <label>Break IN</label>}
+                </Button> : null}
                 {/* <Button
                   color="secondary"
                   variant="contained"
@@ -877,24 +925,19 @@ const Dashboard = ({
           </Grid>
           <Grid container spacing={3}>
             <Grid item lg={4} md={4} xs={12}>
+              
               <Grid item>
-                {/* <Card>
+                {localStorage.getItem('Agenttype') === 'L2' ?
+                <Card>
                   <CardHeader title={'Caller details'} />
-                  {currentCall.callDispositionStatus === 'NotDisposed' ? (
+           
                     <div>
                       <DealerCard
-                        // dealerDetails={{
-                        //   ...rootData[0].data[0],
-                        //   lastOrderReference: rootData[2].data
-                        //     ? rootData[2].data[0] || { OrderNumber: '' }.OrderNumber
-                        //     : ''
-                        // }}
+                        dealerDetails={rootData[1]}
                       />
                     </div>
-                  ) : (
-                      <CommonAlert text="Unable to get caller details" />
-                    )}
-                </Card> */}
+        
+                </Card> : null}
                 <br />
                 {/* <Card>
                   <CardHeader title={'Caller last five interactions'} />
@@ -911,30 +954,32 @@ const Dashboard = ({
                       <CommonAlert text="Unable to get Caller details" />
                     )}
                 </Card> */}
-                <br/>
-                {/* <Card>
-                <CardHeader
-                  title={
-                    'My last five interactions (' + agent.AgentSipId + ')'
-                  }
-                />
-                {ALF.length ? (
-                  <div>
-                    <BasicTable
-                      columns={lastFiveCallData}
-                      records={ALF.slice(0, 3)}
-                      redirectLink="/dash360/admin/agentlastfive"
-                      redirectLabel="View All"
-                    />
-                  </div>
-                ) : (
-                    <CommonAlert text="Unable to get distributor details" />
-                  )}
-              </Card> */}
+                <br />
+                {localStorage.getItem('Agenttype') === 'L2' ?
+                <Card>
+                  <CardHeader
+                    title={
+                      'Open Tickets (' + agent.AgentSipId + ')'
+                    }
+                  />
+                  {ALF.length ? (
+                    <div>
+                      <BasicTable
+                        setRootData={setRootData}
+                        columns={lastFiveCallData}
+                        records={ALF.slice(0, 3)}
+                        redirectLink="/dash360/admin/agentlastfive"
+                        redirectLabel="View All"
+                      />
+                    </div>
+                  ) : (
+                      <CommonAlert text="Unable to get distributor details" />
+                    )}
+                </Card> : null }
               </Grid>
             </Grid>
-            
-            <Grid item lg={12} md={12} xs={12}>
+            {localStorage.getItem('Agenttype') === 'L2' ?
+            <Grid item lg={8} md={12} xs={12}>
 
               <Card>
                 <CardHeader title="Disposition Details" />
@@ -947,7 +992,7 @@ const Dashboard = ({
                       setCurrentCallDetails={setCurrentCallDetails}
                       addToQueue={addToQueue}
                       removeFromQueue={removeFromQueue}
-                      getALF={getALF}
+                      // getALF={getALF}
                       disForm={disForm}
                       setdisForm={form => {
                         setdisForm(form);
@@ -982,7 +1027,57 @@ const Dashboard = ({
 
               <br />
               <FAQ />
-            </Grid>
+            </Grid> : 
+                        <Grid item lg={12} md={12} xs={12}>
+
+                        <Card>
+                          <CardHeader title="Disposition Details" />
+                          <Divider />
+                          {currentCall.callDispositionStatus === 'NotDisposed' &&
+                            user.userType === 'Agent' ? (<CardContent>
+                              <DispositionForm
+                                agentSipID={agent.AgentSipId}
+                                DLF={DLF}
+                                setCurrentCallDetails={setCurrentCallDetails}
+                                addToQueue={addToQueue}
+                                removeFromQueue={removeFromQueue}
+                                // getALF={getALF}
+                                disForm={disForm}
+                                setdisForm={form => {
+                                  setdisForm(form);
+                                }}
+                                category={category}
+                                setCategory={cat => {
+                                  setCategory(cat);
+                                }}
+                                ticketType={ticketType}
+                                setTicketType={tkstyp => {
+                                  setTicketType(tkstyp);
+                                }}
+                                subCategory={subCategory}
+                                setSubCategory={subcat => {
+                                  setSubCategory(subcat);
+                                }}
+                                subCategoryItem={subCategoryItem}
+                                setSubCategoryItem={subcatitem => {
+                                  setSubCategoryItem(subcatitem);
+                                }}
+                                remarks={remarks}
+                                setRemarks={rks => {
+                                  setRemarks(rks);
+                                }}
+                              />
+                            </CardContent>
+                            ) : (
+                              <CommonAlert text="Unable to get disposition details" />
+                            )}
+                        </Card>
+          
+          
+                        <br />
+                        <FAQ />
+                      </Grid>
+            }
 
           </Grid>
 

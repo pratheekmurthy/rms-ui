@@ -64,7 +64,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
         var config = {
     
           method: 'post',
-          url: 'https://mt1.granalytics.in/crm/currentstatuses',
+          url: 'http://localhost:42004/crm/currentstatuses',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -82,7 +82,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
     const handleSubmit = (e) => {
 
         console.log("formData", formData)
-        const url = 'https://mt3.granalytics.in/admin/agent/updateAgent'
+        const url = 'http://localhost:4000/admin/agent/updateAgent'
 
         Axios.post(url, formData)
             .then(function (response) {
@@ -97,7 +97,7 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
     }
     useEffect(() => {
-        const url = 'https://mt3.granalytics.in/admin/group/getGroup'
+        const url = 'http://localhost:4000/admin/group/getGroup'
     
         Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
           .then(function (response) {

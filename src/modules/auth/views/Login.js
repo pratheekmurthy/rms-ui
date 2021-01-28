@@ -94,7 +94,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-var APIENDPOINT = 'https://mt2.granalytics.in';
+var APIENDPOINT = 'http://localhost:42002';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,7 +178,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url = 'https://mt3.granalytics.in/auth/apiM/login'
+      const url = 'http://localhost:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
       console.log("values", values)
 
@@ -196,12 +196,12 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
       if(res.data.userDetails.AgentType === 'L1'){
-        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
-        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
+        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 5000)
       }
       if(res.data.userDetails.AgentType === 'L2'){
-        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
-        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
+        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 5001)
       }
       setLoggedInMain(true);
       setError(false);
@@ -221,7 +221,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       userName: username,
       password: password,
     }
-    const url = 'https://mt3.granalytics.in/auth/apiM/sendOTP'
+    const url = 'http://localhost:4000/auth/apiM/sendOTP'
 
 
     const res = await Axios.post(url, userData);

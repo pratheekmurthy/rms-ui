@@ -65,30 +65,49 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function DealerCard({ dealerDetails }) {
-  console.log('dealerDetails', dealerDetails);
+export default function DealerCard(props) {
+  console.log('dealerDetails', props);
+  
   const classes = useStyles();
 
+const [details, setdetails] = useState({
+  callNumber: "",
+callerName: ""
+})
+if('dealerDetails' in props){
+console.log('props me hai', props.dealerDetails)
+var data =  props.dealerDetails;
+if(data.length){
+  console.log('clicked iteam', data[0])
+// setdetails(data[0])
+localStorage.setItem('callNumber', data[0].callNumber)
+localStorage.setItem('callerName', data[0].callerName)
+}
+}else{
+  console.log('props me nahi hai', props)
+}
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'https://mt2.granalytics.in/';
+  const SOCKETENDPOINT = 'http://localhost:42002/';
   const getIconColor = () => {
     return 'primary';
   };
 
   function makeCall(Number) {
-    if (Number.length === 10) {
+    console.log('make call', Number)
+    if (Number.length === 11) {
       const axios = require('axios');
-
+       Number = Number.substring(1);
+       console.log('make call', Number)
       const config = {
         method: 'get',
         // eslint-disable-next-line prefer-template
         url:
           SOCKETENDPOINT +
-          'ami/actions/orginatecall?sipAgentID=SIP%2F' +
+          'ami/actions/orginatecall?sipAgentID=Local/5' +
           localStorage.getItem('AgentSIPID') +
-          '&NumbertobeCalled=5' +
-          Number,
+          '@from-internal&NumbertobeCalled=59886151114' 
+          ,
         headers: {}
       };
       axios(config)
@@ -102,6 +121,7 @@ export default function DealerCard({ dealerDetails }) {
       console.log('Invalide number');
     }
   }
+  console.log('details', details)
   return (
     <Card>
      
@@ -118,18 +138,18 @@ export default function DealerCard({ dealerDetails }) {
               onClick={() => setShowFullDetailsModal(true)}
             />
           </Tooltip>
-          {localStorage.getItem('AgentType') === 'Outbound' &&
+          {
             localStorage.getItem('callDispositionStatus') === 'Disposed' &&
             localStorage.getItem('callStatus') === 'disconnected' &&
             localStorage.getItem('breakStatus') === 'OUT' ? (
-              // <CallIcon onClick={() => makeCall(mob_no)} />
-              <div></div>
+              <CallIcon onClick={() => makeCall(localStorage.getItem('callNumber'))} />
+           
             ) : null}
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> */}
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
               {/* {display_name} */}
-              Vikram Singh
+             {localStorage.getItem('callerName')}
             </Typography>
 
             <Typography

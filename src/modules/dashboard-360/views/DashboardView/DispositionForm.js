@@ -29,7 +29,7 @@ export default function DispositionForm(props) {
   const config = "http://192.168.3.45:8083/"
   console.log('props.DLF', props.DLF)
   var DLF = props.DLF;
-  var APIENDPOINT = 'https://mt2.granalytics.in';
+  var APIENDPOINT = 'http://localhost:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ export default function DispositionForm(props) {
   ]
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'https://mt1.granalytics.in/';
+  const agentServiceURL = 'http://localhost:42004/';
   const [category, setCategory] = useState({
     value: 'Enquiry',
     label: 'Enquiry'
@@ -414,7 +414,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'https://mt2.granalytics.in/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
+      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=5001',
       headers: {}
     };
 
@@ -444,12 +444,12 @@ export default function DispositionForm(props) {
     props.setdisForm(formRef.current.values);
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if(localStorage.getItem('Agenttype') === 'L1'){
-      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
+      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 5000)
     }
     if(localStorage.getItem('Agenttype') === 'L2'){
-      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
+      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 5001)
     }
     // props.removeFromQueue(props.AgentSipId, '5000');
     // props.addToQueue(props.agentSipID, '5000');
@@ -612,15 +612,15 @@ export default function DispositionForm(props) {
                         dispostionFormData: formRef.current.values             
                       })
                   
-                  //  var i = initialValue
-                  //  i.category = value
+                   var i = initialValue
+                   i.category = value
                   //  i.subcategory.value=""
                   //  i.subcategory.label=""
                   //  i.subcategoryitem.value=""
                   //  i.subcategoryitem.label=""
                   //  setSubCategories([])
                   //     getSubCategories(value);
-                  //     setInitialValue(i)
+                      setInitialValue(i)
                       
                     }
 

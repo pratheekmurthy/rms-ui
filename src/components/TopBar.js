@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = 'https://mt2.granalytics.in';
+var APIENDPOINT = 'http://localhost:42002';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,18 +239,18 @@ const TopBar = ({
   
     try {
       if(localStorage.getItem('Agenttype') === 'L1'){
-        // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
-        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
+        // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 5000)
       }
       if(localStorage.getItem('Agenttype') === 'L2'){
-        // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
-        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
+        // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 5001)
       }
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData= localStorage.jwtToken
 
-      const url='https://mt3.granalytics.in/auth/apiM/logout'
+      const url='http://localhost:4000/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
 
       localStorage.clear();

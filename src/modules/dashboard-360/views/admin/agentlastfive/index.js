@@ -39,7 +39,7 @@ function Invoices({
 
   const orderIdPrev = useRef(orderId);
 
-  const agentServiceURL = 'https://mt1.granalytics.in/';
+  const agentServiceURL = 'http://localhost:42004/';
   function getALF() {
     const axios = require('axios');
     let data = '';

@@ -16,6 +16,7 @@ import {
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { Link } from 'react-router-dom';
 
+
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -35,9 +36,27 @@ const BasicTable = ({
   records,
   redirectLink,
   redirectLabel,
+  setRootData,
   ...rest
 }) => {
   const classes = useStyles();
+  function showthedata(row){
+    console.log('showthedata', row);
+    setRootData([[],[{
+       callNumber:row.callerNumber,
+         callerName:row.CallerName
+       }],[],[],[]])
+    // setCallerDetails({
+    //   callNumber:row.callerNumber,
+    //   callerName:row.CallerName
+    // })
+    // props.setdealerDetails({
+    //   callNumber:row.callerNumber,
+    //   callerName:row.CallerName
+    // })
+    
+    alert('data')
+  }
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <Divider />
@@ -55,7 +74,7 @@ const BasicTable = ({
             </TableHead>
             <TableBody>
               {records?.map((record, index) => (
-                <TableRow hover key={record.id || index}>
+                <TableRow hover key={record.id || index}  onClick={( ) => showthedata(record)}>
                   {columns.map((col, index2) => (
                     <TableCell key={`cell-${index}-${index2}`}>
                       {col.renderCell
