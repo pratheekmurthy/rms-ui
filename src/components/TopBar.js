@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = 'http://localhost:42002';
+var APIENDPOINT = 'https://mt2.granalytics.in';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ const TopBar = ({
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData= localStorage.jwtToken
 
-      const url='http://localhost:4000/auth/apiM/logout'
+      const url='https://mt3.granalytics.in/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
 
       localStorage.clear();
@@ -290,7 +290,7 @@ const TopBar = ({
               Agent {localStorage.getItem('Agenttype')+' '+ localStorage.getItem('AgentSIPID')}
             </Link>
           </Typography>
-          <Typography className={classes.title} variant="h5" noWrap>
+          {/* <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/telephony/dashboard" className="color-white">
               Telephony
             </Link>
@@ -299,7 +299,7 @@ const TopBar = ({
             <Link to="/agent/dashboard" className="color-white">
               Agents
             </Link>
-          </Typography>
+          </Typography> */}
           {viewAccess === -1 ? (
             ''
           ) : (

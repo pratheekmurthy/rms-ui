@@ -29,7 +29,7 @@ export default function DispositionForm(props) {
   const config = "http://192.168.3.45:8083/"
   console.log('props.DLF', props.DLF)
   var DLF = props.DLF;
-  var APIENDPOINT = 'http://localhost:42002';
+  var APIENDPOINT = 'https://mt2.granalytics.in';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +217,7 @@ export default function DispositionForm(props) {
   ]
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://localhost:42004/';
+  const agentServiceURL = 'https://mt1.granalytics.in/';
   const [category, setCategory] = useState({
     value: 'Enquiry',
     label: 'Enquiry'
@@ -269,7 +269,7 @@ export default function DispositionForm(props) {
     async function getItems() {
       const response = await fetch(url + '/level1');
       const body = await response.json();
-
+      console.log('response categories', response)
       if (!unmounted) {
         body.data[0]
           ? setCategory({
@@ -414,7 +414,7 @@ export default function DispositionForm(props) {
 
     var config = {
       method: 'get',
-      url: 'http://localhost:42002/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
+      url: 'https://mt2.granalytics.in/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
       headers: {}
     };
 
