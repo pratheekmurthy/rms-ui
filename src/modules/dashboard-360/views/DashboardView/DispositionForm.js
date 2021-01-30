@@ -258,30 +258,28 @@ export default function DispositionForm(props) {
   useEffect(() => {
     let unmounted = false;
     getDLF()
-    console.log('initialValue', initialValue)
-    if (initialValue.category !== '') {
-      getSubCategories(initialValue.category);
-    }
-    if (initialValue.subcategory !== ''){
-      console.log("initialValue.subcategory", initialValue.subcategory)
-      getSubCategoryItems(initialValue.category,initialValue.subcategory);
-    }
+    // console.log('initialValue', initialValue)
+    // if (initialValue.category !== '') {
+    //   getSubCategories(initialValue.category);
+    // }
+    // if (initialValue.subcategory !== ''){
+    //   console.log("initialValue.subcategory", initialValue.subcategory)
+    //   getSubCategoryItems(initialValue.category,initialValue.subcategory);
+    // }
     async function getItems() {
-      const response = await fetch(url + '/level1');
-      const body = await response.json();
-      console.log('response categories', response)
-      if (!unmounted) {
-        body.data[0]
+      const body = [{"id":"600bc52f997c4d29ff4e5609","category":"Enquiry","active":true,"createdAt":"2021-01-19T07:31:02.745Z","updatedAt":"2021-01-19T07:31:02.745Z","v":0},{"id":"600bc578997c4d29ff4e560a","category":"Complaints","active":true,"createdAt":"2021-01-19T07:31:02.745Z","updatedAt":"2021-01-19T07:31:02.745Z","_v":0}]
+         if (!unmounted) {
+          body[0]
           ? setCategory({
-            label: body.data[0].category,
-            value: body.data[0]._id
+            label: body[0].category,
+            value: body[0].id
           })
           : setCategory({});
 
         setCategories(
-          body.data.map(({ _id, category }) => ({
+          body.map(({ id, category }) => ({
             label: category,
-            value: _id
+            value: id
           }))
         );
         setLoading(false);
@@ -302,17 +300,26 @@ export default function DispositionForm(props) {
      console.log("value", cat)
     let unmounted = false;
     async function getItems() {
-      const response = await fetch(
-        url + '/level2/' + cat.value
-      );
-      const body = await response.json();
+      var InQuiry = [{"id":"600bc7a9997c4d29ff4e560b","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Exam Schedule","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bc7b9997c4d29ff4e560c","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"SEB Link","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb58997c4d29ff4e560d","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Browser Version","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb6e997c4d29ff4e560e","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Mobile App Link","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb78997c4d29ff4e560f","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Minimum System Requirements","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600c7148f50bb21a5ea0919f","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Internet Bandwidth Required","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","_v":0}]
+      var Compln = [{"id":"600c738bf50bb21a5ea091a0","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategory":"Hardware","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600c73adf50bb21a5ea091a1","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategory":"Software","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","_v":0}]
+      // const response = await fetch(
+      //   url + '/level2/' + cat.value
+      // );
+      var body = [];
+      if(cat.value === '600bc52f997c4d29ff4e5609'){
+        body = InQuiry;
+      }
+      if(cat.value === '600bc578997c4d29ff4e560a'){
+        body = Compln;
+      }
+     
    
     
       if (!unmounted) {
         setSubCategories(
-          body.data.map(({ _id, subCategory }) => ({
+          body.map(({ id, subCategory }) => ({
             label: subCategory,
-            value: _id
+            value: id
           }))
         );
        
@@ -327,26 +334,35 @@ export default function DispositionForm(props) {
   const getSubCategoryItems = (cat, sct) => {
     let unmounted = false;
     async function getItems() {
+      var HardWare = [{"id":"600c7421f50bb21a5ea091a2","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c738bf50bb21a5ea091a0","subCategory":"Hardware","subCategoryItem":"Webcam Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c74d5f50bb21a5ea091a3","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c738bf50bb21a5ea091a0","subCategory":"Hardware","subCategoryItem":"Microphone Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","_v":0}]
+      var Software = [{"id":"600c74e0f50bb21a5ea091a4","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"SEB Installation Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c74ebf50bb21a5ea091a5","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"App Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c750df50bb21a5ea091a6","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"Browser Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c7517f50bb21a5ea091a7","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"Login Error","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c7522f50bb21a5ea091a8","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"RP Initiation Failed","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","_v":0}]
+      var data = [];
+      if(sct === '600bc7a9997c4d29ff4e560b'){
+        data = HardWare;
+      }
+      if(sct === '600c738bf50bb21a5ea091a0'){
+        data = Software;
+      }
       //  alert(JSON.stringify(cat))
-      const response = await fetch(
-        url + '/level3/' + cat + '/' + sct.value
-      );
-      const body = await response.json();
+      // const response = await fetch(
+      //   url + '/level3/' + cat + '/' + sct.value
+      // );
+      // const body = await response.json();
 
       if (!unmounted) {
         setSubCategoryItems(
-          body.data.map(({ _id, subCategoryItem }) => ({
+          data.map(({ id, subCategoryItem }) => ({
             label: subCategoryItem,
-            value: _id
+            value: id
           }))
         );
 
         setLoading(false);
 
-        body.data[0]
+        data[0]
           ? setSubCategoryItem({
-            label: body.data[0].subCategoryItem,
-            value: body.data[0]._id
+            label: data[0].subCategoryItem,
+            value: data[0].id
           })
           : setSubCategoryItem({});
       }
@@ -678,13 +694,13 @@ export default function DispositionForm(props) {
                   
                    var i = initialValue
                    i.category = value
-                   getSubCategories(value)
+                  //  getSubCategories(value)
                   //  i.subcategory.value=""
                   //  i.subcategory.label=""
                   //  i.subcategoryitem.value=""
                   //  i.subcategoryitem.label=""
                   //  setSubCategories([])
-                  //     getSubCategories(value);
+                      getSubCategories(value);
                       setInitialValue(i)
                       
                     }

@@ -268,6 +268,13 @@ const TopBar = ({
           <Logo />
         </RouterLink>
         <div className={classes.search}>
+        <Typography className={classes.title} variant="h5" noWrap>
+        <a target="_blank" href="https://mt4.granalytics.in/">FAQ
+        </a>
+       
+         </Typography>
+         </div>
+        {/* <div className={classes.search}>
           <div className={classes.searchIcon}>
             <SearchIcon />
           </div>
@@ -282,7 +289,7 @@ const TopBar = ({
             value={searchText}
             onBlur={distributorID}
           />
-        </div>
+        </div> */}
         <Box flexGrow={1} />
         <Hidden mdDown>
         {localStorage.getItem("role")==="Agent" ?  <Typography className={classes.title} variant="h5" noWrap>

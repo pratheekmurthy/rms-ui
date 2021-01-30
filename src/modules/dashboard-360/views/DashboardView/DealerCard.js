@@ -126,7 +126,8 @@ var data =  props.dealerDetails;
 
   function makeCall(Number) {
     console.log('make call', Number)
-    if (Number.length === 11) {
+    Number = Number.substr(Number.length - 10);
+    if (Number.length === 10) {
       const axios = require('axios');
        Number = Number.substring(1);
        console.log('make call', Number)

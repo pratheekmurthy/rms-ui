@@ -171,10 +171,6 @@ function removeFromQueue(agentId, queue) {
 function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   const classes = useStyles();
   const [error, setError] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [enable, setEnable] = useState(true);
-  const [message, setMessage] = useState(true);
   async function authenticate(values) {
     setError('');
     try {
@@ -187,20 +183,20 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       const obj = res.data.userDetails;
       const { accessToken } = res.data;
   
-      localStorage.setItem("jwtToken", accessToken);
-     
+      console.log('data', res.data)
+      localStorage.setItem("jwtToken", accessToken);     
       localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
       localStorage.setItem('role',res.data.userDetails.role);
       localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
       setUserDetailsMain(obj);
-      setAccountTypeMain(obj.role === 'Agent'||obj.role === 'Admin' ||obj.role === 'Group admin'? ADMIN : USER);
+      setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
       if(res.data.userDetails.AgentType === 'L1'){
-        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
+        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
         addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
       }
       if(res.data.userDetails.AgentType === 'L2'){
-        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
+        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
         addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
       }
       setLoggedInMain(true);
@@ -210,30 +206,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       setLoggedInMain(false);
       setError(true);
     }
-  }
-
-  async function getOtp(e) {
-
-    console.log("values", username)
-
-    console.log("password", password)
-    var userData = {
-      userName: username,
-      password: password,
-    }
-    const url = 'https://mt3.granalytics.in/auth/apiM/sendOTP'
-
-
-    const res = await Axios.post(url, userData);
-    console.log("login api", res.data)
-    if (res.data.statusCode === 200) {
-      setEnable(false)
-      setMessage(true)
-    }
-    if (res.data.statusCode === 404) {
-      setMessage(false)
-    }
-
   }
 
   return (
@@ -254,7 +226,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       >
         <div className={`${classes.paper}`}>
           <div>
-          <div ><center><Logo /></center></div>
             <div className={classes.avatarWrapper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
@@ -265,12 +236,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
             </div>
             <Formik
               initialValues={{
-                email: '',
-                password: '',
-                role: '',
+                email: 'admin@admin.com',
+                password: 'abcabcabc',
+                role: 'Agent',
                 AgentType: 'Inbound',
-                AgentSIPID: '', 
-                OTP:''
+                AgentSIPID: '9999'
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
@@ -279,29 +249,16 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   .required('Email is required'),
                 password: Yup.string()
                   .max(255)
-                  .required('Password is required'),
-                OTP: Yup.string()
-                  .max(255)
-                  .required('OTP is required')
+                  .required('Password is required')
               })}
               onSubmit={values => {
-
-                // console.log('values', values);
+                console.log('values', values);
                 localStorage.setItem('AgentType', values.AgentType);
                 localStorage.setItem('role', values.role);
-               
+                localStorage.setItem('AgentSIPID', values.AgentSIPID);
 
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);
-              }}
-              onBlur={e => {
-                console.log("onblur")
-                if (e.target.name === "password") {
-                  setPassword(e.target.value)
-                }
-                if (e.target.name === "email") {
-                  setUsername(e.target.value)
-                }
               }}
             >
               {({
@@ -320,11 +277,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     label="Email Address"
                     margin="normal"
                     name="email"
-                    onBlur={e => {
-                      setUsername(e.target.value)
-                      setMessage(true)
-                      // getOtp()
-                    }}
+                    onBlur={handleBlur}
                     onChange={handleChange}
                     type="email"
                     value={values.email}
@@ -337,76 +290,13 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     label="Password"
                     margin="normal"
                     name="password"
-                    onBlur={e => {
-                      setPassword(e.target.value)
-                      setMessage(true)
-                      // getOtp(e)
-                    }}
+                    onBlur={handleBlur}
                     onChange={handleChange}
                     type="password"
                     value={values.password}
                     variant="outlined"
                   />
 
-                  {/* <TextField
-                    error={Boolean(touched.role && errors.role)}
-                    fullWidth
-                    helperText={touched.role && errors.role}008618
-                    label="role"
-                    margin="normal"
-                    name="role"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    value={values.role}
-                    variant="outlined"
-                  /> */}
-                  {/* <TextField
-                    error={Boolean(touched.AgentType && errors.AgentType)}
-                    fullWidth
-                    helperText={touched.AgentType && errors.AgentType}
-                    label="Agent Type"
-                    margin="normal"
-                    name="AgentType"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    value={values.AgentType}
-                    variant="outlined"
-                  /> */}
-                  {/* <TextField
-                    error={Boolean(touched.AgentSIPID && errors.AgentSIPID)}
-                    fullWidth
-                    helperText={touched.AgentSIPID && errors.AgentSIPID}
-                    label="Agent SIPID"
-                    margin="normal"
-                    name="AgentSIPID"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    value={values.AgentSIPID}
-                    variant="outlined"
-                  /> */}
-                 {enable === false ? <ThemeProvider theme={theme}>
-                    <Typography variant="h6">OTP Sent Sucessfully</Typography>
-                  </ThemeProvider> : <></>}
-                  {message === false ? <ThemeProvider theme={theme}>
-                    <Typography variant="h6">Invalid Username/Password</Typography>
-                  </ThemeProvider> : <></>}
-                  {enable === false ?    <TextField
-                    error={Boolean(touched.OTP && errors.OTP)}
-                    fullWidth
-                    helperText={touched.OTP && errors.OTP}
-                    label="OTP"
-                    margin="normal"
-                    name="OTP"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    type="text"
-                    value={values.OTP}
-                    variant="outlined"
-                    disabled={enable}
-                  />:<></>}
                   {!!error && (
                     <Box my={1}>
                       <Typography color="secondary">
@@ -414,7 +304,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                       </Typography>
                     </Box>
                   )}
-                   {enable === false ? <Button
+                  <Box my={2} mt={5}>
+                    <Button
                       color="primary"
                       fullWidth
                       size="large"
@@ -422,16 +313,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                       variant="contained"
                     >
                       Sign in now
-                    </Button> : <Button
-                        color="primary"
-                        fullWidth
-                        size="large"
-                        type="submit"
-                        variant="contained"
-                        onClick={(e) => getOtp(e)}
-                      >
-                       Generate OTP
-                    </Button>}
+                    </Button>
+                  </Box>
                 </form>
               )}
             </Formik>
@@ -444,7 +327,6 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     </Grid>
   );
 }
-
 const mapDispatchToProps = dispatch => ({
   setUserDetailsMain: details => dispatch(setUserDetails(details)),
   setAccountTypeMain: type => dispatch(setAccountType(type)),
