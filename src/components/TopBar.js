@@ -267,13 +267,7 @@ const TopBar = ({
         <RouterLink to="/">
           <Logo />
         </RouterLink>
-        <div className={classes.search}>
-        <Typography className={classes.title} variant="h5" noWrap>
-        <a target="_blank" href="https://mt4.granalytics.in/">FAQ
-        </a>
-       
-         </Typography>
-         </div>
+
         {/* <div className={classes.search}>
           <div className={classes.searchIcon}>
             <SearchIcon />

@@ -444,7 +444,7 @@ export default function DispositionForm(props) {
 
   }
   function handleSubmit(e) {
-    console.log('formRef', formRef.current.values);
+    console.log('formRefasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfs', formRef.current.values);
  
     console.log('state',initialValue)
     console.log('dispostion', {
@@ -511,6 +511,7 @@ export default function DispositionForm(props) {
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
+        solution:  formRef.current.values.solution,
         L1ID:localStorage.getItem('callUniqueId')
         })
     }
@@ -536,6 +537,7 @@ export default function DispositionForm(props) {
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
+        solution:  formRef.current.values.solution,
         L1ID:localStorage.getItem('callUniqueId')
         })
         updateCallData(localStorage.getItem('L1ID'), {
@@ -567,6 +569,7 @@ export default function DispositionForm(props) {
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
+        solution:  formRef.current.values.solution,
         L1ID:localStorage.getItem('callUniqueId')
         })
         updateCallData(localStorage.getItem('L2ID'), {

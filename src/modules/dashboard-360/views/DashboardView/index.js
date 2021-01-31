@@ -24,6 +24,7 @@ import {
   GET_CURRENT_STATUS_BY_AGENT_SIP_ID,
   ORIGINATE_CALL_WITH_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
+import Iframe from 'react-iframe'
 import { ExpandMore } from '@material-ui/icons';
 import FAQ from './FAQ'
 import Input from '@material-ui/core/Input';
@@ -899,7 +900,7 @@ const Dashboard = ({
                   style={{ color: 'white' }}
                   onClick={(e) => breakService(e)}
                 >
-                  {currentCall.breakStatus === 'IN' ? <label>Break OUT</label> : <label>Break IN</label>}
+                  {currentCall.breakStatus === 'OUT' || currentCall.breakStatus === 'NA'  ? <label>Break OUT</label> : <label>Break IN</label>}
                 </Button> : null}
                 {/* <Button
                   color="secondary"
@@ -1025,7 +1026,15 @@ const Dashboard = ({
 
 
               <br />
-              <FAQ />
+              {/* <FAQ /> */}
+              <Iframe url="https://mt4.granalytics.in/"
+                 position="absolute"
+        width="100%"
+        height="500Px"
+        id="myId"
+        className="myClassname"
+        display="initial"
+        position="relative"/>
             </Grid> : 
                         <Grid item lg={12} md={12} xs={12}>
 
@@ -1068,13 +1077,21 @@ const Dashboard = ({
                               />
                             </CardContent>
                             ) : (
-                              <CommonAlert text="Unable to get disposition details" />
+                              <></>
+                              // <CommonAlert text="Unable to get disposition details" />
                             )}
                         </Card>
           
           
                         <br />
-                        <FAQ />
+                        {/* <FAQ /> */}
+                        <Iframe url="https://mt4.granalytics.in/"
+        width="100%"
+        height="500Px"
+        id="myId"
+        className="myClassname"
+        display="initial"
+        position="relative"/>
                       </Grid>
             }
 

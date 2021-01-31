@@ -174,7 +174,7 @@ var data =  props.dealerDetails;
           {
             localStorage.getItem('callDispositionStatus') === 'Disposed' &&
             localStorage.getItem('callStatus') === 'disconnected' &&
-            localStorage.getItem('breakStatus') === 'OUT' ? (
+            localStorage.getItem('breakStatus') === 'OUT' || localStorage.getItem('breakStatus') === 'NA'  ? (
               <CallIcon onClick={() => makeCall(get(props, 'dealerDetails.callerNumber') )} />
            
             ) : null}
@@ -308,13 +308,9 @@ var data =  props.dealerDetails;
                 </Grid>
                 <Grid item container>
                   <Grid item xs={5}>
-                    <Typography variant="h5">Issue Type:</Typography>
+                    <Typography variant="h5">Comments:</Typography>
                   </Grid>
-                  <Grid item xs={7}>
-                    <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.issuetype') },
-                    </Typography>
-                  </Grid>
+   
                 </Grid>                <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">  OS Type:</Typography>
@@ -333,13 +329,55 @@ var data =  props.dealerDetails;
                     { get(props, 'dealerDetails.connectivitytype') },
                     </Typography>
                   </Grid>
-                </Grid>                <Grid item container>
+                </Grid>                
+                <Grid item container>
                   <Grid item xs={5}>
-                    <Typography variant="h5"> Device Type:</Typography>
+                    <Typography variant="h5"> Speed Type:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
                     { get(props, 'dealerDetails.speedtype') }
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5"> Issue Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.Category') }
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5"> Issue Description:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.issuedescription') }
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">Type 1:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.subcategory') }
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid item container>
+                  <Grid item xs={5}>
+                    <Typography variant="h5">OS Type:</Typography>
+                  </Grid>
+                  <Grid item xs={7}>
+                    <Typography variant="h5" color="textSecondary">
+                    { get(props, 'dealerDetails.comments') },
                     </Typography>
                   </Grid>
                 </Grid>

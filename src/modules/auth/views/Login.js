@@ -27,7 +27,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://www.grassrootsbpo.com/">
+      <Link color="inherit" href="https://www.grssl.com/">
         Grassroots
       </Link>{' '}
       {2021}
@@ -179,29 +179,39 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
       console.log("values", values)
 
       const res = await Axios.post(url, values);
-      console.log("login api", res.data)
-      const obj = res.data.userDetails;
-      const { accessToken } = res.data;
+      var myObj = res.data;
+      if ('statusCode' in myObj){
+        setLoggedInMain(false);
+        setError(true);
+      } if ('status' in myObj){
+        console.log("login api", res.data)
+        const obj = res.data.userDetails;
+        const { accessToken } = res.data;
+        
+        console.log('data', res.data)
+        localStorage.setItem("jwtToken", accessToken);     
+        localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+        localStorage.setItem('role',res.data.userDetails.role);
+        localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
+        setUserDetailsMain(obj);
+        setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
   
-      console.log('data', res.data)
-      localStorage.setItem("jwtToken", accessToken);     
-      localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-      localStorage.setItem('role',res.data.userDetails.role);
-      localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
-      setUserDetailsMain(obj);
-      setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+        if(res.data.userDetails.AgentType === 'L1'){
+          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
+          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
+        }
+        if(res.data.userDetails.AgentType === 'L2'){
+          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
+          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
+        }
+        setLoggedInMain(true);
+        setError(false);
+        
+      }else{
+        setLoggedInMain(false);
+        setError(true);
+      }
 
-      if(res.data.userDetails.AgentType === 'L1'){
-        // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
-        addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
-      }
-      if(res.data.userDetails.AgentType === 'L2'){
-        // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
-        addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
-      }
-      setLoggedInMain(true);
-      setError(false);
-      
     } catch (err) {
       setLoggedInMain(false);
       setError(true);
@@ -236,11 +246,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
             </div>
             <Formik
               initialValues={{
-                email: 'admin@admin.com',
-                password: 'abcabcabc',
-                role: 'Agent',
-                AgentType: 'Inbound',
-                AgentSIPID: '9999'
+                email: '',
+                password: '',
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
