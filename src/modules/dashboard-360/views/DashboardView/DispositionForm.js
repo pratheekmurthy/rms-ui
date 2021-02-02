@@ -1081,29 +1081,36 @@ export default function DispositionForm(props) {
                   onChange={handleChange}
 
                 />
-                {localStorage.getItem('callStatus') === 'connected' ?                 <FormControlLabel
+              <FormControlLabel
+                  value="disconnected"
+                  control={<Radio />}
+                  label="disconnected"
+                  onChange={handleChange}
+
+                />
+                {/* {localStorage.getItem('callStatus') === 'connected' ?                 <FormControlLabel
                   value="transfercall"
                   control={<Radio />}
                   label="Transfer Call"
                   onChange={handleChange}
-                />: null}
+                />: null} */}
 
               </Field>
             </Grid>
           </Grid>
           <br />
-          {selected === true ? 
+          {/* {selected === true ? 
 
 <Button color="primary" variant="contained"  onClick={(e) =>   transfercall(localStorage.getItem('channel'))}>
 Transfer
 </Button>
                   
-                  : null}
+                  : null} */}
                <span>  </span>
                <span> </span>
                <span> </span>
                <span> </span>
-          <Button color="primary" variant="contained" disabled={localStorage.getItem('callStatus') === 'connected' ? true : false} onClick={handleSubmit}>
+          <Button color="primary" variant="contained"  onClick={handleSubmit}>
             Submit
           </Button>
           
