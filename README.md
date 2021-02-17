@@ -13,3 +13,4 @@ This project consists module based architecture
 		--- Survey Module
 		--- Campaign Module
 # mt-ui
+# mt-multiple-server-ui

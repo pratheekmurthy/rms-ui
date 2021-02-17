@@ -94,36 +94,86 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-var APIENDPOINT = 'https://mt2.granalytics.in';
+var APIENDPOINT = 'http://192.168.3.36:42002';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function addToQueue(agentId, queue) {
-  var axios = require('axios');
-  var data = JSON.stringify({
-    agentId: agentId,
-    queue: queue,
-    action: 'QueueAdd'
-  });
 
-  var config = {
+function addToQueue(agentId, queue) {
+  const axios = require('axios');
+
+  var config1 = {
     method: 'get',
-    url:
-      APIENDPOINT +
-      '/ami/actions/addq?Interface='+agentId+'&Queue=' +
-      queue +
-      '',
-    headers: {
-      'Content-Type': 'application/json'
-    }
+    url: 'http://192.168.3.36:42004/crm/serveragentcounts',
+    headers: {}
   };
 
-  axios(config)
-    .then(function (response) { })
+  axios(config1)
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+
+      var data = response.data
+
+
+      var items = data.items[0];
+      delete items['_id'];
+      delete items['createdAt'];
+      delete items['updatedAt'];
+      delete items['__v'];
+
+      var data = [];
+      data.push(items.server1, items.server2, items.server3, items.server4, items.server5, items.server6)
+      data = data.sort((a, b) => parseFloat(a) - parseFloat(b));
+
+      function getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+      }
+
+      console.log('data', data)
+      console.log(getKeyByValue(items, data[0]));
+      if (getKeyByValue(items, data[0]) === 'server1') {
+        APIENDPOINT = 'http://192.168.3.36:42001';
+      }
+      if (getKeyByValue(items, data[0]) === 'server2') {
+        APIENDPOINT = 'http://192.168.3.36:42002';
+      }
+      if (getKeyByValue(items, data[0]) === 'server3') {
+        APIENDPOINT = 'http://192.168.3.36:42003';
+      }
+      if (getKeyByValue(items, data[0]) === 'server4') {
+        APIENDPOINT = 'http://192.168.3.36:42005';
+      }
+      if (getKeyByValue(items, data[0]) === 'server6') {
+        APIENDPOINT = 'http://192.168.3.36:42006';
+      }
+      if (getKeyByValue(items, data[0]) === 'server5') {
+        APIENDPOINT = 'http://192.168.3.36:42007';
+      }
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/addq?Interface=${agentId}&Queue=${queue
+          }`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => { })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
     .catch(function (error) {
       console.log(error);
     });
+
+
+
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +197,7 @@ function removeFromQueue(agentId, queue) {
       APIENDPOINT +
       '/ami/actions/rmq?Queue=' +
       queue +
-      '&Interface='+agentId+'',
+      '&Interface=' + agentId + '',
     headers: {
       'Content-Type': 'application/json'
     }
@@ -174,40 +224,40 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url = 'https://mt3.granalytics.in/auth/apiM/login'
+      const url = 'http://192.168.3.36:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
       console.log("values", values)
 
       const res = await Axios.post(url, values);
       var myObj = res.data;
-      if ('statusCode' in myObj){
+      if ('statusCode' in myObj) {
         setLoggedInMain(false);
         setError(true);
-      } if ('status' in myObj){
+      } if ('status' in myObj) {
         console.log("login api", res.data)
         const obj = res.data.userDetails;
         const { accessToken } = res.data;
-        
+
         console.log('data', res.data)
-        localStorage.setItem("jwtToken", accessToken);     
+        localStorage.setItem("jwtToken", accessToken);
         localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-        localStorage.setItem('role',res.data.userDetails.role);
+        localStorage.setItem('role', res.data.userDetails.role);
         localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-  
-        if(res.data.userDetails.AgentType === 'L1'){
+
+        if (res.data.userDetails.AgentType === 'L1') {
           // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
-          addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
+          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001)
         }
-        if(res.data.userDetails.AgentType === 'L2'){
+        if (res.data.userDetails.AgentType === 'L2') {
           // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
-          addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
+          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
         }
         setLoggedInMain(true);
         setError(false);
-        
-      }else{
+
+      } else {
         setLoggedInMain(false);
         setError(true);
       }

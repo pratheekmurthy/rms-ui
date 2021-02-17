@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { TextField, RadioGroup } from 'formik-material-ui';
-import { useEffect } from 'react';
+
 import {
   UPDATE_CALL_STATUS,
   UPDATE_CURRENT_STATUS,
@@ -26,95 +26,256 @@ const useStyle = makeStyles(() => ({
   }
 }));
 export default function DispositionForm(props) {
-  const config = "http://192.168.3.45:8083/"
-  console.log('props.DLF', props.DLF)
-  var DLF = props.DLF;
-  var APIENDPOINT = 'https://mt2.granalytics.in';
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  const config = 'http://192.168.3.45:8083/';
+  console.log('props.DLF', props.DLF);
+  const { DLF } = props;
+  let APIENDPOINT = 'http://192.168.3.36:42002';
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
   function addToQueue(agentId, queue) {
-    var axios = require('axios');
-    var data = JSON.stringify({
-      agentId: agentId,
-      queue: queue,
-      action: 'QueueAdd'
-    });
-  
-    var config = {
+    const axios = require('axios');
+
+    var config1 = {
       method: 'get',
-      url:
-        APIENDPOINT +
-        '/ami/actions/addq?Interface='+agentId+'&Queue=' +
-        queue +
-        '',
-      headers: {
-        'Content-Type': 'application/json'
-      }
+      url: 'http://192.168.3.36:42004/crm/serveragentcounts',
+      headers: {}
     };
-  
-    axios(config)
-      .then(function (response) { })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
-  function removeFromQueue(agentId, queue) {
-    var axios = require('axios');
-    console.log('remove', agentId)
-    var data = JSON.stringify({
-      agentId: agentId,
-      queue: queue,
-      action: 'QueueRemove'
-    });
-  
-    var config = {
-      method: 'get',
-      url:
-        APIENDPOINT +
-        '/ami/actions/rmq?Queue=' +
-        queue +
-        '&Interface='+agentId+'',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-  
-    axios(config)
+
+    axios(config1)
       .then(function (response) {
-  
+        console.log(JSON.stringify(response.data));
+
+        var data = response.data
+
+
+        var items = data.items[0];
+        delete items['_id'];
+        delete items['createdAt'];
+        delete items['updatedAt'];
+        delete items['__v'];
+
+        var data = [];
+        data.push(items.server1, items.server2, items.server3, items.server4, items.server5, items.server6)
+        data = data.sort((a, b) => parseFloat(a) - parseFloat(b));
+
+        function getKeyByValue(object, value) {
+          return Object.keys(object).find(key => object[key] === value);
+        }
+
+        console.log('data', data)
+        console.log(getKeyByValue(items, data[0]));
+        if (getKeyByValue(items, data[0]) === 'server1') {
+          APIENDPOINT = 'http://192.168.3.36:42001';
+        }
+        if (getKeyByValue(items, data[0]) === 'server2') {
+          APIENDPOINT = 'http://192.168.3.36:42002';
+        }
+        if (getKeyByValue(items, data[0]) === 'server3') {
+          APIENDPOINT = 'http://192.168.3.36:42003';
+        }
+        if (getKeyByValue(items, data[0]) === 'server4') {
+          APIENDPOINT = 'http://192.168.3.36:42005';
+        }
+        if (getKeyByValue(items, data[0]) === 'server6') {
+          APIENDPOINT = 'http://192.168.3.36:42006';
+        }
+        if (getKeyByValue(items, data[0]) === 'server5') {
+          APIENDPOINT = 'http://192.168.3.36:42007';
+        }
+        const config = {
+          method: 'get',
+          url:
+            `${APIENDPOINT
+            }/ami/actions/addq?Interface=${agentId}&Queue=${queue
+            }`,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+
+        axios(config)
+          .then((response) => { })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch(function (error) {
         console.log(error);
       });
+
+
+
+
   }
-  
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function removeFromQueue(agentId, queue) {
+    const axios = require('axios');
+    console.log('remove', agentId);
+    const data = JSON.stringify({
+      agentId,
+      queue,
+      action: 'QueueRemove'
+    });
+    const str = localStorage.getItem('callUniqueId');
+    const strFirstThree = str.substring(0, 3);
+
+    console.log(str); // shows '012123'
+    console.log(strFirstThree); // shows '012'
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42001';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42002';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42003';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42005';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42006';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    if (strFirstThree) {
+      APIENDPOINT = 'http://192.168.3.36:42007';
+      const config = {
+        method: 'get',
+        url:
+          `${APIENDPOINT
+          }/ami/actions/rmq?Queue=${queue
+          }&Interface=${agentId}`,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+
+      axios(config)
+        .then((response) => {
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+
+  }
+
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  
+  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   const [initialValue, setInitialValue] = useState({
-  
+
     subcategory: '',
     category: '',
     comments: '',
     type: '',
-    subcategoryitem:'',
+    subcategoryitem: '',
     enable: '',
     issuetype: '',
     devicetype: '',
     connectivitytype: '',
-    speedtype:'',
+    speedtype: '',
     ostype: '',
     solution: '',
     issuedescription: '',
@@ -125,28 +286,28 @@ export default function DispositionForm(props) {
   });
   function getDLF() {
     const axios = require('axios');
-    let number =  localStorage.getItem('callerNumber');
+    const number = localStorage.getItem('callerNumber');
     // number = number.substr(number.length -10);
-    console.log('number', number)
-    let data = '';
-    let config = {
+    console.log('number', number);
+    const data = '';
+    const config = {
       method: 'get',
       url:
-      GET_INTERACTION_BY_CALLER_NUMBER +
-        number +
-        '',
+        `${GET_INTERACTION_BY_CALLER_NUMBER
+        + number
+        }`,
       headers: {},
-      data: data
+      data
     };
 
     axios(config)
       .then(async response => {
-        var DLFDATA = response.data;
+        let DLFDATA = response.data;
         DLFDATA = await DLFDATA.reverse();
-        console.log("DLFDATA INSIDE THE DIS FORM", DLFDATA)
-        if(DLFDATA.length && localStorage.getItem('Agenttype') === 'L2'){
-          console.log("DLFDATA INSIDE THE dispostionFormData", DLFDATA[0].dispostionFormData)
-          setInitialValue(DLFDATA[0].dispostionFormData)
+        console.log('DLFDATA INSIDE THE DIS FORM', DLFDATA);
+        if (DLFDATA.length && localStorage.getItem('Agenttype') === 'L2') {
+          console.log('DLFDATA INSIDE THE dispostionFormData', DLFDATA[0].dispostionFormData);
+          setInitialValue(DLFDATA[0].dispostionFormData);
         }
         // setDLF(DLFDATA);
       })
@@ -163,7 +324,7 @@ export default function DispositionForm(props) {
     {
       id: '2', value: 'Laptop/ Desktop',
     }
-  ]
+  ];
 
   const ostype = [
     {
@@ -175,7 +336,7 @@ export default function DispositionForm(props) {
     {
       id: '3', value: 'MAC / Linux,'
     }
-  ]
+  ];
   const connectivitytype = [
     {
       id: '1', value: 'Hotspot',
@@ -186,10 +347,10 @@ export default function DispositionForm(props) {
     {
       id: '3', value: 'Broadband',
     }
-  ]
+  ];
   const issuetype = [
 
-  ]
+  ];
   const speedtype = [
     {
       id: '1', value: 'Less than 2 MBPS',
@@ -197,7 +358,7 @@ export default function DispositionForm(props) {
     {
       id: '2', value: 'More than 2 MBPS',
     }
-  ]
+  ];
   const L1Name = [
     {
       id: '1', value: 'Chaitra',
@@ -214,10 +375,10 @@ export default function DispositionForm(props) {
     {
       id: '5', value: 'Sonu',
     }
-  ]
+  ];
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'https://mt1.granalytics.in/';
+  const agentServiceURL = 'http://192.168.3.36:42004/';
   const [category, setCategory] = useState({
     value: 'Enquiry',
     label: 'Enquiry'
@@ -240,24 +401,22 @@ export default function DispositionForm(props) {
     label: ''
   });
   const [selected, setSelected] = useState(false);
-  const url = "http://192.168.3.45:7002"
+  const url = 'http://192.168.3.45:7002';
   const handleChange = (e, s) => {
-
     updateCallData(localStorage.getItem('callUniqueId'), {
-      type: formRef.current.values.type,     
-      dispostionFormData: formRef.current.values             
-    })
+      type: formRef.current.values.type,
+      dispostionFormData: formRef.current.values
+    });
     // console.log("change",e.target.defaultValue)
-    if (e.target.defaultValue === "transfercall") {
+    if (e.target.defaultValue === 'transfercall') {
       setSelected(true);
-    }
-    else {
+    } else {
       setSelected(false);
     }
   };
   useEffect(() => {
     let unmounted = false;
-    getDLF()
+    getDLF();
     // console.log('initialValue', initialValue)
     // if (initialValue.category !== '') {
     //   getSubCategories(initialValue.category);
@@ -267,9 +426,13 @@ export default function DispositionForm(props) {
     //   getSubCategoryItems(initialValue.category,initialValue.subcategory);
     // }
     async function getItems() {
-      const body = [{"id":"600bc52f997c4d29ff4e5609","category":"Enquiry","active":true,"createdAt":"2021-01-19T07:31:02.745Z","updatedAt":"2021-01-19T07:31:02.745Z","v":0},{"id":"600bc578997c4d29ff4e560a","category":"Complaints","active":true,"createdAt":"2021-01-19T07:31:02.745Z","updatedAt":"2021-01-19T07:31:02.745Z","_v":0}]
-         if (!unmounted) {
-          body[0]
+      const body = [{
+        id: '600bc52f997c4d29ff4e5609', category: 'Enquiry', active: true, createdAt: '2021-01-19T07:31:02.745Z', updatedAt: '2021-01-19T07:31:02.745Z', v: 0
+      }, {
+        id: '600bc578997c4d29ff4e560a', category: 'Complaints', active: true, createdAt: '2021-01-19T07:31:02.745Z', updatedAt: '2021-01-19T07:31:02.745Z', _v: 0
+      }];
+      if (!unmounted) {
+        body[0]
           ? setCategory({
             label: body[0].category,
             value: body[0].id
@@ -294,27 +457,41 @@ export default function DispositionForm(props) {
 
   useEffect(() => {
 
-  }, [initialValue])
+  }, [initialValue]);
 
   const getSubCategories = cat => {
-     console.log("value", cat)
+    console.log('value', cat);
     let unmounted = false;
     async function getItems() {
-      var InQuiry = [{"id":"600bc7a9997c4d29ff4e560b","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Exam Schedule","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bc7b9997c4d29ff4e560c","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"SEB Link","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb58997c4d29ff4e560d","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Browser Version","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb6e997c4d29ff4e560e","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Mobile App Link","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600bcb78997c4d29ff4e560f","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Minimum System Requirements","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600c7148f50bb21a5ea0919f","categoryId":"600bc52f997c4d29ff4e5609","category":"Enquiry","subCategory":"Internet Bandwidth Required","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","_v":0}]
-      var Compln = [{"id":"600c738bf50bb21a5ea091a0","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategory":"Hardware","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","v":0},{"_id":"600c73adf50bb21a5ea091a1","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategory":"Software","active":true,"createdAt":"2021-01-19T07:44:05.559Z","updatedAt":"2021-01-19T07:44:05.559Z","_v":0}]
+      const InQuiry = [{
+        id: '600bc7a9997c4d29ff4e560b', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'Exam Schedule', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600bc7b9997c4d29ff4e560c', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'SEB Link', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600bcb58997c4d29ff4e560d', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'Browser Version', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600bcb6e997c4d29ff4e560e', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'Mobile App Link', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600bcb78997c4d29ff4e560f', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'Minimum System Requirements', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600c7148f50bb21a5ea0919f', categoryId: '600bc52f997c4d29ff4e5609', category: 'Enquiry', subCategory: 'Internet Bandwidth Required', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', _v: 0
+      }];
+      const Compln = [{
+        id: '600c738bf50bb21a5ea091a0', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategory: 'Hardware', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', v: 0
+      }, {
+        _id: '600c73adf50bb21a5ea091a1', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategory: 'Software', active: true, createdAt: '2021-01-19T07:44:05.559Z', updatedAt: '2021-01-19T07:44:05.559Z', _v: 0
+      }];
       // const response = await fetch(
       //   url + '/level2/' + cat.value
       // );
-      var body = [];
-      if(cat.value === '600bc52f997c4d29ff4e5609'){
+      let body = [];
+      if (cat.value === '600bc52f997c4d29ff4e5609') {
         body = InQuiry;
       }
-      if(cat.value === '600bc578997c4d29ff4e560a'){
+      if (cat.value === '600bc578997c4d29ff4e560a') {
         body = Compln;
       }
-     
-   
-    
+
       if (!unmounted) {
         setSubCategories(
           body.map(({ id, subCategory }) => ({
@@ -322,7 +499,7 @@ export default function DispositionForm(props) {
             value: id
           }))
         );
-       
+
         setLoading(false);
       }
     }
@@ -334,13 +511,27 @@ export default function DispositionForm(props) {
   const getSubCategoryItems = (cat, sct) => {
     let unmounted = false;
     async function getItems() {
-      var HardWare = [{"id":"600c7421f50bb21a5ea091a2","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c738bf50bb21a5ea091a0","subCategory":"Hardware","subCategoryItem":"Webcam Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c74d5f50bb21a5ea091a3","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c738bf50bb21a5ea091a0","subCategory":"Hardware","subCategoryItem":"Microphone Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","_v":0}]
-      var Software = [{"id":"600c74e0f50bb21a5ea091a4","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"SEB Installation Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c74ebf50bb21a5ea091a5","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"App Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c750df50bb21a5ea091a6","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"Browser Issue","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c7517f50bb21a5ea091a7","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"Login Error","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","v":0},{"_id":"600c7522f50bb21a5ea091a8","categoryId":"600bc578997c4d29ff4e560a","category":"Complaints","subCategoryId":"600c73adf50bb21a5ea091a1","subCategory":"Software","subCategoryItem":"RP Initiation Failed","active":true,"createdAt":"2021-01-19T07:54:08.427Z","updatedAt":"2021-01-19T07:54:08.427Z","_v":0}]
-      var data = [];
-      if(sct === '600bc7a9997c4d29ff4e560b'){
+      const HardWare = [{
+        id: '600c7421f50bb21a5ea091a2', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c738bf50bb21a5ea091a0', subCategory: 'Hardware', subCategoryItem: 'Webcam Issue', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', v: 0
+      }, {
+        _id: '600c74d5f50bb21a5ea091a3', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c738bf50bb21a5ea091a0', subCategory: 'Hardware', subCategoryItem: 'Microphone Issue', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', _v: 0
+      }];
+      const Software = [{
+        id: '600c74e0f50bb21a5ea091a4', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c73adf50bb21a5ea091a1', subCategory: 'Software', subCategoryItem: 'SEB Installation Issue', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', v: 0
+      }, {
+        _id: '600c74ebf50bb21a5ea091a5', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c73adf50bb21a5ea091a1', subCategory: 'Software', subCategoryItem: 'App Issue', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', v: 0
+      }, {
+        _id: '600c750df50bb21a5ea091a6', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c73adf50bb21a5ea091a1', subCategory: 'Software', subCategoryItem: 'Browser Issue', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', v: 0
+      }, {
+        _id: '600c7517f50bb21a5ea091a7', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c73adf50bb21a5ea091a1', subCategory: 'Software', subCategoryItem: 'Login Error', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', v: 0
+      }, {
+        _id: '600c7522f50bb21a5ea091a8', categoryId: '600bc578997c4d29ff4e560a', category: 'Complaints', subCategoryId: '600c73adf50bb21a5ea091a1', subCategory: 'Software', subCategoryItem: 'RP Initiation Failed', active: true, createdAt: '2021-01-19T07:54:08.427Z', updatedAt: '2021-01-19T07:54:08.427Z', _v: 0
+      }];
+      let data = [];
+      if (sct === '600bc7a9997c4d29ff4e560b') {
         data = HardWare;
       }
-      if(sct === '600c738bf50bb21a5ea091a0'){
+      if (sct === '600c738bf50bb21a5ea091a0') {
         data = Software;
       }
       //  alert(JSON.stringify(cat))
@@ -374,17 +565,17 @@ export default function DispositionForm(props) {
   };
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
-    let data = JSON.stringify(dispostionData);
-    console.log('updateCAllData', data, uniqueid)
+    const data = JSON.stringify(dispostionData);
+    console.log('updateCAllData', data, uniqueid);
 
-    let config = {
+    const config = {
       method: 'post',
 
       url: UPDATE_CALL_STATUS + uniqueid,
       headers: {
         'Content-Type': 'application/json'
       },
-      data: data
+      data
     };
 
     axios(config)
@@ -398,8 +589,8 @@ export default function DispositionForm(props) {
   }
 
   function updateAgentCallStatus(updateData) {
-    var axios = require('axios');
-    var data = {
+    const axios = require('axios');
+    const data = {
       agentCallStatus: updateData.callStatus,
       agentCallEvent: updateData.callEvent,
       agentCallUniqueId: updateData.callUniqueId,
@@ -407,46 +598,45 @@ export default function DispositionForm(props) {
       agentCallDispositionStatus: updateData.callDispositionStatus,
       callerNumber: updateData.callerNumber
     };
-    var config = {
+    const config = {
 
       method: 'put',
       url: UPDATE_CURRENT_STATUS + updateData.callStatusId,
       headers: {
         'Content-Type': 'application/json'
       },
-      data: data
+      data
     };
 
     axios(config)
-      .then(function (response) {
-        console.log("update", JSON.stringify(response.data));
+      .then((response) => {
+        console.log('update', JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }
   function transfercall(Channel) {
-    var axios = require('axios');
+    const axios = require('axios');
 
-    var config = {
+    const config = {
       method: 'get',
-      url: 'https://mt2.granalytics.in/ami/actions/atxfer?Channel=' + Channel + '&NumbertobeCalled=7002',
+      url: `http://192.168.3.36:42002/ami/actions/atxfer?Channel=${Channel}&NumbertobeCalled=7002`,
       headers: {}
     };
 
     axios(config)
-      .then(function (response) {
+      .then((response) => {
         console.log(JSON.stringify(response.data));
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
-
   }
   function handleSubmit(e) {
     console.log('formRefasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfs', formRef.current.values);
- 
-    console.log('state',initialValue)
+
+    console.log('state', initialValue);
     console.log('dispostion', {
       // tickettype: formRef.current.values.tickettype.label,
       category: formRef.current.values.category.label,
@@ -456,15 +646,15 @@ export default function DispositionForm(props) {
       type: formRef.current.values.type,
 
     });
-  
+
     localStorage.setItem('callDispositionStatus', 'Disposed');
-    if(localStorage.getItem('Agenttype') === 'L1'){
-      removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-      addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
+    if (localStorage.getItem('Agenttype') === 'L1') {
+      removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001);
+      addToQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001);
     }
-    if(localStorage.getItem('Agenttype') === 'L2'){
-      removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-      addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
+    if (localStorage.getItem('Agenttype') === 'L2') {
+      removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002);
+      addToQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002);
     }
     // // props.removeFromQueue(props.AgentSipId, '7001');
     // // props.addToQueue(props.agentSipID, '7001');
@@ -488,8 +678,8 @@ export default function DispositionForm(props) {
       callDispositionStatus: localStorage.getItem('callDispositionStatus'),
       callerNumber: localStorage.getItem('callerNumber'),
 
-    })
-    if(localStorage.getItem('Agenttype') === 'L1'){
+    });
+    if (localStorage.getItem('Agenttype') === 'L1') {
       updateCallData(localStorage.getItem('callUniqueId'), {
         category: formRef.current.values.category.label,
         subcategory: formRef.current.values.subcategory.label,
@@ -497,25 +687,25 @@ export default function DispositionForm(props) {
         comments: formRef.current.values.comments,
         type: formRef.current.values.type,
         distributerID: localStorage.getItem('distributer_id'),
-        CallerName:  formRef.current.values.CallerName,
+        CallerName: formRef.current.values.CallerName,
         callerapplication: formRef.current.values.callerapplication,
-        connectivitytype:  formRef.current.values.connectivitytype.value,
-        devicetype:  formRef.current.values.devicetype.value,
-        enable:  ""+formRef.current.values.enable+"",
+        connectivitytype: formRef.current.values.connectivitytype.value,
+        devicetype: formRef.current.values.devicetype.value,
+        enable: `${formRef.current.values.enable}`,
         issuedescription: formRef.current.values.issuedescription,
         issuetype: formRef.current.values.issuetype,
         ostype: formRef.current.values.ostype.value,
-        speedtype:  formRef.current.values.speedtype.value,
-        status:  formRef.current.values.status,
-        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        speedtype: formRef.current.values.speedtype.value,
+        status: formRef.current.values.status,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
-        solution:  formRef.current.values.solution,
-        L1ID:localStorage.getItem('callUniqueId')
-        })
+        solution: formRef.current.values.solution,
+        L1ID: localStorage.getItem('callUniqueId')
+      });
     }
-    if(localStorage.getItem('Agenttype') === 'L2'){
+    if (localStorage.getItem('Agenttype') === 'L2') {
       updateCallData(localStorage.getItem('callUniqueId'), {
         category: formRef.current.values.category.label,
         subcategory: formRef.current.values.subcategory.label,
@@ -523,31 +713,30 @@ export default function DispositionForm(props) {
         comments: formRef.current.values.comments,
         type: formRef.current.values.type,
         distributerID: localStorage.getItem('distributer_id'),
-        CallerName:  formRef.current.values.CallerName,
+        CallerName: formRef.current.values.CallerName,
         callerapplication: formRef.current.values.callerapplication,
-        connectivitytype:  formRef.current.values.connectivitytype.value,
-        devicetype:  formRef.current.values.devicetype.value,
-        enable:  ""+formRef.current.values.enable+"",
+        connectivitytype: formRef.current.values.connectivitytype.value,
+        devicetype: formRef.current.values.devicetype.value,
+        enable: `${formRef.current.values.enable}`,
         issuedescription: formRef.current.values.issuedescription,
         issuetype: formRef.current.values.issuetype,
         ostype: formRef.current.values.ostype.value,
-        speedtype:  formRef.current.values.speedtype.value,
-        status:  formRef.current.values.status,
-        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        speedtype: formRef.current.values.speedtype.value,
+        status: formRef.current.values.status,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
-        solution:  formRef.current.values.solution,
-        L1ID:localStorage.getItem('callUniqueId')
-        })
-        updateCallData(localStorage.getItem('L1ID'), {
-          L2ID:localStorage.getItem('callUniqueId'),
-          type: formRef.current.values.type,
-          agenttype:'L2'
-        })
-      
+        solution: formRef.current.values.solution,
+        L1ID: localStorage.getItem('callUniqueId')
+      });
+      updateCallData(localStorage.getItem('L1ID'), {
+        L2ID: localStorage.getItem('callUniqueId'),
+        type: formRef.current.values.type,
+        agenttype: 'L2'
+      });
     }
-    if(localStorage.getItem('Agenttype') === 'L3'){
+    if (localStorage.getItem('Agenttype') === 'L3') {
       updateCallData(localStorage.getItem('callUniqueId'), {
         category: formRef.current.values.category.label,
         subcategory: formRef.current.values.subcategory.label,
@@ -555,32 +744,29 @@ export default function DispositionForm(props) {
         comments: formRef.current.values.comments,
         type: formRef.current.values.type,
         distributerID: localStorage.getItem('distributer_id'),
-        CallerName:  formRef.current.values.CallerName,
+        CallerName: formRef.current.values.CallerName,
         callerapplication: formRef.current.values.callerapplication,
-        connectivitytype:  formRef.current.values.connectivitytype.value,
-        devicetype:  formRef.current.values.devicetype.value,
-        enable:  ""+formRef.current.values.enable+"",
+        connectivitytype: formRef.current.values.connectivitytype.value,
+        devicetype: formRef.current.values.devicetype.value,
+        enable: `${formRef.current.values.enable}`,
         issuedescription: formRef.current.values.issuedescription,
         issuetype: formRef.current.values.issuetype,
         ostype: formRef.current.values.ostype.value,
-        speedtype:  formRef.current.values.speedtype.value,
-        status:  formRef.current.values.status,
-        subcategoryitem:  formRef.current.values.subcategoryitem.label,
+        speedtype: formRef.current.values.speedtype.value,
+        status: formRef.current.values.status,
+        subcategoryitem: formRef.current.values.subcategoryitem.label,
         type: formRef.current.values.type,
         dispostionFormData: formRef.current.values,
         anydeskid: formRef.current.values.anydeskid,
-        solution:  formRef.current.values.solution,
-        L1ID:localStorage.getItem('callUniqueId')
-        })
-        updateCallData(localStorage.getItem('L2ID'), {
-          L2ID:localStorage.getItem('callUniqueId'),
-          type: formRef.current.values.type,
-          agenttype:'L3'
-        })
-      
+        solution: formRef.current.values.solution,
+        L1ID: localStorage.getItem('callUniqueId')
+      });
+      updateCallData(localStorage.getItem('L2ID'), {
+        L2ID: localStorage.getItem('callUniqueId'),
+        type: formRef.current.values.type,
+        agenttype: 'L3'
+      });
     }
-
-   
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
@@ -594,7 +780,7 @@ export default function DispositionForm(props) {
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-       
+
         category: yup
           .object()
           .required('Please select a  category')
@@ -633,7 +819,7 @@ export default function DispositionForm(props) {
           .object()
           .required('Please select a L2')
           .typeError('Please select a L2'),
-          anydeskid:yup.string().required('Please Enter Any Desk ID'),
+        anydeskid: yup.string().required('Please Enter Any Desk ID'),
         CallerName: yup.string().required('Please Enter Caller Name'),
         callerapplication: yup.string().required('Please Enter Caller Application'),
         issuedescription: yup.string().required('Please Enter Issue Description'),
@@ -666,14 +852,11 @@ export default function DispositionForm(props) {
               />
             </Grid>
 
-
-
             <Grid item xs={4} sm={4}>
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
               >
-
 
                 <Autocomplete
                   options={categories}
@@ -682,32 +865,30 @@ export default function DispositionForm(props) {
                   value={initialValue.category}
                   getOptionSelected={(option, value) => {
                     console.log('category', value);
-                    return value.label === option.label
+                    return value.label === option.label;
                   }}
                   key={autoCompleteKey}
                   onChange={(event, value) => {
-                    console.log('value', value)
+                    console.log('value', value);
                     if (value !== null) {
                       setFieldValue('category', value);
 
                       updateCallData(localStorage.getItem('callUniqueId'), {
-                        type: formRef.current.values.type,     
-                        dispostionFormData: formRef.current.values             
-                      })
-                  
-                   var i = initialValue
-                   i.category = value
-                  //  getSubCategories(value)
-                  //  i.subcategory.value=""
-                  //  i.subcategory.label=""
-                  //  i.subcategoryitem.value=""
-                  //  i.subcategoryitem.label=""
-                  //  setSubCategories([])
-                      getSubCategories(value);
-                      setInitialValue(i)
-                      
-                    }
+                        type: formRef.current.values.type,
+                        dispostionFormData: formRef.current.values
+                      });
 
+                      const i = initialValue;
+                      i.category = value;
+                      //  getSubCategories(value)
+                      //  i.subcategory.value=""
+                      //  i.subcategory.label=""
+                      //  i.subcategoryitem.value=""
+                      //  i.subcategoryitem.label=""
+                      //  setSubCategories([])
+                      getSubCategories(value);
+                      setInitialValue(i);
+                    }
                   }}
                   renderInput={params => (
                     <Field
@@ -725,7 +906,6 @@ export default function DispositionForm(props) {
             {subCategories.length > 0 ? (
               <Grid item xs={4} sm={4}>
 
-
                 <Autocomplete
                   options={subCategories}
                   getOptionLabel={option => option.label}
@@ -738,24 +918,24 @@ export default function DispositionForm(props) {
                       setFieldValue('subcategory', value);
 
                       updateCallData(localStorage.getItem('callUniqueId'), {
-                        type: formRef.current.values.type,     
-                        dispostionFormData: formRef.current.values             
-                      })
+                        type: formRef.current.values.type,
+                        dispostionFormData: formRef.current.values
+                      });
                       props.setSubCategory(value);
                       getSubCategoryItems(
                         formRef.current.values.category.value,
                         value
                       );
-                      var i = initialValue
-                      i.subcategory = value
-                      setInitialValue(i)
+                      const i = initialValue;
+                      i.subcategory = value;
+                      setInitialValue(i);
                     }
                   }}
                   renderInput={params => (
                     <Field
                       component={TextField}
                       {...params}
-                   
+
                       label="Select a Type1"
                       variant="outlined"
                       name="subcategory"
@@ -774,29 +954,26 @@ export default function DispositionForm(props) {
                   className={classes.fieldContainer}
                 >
 
-
                   <Autocomplete
                     options={subCategoryItems}
                     getOptionLabel={option => option.label}
                     // style={{ width: 400, overflow: "hidden" }}
                     value={initialValue.subCategoryItem}
-                    getOptionSelected={(option, value) =>
-                      value.id === option.id
-                    }
+                    getOptionSelected={(option, value) => value.id === option.id}
                     key={autoCompleteKey}
-                    
+
                     onChange={(event, value) => {
                       if (value !== null) {
                         setFieldValue('subcategoryitem', value);
                         props.setSubCategoryItem(value);
 
-                      updateCallData(localStorage.getItem('callUniqueId'), {
-                        type: formRef.current.values.type,     
-                        dispostionFormData: formRef.current.values             
-                      })
-                        var i = initialValue
-                        i.subCategoryItem = value
-                        setInitialValue(i)
+                        updateCallData(localStorage.getItem('callUniqueId'), {
+                          type: formRef.current.values.type,
+                          dispostionFormData: formRef.current.values
+                        });
+                        const i = initialValue;
+                        i.subCategoryItem = value;
+                        setInitialValue(i);
                       }
                     }}
                     renderInput={params => (
@@ -817,7 +994,6 @@ export default function DispositionForm(props) {
               )}
             <Grid item xs={4} sm={4}>
 
-
               <Autocomplete
                 options={devicetype}
                 getOptionLabel={option => option.value}
@@ -830,12 +1006,12 @@ export default function DispositionForm(props) {
                     setFieldValue('devicetype', value);
 
                     updateCallData(localStorage.getItem('callUniqueId'), {
-                      type: formRef.current.values.type,     
-                      dispostionFormData: formRef.current.values             
-                    })
-                    var i = initialValue
-                    i.devicetype = value
-                    setInitialValue(i)
+                      type: formRef.current.values.type,
+                      dispostionFormData: formRef.current.values
+                    });
+                    const i = initialValue;
+                    i.devicetype = value;
+                    setInitialValue(i);
                   }
                   //  props.setSubCategory(value);
                   //  getSubCategoryItems(
@@ -856,16 +1032,14 @@ export default function DispositionForm(props) {
               />
             </Grid>
 
-
             <Grid item xs={4} sm={4}>
-
 
               <Autocomplete
                 options={ostype}
                 getOptionLabel={option => option.value}
                 // style={{ width: 400, overflow: "hidden" }}
                 getOptionSelected={(option, value) => {
-                  return value.id === option.id
+                  return value.id === option.id;
                 }}
                 value={initialValue.ostype}
                 key={autoCompleteKey}
@@ -874,17 +1048,16 @@ export default function DispositionForm(props) {
                     setFieldValue('ostype', value);
 
                     updateCallData(localStorage.getItem('callUniqueId'), {
-                      type: formRef.current.values.type,     
-                      dispostionFormData: formRef.current.values             
-                    })
-                    console.log('asdfasf', initialValue)
-                    initialValue.ostype = value
-                    setInitialValue(initialValue)
+                      type: formRef.current.values.type,
+                      dispostionFormData: formRef.current.values
+                    });
+                    console.log('asdfasf', initialValue);
+                    initialValue.ostype = value;
+                    setInitialValue(initialValue);
                   }
                   //  var inivalues = initialValues;
                   //  initialValues.ostype = value.label
                   //  setInitialValue(initialValues)
-
                 }}
                 renderInput={params => (
                   <Field
@@ -911,7 +1084,6 @@ export default function DispositionForm(props) {
             </Grid>
             <Grid item xs={4} sm={4}>
 
-
               <Autocomplete
                 options={connectivitytype}
                 getOptionLabel={option => option.value}
@@ -921,19 +1093,16 @@ export default function DispositionForm(props) {
                 key={autoCompleteKey}
                 onChange={(event, value) => {
                   if (value !== null) {
-                 
-                      setFieldValue('connectivitytype', value);
+                    setFieldValue('connectivitytype', value);
 
-                      updateCallData(localStorage.getItem('callUniqueId'), {
-                        type: formRef.current.values.type,     
-                        dispostionFormData: formRef.current.values             
-                      })
-                      var i = initialValue
-                      i.connectivitytype = value
-                      setInitialValue(i)
-                    }
-                  
-
+                    updateCallData(localStorage.getItem('callUniqueId'), {
+                      type: formRef.current.values.type,
+                      dispostionFormData: formRef.current.values
+                    });
+                    const i = initialValue;
+                    i.connectivitytype = value;
+                    setInitialValue(i);
+                  }
                 }}
                 renderInput={params => (
                   <Field
@@ -950,7 +1119,6 @@ export default function DispositionForm(props) {
 
             <Grid item xs={4} sm={4}>
 
-
               <Autocomplete
                 options={speedtype}
                 getOptionLabel={option => option.value}
@@ -963,15 +1131,13 @@ export default function DispositionForm(props) {
                     setFieldValue('speedtype', value);
 
                     updateCallData(localStorage.getItem('callUniqueId'), {
-                      type: formRef.current.values.type,     
-                      dispostionFormData: formRef.current.values             
-                    })
-                    var i = initialValue
-                    i.speedtype = value
-                    setInitialValue(i)
-                    
+                      type: formRef.current.values.type,
+                      dispostionFormData: formRef.current.values
+                    });
+                    const i = initialValue;
+                    i.speedtype = value;
+                    setInitialValue(i);
                   }
-
                 }}
                 renderInput={params => (
                   <Field
@@ -1027,7 +1193,6 @@ export default function DispositionForm(props) {
                 className={classes.fieldContainer}
               >
 
-   
                 <Autocomplete
                   options={L1Name}
                   getOptionLabel={option => option.value}
@@ -1040,12 +1205,12 @@ export default function DispositionForm(props) {
                     if (value !== null) {
 
                       updateCallData(localStorage.getItem('callUniqueId'), {
-                        type: formRef.current.values.type,     
-                        dispostionFormData: formRef.current.values             
+                        type: formRef.current.values.type,
+                        dispostionFormData: formRef.current.values
                       })
                       setFieldValue('L1Name', value);
                       transfercall(localStorage.getItem('channel'))
-                      
+
                     }
 
                   }}
@@ -1081,12 +1246,11 @@ export default function DispositionForm(props) {
                   onChange={handleChange}
 
                 />
-              <FormControlLabel
+                <FormControlLabel
                   value="disconnected"
                   control={<Radio />}
                   label="disconnected"
                   onChange={handleChange}
-
                 />
                 {/* {localStorage.getItem('callStatus') === 'connected' ?                 <FormControlLabel
                   value="transfercall"
@@ -1099,21 +1263,21 @@ export default function DispositionForm(props) {
             </Grid>
           </Grid>
           <br />
-          {/* {selected === true ? 
+          {/* {selected === true ?
 
 <Button color="primary" variant="contained"  onClick={(e) =>   transfercall(localStorage.getItem('channel'))}>
 Transfer
 </Button>
-                  
+
                   : null} */}
-               <span>  </span>
-               <span> </span>
-               <span> </span>
-               <span> </span>
-          <Button color="primary" variant="contained"  onClick={handleSubmit}>
+          <span>  </span>
+          <span> </span>
+          <span> </span>
+          <span> </span>
+          <Button color="primary" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
-          
+
         </Form>
       )}
     </Formik>

@@ -34,9 +34,9 @@ export default function DataGridDemo() {
   const [editData, setEditData] = useState([]);
 
   function TableData() {
-    const url = 'https://mt3.granalytics.in/admin/agent/viewAgent'
+    const url = 'http://192.168.3.36:4000/admin/agent/viewAgent'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
+    Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
         // console.log(JSON.stringify(response.data.data));
         setAgents(response.data.data)
@@ -61,7 +61,7 @@ export default function DataGridDemo() {
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
+          const url = 'http://192.168.3.36:4000/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)

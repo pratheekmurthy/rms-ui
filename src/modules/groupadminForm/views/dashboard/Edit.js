@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function DistSelect({InputLabelProps = {}, ...props }) {
+export default function DistSelect({ InputLabelProps = {}, ...props }) {
     const classes = useStyles();
     const [Groups, setGroups] = useState([]);
     //   console.log("EditData",props.EditData)
@@ -39,50 +39,50 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
 
     const handleChange = (e) => {
-        console.log("target", e.target )
+        console.log("target", e.target)
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
     }
     function updateAgentCallStatus(contactNumber) {
-        console.log("contactNumber",contactNumber)
+        console.log("contactNumber", contactNumber)
         var axios = require('axios');
-        
+
         var data = {
-          agentCallDispositionStatus: "NotDisposed",
-          agentCallType: "Inbound",
-          agentCallUniqueId: "1610712538.46886",
-          agentCallEvent: "Bridge",
-          agentCallStatus: "disconnected",
-          agentID: "9998",
-          agentSipID: "9998",
-          contactNumber:contactNumber,
-          breakStatus: "OUT",
-         
+            agentCallDispositionStatus: "NotDisposed",
+            agentCallType: "Inbound",
+            agentCallUniqueId: "1610712538.46886",
+            agentCallEvent: "Bridge",
+            agentCallStatus: "disconnected",
+            agentID: "9998",
+            agentSipID: "9998",
+            contactNumber: contactNumber,
+            breakStatus: "OUT",
+
         };
         var config = {
-    
-          method: 'post',
-          url: 'https://localhost:42004/crm/currentstatuses',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data: data
+
+            method: 'post',
+            url: 'https://localhost:42004/crm/currentstatuses',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
-    
+
         axios(config)
-          .then(function (response) {
-            console.log("update", JSON.stringify(response.data));
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      }
+            .then(function (response) {
+                console.log("update", JSON.stringify(response.data));
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
     const handleSubmit = (e) => {
 
         console.log("formData", formData)
-        const url = 'https://mt3.granalytics.in/admin/agent/updateAgent'
+        const url = 'http://192.168.3.36:4000/admin/agent/updateAgent'
 
         Axios.post(url, formData)
             .then(function (response) {
@@ -97,24 +97,24 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
 
     }
     useEffect(() => {
-        const url = 'https://mt3.granalytics.in/admin/group/getGroup'
-    
-        Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
-          .then(function (response) {
-            console.log(response);
-            if (response.data.status === 200) {
-              // roup=response.data.data
-              setGroups(response.data.data)
-            }
-            else{
-              alert(response.data.message)
-        
-           
-            }
-          })
-    
-    
-      }, [])
+        const url = 'http://192.168.3.36:4000/admin/group/getGroup'
+
+        Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
+            .then(function (response) {
+                console.log(response);
+                if (response.data.status === 200) {
+                    // roup=response.data.data
+                    setGroups(response.data.data)
+                }
+                else {
+                    alert(response.data.message)
+
+
+                }
+            })
+
+
+    }, [])
     return (
         <div>
             {showModal && (
@@ -192,19 +192,19 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                                 InputLabelProps={{ ...InputLabelProps, shrink: true }}
                                 {...props}
                             >
-                                 {Groups.map((option) => (
-                  <option
-                    key={option.group_id}
-                    value={option.group_name}
-                  >
-                    {option.group_name}
-                  </option>
-                ))}
-                               
+                                {Groups.map((option) => (
+                                    <option
+                                        key={option.group_id}
+                                        value={option.group_name}
+                                    >
+                                        {option.group_name}
+                                    </option>
+                                ))}
+
 
                             </TextField>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <TextField
                                 fullWidth
                                 label="Select Agent Type"
@@ -228,11 +228,11 @@ export default function DistSelect({InputLabelProps = {}, ...props }) {
                                 >
                                     L2
                                     </option>
-                                   
+
                             </TextField>
-                           
-                            <br/>
-                            <br/>
+
+                            <br />
+                            <br />
                             <TextField
                                 fullWidth
                                 label="Select Agent Type"

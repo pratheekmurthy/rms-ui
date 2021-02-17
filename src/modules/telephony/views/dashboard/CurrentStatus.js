@@ -50,9 +50,9 @@ export default function DataGridDemo() {
 
     Axios.get(url)
       .then(function (response) {
-        console.log("table",response.data.items);
-      //   const filteredData=response.data.items
-      //  filteredData = ALFDATA.filter(data => data.= startDate.toISOString().substring(0, 10) )
+        console.log("table", response.data.items);
+        //   const filteredData=response.data.items
+        //  filteredData = ALFDATA.filter(data => data.= startDate.toISOString().substring(0, 10) )
         setAgents(response.data.items)
 
       })
@@ -71,11 +71,11 @@ export default function DataGridDemo() {
       {agents.length > 0 ? <DataGrid rows={agents.map(calls => ({
         ...calls,
         id: calls._id
-      }))} columns={columns} pageSize={5} 
+      }))} columns={columns} pageSize={5}
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
+          const url = 'http://192.168.3.36:4000/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)
@@ -89,7 +89,7 @@ export default function DataGridDemo() {
             })
           // setSelection(newSelection.rowIds);
         }} /> : <></>}
-    
+
     </div>
   );
 }

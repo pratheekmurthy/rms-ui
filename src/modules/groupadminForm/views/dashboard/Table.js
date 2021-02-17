@@ -12,7 +12,7 @@ const columns = [
     headerName: 'Email',
     width: 200,
   },
- 
+
   {
     field: 'GroupName',
     headerName: 'Groups',
@@ -29,7 +29,7 @@ export default function DataGridDemo() {
   const [editData, setEditData] = useState([]);
 
   function TableData() {
-    const url = 'https://mt3.granalytics.in/admin/groupdadmin/view'
+    const url = 'http://192.168.3.36:4000/admin/groupdadmin/view'
 
     Axios.post(url)
       .then(function (response) {
@@ -56,7 +56,7 @@ export default function DataGridDemo() {
         onSelectionChange={(newSelection) => {
 
 
-          const url = 'https://mt3.granalytics.in/admin/agent/getAgent'
+          const url = 'http://192.168.3.36:4000/admin/agent/getAgent'
 
 
           Axios.post(url, newSelection)

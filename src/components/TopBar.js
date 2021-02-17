@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = 'https://mt2.granalytics.in';
+var APIENDPOINT = 'http://192.168.3.36:42002';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ function addToQueue(agentId, queue) {
     method: 'get',
     url:
       APIENDPOINT +
-      '/ami/actions/addq?Interface='+agentId+'&Queue=' +
+      '/ami/actions/addq?Interface=' + agentId + '&Queue=' +
       queue +
       '',
     headers: {
@@ -122,31 +122,161 @@ function addToQueue(agentId, queue) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function removeFromQueue(agentId, queue) {
-  var axios = require('axios');
-  console.log('remove', agentId)
-  var data = JSON.stringify({
-    agentId: agentId,
-    queue: queue,
+  const axios = require('axios');
+  console.log('remove', agentId);
+  const data = JSON.stringify({
+    agentId,
+    queue,
     action: 'QueueRemove'
   });
+  const str = localStorage.getItem('callUniqueId');
+  const strFirstThree = str.substring(0, 3);
 
-  var config = {
+  console.log(str); // shows '012123'
+  console.log(strFirstThree); // shows '012'
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42001';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42002';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42003';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42005';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42006';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  if (strFirstThree) {
+    APIENDPOINT = 'http://192.168.3.36:42007';
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+
+    axios(config)
+      .then((response) => {
+
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const config = {
     method: 'get',
     url:
-      APIENDPOINT +
-      '/ami/actions/rmq?Queue=' +
-      queue +
-      '&Interface='+agentId+'',
+      `${APIENDPOINT
+      }/ami/actions/rmq?Queue=${queue
+      }&Interface=${agentId}`,
     headers: {
       'Content-Type': 'application/json'
     }
   };
 
   axios(config)
-    .then(function (response) {
+    .then((response) => {
 
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.log(error);
     });
 }
@@ -236,22 +366,22 @@ const TopBar = ({
     searchDist(searchText);
   };
   async function logoutUser() {
-  
+
     try {
-      if(localStorage.getItem('Agenttype') === 'L1'){
+      if (localStorage.getItem('Agenttype') === 'L1') {
         // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
-        removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7001)
+        removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001)
       }
-      if(localStorage.getItem('Agenttype') === 'L2'){
+      if (localStorage.getItem('Agenttype') === 'L2') {
         // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
-        removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue\n', 7002)
+        removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
       }
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
-      const userData= localStorage.jwtToken
+      const userData = localStorage.jwtToken
 
-      const url='https://mt3.granalytics.in/auth/apiM/logout'
-      await Axios.delete(url, { headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } });
+      const url = 'http://192.168.3.36:4000/auth/apiM/logout'
+      await Axios.delete(url, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } });
 
       localStorage.clear();
 
@@ -262,7 +392,7 @@ const TopBar = ({
   }
   var test = "green"
   return (
-    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}  style={{background:`${test}`}}>
+    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: `${test}` }}>
       <Toolbar>
         <RouterLink to="/">
           <Logo />
@@ -286,32 +416,32 @@ const TopBar = ({
         </div> */}
         <Box flexGrow={1} />
         <Hidden mdDown>
-        {localStorage.getItem("role")==="Agent" ?  <Typography className={classes.title} variant="h5" noWrap>
+          {localStorage.getItem("role") === "Agent" ? <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/dash360" className="color-white">
-              Agent {localStorage.getItem('Agenttype')+' '+ localStorage.getItem('AgentSIPID')}
+              Agent {localStorage.getItem('Agenttype') + ' ' + localStorage.getItem('AgentSIPID')}
             </Link>
-          </Typography>:<></>}
-          {localStorage.getItem("role")==="Admin" || localStorage.getItem("role")==="Group admin" ?  <Typography className={classes.title} variant="h5" noWrap>
+          </Typography> : <></>}
+          {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/telephony/dashboard" className="color-white">
               Telephony
             </Link>
-          </Typography>:<></>}
-          {localStorage.getItem("role")==="Admin" || localStorage.getItem("role")==="Group admin" ?   <Typography className={classes.title} variant="h5" noWrap>
+          </Typography> : <></>}
+          {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/agent/dashboard" className="color-white">
               Agents
             </Link>
-          </Typography>:<></>}
-          {localStorage.getItem("role")==="Admin"?  <Typography className={classes.title} variant="h5" noWrap>
+          </Typography> : <></>}
+          {localStorage.getItem("role") === "Admin" ? <Typography className={classes.title} variant="h5" noWrap>
             <Link to="/group/dashboard" className="color-white">
               Groups
             </Link>
-          </Typography>:<></>}
+          </Typography> : <></>}
           {viewAccess === -1 ? (
             ''
           ) : (
-            <></>
-          )}
-          
+              <></>
+            )}
+
           <IconButton color="inherit">
             <Badge
               badgeContent={notifications.length}

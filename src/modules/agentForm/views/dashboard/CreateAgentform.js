@@ -25,9 +25,9 @@ const useStyle = makeStyles(() => ({
     width: '100%'
   }
 }));
-export default function DispositionForm({...props}) {
+export default function DispositionForm({ ...props }) {
   const config = "http://192.168.3.45:8083/"
- 
+
   const [initialValue, setInitialValue] = useState({
 
     AgentName: '',
@@ -38,7 +38,7 @@ export default function DispositionForm({...props}) {
       value: "",
       label: ""
     },
-    Group:{
+    Group: {
       value: "",
       label: ""
     }
@@ -46,7 +46,7 @@ export default function DispositionForm({...props}) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'https://mt1.granalytics.in/';
+  const agentServiceURL = 'http://192.168.3.36:42004/';
   const AgentType = [
     {
       id: '1', value: 'L1',
@@ -71,9 +71,9 @@ export default function DispositionForm({...props}) {
 
 
   function updateAgentCallStatus(contactNumber) {
-    console.log("contactNumber",contactNumber)
+    console.log("contactNumber", contactNumber)
     var axios = require('axios');
-    
+
     var data = {
       agentCallDispositionStatus: "NotDisposed",
       agentCallType: "Inbound",
@@ -82,14 +82,14 @@ export default function DispositionForm({...props}) {
       agentCallStatus: "disconnected",
       agentID: "9998",
       agentSipID: "9998",
-      contactNumber:contactNumber,
+      contactNumber: contactNumber,
       breakStatus: "OUT",
-     
+
     };
     var config = {
 
       method: 'post',
-      url: 'https://mt1.granalytics.in/crm/currentstatuses',
+      url: 'http://192.168.3.36:42004/crm/currentstatuses',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -104,10 +104,10 @@ export default function DispositionForm({...props}) {
         console.log(error);
       });
   }
-  async function pushAgentCurrentStatusData(data){
+  async function pushAgentCurrentStatusData(data) {
     const url = agentServiceURL + 'crm/currentstatuses';
     const result = await fetch(url, { method: 'post', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } });
-   console.log("result", result)
+    console.log("result", result)
     return await result.json();
   }
   function handleSubmit(e) {
@@ -121,15 +121,15 @@ export default function DispositionForm({...props}) {
       "AgentType": formRef.current.values.AgentType.value,
       "group": formRef.current.values.Group.group_name,
     }
-    const url = 'https://mt3.granalytics.in/admin/agent/addAgent'
+    const url = 'http://192.168.3.36:4000/admin/agent/addAgent'
 
-    Axios.post(url, {data},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+    Axios.post(url, { data }, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
         console.log(response);
         if (response.data.status === 200) {
           alert("Created Agent Successfully")
           // updateAgentCallStatus(formRef.current.values.Agentcontact)
-          const result={
+          const result = {
             "agentCallDispositionStatus": "NA",
             "agentCallType": "Inbound",
             "agentCallUniqueId": "NA",
@@ -143,47 +143,49 @@ export default function DispositionForm({...props}) {
             "bridgeUniqueid1": "NA",
             "bridgeUniqueid2": "NA",
             "channel": "NA",
-            "contactNumber":data.Agentcontact,
-            "agenttype":data.AgentType
+            "contactNumber": data.Agentcontact,
+            "agenttype": data.AgentType
           }
-       
+
           pushAgentCurrentStatusData(result)
           props.TableData()
         }
-        else{
+        else {
           alert(response.data.message)
-        console.log( "formRef.current",formRef.current)
-       
+          console.log("formRef.current", formRef.current)
+
         }
       })
 
-      setInitialValue({
+    setInitialValue({
 
-        AgentName: '',
-        AgentEmail: '',
-        Agentcontact: '',
-        location: '',
-       
-        AgentType: {
-          value: "",
-          label: "",
-          id:""
-        }
-      });
-     
-      formRef.current.values.AgentName = ""
-      formRef.current.values.AgentEmail = ""
-      formRef.current.values.Agentcontact = ""
-      formRef.current.values.location = ""
-      formRef.current.values.AgentType.label = ""
-      formRef.current.values.AgentType.value = ""
-      formRef.current.values.AgentType.id = ""
-      formRef.current.values.Group={ value: "",
-      label: ""}
-      console.log("initialValue", initialValue)
-     
+      AgentName: '',
+      AgentEmail: '',
+      Agentcontact: '',
+      location: '',
+
+      AgentType: {
+        value: "",
+        label: "",
+        id: ""
+      }
+    });
+
+    formRef.current.values.AgentName = ""
+    formRef.current.values.AgentEmail = ""
+    formRef.current.values.Agentcontact = ""
+    formRef.current.values.location = ""
+    formRef.current.values.AgentType.label = ""
+    formRef.current.values.AgentType.value = ""
+    formRef.current.values.AgentType.id = ""
+    formRef.current.values.Group = {
+      value: "",
+      label: ""
+    }
+    console.log("initialValue", initialValue)
+
     e.preventDefault()
-  
+
 
   }
 
@@ -193,19 +195,19 @@ export default function DispositionForm({...props}) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
+    const url = 'http://192.168.3.36:4000/admin/group/getGroup'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+    Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
         console.log(response);
         if (response.data.status === 200) {
           // roup=response.data.data
           setGroups(response.data.data)
         }
-        else{
+        else {
           alert(response.data.message)
-    
-       
+
+
         }
       })
 
@@ -229,7 +231,7 @@ export default function DispositionForm({...props}) {
           .object()
           .required('Please select a Agent Type')
           .typeError('Please select a valid Agent Type'),
-          Group: yup
+        Group: yup
           .object()
           .required('Please select a Group')
           .typeError('Please select a Group'),
@@ -274,8 +276,8 @@ export default function DispositionForm({...props}) {
                 label="Agent Contact Number"
               />
             </Grid>
-            
-            {localStorage.getItem('role')=== "Admin"? <Grid item >
+
+            {localStorage.getItem('role') === "Admin" ? <Grid item >
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
@@ -308,9 +310,9 @@ export default function DispositionForm({...props}) {
                 />
               </FormControl>
 
-            </Grid>:<></>}
+            </Grid> : <></>}
 
-           <Grid item >
+            <Grid item >
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}

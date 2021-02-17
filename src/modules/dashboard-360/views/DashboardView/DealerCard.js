@@ -67,59 +67,59 @@ const useStyles = makeStyles(theme => ({
 
 export default function DealerCard(props) {
   console.log('dealerDetails', props);
- const get = function(obj, key) {
-    return key.split(".").reduce(function(o, x) {
-        return (typeof o == "undefined" || o === null) ? o : o[x];
+  const get = function (obj, key) {
+    return key.split(".").reduce(function (o, x) {
+      return (typeof o == "undefined" || o === null) ? o : o[x];
     }, obj);
-}
+  }
   const classes = useStyles();
-const [state, setState] = useState(props)
-const [details, setdetails] = useState({
-  "CallerName": "",
-  "agentExtension": "",
-  "agentID": "",
-  "agenttype": "",
-  "asterixUniqueID": "",
-  "callType": "",
-  "callerNumber": "",
-  "callerapplication": "",
-  "campaignID": "",
-  "category": "",
-  "comments": "",
-  "connectivitytype": "",
-  "created": "",
-  "devicetype": "",
-   "distributerID": "",
-  "distributerName": "",
-  "enable": "",
-  "issuedescription": "",
-  "issuetype": "",
-  "ostype": "",
-  "rid": "",
-  "solution": "",
-  "speedtype": "",
-  "status": "",
-  "subcategory": "",
-  "subcategoryitem": "",
-  "tickettype": "",
-  "type": ""
-})
-if('dealerDetails' in props){
-console.log('props me hai', props.dealerDetails)
-var data =  props.dealerDetails;
-// if(Object.keys(data).length !== 0){
-//   console.log('clicked iteam', data[0])
-// setdetails(data)
-// setState(data)
-// // localStorage.setItem('callNumber', data[0].callNumber)
-// // localStorage.setItem('callerName', data[0].callerName)
-// }
-}else{
-  console.log('props me nahi hai', props)
-}
+  const [state, setState] = useState(props)
+  const [details, setdetails] = useState({
+    "CallerName": "",
+    "agentExtension": "",
+    "agentID": "",
+    "agenttype": "",
+    "asterixUniqueID": "",
+    "callType": "",
+    "callerNumber": "",
+    "callerapplication": "",
+    "campaignID": "",
+    "category": "",
+    "comments": "",
+    "connectivitytype": "",
+    "created": "",
+    "devicetype": "",
+    "distributerID": "",
+    "distributerName": "",
+    "enable": "",
+    "issuedescription": "",
+    "issuetype": "",
+    "ostype": "",
+    "rid": "",
+    "solution": "",
+    "speedtype": "",
+    "status": "",
+    "subcategory": "",
+    "subcategoryitem": "",
+    "tickettype": "",
+    "type": ""
+  })
+  if ('dealerDetails' in props) {
+    console.log('props me hai', props.dealerDetails)
+    var data = props.dealerDetails;
+    // if(Object.keys(data).length !== 0){
+    //   console.log('clicked iteam', data[0])
+    // setdetails(data)
+    // setState(data)
+    // // localStorage.setItem('callNumber', data[0].callNumber)
+    // // localStorage.setItem('callerName', data[0].callerName)
+    // }
+  } else {
+    console.log('props me nahi hai', props)
+  }
 
   const [showFullDetailsModal, setShowFullDetailsModal] = useState(false);
-  const SOCKETENDPOINT = 'https://mt2.granalytics.in/';
+  const SOCKETENDPOINT = 'http://192.168.3.36:42002/';
   const getIconColor = () => {
     return 'primary';
   };
@@ -129,8 +129,8 @@ var data =  props.dealerDetails;
     Number = Number.substr(Number.length - 10);
     if (Number.length === 10) {
       const axios = require('axios');
-       Number = Number.substring(1);
-       console.log('make call', Number)
+      Number = Number.substring(1);
+      console.log('make call', Number)
       const config = {
         method: 'get',
         // eslint-disable-next-line prefer-template
@@ -138,8 +138,8 @@ var data =  props.dealerDetails;
           SOCKETENDPOINT +
           'ami/actions/orginatecall?sipAgentID=Local/5' +
           localStorage.getItem('AgentSIPID') +
-          '@from-internal&NumbertobeCalled=5'+Number 
-          ,
+          '@from-internal&NumbertobeCalled=5' + Number
+        ,
         headers: {}
       };
       axios(config)
@@ -153,13 +153,13 @@ var data =  props.dealerDetails;
       console.log('Invalide number');
     }
   }
-  console.log('details', get(props, 'dealerDetails.CallerName') )
+  console.log('details', get(props, 'dealerDetails.CallerName'))
   console.log('state', state)
   return (
     <Card>
-     
+
       <CardContent>
-     
+
         <Grid container justify="center" className="position-relative">
           <Tooltip
             title="View More Details"
@@ -173,24 +173,24 @@ var data =  props.dealerDetails;
           </Tooltip>
           {
             localStorage.getItem('callDispositionStatus') === 'Disposed' &&
-            localStorage.getItem('callStatus') === 'disconnected' &&
-            localStorage.getItem('breakStatus') === 'OUT' || localStorage.getItem('breakStatus') === 'NA'  ? (
-              <CallIcon onClick={() => makeCall(get(props, 'dealerDetails.callerNumber') )} />
-           
-            ) : null}
+              localStorage.getItem('callStatus') === 'disconnected' &&
+              localStorage.getItem('breakStatus') === 'OUT' || localStorage.getItem('breakStatus') === 'NA' ? (
+                <CallIcon onClick={() => makeCall(get(props, 'dealerDetails.callerNumber'))} />
+
+              ) : null}
           {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg> */}
           <Box>
             <Typography gutterBottom variant="h5" component="h2" align="center">
               {/* {display_name} */}
-             {/* {localStorage.getItem('callerName')} */}
-           Caller Name:  { get(props, 'dealerDetails.CallerName') }, 
+              {/* {localStorage.getItem('callerName')} */}
+           Caller Name:  {get(props, 'dealerDetails.CallerName')},
            {/* Caller Application:  { get(props, 'dealerDetails.callerapplication') }
            Device Type:  { get(props, 'dealerDetails.devicetype') }        
            Issue Type:  { get(props, 'dealerDetails.issuetype') },            
            OS Type:  { get(props, 'dealerDetails.ostype') },               
            Internet Connection Type:{ get(props, 'dealerDetails.connectivitytype') },
            Internet Speed:  { get(props, 'dealerDetails.speedtype') } */}
-           
+
             </Typography>
 
             <Typography
@@ -199,7 +199,7 @@ var data =  props.dealerDetails;
               component="p"
               align="center"
             >
-               {/* Caller Application:  { get(props, 'dealerDetails.callerapplication') } */}
+              {/* Caller Application:  { get(props, 'dealerDetails.callerapplication') } */}
               {/* {email_id} */}
               {/* v.singh2210@gmail.com */}
               <br />
@@ -253,10 +253,10 @@ var data =  props.dealerDetails;
           </Grid> */}
         </Grid>
       </CardContent>
-     
-     
-     
-     
+
+
+
+
       {showFullDetailsModal && (
         <Dialog
           open
@@ -267,8 +267,8 @@ var data =  props.dealerDetails;
           <Divider light />
           <DialogContent>
             {/* <Typography variant="h6"> */}
-              {/* {display_name} */}
-              {/* <Tooltip title='active'>
+            {/* {display_name} */}
+            {/* <Tooltip title='active'>
                 <CheckCircleIcon
                   color={getIconColor()}
                   style={{ marginBottom: -3, marginLeft: 5 }}
@@ -292,7 +292,7 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.callerapplication') }
+                      {get(props, 'dealerDetails.callerapplication')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -302,7 +302,7 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.devicetype') } 
+                      {get(props, 'dealerDetails.devicetype')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -310,14 +310,14 @@ var data =  props.dealerDetails;
                   <Grid item xs={5}>
                     <Typography variant="h5">Comments:</Typography>
                   </Grid>
-   
+
                 </Grid>                <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">  OS Type:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.ostype') },   
+                      {get(props, 'dealerDetails.ostype')},
                     </Typography>
                   </Grid>
                 </Grid>                <Grid item container>
@@ -326,17 +326,17 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.connectivitytype') },
+                      {get(props, 'dealerDetails.connectivitytype')},
                     </Typography>
                   </Grid>
-                </Grid>                
+                </Grid>
                 <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5"> Speed Type:</Typography>
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.speedtype') }
+                      {get(props, 'dealerDetails.speedtype')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -346,7 +346,7 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.Category') }
+                      {get(props, 'dealerDetails.Category')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -356,7 +356,7 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.issuedescription') }
+                      {get(props, 'dealerDetails.issuedescription')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -366,7 +366,7 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.subcategory') }
+                      {get(props, 'dealerDetails.subcategory')}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -377,15 +377,15 @@ var data =  props.dealerDetails;
                   </Grid>
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
-                    { get(props, 'dealerDetails.comments') },
+                      {get(props, 'dealerDetails.comments')},
                     </Typography>
                   </Grid>
                 </Grid>
 
-                            
-                      
-         
-          
+
+
+
+
                 {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Phone Number:</Typography>
@@ -442,7 +442,7 @@ var data =  props.dealerDetails;
                   <Grid item xs={7}>
                     <Typography variant="h5" color="textSecondary">
                       {/* {pan_no} */}
-                    {/* </Typography>
+                {/* </Typography>
                   </Grid>
                 </Grid> */}
                 {/* <Grid item container>

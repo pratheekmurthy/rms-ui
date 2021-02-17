@@ -32,8 +32,8 @@ export default function DispositionForm(props) {
     GroupAdminName: '',
     GroupAdminEmail: '',
     groupcontact: '',
-   
-    Group:{
+
+    Group: {
       value: "",
       label: ""
     }
@@ -41,7 +41,7 @@ export default function DispositionForm(props) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'https://mt1.granalytics.in/';
+  const agentServiceURL = 'http://192.168.3.36:42004/';
 
   // const Groups = [
   //   {
@@ -58,9 +58,9 @@ export default function DispositionForm(props) {
 
 
   function updateAgentCallStatus(contactNumber) {
-    console.log("contactNumber",contactNumber)
+    console.log("contactNumber", contactNumber)
     var axios = require('axios');
-    
+
     var data = {
       agentCallDispositionStatus: "NotDisposed",
       agentCallType: "Inbound",
@@ -69,9 +69,9 @@ export default function DispositionForm(props) {
       agentCallStatus: "disconnected",
       agentID: "9998",
       agentSipID: "9998",
-      contactNumber:contactNumber,
+      contactNumber: contactNumber,
       breakStatus: "OUT",
-     
+
     };
     var config = {
 
@@ -99,12 +99,12 @@ export default function DispositionForm(props) {
       "GEmail": formRef.current.values.GroupAdminEmail,
 
       "Gcontact": formRef.current.values.groupcontact,
-     
+
       "groupslabel": formRef.current.values.Group,
     }
-  
-    const url = 'https://mt3.granalytics.in/admin/groupdadmin/add'
-console.log("data",data)
+
+    const url = 'http://192.168.3.36:4000/admin/groupdadmin/add'
+    console.log("data", data)
     Axios.post(url, data)
       .then(function (response) {
         console.log(response);
@@ -112,35 +112,37 @@ console.log("data",data)
           alert("Created Successfully")
           // updateAgentCallStatus(formRef.current.values.Agentcontact)
         }
-        else{
+        else {
           alert(response.data.message)
-        console.log( "formRef.current",formRef.current)
-       
+          console.log("formRef.current", formRef.current)
+
         }
       })
 
-      setInitialValue({
+    setInitialValue({
 
-        GroupAdminName: '',
-        GroupAdminEmail: '',
-        groupcontact: '',
-       
-        Group:{
-          value: "",
-          label: ""
-        }
-      });
-  
-      formRef.current.values.GroupAdminName = ""
-      formRef.current.values.GroupAdminEmail = ""
-      formRef.current.values.groupcontact = ""
-    
-      formRef.current.values.Group={ value: "",
-      label: ""}
-      console.log("initialValue", initialValue)
-     
+      GroupAdminName: '',
+      GroupAdminEmail: '',
+      groupcontact: '',
+
+      Group: {
+        value: "",
+        label: ""
+      }
+    });
+
+    formRef.current.values.GroupAdminName = ""
+    formRef.current.values.GroupAdminEmail = ""
+    formRef.current.values.groupcontact = ""
+
+    formRef.current.values.Group = {
+      value: "",
+      label: ""
+    }
+    console.log("initialValue", initialValue)
+
     e.preventDefault()
-  
+
 
   }
 
@@ -150,19 +152,19 @@ console.log("data",data)
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'https://mt3.granalytics.in/admin/group/getGroup'
+    const url = 'http://192.168.3.36:4000/admin/group/getGroup'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` } })
+    Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
         console.log(response);
         if (response.data.status === 200) {
           // roup=response.data.data
           setGroups(response.data.data)
         }
-        else{
+        else {
           alert(response.data.message)
-    
-       
+
+
         }
       })
 
@@ -182,21 +184,21 @@ console.log("data",data)
       }}
       innerRef={formRef}
       validationSchema={yup.object({
-      
-          Group: yup
+
+        Group: yup
           .object()
           .required('Please select a Group')
           .typeError('Please select a Group'),
-          GroupAdminName: yup.string().required('Please Enter Group Admin Name'),
-          GroupAdminEmail: yup.string().required('Please Enter Group Admin Email'),
-          groupcontact: yup.string().required('Please Enter  Group Admin Contact Number'),
-       
+        GroupAdminName: yup.string().required('Please Enter Group Admin Name'),
+        GroupAdminEmail: yup.string().required('Please Enter Group Admin Email'),
+        groupcontact: yup.string().required('Please Enter  Group Admin Contact Number'),
+
       })}
     >
       {({ setFieldValue }) => (
         <Form>
           <Grid container spacing={2} direction="column">
-          <Grid item >
+            <Grid item >
               <FormControl
                 variant="outlined"
                 className={classes.fieldContainer}
@@ -262,10 +264,10 @@ console.log("data",data)
                 label="Group Admin Contact Number"
               />
             </Grid>
-          
-          
 
-          
+
+
+
           </Grid>
           <br />
 

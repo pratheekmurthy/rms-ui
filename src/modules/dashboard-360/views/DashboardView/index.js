@@ -55,10 +55,23 @@ import DispositionForm from './DispositionForm';
 import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import DistributorSelectPopup from './DistributorSelectModal';
+import data from '../customer/CustomerListView/data';
+import { da } from 'date-fns/locale';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
-const SOCKETENDPOINT = 'https://mt2.granalytics.in';
+const SOCKETENDPOINT = 'http://192.168.3.36:42001';
+const SOCKETENDPOINT1 = 'http://192.168.3.36:42002';
+const SOCKETENDPOINT2 = 'http://192.168.3.36:42003';
+const SOCKETENDPOINT3 = 'http://192.168.3.36:42005';
+const SOCKETENDPOINT4 = 'http://192.168.3.36:42006';
+const SOCKETENDPOINT5 = 'http://192.168.3.36:42007';
 
 const socket = socketIOClient(SOCKETENDPOINT);
+const socket1 = socketIOClient(SOCKETENDPOINT1);
+const socket2 = socketIOClient(SOCKETENDPOINT2);
+const socket3 = socketIOClient(SOCKETENDPOINT3);
+const socket4 = socketIOClient(SOCKETENDPOINT4);
+const socket5 = socketIOClient(SOCKETENDPOINT5);
+
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -208,7 +221,7 @@ const Dashboard = ({
     showDistributorDetailsModal,
     setShowDistributorDetailsModal
   ] = useState(false);
-  const [dealerDetails, setdealerDetails] =  useState({ });
+  const [dealerDetails, setdealerDetails] = useState({});
   const [distributorModal, setDistributorModal] = useState({});
   function getDLF() {
     const axios = require('axios');
@@ -257,13 +270,13 @@ const Dashboard = ({
       });
   }
 
-  function getOpenTickets(agentType, status){
- 
+  function getOpenTickets(agentType, status) {
+
     var axios = require('axios');
 
     var config = {
       method: 'get',
-      url: 'https://mt1.granalytics.in/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
+      url: 'http://192.168.3.36:42004/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
       headers: {}
     };
 
@@ -271,7 +284,7 @@ const Dashboard = ({
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         var ALFDATA = response.data;
-        console.log('calling the open tickets',ALFDATA)
+        console.log('calling the open tickets', ALFDATA)
         // ALFDATA = ALFDATA.reverse();
         setALF(ALFDATA);
       })
@@ -311,7 +324,7 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'https://mt2.granalytics.in';
+  var APIENDPOINT = 'http://192.168.3.36:42002';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -678,13 +691,13 @@ const Dashboard = ({
   ///socket ends
   useEffect(() => {
     // getALF();
-    if(localStorage.getItem('Agenttype') === 'L1'){
+    if (localStorage.getItem('Agenttype') === 'L1') {
       // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
     }
-    if(localStorage.getItem('Agenttype') === 'L2'){
+    if (localStorage.getItem('Agenttype') === 'L2') {
       getOpenTickets('L1', 'open');
     }
-    if(localStorage.getItem('Agenttype') === 'L3'){
+    if (localStorage.getItem('Agenttype') === 'L3') {
       getOpenTickets('L2', 'open');
     }
 
@@ -702,12 +715,22 @@ const Dashboard = ({
       )
     );
     setLoadingDetails(false);
-    socket.on('ringing1', data => {
+    ///socket 1///////////////////////////////
+    socket.on('AstriskEvent', data => {
+      if (data.Event === 'Hangup') {
+        // console.log('AstriskEvent', data)
+      }
+      if (data.Event === 'Bridge') {
+        // console.log('AstriskEvent', data)
+      }
 
+    })
+    socket.on('ringing1', data => {
+      console.log('ringing1', data);
       // var Channel1 = data.Channel1;
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
-        console.log('ringing1', data);
+
         localStorage.setItem('channel', data.event.Channel)
         //   console.log('AstriskEventBridgeOutbound', data);
 
@@ -725,11 +748,11 @@ const Dashboard = ({
     });
 
     socket.on('ringing2', data => {
-
+      console.log('ringing2', data)
       // var Channel1 = data.Channel1;
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
-        console.log('ringing2', data)
+
         localStorage.setItem('callUniqueId', data.event.Uniqueid)
         localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
         // //   console.log('AstriskEventBridgeOutbound', data);
@@ -753,7 +776,7 @@ const Dashboard = ({
 
     })
     socket.on('connected', data => {
-      // console.log('connected', data)
+      console.log('connected', data);
       var agentExtension = data.agentNumber;
       if (agentExtension === agent.AgentSipId) {
         // getInitialData();
@@ -792,11 +815,564 @@ const Dashboard = ({
         );
       }
     });
+    /////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //socket1//////////////////////////////////////////////////////////////////////////////////
+    socket1.on('AstriskEvent', data => {
+      if (data.Event === 'Hangup') {
+        // console.log('AstriskEvent', data)
+      }
+      if (data.Event === 'Bridge') {
+        // console.log('AstriskEvent', data)
+      }
+
+    })
+    socket1.on('ringing1', data => {
+      console.log('ringing1', data);
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('channel', data.event.Channel)
+        //   console.log('AstriskEventBridgeOutbound', data);
+
+        // setCurrentCallDetails(
+        //   localStorage.getItem('callStatusId'),
+        //   data.Uniqueid,
+        //   agent.AgentType,
+        //   'connected',
+        //   'Bridge',
+        //   'NotDisposed',
+        //   '',
+        //   localStorage.getItem('breakStatus')
+        // );
+      }
+    });
+
+    socket1.on('ringing2', data => {
+      console.log('ringing2', data)
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('callUniqueId', data.event.Uniqueid)
+        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+        // //   console.log('AstriskEventBridgeOutbound', data);
+
+        //   setCurrentCallDetails(
+        //     localStorage.getItem('callStatusId'),
+        //     localStorage.getItem('callUniqueId'),
+        //     agent.AgentType,
+        //     'connected',
+        //     'Bridge',
+        //     'NotDisposed',
+        //     data.contactNumber,
+        //     localStorage.getItem('breakStatus')
+        //   );
+      }
+    });
+    socket1.on('transfercallnumber', data => {
+      if (localStorage.getItem('Agenttype') === 'L2') {
+        localStorage.setItem('callerNumber', data.contactnumber)
+      }
+
+    })
+    socket1.on('connected', data => {
+      console.log('connected', data);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // getInitialData();
+        // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+        // removeFromQueue(agent.AgentSipId, '7001');
+      }
+    });
+    socket1.on('hangup', data => {
+      console.log('hangup', data);
+      // var str = data.Channel;
+      // var agentsipid = str.substring(4, 8);
+      // console.log('agentsipid', agentsipid);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // console.log('AstriskEventHangup', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+      }
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //socket2//////////////////////////////////////////////////////////////////////////////////
+    socket2.on('AstriskEvent', data => {
+      if (data.Event === 'Hangup') {
+        // console.log('AstriskEvent', data)
+      }
+      if (data.Event === 'Bridge') {
+        // console.log('AstriskEvent', data)
+      }
+
+    })
+    socket2.on('ringing1', data => {
+      console.log('ringing1', data);
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('channel', data.event.Channel)
+        //   console.log('AstriskEventBridgeOutbound', data);
+
+        // setCurrentCallDetails(
+        //   localStorage.getItem('callStatusId'),
+        //   data.Uniqueid,
+        //   agent.AgentType,
+        //   'connected',
+        //   'Bridge',
+        //   'NotDisposed',
+        //   '',
+        //   localStorage.getItem('breakStatus')
+        // );
+      }
+    });
+
+    socket2.on('ringing2', data => {
+      console.log('ringing2', data)
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('callUniqueId', data.event.Uniqueid)
+        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+        // //   console.log('AstriskEventBridgeOutbound', data);
+
+        //   setCurrentCallDetails(
+        //     localStorage.getItem('callStatusId'),
+        //     localStorage.getItem('callUniqueId'),
+        //     agent.AgentType,
+        //     'connected',
+        //     'Bridge',
+        //     'NotDisposed',
+        //     data.contactNumber,
+        //     localStorage.getItem('breakStatus')
+        //   );
+      }
+    });
+    socket2.on('transfercallnumber', data => {
+      if (localStorage.getItem('Agenttype') === 'L2') {
+        localStorage.setItem('callerNumber', data.contactnumber)
+      }
+
+    })
+    socket2.on('connected', data => {
+      console.log('connected', data);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // getInitialData();
+        // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+        // removeFromQueue(agent.AgentSipId, '7001');
+      }
+    });
+    socket2.on('hangup', data => {
+      console.log('hangup', data);
+      // var str = data.Channel;
+      // var agentsipid = str.substring(4, 8);
+      // console.log('agentsipid', agentsipid);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // console.log('AstriskEventHangup', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+      }
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //socket3//////////////////////////////////////////////////////////////////////////////////
+    socket3.on('AstriskEvent', data => {
+      if (data.Event === 'Hangup') {
+        // console.log('AstriskEvent', data)
+      }
+      if (data.Event === 'Bridge') {
+        // console.log('AstriskEvent', data)
+      }
+
+    })
+    socket3.on('ringing1', data => {
+      console.log('ringing1', data);
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('channel', data.event.Channel)
+        //   console.log('AstriskEventBridgeOutbound', data);
+
+        // setCurrentCallDetails(
+        //   localStorage.getItem('callStatusId'),
+        //   data.Uniqueid,
+        //   agent.AgentType,
+        //   'connected',
+        //   'Bridge',
+        //   'NotDisposed',
+        //   '',
+        //   localStorage.getItem('breakStatus')
+        // );
+      }
+    });
+
+    socket3.on('ringing2', data => {
+      console.log('ringing2', data)
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+
+        localStorage.setItem('callUniqueId', data.event.Uniqueid)
+        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+        // //   console.log('AstriskEventBridgeOutbound', data);
+
+        //   setCurrentCallDetails(
+        //     localStorage.getItem('callStatusId'),
+        //     localStorage.getItem('callUniqueId'),
+        //     agent.AgentType,
+        //     'connected',
+        //     'Bridge',
+        //     'NotDisposed',
+        //     data.contactNumber,
+        //     localStorage.getItem('breakStatus')
+        //   );
+      }
+    });
+    socket3.on('transfercallnumber', data => {
+      if (localStorage.getItem('Agenttype') === 'L2') {
+        localStorage.setItem('callerNumber', data.contactnumber)
+      }
+
+    })
+    socket3.on('connected', data => {
+      console.log('connected', data);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // getInitialData();
+        // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+        // removeFromQueue(agent.AgentSipId, '7001');
+      }
+    });
+    socket3.on('hangup', data => {
+      console.log('hangup', data);
+      // var str = data.Channel;
+      // var agentsipid = str.substring(4, 8);
+      // console.log('agentsipid', agentsipid);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // console.log('AstriskEventHangup', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+      }
+    });
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //socket4//////////////////////////////////////////////////////////////////////////////////
+    // socket4.on('AstriskEvent', data => {
+    //   if(data.Event === 'Hangup'){
+    //     console.log('AstriskEvent', data)
+    //   }
+    //   if(data.Event === 'Bridge'){
+    //     console.log('AstriskEvent', data)
+    //   }
+
+    // })
+    // socket4.on('ringing1', data => {
+    //   console.log('ringing1', data);
+    //   // var Channel1 = data.Channel1;
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+
+    //     localStorage.setItem('channel', data.event.Channel)
+    //     //   console.log('AstriskEventBridgeOutbound', data);
+
+    //     // setCurrentCallDetails(
+    //     //   localStorage.getItem('callStatusId'),
+    //     //   data.Uniqueid,
+    //     //   agent.AgentType,
+    //     //   'connected',
+    //     //   'Bridge',
+    //     //   'NotDisposed',
+    //     //   '',
+    //     //   localStorage.getItem('breakStatus')
+    //     // );
+    //   }
+    // });
+
+    // socket4.on('ringing2', data => {
+    //   console.log('ringing2', data)
+    //   // var Channel1 = data.Channel1;
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+
+    //     localStorage.setItem('callUniqueId', data.event.Uniqueid)
+    //     localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+    //     // //   console.log('AstriskEventBridgeOutbound', data);
+
+    //     //   setCurrentCallDetails(
+    //     //     localStorage.getItem('callStatusId'),
+    //     //     localStorage.getItem('callUniqueId'),
+    //     //     agent.AgentType,
+    //     //     'connected',
+    //     //     'Bridge',
+    //     //     'NotDisposed',
+    //     //     data.contactNumber,
+    //     //     localStorage.getItem('breakStatus')
+    //     //   );
+    //   }
+    // });
+    // socket4.on('transfercallnumber', data => {
+    //   if (localStorage.getItem('Agenttype') === 'L2') {
+    //     localStorage.setItem('callerNumber', data.contactnumber)
+    //   }
+
+    // })
+    // socket4.on('connected', data => {
+    //   console.log('connected', data);
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+    //     // getInitialData();
+    //     // console.log('AstriskEventBridgeInbound', data);
+    //     localStorage.setItem('distributer_id', agent.AgentSipId);
+    //     setCurrentCallDetails(
+    //       localStorage.getItem('callStatusId'),
+    //       localStorage.getItem('callUniqueId'),
+    //       agent.AgentType,
+    //       'connected',
+    //       'Bridge',
+    //       'NotDisposed',
+    //       localStorage.getItem('callerNumber'),
+    //       localStorage.getItem('breakStatus')
+    //     );
+    //     // removeFromQueue(agent.AgentSipId, '7001');
+    //   }
+    // });
+    // socket4.on('hangup', data => {
+    //   console.log('hangup', data);
+    //   // var str = data.Channel;
+    //   // var agentsipid = str.substring(4, 8);
+    //   // console.log('agentsipid', agentsipid);
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+    //     // console.log('AstriskEventHangup', data);
+    //     setCurrentCallDetails(
+    //       localStorage.getItem('callStatusId'),
+    //       localStorage.getItem('callUniqueId'),
+    //       localStorage.getItem('callType'),
+    //       'disconnected',
+    //       'Hangup',
+    //       localStorage.getItem('callDispositionStatus'),
+    //       localStorage.getItem('callerNumber'),
+    //       localStorage.getItem('breakStatus')
+    //     );
+    //   }
+    // });
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    //socket5//////////////////////////////////////////////////////////////////////////////////
+    // socket5.on('AstriskEvent', data => {
+    //   if(data.Event === 'Hangup'){
+    //     console.log('AstriskEvent', data)
+    //   }
+    //   if(data.Event === 'Bridge'){
+    //     console.log('AstriskEvent', data)
+    //   }
+
+    // })
+    // socket5.on('ringing1', data => {
+    //   console.log('ringing1', data);
+    //   // var Channel1 = data.Channel1;
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+
+    //     localStorage.setItem('channel', data.event.Channel)
+    //     //   console.log('AstriskEventBridgeOutbound', data);
+
+    //     // setCurrentCallDetails(
+    //     //   localStorage.getItem('callStatusId'),
+    //     //   data.Uniqueid,
+    //     //   agent.AgentType,
+    //     //   'connected',
+    //     //   'Bridge',
+    //     //   'NotDisposed',
+    //     //   '',
+    //     //   localStorage.getItem('breakStatus')
+    //     // );
+    //   }
+    // });
+
+    // socket5.on('ringing2', data => {
+    //   console.log('ringing2', data)
+    //   // var Channel1 = data.Channel1;
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+
+    //     localStorage.setItem('callUniqueId', data.event.Uniqueid)
+    //     localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+    //     // //   console.log('AstriskEventBridgeOutbound', data);
+
+    //     //   setCurrentCallDetails(
+    //     //     localStorage.getItem('callStatusId'),
+    //     //     localStorage.getItem('callUniqueId'),
+    //     //     agent.AgentType,
+    //     //     'connected',
+    //     //     'Bridge',
+    //     //     'NotDisposed',
+    //     //     data.contactNumber,
+    //     //     localStorage.getItem('breakStatus')
+    //     //   );
+    //   }
+    // });
+    // socket5.on('transfercallnumber', data => {
+    //   if (localStorage.getItem('Agenttype') === 'L2') {
+    //     localStorage.setItem('callerNumber', data.contactnumber)
+    //   }
+
+    // })
+    // socket5.on('connected', data => {
+    //   console.log('connected', data);
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+    //     // getInitialData();
+    //     // console.log('AstriskEventBridgeInbound', data);
+    //     localStorage.setItem('distributer_id', agent.AgentSipId);
+    //     setCurrentCallDetails(
+    //       localStorage.getItem('callStatusId'),
+    //       localStorage.getItem('callUniqueId'),
+    //       agent.AgentType,
+    //       'connected',
+    //       'Bridge',
+    //       'NotDisposed',
+    //       localStorage.getItem('callerNumber'),
+    //       localStorage.getItem('breakStatus')
+    //     );
+    //     // removeFromQueue(agent.AgentSipId, '7001');
+    //   }
+    // });
+    // socket5.on('hangup', data => {
+    //   console.log('hangup', data);
+    //   // var str = data.Channel;
+    //   // var agentsipid = str.substring(4, 8);
+    //   // console.log('agentsipid', agentsipid);
+    //   var agentExtension = data.agentNumber;
+    //   if (agentExtension === agent.AgentSipId) {
+    //     // console.log('AstriskEventHangup', data);
+    //     setCurrentCallDetails(
+    //       localStorage.getItem('callStatusId'),
+    //       localStorage.getItem('callUniqueId'),
+    //       localStorage.getItem('callType'),
+    //       'disconnected',
+    //       'Hangup',
+    //       localStorage.getItem('callDispositionStatus'),
+    //       localStorage.getItem('callerNumber'),
+    //       localStorage.getItem('breakStatus')
+    //     );
+    //   }
+    // });
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+
     return () => {
       socket.off('ringing');
       socket.off('connected');
       socket.off('hangup');
       socket.off('transfercallnumber');
+
+      socket1.off('ringing');
+      socket1.off('connected');
+      socket1.off('hangup');
+      socket1.off('transfercallnumber');
+
+      socket2.off('ringing');
+      socket2.off('connected');
+      socket2.off('hangup');
+      socket2.off('transfercallnumber');
+
+      socket3.off('ringing');
+      socket3.off('connected');
+      socket3.off('hangup');
+      socket3.off('transfercallnumber');
+
+      // socket4.off('ringing');
+      // socket4.off('connected');
+      // socket4.off('hangup');
+      // socket4.off('transfercallnumber');
+
+      // socket5.off('ringing');
+      // socket5.off('connected');
+      // socket5.off('hangup');
+      // socket5.off('transfercallnumber');
     };
   }, []);
 
@@ -814,13 +1390,13 @@ const Dashboard = ({
 
     }
     // getALF();
-    if(localStorage.getItem('Agenttype') === 'L1'){
+    if (localStorage.getItem('Agenttype') === 'L1') {
       // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
     }
-    if(localStorage.getItem('Agenttype') === 'L2'){
+    if (localStorage.getItem('Agenttype') === 'L2') {
       getOpenTickets('L1', 'open');
     }
-    if(localStorage.getItem('Agenttype') === 'L3'){
+    if (localStorage.getItem('Agenttype') === 'L3') {
       getOpenTickets('L2', 'open');
     }
 
@@ -829,7 +1405,7 @@ const Dashboard = ({
     currentCall.callStatus,
     currentCall.breakStatus
   ]);
- 
+
   useEffect(() => {
     console.log("currentCall", currentCall)
     if (reduxState.searchDistributor.length >= 4) {
@@ -900,7 +1476,7 @@ const Dashboard = ({
                   style={{ color: 'white' }}
                   onClick={(e) => breakService(e)}
                 >
-                  {currentCall.breakStatus === 'OUT' || currentCall.breakStatus === 'NA'  ? <label>Break OUT</label> : <label>Break IN</label>}
+                  {currentCall.breakStatus === 'OUT' || currentCall.breakStatus === 'NA' ? <label>Break OUT</label> : <label>Break IN</label>}
                 </Button> : null}
                 {/* <Button
                   color="secondary"
@@ -923,19 +1499,19 @@ const Dashboard = ({
           </Grid>
           <Grid container spacing={3}>
             <Grid item lg={4} md={4} xs={12}>
-              
+
               <Grid item>
                 {localStorage.getItem('Agenttype') === 'L2' ?
-                <Card>
-                  <CardHeader title={'Caller details'} />
-           
+                  <Card>
+                    <CardHeader title={'Caller details'} />
+
                     <div>
                       <DealerCard
                         dealerDetails={dealerDetails}
                       />
                     </div>
-        
-                </Card> : null}
+
+                  </Card> : null}
                 <br />
                 {/* <Card>
                   <CardHeader title={'Caller last five interactions'} />
@@ -954,145 +1530,145 @@ const Dashboard = ({
                 </Card> */}
                 <br />
                 {localStorage.getItem('Agenttype') === 'L2' ?
-                <Card>
-                  <CardHeader
-                    title={
-                      'Open Tickets (' + agent.AgentSipId + ')'
-                    }
-                  />
-                  {ALF.length ? (
-                    <div>
-                      <BasicTable
-                        setRootData={setRootData}
-                        setdealerDetails={setdealerDetails}
-                        columns={lastFiveCallData}
-                        records={ALF.slice(0, 3)}
+                  <Card>
+                    <CardHeader
+                      title={
+                        'Open Tickets (' + agent.AgentSipId + ')'
+                      }
+                    />
+                    {ALF.length ? (
+                      <div>
+                        <BasicTable
+                          setRootData={setRootData}
+                          setdealerDetails={setdealerDetails}
+                          columns={lastFiveCallData}
+                          records={ALF.slice(0, 3)}
                         // redirectLink="/dash360/admin/agentlastfive"
                         // redirectLabel="View All"
-                      />
-                    </div>
-                  ) : (
-                      <CommonAlert text="N/A" />
-                    )}
-                </Card> : null }
+                        />
+                      </div>
+                    ) : (
+                        <CommonAlert text="N/A" />
+                      )}
+                  </Card> : null}
               </Grid>
             </Grid>
             {localStorage.getItem('Agenttype') === 'L2' ?
-            <Grid item lg={8} md={12} xs={12}>
+              <Grid item lg={8} md={12} xs={12}>
 
-              <Card>
-                <CardHeader title="Interaction Details" />
-                <Divider />
-                {currentCall.callDispositionStatus === 'NotDisposed' &&
-                  user.userType === 'Agent' ? (<CardContent>
-                    <DispositionForm
-                      agentSipID={agent.AgentSipId}
-                      DLF={DLF}
-                      setCurrentCallDetails={setCurrentCallDetails}
-                      addToQueue={addToQueue}
-                      removeFromQueue={removeFromQueue}
-                      // getALF={getALF}
-                      disForm={disForm}
-                      setdisForm={form => {
-                        setdisForm(form);
-                      }}
-                      category={category}
-                      setCategory={cat => {
-                        setCategory(cat);
-                      }}
-                      ticketType={ticketType}
-                      setTicketType={tkstyp => {
-                        setTicketType(tkstyp);
-                      }}
-                      subCategory={subCategory}
-                      setSubCategory={subcat => {
-                        setSubCategory(subcat);
-                      }}
-                      subCategoryItem={subCategoryItem}
-                      setSubCategoryItem={subcatitem => {
-                        setSubCategoryItem(subcatitem);
-                      }}
-                      remarks={remarks}
-                      setRemarks={rks => {
-                        setRemarks(rks);
-                      }}
-                    />
-                  </CardContent>
-                  ) : (
-                    <></>
-                    // <CommonAlert text="Unable to get disposition details" />
-                  )}
-              </Card>
+                <Card>
+                  <CardHeader title="Interaction Details" />
+                  <Divider />
+                  {currentCall.callDispositionStatus === 'NotDisposed' &&
+                    user.userType === 'Agent' ? (<CardContent>
+                      <DispositionForm
+                        agentSipID={agent.AgentSipId}
+                        DLF={DLF}
+                        setCurrentCallDetails={setCurrentCallDetails}
+                        addToQueue={addToQueue}
+                        removeFromQueue={removeFromQueue}
+                        // getALF={getALF}
+                        disForm={disForm}
+                        setdisForm={form => {
+                          setdisForm(form);
+                        }}
+                        category={category}
+                        setCategory={cat => {
+                          setCategory(cat);
+                        }}
+                        ticketType={ticketType}
+                        setTicketType={tkstyp => {
+                          setTicketType(tkstyp);
+                        }}
+                        subCategory={subCategory}
+                        setSubCategory={subcat => {
+                          setSubCategory(subcat);
+                        }}
+                        subCategoryItem={subCategoryItem}
+                        setSubCategoryItem={subcatitem => {
+                          setSubCategoryItem(subcatitem);
+                        }}
+                        remarks={remarks}
+                        setRemarks={rks => {
+                          setRemarks(rks);
+                        }}
+                      />
+                    </CardContent>
+                    ) : (
+                      <></>
+                      // <CommonAlert text="Unable to get disposition details" />
+                    )}
+                </Card>
 
 
-              <br />
-              {/* <FAQ /> */}
-              <Iframe url="https://mt4.granalytics.in/"
-                 position="absolute"
-        width="100%"
-        height="500Px"
-        id="myId"
-        className="myClassname"
-        display="initial"
-        position="relative"/>
-            </Grid> : 
-                        <Grid item lg={12} md={12} xs={12}>
+                <br />
+                {/* <FAQ /> */}
+                <Iframe url="https://mt4.granalytics.in/"
+                  position="absolute"
+                  width="100%"
+                  height="500Px"
+                  id="myId"
+                  className="myClassname"
+                  display="initial"
+                  position="relative" />
+              </Grid> :
+              <Grid item lg={12} md={12} xs={12}>
 
-                        <Card>
-                          <CardHeader title="Disposition Details" />
-                          <Divider />
-                          {currentCall.callDispositionStatus === 'NotDisposed' &&
-                            user.userType === 'Agent' ? (<CardContent>
-                              <DispositionForm
-                                agentSipID={agent.AgentSipId}
-                                DLF={DLF}
-                                setCurrentCallDetails={setCurrentCallDetails}
-                                addToQueue={addToQueue}
-                                removeFromQueue={removeFromQueue}
-                                // getALF={getALF}
-                                disForm={disForm}
-                                setdisForm={form => {
-                                  setdisForm(form);
-                                }}
-                                category={category}
-                                setCategory={cat => {
-                                  setCategory(cat);
-                                }}
-                                ticketType={ticketType}
-                                setTicketType={tkstyp => {
-                                  setTicketType(tkstyp);
-                                }}
-                                subCategory={subCategory}
-                                setSubCategory={subcat => {
-                                  setSubCategory(subcat);
-                                }}
-                                subCategoryItem={subCategoryItem}
-                                setSubCategoryItem={subcatitem => {
-                                  setSubCategoryItem(subcatitem);
-                                }}
-                                remarks={remarks}
-                                setRemarks={rks => {
-                                  setRemarks(rks);
-                                }}
-                              />
-                            </CardContent>
-                            ) : (
-                              <></>
-                              // <CommonAlert text="Unable to get disposition details" />
-                            )}
-                        </Card>
-          
-          
-                        <br />
-                        {/* <FAQ /> */}
-                        <Iframe url="https://mt4.granalytics.in/"
-        width="100%"
-        height="500Px"
-        id="myId"
-        className="myClassname"
-        display="initial"
-        position="relative"/>
-                      </Grid>
+                <Card>
+                  <CardHeader title="Disposition Details" />
+                  <Divider />
+                  {currentCall.callDispositionStatus === 'NotDisposed' &&
+                    user.userType === 'Agent' ? (<CardContent>
+                      <DispositionForm
+                        agentSipID={agent.AgentSipId}
+                        DLF={DLF}
+                        setCurrentCallDetails={setCurrentCallDetails}
+                        addToQueue={addToQueue}
+                        removeFromQueue={removeFromQueue}
+                        // getALF={getALF}
+                        disForm={disForm}
+                        setdisForm={form => {
+                          setdisForm(form);
+                        }}
+                        category={category}
+                        setCategory={cat => {
+                          setCategory(cat);
+                        }}
+                        ticketType={ticketType}
+                        setTicketType={tkstyp => {
+                          setTicketType(tkstyp);
+                        }}
+                        subCategory={subCategory}
+                        setSubCategory={subcat => {
+                          setSubCategory(subcat);
+                        }}
+                        subCategoryItem={subCategoryItem}
+                        setSubCategoryItem={subcatitem => {
+                          setSubCategoryItem(subcatitem);
+                        }}
+                        remarks={remarks}
+                        setRemarks={rks => {
+                          setRemarks(rks);
+                        }}
+                      />
+                    </CardContent>
+                    ) : (
+                      <></>
+                      // <CommonAlert text="Unable to get disposition details" />
+                    )}
+                </Card>
+
+
+                <br />
+                {/* <FAQ /> */}
+                <Iframe url="https://mt4.granalytics.in/"
+                  width="100%"
+                  height="500Px"
+                  id="myId"
+                  className="myClassname"
+                  display="initial"
+                  position="relative" />
+              </Grid>
             }
 
           </Grid>

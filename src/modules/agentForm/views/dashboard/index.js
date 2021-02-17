@@ -18,7 +18,7 @@ import {
   Box
 } from '@material-ui/core';
 import {
-  GET_INBOUND_DASHBOARD_DATA,  
+  GET_INBOUND_DASHBOARD_DATA,
   GET_INTERACTION_BY_AGENT_SIP_ID
 } from 'src/modules/dashboard-360/utils/endpoints';
 import Axios from 'axios';
@@ -74,13 +74,13 @@ const AgentDashboard = () => {
 
   useEffect(() => {
 
- 
+
 
   }, [])
   function TableData() {
-    const url = 'https://mt3.granalytics.in/admin/agent/viewAgent'
+    const url = 'http://192.168.3.36:4000/admin/agent/viewAgent'
 
-    Axios.post(url,{},{ headers: { Authorization:`Bearer ${localStorage.getItem('jwtToken')}` }})
+    Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
         // console.log(JSON.stringify(response.data.data));
         setAgents(response.data.data)
@@ -94,38 +94,38 @@ const AgentDashboard = () => {
   return (
     // <>
     <Container maxWidth={false}>
-        <div className={classes.root}>
-      <Grid container spacing={3}>
-    
-        <Grid item xs={12} sm={4}>
-        <div>
-       
-         <Card>
-                  <CardHeader title={'Create Agent'} />
-                  <CardContent>
-                    <CreateAgent  TableData={TableData}/>
-                    </CardContent>
-                    </Card>
-                  
-               </div>
-        
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+
+          <Grid item xs={12} sm={4}>
+            <div>
+
+              <Card>
+                <CardHeader title={'Create Agent'} />
+                <CardContent>
+                  <CreateAgent TableData={TableData} />
+                </CardContent>
+              </Card>
+
+            </div>
+
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <div>
+              <Card>
+                <CardHeader title={'Agent Details'} />
+                <CardContent>
+                  <AgentTable />
+                </CardContent>
+              </Card>
+            </div>
+
+          </Grid>
+
         </Grid>
-        <Grid item xs={12} sm={8}>
-        <div>
-        <Card>
-                  <CardHeader title={'Agent Details'} />
-                  <CardContent>
-        <AgentTable/>
-        </CardContent>
-           </Card>
-               </div>
-         
-        </Grid>
-      
-      </Grid>
-    </div>
-  
-     </Container>
+      </div>
+
+    </Container>
     // </>
   );
 };
