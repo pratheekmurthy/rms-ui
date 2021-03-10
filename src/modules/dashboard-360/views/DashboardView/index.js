@@ -1429,7 +1429,7 @@ const Dashboard = ({
             <CallIcon />
             &nbsp;
             <Typography display="inline">
-              {currentCall.callType} Call In Progress
+              Inbound Call In Progress
             </Typography>
           </Box>{' '}
         </div>
@@ -1446,7 +1446,7 @@ const Dashboard = ({
               <CallIcon />
             &nbsp;
             <Typography display="inline">
-                {currentCall.callType} Call Is Disconnected
+                Inbound Call Is Disconnected
             </Typography>
             </Box>{' '}
           </div>
