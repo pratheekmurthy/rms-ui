@@ -65,10 +65,15 @@ import { da } from 'date-fns/locale';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
 
 
-const socket1 = socketIOClient(SOCKETENDPOINT1);
-const socket2 = socketIOClient(SOCKETENDPOINT2);
-const socket3 = socketIOClient(SOCKETENDPOINT3);
-const socket4 = socketIOClient(SOCKETENDPOINT4);
+// const socket1 = socketIOClient(SOCKETENDPOINT1, { transports: ['websocket'] });
+// const socket2 = socketIOClient(SOCKETENDPOINT2 , { transports: ['websocket'] });
+// const socket3 = socketIOClient(SOCKETENDPOINT3, { transports: ['websocket'] });
+// const socket4 = socketIOClient(SOCKETENDPOINT4, { transports: ['websocket'] });
+
+const socket1 = socketIOClient(SOCKETENDPOINT1, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
+const socket2 = socketIOClient(SOCKETENDPOINT2, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
+const socket3 = socketIOClient(SOCKETENDPOINT3, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
+const socket4 = socketIOClient(SOCKETENDPOINT4, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
 
 
 
@@ -448,6 +453,27 @@ const Dashboard = ({
       });
   }
 
+
+  function updateAgentCallStatusV2(callStatusId, data) {
+    // console.log("updateData", updateData)
+    var axios = require('axios');
+    var config = {
+      method: 'put',
+      url: UPDATE_CURRENT_STATUS + callStatusId,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: data
+    };
+    axios(config)
+      .then(function (response) {
+        console.log('update', JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   function getAgentCallStatus(agentSipID) {
     console.log('calling the', agentSipID)
     var axios = require('axios');
@@ -462,7 +488,7 @@ const Dashboard = ({
 
         if (response.data) {
           console.log('getAgentCallStatus....................', response.data);
-
+          updateAgentCallStatusV2(response.data[0]._id, { loginStatus: 'true' })
           setCurrentCallDetails(
             response.data[0]._id,
             response.data[0].agentCallUniqueId,
@@ -616,70 +642,22 @@ const Dashboard = ({
   }
 
   function breakService(e) {
-
     console.log('Break', localStorage.getItem('breakStatus'));
     var BreakStatus = localStorage.getItem('breakStatus');
     if (BreakStatus === 'NA') {
       console.log('Inside the NA');
+      addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
       localStorage.setItem('breakStatus', 'IN');
-      if (agent.AgentType === 'Inbound') {
-        if (localStorage.getItem('Agenttype') === 'L1') {
-          // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-          }
-        }
-        if (localStorage.getItem('Agenttype') === 'L2') {
-          // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-          }
-        }
-      }
     }
     if (BreakStatus === 'IN') {
       console.log('Inside the IN');
+      addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
       localStorage.setItem('breakStatus', 'OUT');
-      if (agent.AgentType === 'Inbound') {
-        if (localStorage.getItem('Agenttype') === 'L1') {
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
-          }
-
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-          }
-        }
-        if (localStorage.getItem('Agenttype') === 'L2') {
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
-          }
-
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-          }
-        }
-      }
     }
     if (BreakStatus === 'OUT') {
       console.log('Inside the OUT');
       localStorage.setItem('breakStatus', 'IN');
-      if (agent.AgentType === 'Inbound') {
-        if (localStorage.getItem('Agenttype') === 'L1') {
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
-          }
-          // removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
-          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-        }
-        if (localStorage.getItem('Agenttype') === 'L2') {
-          if (user_Details.AgentQueueStatus === 'dynamic') {
-            removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
-          }
-          // removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
-          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-        }
-      }
+      removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
     }
 
     updateAgentCallStatus({
@@ -1240,7 +1218,7 @@ const Dashboard = ({
 
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
-      {currentCall.callStatus === 'connected' ? (
+      {currentCall.callStatus === 'connected' && currentCall.callDispositionStatus != 'Disposed' ? (
         <div>
 
           <Box

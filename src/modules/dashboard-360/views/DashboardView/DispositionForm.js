@@ -509,18 +509,18 @@ export default function DispositionForm(props) {
 
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if (localStorage.getItem('Agenttype') === 'L1') {
-      if (user_Details.AgentQueueStatus === 'dynamic') {
-        removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
-      }
+      // if (user_Details.AgentQueueStatus === 'dynamic') {
+      //   removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+      // }
 
       if (user_Details.AgentQueueStatus === 'dynamic') {
         addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
       }
     }
     if (localStorage.getItem('Agenttype') === 'L2') {
-      if (user_Details.AgentQueueStatus === 'dynamic') {
-        removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
-      }
+      // if (user_Details.AgentQueueStatus === 'dynamic') {
+      //   removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+      // }
 
       if (user_Details.AgentQueueStatus === 'dynamic') {
         addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)

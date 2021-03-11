@@ -46,7 +46,9 @@ function Main({
                 roleids: result.roleids,
                 role: result.role,
                 modules: result.modules,
-                External_num: result.External_num
+                External_num: result.External_num,
+                Server: result.Server,
+                AgentQueueStatus: result.AgentQueueStatus
               }
               setUserDetailsMain(obj)
               localStorage.setItem('AgentSIPID', obj.External_num);

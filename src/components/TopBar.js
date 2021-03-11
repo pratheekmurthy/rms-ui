@@ -28,7 +28,7 @@ import { connect } from 'react-redux';
 import Axios from 'axios';
 import { SET_SEARCH_DISTRIBUTOR } from 'src/redux/constants';
 import {
-  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT3, SOCKETENDPOINT4
+  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT3, SOCKETENDPOINT4, UPDATE_CURRENT_STATUS
 } from '../modules/dashboard-360/utils/endpoints'
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -166,7 +166,25 @@ function removeFromQueue(agentId, queue, user_Details) {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+function updateAgentCallStatusV2(callStatusId, data) {
+  // console.log("updateData", updateData)
+  var axios = require('axios');
+  var config = {
+    method: 'put',
+    url: UPDATE_CURRENT_STATUS + callStatusId,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: data
+  };
+  axios(config)
+    .then(function (response) {
+      console.log('update', JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 
 const TopBar = ({
   className,
@@ -261,6 +279,7 @@ const TopBar = ({
           removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
         }
       }
+      updateAgentCallStatusV2(localStorage.getItem('callStatusId'), { loginStatus: 'false' })
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData = localStorage.jwtToken
