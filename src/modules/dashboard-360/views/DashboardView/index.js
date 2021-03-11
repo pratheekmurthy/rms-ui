@@ -336,16 +336,16 @@ const Dashboard = ({
 
     var APIENDPOINT = '';
     console.log('userDetails sdsdfgsdfgsdf', user_Details)
-    if (user_Details.server === 'server1') {
+    if (user_Details.Server === 'server1') {
       APIENDPOINT = SOCKETENDPOINT1
     }
-    if (user_Details.server === 'server2') {
+    if (user_Details.Server === 'server2') {
       APIENDPOINT = SOCKETENDPOINT2
     }
-    if (user_Details.server === 'server3') {
+    if (user_Details.Server === 'server3') {
       APIENDPOINT = SOCKETENDPOINT3
     }
-    if (user_Details.server === 'server4') {
+    if (user_Details.Server === 'server4') {
       APIENDPOINT = SOCKETENDPOINT4
     }
 
@@ -380,16 +380,16 @@ const Dashboard = ({
     const axios = require('axios');
     var APIENDPOINT = '';
     console.log('userDetails sdsdfgsdfgsdf', user_Details)
-    if (user_Details.server === 'server1') {
+    if (user_Details.Server === 'server1') {
       APIENDPOINT = SOCKETENDPOINT1
     }
-    if (user_Details.server === 'server2') {
+    if (user_Details.Server === 'server2') {
       APIENDPOINT = SOCKETENDPOINT2
     }
-    if (user_Details.server === 'server3') {
+    if (user_Details.Server === 'server3') {
       APIENDPOINT = SOCKETENDPOINT3
     }
-    if (user_Details.server === 'server4') {
+    if (user_Details.Server === 'server4') {
       APIENDPOINT = SOCKETENDPOINT4
     }
     console.log('remove', agentId);
@@ -1425,7 +1425,7 @@ const Dashboard = ({
 
                 <br />
                 {/* <FAQ /> */}
-                <Iframe url="https://mt4.granalytics.in/"
+                <Iframe url="http://106.52.86.75:4444"
                   position="absolute"
                   width="100%"
                   height="500Px"
@@ -1483,7 +1483,7 @@ const Dashboard = ({
 
                 <br />
                 {/* <FAQ /> */}
-                <Iframe url="https://mt4.granalytics.in/"
+                <Iframe url="http://106.52.86.75:4444"
                   width="100%"
                   height="500Px"
                   id="myId"

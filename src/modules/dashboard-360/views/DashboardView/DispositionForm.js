@@ -41,16 +41,16 @@ export default function DispositionForm(props) {
 
     var APIENDPOINT = '';
     console.log('userDetails sdsdfgsdfgsdf', user_Details)
-    if (user_Details.server === 'server1') {
+    if (user_Details.Server === 'server1') {
       APIENDPOINT = SOCKETENDPOINT1
     }
-    if (user_Details.server === 'server2') {
+    if (user_Details.Server === 'server2') {
       APIENDPOINT = SOCKETENDPOINT2
     }
-    if (user_Details.server === 'server3') {
+    if (user_Details.Server === 'server3') {
       APIENDPOINT = SOCKETENDPOINT3
     }
-    if (user_Details.server === 'server4') {
+    if (user_Details.Server === 'server4') {
       APIENDPOINT = SOCKETENDPOINT4
     }
 
@@ -85,16 +85,16 @@ export default function DispositionForm(props) {
     const axios = require('axios');
     var APIENDPOINT = '';
     console.log('userDetails sdsdfgsdfgsdf', user_Details)
-    if (user_Details.server === 'server1') {
+    if (user_Details.Server === 'server1') {
       APIENDPOINT = SOCKETENDPOINT1
     }
-    if (user_Details.server === 'server2') {
+    if (user_Details.Server === 'server2') {
       APIENDPOINT = SOCKETENDPOINT2
     }
-    if (user_Details.server === 'server3') {
+    if (user_Details.Server === 'server3') {
       APIENDPOINT = SOCKETENDPOINT3
     }
-    if (user_Details.server === 'server4') {
+    if (user_Details.Server === 'server4') {
       APIENDPOINT = SOCKETENDPOINT4
     }
     console.log('remove', agentId);

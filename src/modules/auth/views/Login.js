@@ -111,18 +111,19 @@ var APIENDPOINT = SOCKETENDPOINT2;
 
 function addToQueue(agentId, queue, user_Details) {
   const axios = require('axios');
+  console.log(user_Details, "addddd")
   var APIENDPOINT = '';
   console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.server === 'server1') {
+  if (user_Details.Server === 'server1') {
     APIENDPOINT = SOCKETENDPOINT1
   }
-  if (user_Details.server === 'server2') {
+  if (user_Details.Server === 'server2') {
     APIENDPOINT = SOCKETENDPOINT2
   }
-  if (user_Details.server === 'server3') {
+  if (user_Details.Server === 'server3') {
     APIENDPOINT = SOCKETENDPOINT3
   }
-  if (user_Details.server === 'server4') {
+  if (user_Details.Server === 'server4') {
     APIENDPOINT = SOCKETENDPOINT4
   }
 
@@ -156,16 +157,16 @@ function removeFromQueue(agentId, queue, user_Details) {
   const axios = require('axios');
   var APIENDPOINT = '';
   console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.server === 'server1') {
+  if (user_Details.Server === 'server1') {
     APIENDPOINT = SOCKETENDPOINT1
   }
-  if (user_Details.server === 'server2') {
+  if (user_Details.Server === 'server2') {
     APIENDPOINT = SOCKETENDPOINT2
   }
-  if (user_Details.server === 'server3') {
+  if (user_Details.Server === 'server3') {
     APIENDPOINT = SOCKETENDPOINT3
   }
-  if (user_Details.server === 'server4') {
+  if (user_Details.Server === 'server4') {
     APIENDPOINT = SOCKETENDPOINT4
   }
   console.log('remove', agentId);
@@ -218,7 +219,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
         const obj = res.data.userDetails;
         const { accessToken } = res.data;
 
-        console.log('data', res.data)
+        console.log('data resppppp', res.data)
         localStorage.setItem("jwtToken", accessToken);
         localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
         localStorage.setItem('role', res.data.userDetails.role);
@@ -227,18 +228,20 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
+
+
         if (res.data.userDetails.AgentType === 'L1') {
           // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
           // var queue=res.data.userDetails.AgentQueueStatus
           if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
           }
         }
         if (res.data.userDetails.AgentType === 'L2') {
           // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
           // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
           if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
           }
         }
         setLoggedInMain(true);
