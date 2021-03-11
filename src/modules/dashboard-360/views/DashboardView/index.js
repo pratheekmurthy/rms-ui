@@ -1425,7 +1425,7 @@ const Dashboard = ({
 
                 <br />
                 {/* <FAQ /> */}
-                <Iframe url="http://106.52.86.75:4444"
+                <Iframe url="http://106.51.86.75:4444"
                   position="absolute"
                   width="100%"
                   height="500Px"
@@ -1483,7 +1483,7 @@ const Dashboard = ({
 
                 <br />
                 {/* <FAQ /> */}
-                <Iframe url="http://106.52.86.75:4444"
+                <Iframe url="http://106.51.86.75:4444"
                   width="100%"
                   height="500Px"
                   id="myId"
