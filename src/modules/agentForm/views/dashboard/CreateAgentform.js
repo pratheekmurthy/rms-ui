@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import {
   UPDATE_CALL_STATUS,
   UPDATE_CURRENT_STATUS,
+  Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import {
   Button,
@@ -46,7 +47,7 @@ export default function DispositionForm({ ...props }) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.36:42004/';
+  const agentServiceURL = `${Agent_service_url}/`;
   const AgentType = [
     {
       id: '1', value: 'L1',
@@ -89,7 +90,7 @@ export default function DispositionForm({ ...props }) {
     var config = {
 
       method: 'post',
-      url: 'http://192.168.3.36:42004/crm/currentstatuses',
+      url: `${Agent_service_url}/crm/currentstatuses`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -121,7 +122,7 @@ export default function DispositionForm({ ...props }) {
       "AgentType": formRef.current.values.AgentType.value,
       "group": formRef.current.values.Group.group_name,
     }
-    const url = 'http://192.168.3.36:4000/admin/agent/addAgent'
+    const url = 'http://106.51.86.75:4000/admin/agent/addAgent'
 
     Axios.post(url, { data }, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {
@@ -195,7 +196,7 @@ export default function DispositionForm({ ...props }) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'http://192.168.3.36:4000/admin/group/getGroup'
+    const url = 'http://106.51.86.75:4000/admin/group/getGroup'
 
     Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {

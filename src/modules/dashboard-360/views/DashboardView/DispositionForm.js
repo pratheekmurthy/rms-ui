@@ -6,7 +6,8 @@ import {
   UPDATE_CALL_STATUS,
   UPDATE_CURRENT_STATUS,
   GET_INTERACTION_BY_DISTRIBUTOR_ID,
-  GET_INTERACTION_BY_CALLER_NUMBER
+  GET_INTERACTION_BY_CALLER_NUMBER,
+  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT4, SOCKETENDPOINT3, Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import {
   Button,
@@ -19,6 +20,7 @@ import {
 import * as yup from 'yup';
 // import config from '../../../ticketing/views/config.json';g
 import { Autocomplete } from '@material-ui/lab';
+import { useSelector } from 'react-redux'
 // import { AlternateEmailTwoTone } from '@material-ui/icons';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
@@ -29,82 +31,45 @@ export default function DispositionForm(props) {
   const config = 'http://192.168.3.45:8083/';
   console.log('props.DLF', props.DLF);
   const { DLF } = props;
-  let APIENDPOINT = 'http://192.168.3.36:42002';
+  let APIENDPOINT = SOCKETENDPOINT2;
   /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function addToQueue(agentId, queue) {
+  function addToQueue(agentId, queue, user_Details) {
     const axios = require('axios');
 
-    var config1 = {
+    var APIENDPOINT = '';
+    console.log('userDetails sdsdfgsdfgsdf', user_Details)
+    if (user_Details.server === 'server1') {
+      APIENDPOINT = SOCKETENDPOINT1
+    }
+    if (user_Details.server === 'server2') {
+      APIENDPOINT = SOCKETENDPOINT2
+    }
+    if (user_Details.server === 'server3') {
+      APIENDPOINT = SOCKETENDPOINT3
+    }
+    if (user_Details.server === 'server4') {
+      APIENDPOINT = SOCKETENDPOINT4
+    }
+
+    const config = {
       method: 'get',
-      url: 'http://192.168.3.36:42004/crm/serveragentcounts',
-      headers: {}
+      url:
+        `${APIENDPOINT
+        }/ami/actions/addq?Interface=${agentId}&Queue=${queue
+        }`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
     };
 
-    axios(config1)
-      .then(function (response) {
-        console.log(JSON.stringify(response.data));
-
-        var data = response.data
-
-
-        var items = data.items[0];
-        delete items['_id'];
-        delete items['createdAt'];
-        delete items['updatedAt'];
-        delete items['__v'];
-
-        var data = [];
-        data.push(items.server1, items.server2, items.server3, items.server4, items.server5, items.server6)
-        data = data.sort((a, b) => parseFloat(a) - parseFloat(b));
-
-        function getKeyByValue(object, value) {
-          return Object.keys(object).find(key => object[key] === value);
-        }
-
-        console.log('data', data)
-        console.log(getKeyByValue(items, data[0]));
-        if (getKeyByValue(items, data[0]) === 'server1') {
-          APIENDPOINT = 'http://192.168.3.36:42001';
-        }
-        if (getKeyByValue(items, data[0]) === 'server2') {
-          APIENDPOINT = 'http://192.168.3.36:42002';
-        }
-        if (getKeyByValue(items, data[0]) === 'server3') {
-          APIENDPOINT = 'http://192.168.3.36:42003';
-        }
-        if (getKeyByValue(items, data[0]) === 'server4') {
-          APIENDPOINT = 'http://192.168.3.36:42005';
-        }
-        if (getKeyByValue(items, data[0]) === 'server6') {
-          APIENDPOINT = 'http://192.168.3.36:42006';
-        }
-        if (getKeyByValue(items, data[0]) === 'server5') {
-          APIENDPOINT = 'http://192.168.3.36:42007';
-        }
-        const config = {
-          method: 'get',
-          url:
-            `${APIENDPOINT
-            }/ami/actions/addq?Interface=${agentId}&Queue=${queue
-            }`,
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        };
-
-        axios(config)
-          .then((response) => { })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
+    axios(config)
+      .then((response) => { })
+      .catch((error) => {
         console.log(error);
       });
-
 
 
 
@@ -112,157 +77,51 @@ export default function DispositionForm(props) {
   /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
   /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
-  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function removeFromQueue(agentId, queue) {
+  function removeFromQueue(agentId, queue, user_Details) {
     const axios = require('axios');
+    var APIENDPOINT = '';
+    console.log('userDetails sdsdfgsdfgsdf', user_Details)
+    if (user_Details.server === 'server1') {
+      APIENDPOINT = SOCKETENDPOINT1
+    }
+    if (user_Details.server === 'server2') {
+      APIENDPOINT = SOCKETENDPOINT2
+    }
+    if (user_Details.server === 'server3') {
+      APIENDPOINT = SOCKETENDPOINT3
+    }
+    if (user_Details.server === 'server4') {
+      APIENDPOINT = SOCKETENDPOINT4
+    }
     console.log('remove', agentId);
-    const data = JSON.stringify({
-      agentId,
-      queue,
-      action: 'QueueRemove'
-    });
-    const str = localStorage.getItem('callUniqueId');
-    const strFirstThree = str.substring(0, 3);
+    const config = {
+      method: 'get',
+      url:
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
 
-    console.log(str); // shows '012123'
-    console.log(strFirstThree); // shows '012'
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42001';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
+    axios(config)
+      .then((response) => {
 
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42002';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42003';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42005';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42006';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-    if (strFirstThree) {
-      APIENDPOINT = 'http://192.168.3.36:42007';
-      const config = {
-        method: 'get',
-        url:
-          `${APIENDPOINT
-          }/ami/actions/rmq?Queue=${queue
-          }&Interface=${agentId}`,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      };
-
-      axios(config)
-        .then((response) => {
-
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-
-
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
-  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
-  /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   const [initialValue, setInitialValue] = useState({
 
@@ -378,7 +237,7 @@ export default function DispositionForm(props) {
   ];
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.36:42004/';
+  const agentServiceURL = `${Agent_service_url}/`;
   const [category, setCategory] = useState({
     value: 'Enquiry',
     label: 'Enquiry'
@@ -401,6 +260,7 @@ export default function DispositionForm(props) {
     label: ''
   });
   const [selected, setSelected] = useState(false);
+  const user_Details = useSelector(state => state.userData)
   const url = 'http://192.168.3.45:7002';
   const handleChange = (e, s) => {
     updateCallData(localStorage.getItem('callUniqueId'), {
@@ -621,7 +481,7 @@ export default function DispositionForm(props) {
 
     const config = {
       method: 'get',
-      url: `http://192.168.3.36:42002/ami/actions/atxfer?Channel=${Channel}&NumbertobeCalled=7002`,
+      url: `${SOCKETENDPOINT2}/ami/actions/atxfer?Channel=${Channel}&NumbertobeCalled=7002`,
       headers: {}
     };
 
@@ -649,12 +509,22 @@ export default function DispositionForm(props) {
 
     localStorage.setItem('callDispositionStatus', 'Disposed');
     if (localStorage.getItem('Agenttype') === 'L1') {
-      removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001);
-      addToQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001);
+      if (user_Details.AgentQueueStatus === 'dynamic') {
+        removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+      }
+
+      if (user_Details.AgentQueueStatus === 'dynamic') {
+        addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+      }
     }
     if (localStorage.getItem('Agenttype') === 'L2') {
-      removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002);
-      addToQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002);
+      if (user_Details.AgentQueueStatus === 'dynamic') {
+        removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+      }
+
+      if (user_Details.AgentQueueStatus === 'dynamic') {
+        addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+      }
     }
     // // props.removeFromQueue(props.AgentSipId, '7001');
     // // props.addToQueue(props.agentSipID, '7001');
@@ -945,8 +815,8 @@ export default function DispositionForm(props) {
                 />
               </Grid>
             ) : (
-                <></>
-              )}
+              <></>
+            )}
             {subCategoryItems.length > 0 ? (
               <Grid item xs={4} sm={4}>
                 <FormControl
@@ -990,8 +860,8 @@ export default function DispositionForm(props) {
                 </FormControl>
               </Grid>
             ) : (
-                <></>
-              )}
+              <></>
+            )}
             <Grid item xs={4} sm={4}>
 
               <Autocomplete

@@ -27,6 +27,9 @@ import { setLoggedIn, setSearchDistributor } from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
 import { SET_SEARCH_DISTRIBUTOR } from 'src/redux/constants';
+import {
+  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT3, SOCKETENDPOINT4
+} from '../modules/dashboard-360/utils/endpoints'
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -82,7 +85,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = 'http://192.168.3.36:42002';
+var APIENDPOINT = SOCKETENDPOINT2;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,146 +124,23 @@ function addToQueue(agentId, queue) {
 /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function removeFromQueue(agentId, queue) {
+function removeFromQueue(agentId, queue, user_Details) {
   const axios = require('axios');
+  var APIENDPOINT = '';
+  console.log('userDetails sdsdfgsdfgsdf', user_Details)
+  if (user_Details.server === 'server1') {
+    APIENDPOINT = SOCKETENDPOINT1
+  }
+  if (user_Details.server === 'server2') {
+    APIENDPOINT = SOCKETENDPOINT2
+  }
+  if (user_Details.server === 'server3') {
+    APIENDPOINT = SOCKETENDPOINT3
+  }
+  if (user_Details.server === 'server4') {
+    APIENDPOINT = SOCKETENDPOINT4
+  }
   console.log('remove', agentId);
-  const data = JSON.stringify({
-    agentId,
-    queue,
-    action: 'QueueRemove'
-  });
-  const str = localStorage.getItem('callUniqueId');
-  const strFirstThree = str.substring(0, 3);
-
-  console.log(str); // shows '012123'
-  console.log(strFirstThree); // shows '012'
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42001';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42002';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42003';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42005';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42006';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  if (strFirstThree) {
-    APIENDPOINT = 'http://192.168.3.36:42007';
-    const config = {
-      method: 'get',
-      url:
-        `${APIENDPOINT
-        }/ami/actions/rmq?Queue=${queue
-        }&Interface=${agentId}`,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-
-    axios(config)
-      .then((response) => {
-
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
   const config = {
     method: 'get',
     url:
@@ -296,6 +176,7 @@ const TopBar = ({
   ...rest
 }) => {
   const userData = useSelector(state => state.userData);
+  const user_Details = useSelector(state => state.userData)
   const [createAccess, setCreateAccess] = useState(-1);
   const [viewAccess, setViewAccess] = useState(-1);
   const [assignAccess, setAssignAccess] = useState(-1);
@@ -370,17 +251,21 @@ const TopBar = ({
     try {
       if (localStorage.getItem('Agenttype') === 'L1') {
         // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
-        removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001)
+        if (user_Details.AgentQueueStatus === 'dynamic') {
+          removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+        }
       }
       if (localStorage.getItem('Agenttype') === 'L2') {
         // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
-        removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
+        if (user_Details.AgentQueueStatus === 'dynamic') {
+          removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+        }
       }
       // axios
       // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
       const userData = localStorage.jwtToken
 
-      const url = 'http://192.168.3.36:4000/auth/apiM/logout'
+      const url = 'http://106.51.86.75:4000/auth/apiM/logout'
       await Axios.delete(url, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } });
 
       localStorage.clear();
@@ -439,8 +324,8 @@ const TopBar = ({
           {viewAccess === -1 ? (
             ''
           ) : (
-              <></>
-            )}
+            <></>
+          )}
 
           <IconButton color="inherit">
             <Badge

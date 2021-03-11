@@ -11,6 +11,7 @@ import {
   getDealerInvoiceDetails,
   getSingleInvoiceDetails
 } from '../../DashboardView/apiCalls';
+import { Agent_service_url } from '../../../utils/endpoints';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 import DownloadReport from '../../DashboardView/DownloadReport';
 
@@ -34,12 +35,13 @@ function Invoices({
     }
   } = props;
 
+
   const [invoiceDetails, setSingleInvoiceDetails] = useState(null);
   const [agentdisposedCalls, setagentdisposedCalls] = useState([]);
 
   const orderIdPrev = useRef(orderId);
 
-  const agentServiceURL = 'http://192.168.3.36:42004/';
+  const agentServiceURL = `${Agent_service_url}/`;
   function getALF() {
     const axios = require('axios');
     let data = '';
@@ -103,8 +105,8 @@ function Invoices({
       {agentdisposedCalls.length ? (
         <DownloadReport DownloadData={agentdisposedCalls} />
       ) : (
-          <></>
-        )}
+        <></>
+      )}
       <DataGrid
         page={page}
         onPageChange={params => {
@@ -126,8 +128,8 @@ function Invoices({
     showLoader ? (
       <MainLoader />
     ) : (
-        <CommonAlert style={{ margin: 20 }} />
-      );
+      <CommonAlert style={{ margin: 20 }} />
+    );
 }
 
 Invoices.propTypes = {

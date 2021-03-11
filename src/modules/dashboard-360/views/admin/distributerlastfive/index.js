@@ -39,7 +39,7 @@ function Invoices({
 
   const orderIdPrev = useRef(orderId);
 
-  const agentServiceURL = 'http://192.168.3.36:42004/';
+  const agentServiceURL = `Agent_service_url/`;
   function getALF() {
     const axios = require('axios');
     let data = '';
@@ -101,8 +101,8 @@ function Invoices({
       {agentdisposedCalls.length > 0 ? (
         <DownloadReport DownloadData={agentdisposedCalls} />
       ) : (
-          <></>
-        )}
+        <></>
+      )}
       <DataGrid
         page={page}
         onPageChange={params => {
@@ -123,8 +123,8 @@ function Invoices({
     showLoader ? (
       <MainLoader />
     ) : (
-        <CommonAlert style={{ margin: 20 }} />
-      );
+      <CommonAlert style={{ margin: 20 }} />
+    );
 }
 
 Invoices.propTypes = {

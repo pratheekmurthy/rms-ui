@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import {
   UPDATE_CALL_STATUS,
   UPDATE_CURRENT_STATUS,
+  Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import {
   Button,
@@ -41,7 +42,7 @@ export default function DispositionForm(props) {
   const [Groups, setGroups] = useState([]);
   const classes = useStyle();
   const formRef = useRef({});
-  const agentServiceURL = 'http://192.168.3.36:42004/';
+  const agentServiceURL = `${Agent_service_url}/`;
 
   // const Groups = [
   //   {
@@ -103,7 +104,7 @@ export default function DispositionForm(props) {
       "groupslabel": formRef.current.values.Group,
     }
 
-    const url = 'http://192.168.3.36:4000/admin/groupdadmin/add'
+    const url = 'http://106.51.86.75:4000/admin/groupdadmin/add'
     console.log("data", data)
     Axios.post(url, data)
       .then(function (response) {
@@ -152,7 +153,7 @@ export default function DispositionForm(props) {
   useEffect(() => {
     console.log('formRef', formRef.current.values);
     console.log("initialValue", initialValue)
-    const url = 'http://192.168.3.36:4000/admin/group/getGroup'
+    const url = 'http://106.51.86.75:4000/admin/group/getGroup'
 
     Axios.post(url, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
       .then(function (response) {

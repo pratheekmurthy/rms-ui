@@ -22,7 +22,12 @@ import {
   GET_INTERACTION_BY_AGENT_SIP_ID,
   UPDATE_CURRENT_STATUS,
   GET_CURRENT_STATUS_BY_AGENT_SIP_ID,
-  ORIGINATE_CALL_WITH_SIP_ID
+  ORIGINATE_CALL_WITH_SIP_ID,
+  SOCKETENDPOINT1,
+  SOCKETENDPOINT2,
+  SOCKETENDPOINT3,
+  SOCKETENDPOINT4,
+  Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import Iframe from 'react-iframe'
 import { ExpandMore } from '@material-ui/icons';
@@ -58,19 +63,15 @@ import DistributorSelectPopup from './DistributorSelectModal';
 import data from '../customer/CustomerListView/data';
 import { da } from 'date-fns/locale';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
-const SOCKETENDPOINT = 'http://192.168.3.36:42001';
-const SOCKETENDPOINT1 = 'http://192.168.3.36:42002';
-const SOCKETENDPOINT2 = 'http://192.168.3.36:42003';
-const SOCKETENDPOINT3 = 'http://192.168.3.36:42005';
-const SOCKETENDPOINT4 = 'http://192.168.3.36:42006';
-const SOCKETENDPOINT5 = 'http://192.168.3.36:42007';
 
-const socket = socketIOClient(SOCKETENDPOINT);
+
 const socket1 = socketIOClient(SOCKETENDPOINT1);
 const socket2 = socketIOClient(SOCKETENDPOINT2);
 const socket3 = socketIOClient(SOCKETENDPOINT3);
 const socket4 = socketIOClient(SOCKETENDPOINT4);
-const socket5 = socketIOClient(SOCKETENDPOINT5);
+
+
+
 
 const useStyles = makeStyles(theme => {
   return {
@@ -130,6 +131,7 @@ const Dashboard = ({
 }) => {
   const classes = useStyles();
   const reduxState = useSelector(state => state);
+  const user_Details = useSelector(state => state.userData)
   const [tab, setTab] = useState(0);
   const [loadingDetails, setLoadingDetails] = useState(true);
   const [rootData, setRootData] = useState(null);
@@ -276,7 +278,7 @@ const Dashboard = ({
 
     var config = {
       method: 'get',
-      url: 'http://192.168.3.36:42004/crm/interactions/getByAgentStatus?type=' + agentType + '&status=' + status + '',
+      url: `${Agent_service_url}/crm/interactions/getByAgentStatus?type=` + agentType + '&status=' + status + '',
       headers: {}
     };
 
@@ -324,36 +326,47 @@ const Dashboard = ({
     localStorage.setItem('breakStatus', breakStatus);
   }
 
-  var APIENDPOINT = 'http://192.168.3.36:42002';
+  var APIENDPOINT = SOCKETENDPOINT2;
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function addToQueue(agentId, queue) {
+  function addToQueue(agentId, queue, user_Details) {
     var axios = require('axios');
-    var data = JSON.stringify({
-      agentId: agentId,
-      queue: queue,
-      action: 'QueueAdd'
-    });
 
-    var config = {
+    var APIENDPOINT = '';
+    console.log('userDetails sdsdfgsdfgsdf', user_Details)
+    if (user_Details.server === 'server1') {
+      APIENDPOINT = SOCKETENDPOINT1
+    }
+    if (user_Details.server === 'server2') {
+      APIENDPOINT = SOCKETENDPOINT2
+    }
+    if (user_Details.server === 'server3') {
+      APIENDPOINT = SOCKETENDPOINT3
+    }
+    if (user_Details.server === 'server4') {
+      APIENDPOINT = SOCKETENDPOINT4
+    }
+
+
+    const config = {
       method: 'get',
       url:
-        APIENDPOINT +
-        '/ami/actions/addq?Interface=' + agentId + '&Queue=' +
-        queue +
-        '',
+        `${APIENDPOINT
+        }/ami/actions/addq?Interface=${agentId}&Queue=${queue
+        }`,
       headers: {
         'Content-Type': 'application/json'
       }
     };
 
     axios(config)
-      .then(function (response) { })
-      .catch(function (error) {
+      .then((response) => { })
+      .catch((error) => {
         console.log(error);
       });
+
   }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
@@ -363,32 +376,39 @@ const Dashboard = ({
   /// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  function removeFromQueue(agentId, queue) {
-    var axios = require('axios');
-    console.log('remove', agentId)
-    var data = JSON.stringify({
-      agentId: agentId,
-      queue: queue,
-      action: 'QueueRemove'
-    });
-
-    var config = {
+  function removeFromQueue(agentId, queue, user_Details) {
+    const axios = require('axios');
+    var APIENDPOINT = '';
+    console.log('userDetails sdsdfgsdfgsdf', user_Details)
+    if (user_Details.server === 'server1') {
+      APIENDPOINT = SOCKETENDPOINT1
+    }
+    if (user_Details.server === 'server2') {
+      APIENDPOINT = SOCKETENDPOINT2
+    }
+    if (user_Details.server === 'server3') {
+      APIENDPOINT = SOCKETENDPOINT3
+    }
+    if (user_Details.server === 'server4') {
+      APIENDPOINT = SOCKETENDPOINT4
+    }
+    console.log('remove', agentId);
+    const config = {
       method: 'get',
       url:
-        APIENDPOINT +
-        '/ami/actions/rmq?Queue=' +
-        queue +
-        '&Interface=' + agentId + '',
+        `${APIENDPOINT
+        }/ami/actions/rmq?Queue=${queue
+        }&Interface=${agentId}`,
       headers: {
         'Content-Type': 'application/json'
       }
     };
 
     axios(config)
-      .then(function (response) {
+      .then((response) => {
 
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log(error);
       });
   }
@@ -396,6 +416,7 @@ const Dashboard = ({
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
   function updateAgentCallStatus(updateData) {
     console.log("updateData", updateData)
@@ -565,9 +586,9 @@ const Dashboard = ({
     }
   }
 
-  ///socket start
+  ///socket1 start
   if (user.userType === 'Agent') {
-    socket.on('AstriskEvent', data => {
+    socket1.on('AstriskEvent', data => {
 
 
       if (data.Event === 'Bridge') {
@@ -604,11 +625,15 @@ const Dashboard = ({
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
           // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
-          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+          }
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
           // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
-          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+          }
         }
       }
     }
@@ -617,12 +642,22 @@ const Dashboard = ({
       localStorage.setItem('breakStatus', 'OUT');
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
-          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
-          addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+          }
+
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+          }
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
-          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
-          addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+          }
+
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+          }
         }
       }
     }
@@ -631,11 +666,17 @@ const Dashboard = ({
       localStorage.setItem('breakStatus', 'IN');
       if (agent.AgentType === 'Inbound') {
         if (localStorage.getItem('Agenttype') === 'L1') {
-          removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+          }
+          // removeFromQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue', 7001)
           // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-queue', 7001)
         }
         if (localStorage.getItem('Agenttype') === 'L2') {
-          removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
+          if (user_Details.AgentQueueStatus === 'dynamic') {
+            removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+          }
+          // removeFromQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue', 7002)
           // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-queue', 7002)
         }
       }
@@ -688,7 +729,7 @@ const Dashboard = ({
       });
   }
 
-  ///socket ends
+  ///socket1 ends
   useEffect(() => {
     // getALF();
     if (localStorage.getItem('Agenttype') === 'L1') {
@@ -715,110 +756,7 @@ const Dashboard = ({
       )
     );
     setLoadingDetails(false);
-    ///socket 1///////////////////////////////
-    socket.on('AstriskEvent', data => {
-      if (data.Event === 'Hangup') {
-        // console.log('AstriskEvent', data)
-      }
-      if (data.Event === 'Bridge') {
-        // console.log('AstriskEvent', data)
-      }
-
-    })
-    socket.on('ringing1', data => {
-      console.log('ringing1', data);
-      // var Channel1 = data.Channel1;
-      var agentExtension = data.agentNumber;
-      if (agentExtension === agent.AgentSipId) {
-
-        localStorage.setItem('channel', data.event.Channel)
-        //   console.log('AstriskEventBridgeOutbound', data);
-
-        // setCurrentCallDetails(
-        //   localStorage.getItem('callStatusId'),
-        //   data.Uniqueid,
-        //   agent.AgentType,
-        //   'connected',
-        //   'Bridge',
-        //   'NotDisposed',
-        //   '',
-        //   localStorage.getItem('breakStatus')
-        // );
-      }
-    });
-
-    socket.on('ringing2', data => {
-      console.log('ringing2', data)
-      // var Channel1 = data.Channel1;
-      var agentExtension = data.agentNumber;
-      if (agentExtension === agent.AgentSipId) {
-
-        localStorage.setItem('callUniqueId', data.event.Uniqueid)
-        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
-        // //   console.log('AstriskEventBridgeOutbound', data);
-
-        //   setCurrentCallDetails(
-        //     localStorage.getItem('callStatusId'),
-        //     localStorage.getItem('callUniqueId'),
-        //     agent.AgentType,
-        //     'connected',
-        //     'Bridge',
-        //     'NotDisposed',
-        //     data.contactNumber,
-        //     localStorage.getItem('breakStatus')
-        //   );
-      }
-    });
-    socket.on('transfercallnumber', data => {
-      if (localStorage.getItem('Agenttype') === 'L2') {
-        localStorage.setItem('callerNumber', data.contactnumber)
-      }
-
-    })
-    socket.on('connected', data => {
-      console.log('connected', data);
-      var agentExtension = data.agentNumber;
-      if (agentExtension === agent.AgentSipId) {
-        // getInitialData();
-        // console.log('AstriskEventBridgeInbound', data);
-        localStorage.setItem('distributer_id', agent.AgentSipId);
-        setCurrentCallDetails(
-          localStorage.getItem('callStatusId'),
-          localStorage.getItem('callUniqueId'),
-          agent.AgentType,
-          'connected',
-          'Bridge',
-          'NotDisposed',
-          localStorage.getItem('callerNumber'),
-          localStorage.getItem('breakStatus')
-        );
-        // removeFromQueue(agent.AgentSipId, '7001');
-      }
-    });
-    socket.on('hangup', data => {
-      console.log('hangup', data);
-      // var str = data.Channel;
-      // var agentsipid = str.substring(4, 8);
-      // console.log('agentsipid', agentsipid);
-      var agentExtension = data.agentNumber;
-      if (agentExtension === agent.AgentSipId) {
-        // console.log('AstriskEventHangup', data);
-        setCurrentCallDetails(
-          localStorage.getItem('callStatusId'),
-          localStorage.getItem('callUniqueId'),
-          localStorage.getItem('callType'),
-          'disconnected',
-          'Hangup',
-          localStorage.getItem('callDispositionStatus'),
-          localStorage.getItem('callerNumber'),
-          localStorage.getItem('breakStatus')
-        );
-      }
-    });
-    /////////////////////////////////////////////
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //socket1//////////////////////////////////////////////////////////////////////////////////
+    ///socket1 1///////////////////////////////
     socket1.on('AstriskEvent', data => {
       if (data.Event === 'Hangup') {
         // console.log('AstriskEvent', data)
@@ -918,12 +856,10 @@ const Dashboard = ({
         );
       }
     });
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////
-    //socket2//////////////////////////////////////////////////////////////////////////////////
+    //1//////////////////////////////////////////////////////////////////////////////////
     socket2.on('AstriskEvent', data => {
       if (data.Event === 'Hangup') {
         // console.log('AstriskEvent', data)
@@ -1134,221 +1070,111 @@ const Dashboard = ({
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     //socket4//////////////////////////////////////////////////////////////////////////////////
-    // socket4.on('AstriskEvent', data => {
-    //   if(data.Event === 'Hangup'){
-    //     console.log('AstriskEvent', data)
-    //   }
-    //   if(data.Event === 'Bridge'){
-    //     console.log('AstriskEvent', data)
-    //   }
+    socket4.on('AstriskEvent', data => {
+      if (data.Event === 'Hangup') {
+        // console.log('AstriskEvent', data)
+      }
+      if (data.Event === 'Bridge') {
+        // console.log('AstriskEvent', data)
+      }
 
-    // })
-    // socket4.on('ringing1', data => {
-    //   console.log('ringing1', data);
-    //   // var Channel1 = data.Channel1;
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
+    })
+    socket4.on('ringing1', data => {
+      console.log('ringing1', data);
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
 
-    //     localStorage.setItem('channel', data.event.Channel)
-    //     //   console.log('AstriskEventBridgeOutbound', data);
+        localStorage.setItem('channel', data.event.Channel)
+        //   console.log('AstriskEventBridgeOutbound', data);
 
-    //     // setCurrentCallDetails(
-    //     //   localStorage.getItem('callStatusId'),
-    //     //   data.Uniqueid,
-    //     //   agent.AgentType,
-    //     //   'connected',
-    //     //   'Bridge',
-    //     //   'NotDisposed',
-    //     //   '',
-    //     //   localStorage.getItem('breakStatus')
-    //     // );
-    //   }
-    // });
+        // setCurrentCallDetails(
+        //   localStorage.getItem('callStatusId'),
+        //   data.Uniqueid,
+        //   agent.AgentType,
+        //   'connected',
+        //   'Bridge',
+        //   'NotDisposed',
+        //   '',
+        //   localStorage.getItem('breakStatus')
+        // );
+      }
+    });
 
-    // socket4.on('ringing2', data => {
-    //   console.log('ringing2', data)
-    //   // var Channel1 = data.Channel1;
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
+    socket4.on('ringing2', data => {
+      console.log('ringing2', data)
+      // var Channel1 = data.Channel1;
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
 
-    //     localStorage.setItem('callUniqueId', data.event.Uniqueid)
-    //     localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
-    //     // //   console.log('AstriskEventBridgeOutbound', data);
+        localStorage.setItem('callUniqueId', data.event.Uniqueid)
+        localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
+        // //   console.log('AstriskEventBridgeOutbound', data);
 
-    //     //   setCurrentCallDetails(
-    //     //     localStorage.getItem('callStatusId'),
-    //     //     localStorage.getItem('callUniqueId'),
-    //     //     agent.AgentType,
-    //     //     'connected',
-    //     //     'Bridge',
-    //     //     'NotDisposed',
-    //     //     data.contactNumber,
-    //     //     localStorage.getItem('breakStatus')
-    //     //   );
-    //   }
-    // });
-    // socket4.on('transfercallnumber', data => {
-    //   if (localStorage.getItem('Agenttype') === 'L2') {
-    //     localStorage.setItem('callerNumber', data.contactnumber)
-    //   }
+        //   setCurrentCallDetails(
+        //     localStorage.getItem('callStatusId'),
+        //     localStorage.getItem('callUniqueId'),
+        //     agent.AgentType,
+        //     'connected',
+        //     'Bridge',
+        //     'NotDisposed',
+        //     data.contactNumber,
+        //     localStorage.getItem('breakStatus')
+        //   );
+      }
+    });
+    socket4.on('transfercallnumber', data => {
+      if (localStorage.getItem('Agenttype') === 'L2') {
+        localStorage.setItem('callerNumber', data.contactnumber)
+      }
 
-    // })
-    // socket4.on('connected', data => {
-    //   console.log('connected', data);
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-    //     // getInitialData();
-    //     // console.log('AstriskEventBridgeInbound', data);
-    //     localStorage.setItem('distributer_id', agent.AgentSipId);
-    //     setCurrentCallDetails(
-    //       localStorage.getItem('callStatusId'),
-    //       localStorage.getItem('callUniqueId'),
-    //       agent.AgentType,
-    //       'connected',
-    //       'Bridge',
-    //       'NotDisposed',
-    //       localStorage.getItem('callerNumber'),
-    //       localStorage.getItem('breakStatus')
-    //     );
-    //     // removeFromQueue(agent.AgentSipId, '7001');
-    //   }
-    // });
-    // socket4.on('hangup', data => {
-    //   console.log('hangup', data);
-    //   // var str = data.Channel;
-    //   // var agentsipid = str.substring(4, 8);
-    //   // console.log('agentsipid', agentsipid);
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-    //     // console.log('AstriskEventHangup', data);
-    //     setCurrentCallDetails(
-    //       localStorage.getItem('callStatusId'),
-    //       localStorage.getItem('callUniqueId'),
-    //       localStorage.getItem('callType'),
-    //       'disconnected',
-    //       'Hangup',
-    //       localStorage.getItem('callDispositionStatus'),
-    //       localStorage.getItem('callerNumber'),
-    //       localStorage.getItem('breakStatus')
-    //     );
-    //   }
-    // });
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    //socket5//////////////////////////////////////////////////////////////////////////////////
-    // socket5.on('AstriskEvent', data => {
-    //   if(data.Event === 'Hangup'){
-    //     console.log('AstriskEvent', data)
-    //   }
-    //   if(data.Event === 'Bridge'){
-    //     console.log('AstriskEvent', data)
-    //   }
-
-    // })
-    // socket5.on('ringing1', data => {
-    //   console.log('ringing1', data);
-    //   // var Channel1 = data.Channel1;
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-
-    //     localStorage.setItem('channel', data.event.Channel)
-    //     //   console.log('AstriskEventBridgeOutbound', data);
-
-    //     // setCurrentCallDetails(
-    //     //   localStorage.getItem('callStatusId'),
-    //     //   data.Uniqueid,
-    //     //   agent.AgentType,
-    //     //   'connected',
-    //     //   'Bridge',
-    //     //   'NotDisposed',
-    //     //   '',
-    //     //   localStorage.getItem('breakStatus')
-    //     // );
-    //   }
-    // });
-
-    // socket5.on('ringing2', data => {
-    //   console.log('ringing2', data)
-    //   // var Channel1 = data.Channel1;
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-
-    //     localStorage.setItem('callUniqueId', data.event.Uniqueid)
-    //     localStorage.setItem('callerNumber', data.event.ConnectedLineNum)
-    //     // //   console.log('AstriskEventBridgeOutbound', data);
-
-    //     //   setCurrentCallDetails(
-    //     //     localStorage.getItem('callStatusId'),
-    //     //     localStorage.getItem('callUniqueId'),
-    //     //     agent.AgentType,
-    //     //     'connected',
-    //     //     'Bridge',
-    //     //     'NotDisposed',
-    //     //     data.contactNumber,
-    //     //     localStorage.getItem('breakStatus')
-    //     //   );
-    //   }
-    // });
-    // socket5.on('transfercallnumber', data => {
-    //   if (localStorage.getItem('Agenttype') === 'L2') {
-    //     localStorage.setItem('callerNumber', data.contactnumber)
-    //   }
-
-    // })
-    // socket5.on('connected', data => {
-    //   console.log('connected', data);
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-    //     // getInitialData();
-    //     // console.log('AstriskEventBridgeInbound', data);
-    //     localStorage.setItem('distributer_id', agent.AgentSipId);
-    //     setCurrentCallDetails(
-    //       localStorage.getItem('callStatusId'),
-    //       localStorage.getItem('callUniqueId'),
-    //       agent.AgentType,
-    //       'connected',
-    //       'Bridge',
-    //       'NotDisposed',
-    //       localStorage.getItem('callerNumber'),
-    //       localStorage.getItem('breakStatus')
-    //     );
-    //     // removeFromQueue(agent.AgentSipId, '7001');
-    //   }
-    // });
-    // socket5.on('hangup', data => {
-    //   console.log('hangup', data);
-    //   // var str = data.Channel;
-    //   // var agentsipid = str.substring(4, 8);
-    //   // console.log('agentsipid', agentsipid);
-    //   var agentExtension = data.agentNumber;
-    //   if (agentExtension === agent.AgentSipId) {
-    //     // console.log('AstriskEventHangup', data);
-    //     setCurrentCallDetails(
-    //       localStorage.getItem('callStatusId'),
-    //       localStorage.getItem('callUniqueId'),
-    //       localStorage.getItem('callType'),
-    //       'disconnected',
-    //       'Hangup',
-    //       localStorage.getItem('callDispositionStatus'),
-    //       localStorage.getItem('callerNumber'),
-    //       localStorage.getItem('breakStatus')
-    //     );
-    //   }
-    // });
+    })
+    socket4.on('connected', data => {
+      console.log('connected', data);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // getInitialData();
+        // console.log('AstriskEventBridgeInbound', data);
+        localStorage.setItem('distributer_id', agent.AgentSipId);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          agent.AgentType,
+          'connected',
+          'Bridge',
+          'NotDisposed',
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+        // removeFromQueue(agent.AgentSipId, '7001');
+      }
+    });
+    socket4.on('hangup', data => {
+      console.log('hangup', data);
+      // var str = data.Channel;
+      // var agentsipid = str.substring(4, 8);
+      // console.log('agentsipid', agentsipid);
+      var agentExtension = data.agentNumber;
+      if (agentExtension === agent.AgentSipId) {
+        // console.log('AstriskEventHangup', data);
+        setCurrentCallDetails(
+          localStorage.getItem('callStatusId'),
+          localStorage.getItem('callUniqueId'),
+          localStorage.getItem('callType'),
+          'disconnected',
+          'Hangup',
+          localStorage.getItem('callDispositionStatus'),
+          localStorage.getItem('callerNumber'),
+          localStorage.getItem('breakStatus')
+        );
+      }
+    });
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
+
 
     return () => {
-      socket.off('ringing');
-      socket.off('connected');
-      socket.off('hangup');
-      socket.off('transfercallnumber');
-
       socket1.off('ringing');
       socket1.off('connected');
       socket1.off('hangup');
@@ -1364,15 +1190,11 @@ const Dashboard = ({
       socket3.off('hangup');
       socket3.off('transfercallnumber');
 
-      // socket4.off('ringing');
-      // socket4.off('connected');
-      // socket4.off('hangup');
-      // socket4.off('transfercallnumber');
+      socket4.off('ringing');
+      socket4.off('connected');
+      socket4.off('hangup');
+      socket4.off('transfercallnumber');
 
-      // socket5.off('ringing');
-      // socket5.off('connected');
-      // socket5.off('hangup');
-      // socket5.off('transfercallnumber');
     };
   }, []);
 
@@ -1436,32 +1258,32 @@ const Dashboard = ({
       ) : null}
       {currentCall.callDispositionStatus === 'NotDisposed' &&
         currentCall.callStatus === 'disconnected' ? (
-          <div>
+        <div>
 
-            <Box
-              alignItems="center"
-              display="flex"
-              className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
-            >
-              <CallIcon />
+          <Box
+            alignItems="center"
+            display="flex"
+            className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
+          >
+            <CallIcon />
             &nbsp;
             <Typography display="inline">
-                Inbound Call Is Disconnected
+              Inbound Call Is Disconnected
             </Typography>
-            </Box>{' '}
-          </div>
-        ) : null}
+          </Box>{' '}
+        </div>
+      ) : null}
       <CustomBreadcrumbs />
       {agent.AgentType === 'Outbound' &&
         localStorage.getItem('callDispositionStatus') === 'Disposed' &&
         localStorage.getItem('callStatus') === 'disconnected' &&
         localStorage.getItem('breakStatus') === 'OUT' ? (
-          <div>
-            <Input value={mobile} onChange={onChange} margin="dense" />
-            <CallIcon onClick={onClick} />
+        <div>
+          <Input value={mobile} onChange={onChange} margin="dense" />
+          <CallIcon onClick={onClick} />
 
-          </div>
-        ) : null}
+        </div>
+      ) : null}
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
@@ -1470,7 +1292,7 @@ const Dashboard = ({
               <Grid item>
 
 
-                {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus === 'disconnected' ? <Button
+                {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus != 'connected' ? <Button
                   color="secondary"
                   variant="contained"
                   style={{ color: 'white' }}
@@ -1548,8 +1370,8 @@ const Dashboard = ({
                         />
                       </div>
                     ) : (
-                        <CommonAlert text="N/A" />
-                      )}
+                      <CommonAlert text="N/A" />
+                    )}
                   </Card> : null}
               </Grid>
             </Grid>
@@ -1594,10 +1416,10 @@ const Dashboard = ({
                         }}
                       />
                     </CardContent>
-                    ) : (
-                      <></>
-                      // <CommonAlert text="Unable to get disposition details" />
-                    )}
+                  ) : (
+                    <></>
+                    // <CommonAlert text="Unable to get disposition details" />
+                  )}
                 </Card>
 
 
@@ -1652,10 +1474,10 @@ const Dashboard = ({
                         }}
                       />
                     </CardContent>
-                    ) : (
-                      <></>
-                      // <CommonAlert text="Unable to get disposition details" />
-                    )}
+                  ) : (
+                    <></>
+                    // <CommonAlert text="Unable to get disposition details" />
+                  )}
                 </Card>
 
 
@@ -1678,8 +1500,8 @@ const Dashboard = ({
 
     </div>
   ) : (
-      <MainLoader />
-    );
+    <MainLoader />
+  );
 };
 Dashboard.propTypes = {
   distributorOrders: PropTypes.arrayOf(PropTypes.object),

@@ -17,7 +17,8 @@ import {
 } from '@material-ui/core';
 import {
   GET_INBOUND_DASHBOARD_DATA,
-  GET_INTERACTION_BY_AGENT_SIP_ID
+  GET_INTERACTION_BY_AGENT_SIP_ID,
+  Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import CallIcon from '@material-ui/icons/Call';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
@@ -43,6 +44,7 @@ import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadR
 import DispositionTable from './DispositionTable';
 import { DataGrid } from '@material-ui/data-grid';
 import CurrentStatus from './CurrentStatus'
+import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
 import {
 
   lastFiveCallData
@@ -199,7 +201,7 @@ const Inbound = () => {
 
     const axios = require('axios');
     let data = '';
-    let u = 'http://192.168.3.36:42004'
+    let u = Agent_service_url
     let config = {
       method: 'get',
       url: u + GET_INTERACTION_BY_AGENT_SIP_ID + localStorage.getItem('AgentSIPID') + '',
@@ -247,7 +249,7 @@ const Inbound = () => {
 
 
   }
-  const SOCKETENDPOINT = 'http://192.168.3.36:42002/';
+  const SOCKETENDPOINT = SOCKETENDPOINT2;
 
   useEffect(() => {
 
