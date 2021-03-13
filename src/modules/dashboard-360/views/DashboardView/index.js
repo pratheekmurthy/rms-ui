@@ -14,7 +14,7 @@ import {
   Grid,
   makeStyles,
   Typography,
-
+  TextField,
 } from '@material-ui/core';
 import {
   PUT_BREAK_AGENT,
@@ -30,6 +30,7 @@ import {
   Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import Iframe from 'react-iframe'
+import SearchIcon from '@material-ui/icons/Search';
 import { ExpandMore } from '@material-ui/icons';
 import FAQ from './FAQ'
 import Input from '@material-ui/core/Input';
@@ -39,10 +40,12 @@ import CustomTabs from 'src/modules/dashboard-360/components/CustomTabs';
 import CustomTabPanel from 'src/modules/dashboard-360/components/CustomTabPanel';
 import BasicTable from 'src/modules/dashboard-360/components/BasicTable';
 import MainLoader from 'src/components/MainLoader';
+import axios from 'axios'
 import {
   invoicesColumns,
   orderColumns,
-  lastFiveCallData
+  lastFiveCallData,
+  CallerInteractioncolumns
 } from 'src/modules/dashboard-360/utils/columns-config';
 import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
@@ -230,6 +233,30 @@ const Dashboard = ({
   ] = useState(false);
   const [dealerDetails, setdealerDetails] = useState({});
   const [distributorModal, setDistributorModal] = useState({});
+  const [searchItem, setSearchItem] = useState("")
+  const [customerTable, setCustomertable] = useState([])
+  const [selectedData1, setSelectedData1] = useState({})
+  const [selectedItem, setSelectedItem] = useState({
+    CallerName: "",
+    agentExtension: "",
+    agentID: "",
+    asterixUniqueID: "",
+    callerapplication: "",
+    callermobilenumber: "",
+    category: "",
+    comments: "",
+    contactedNumber: "",
+    created: "",
+    createdAt: "",
+    issuetype: "",
+    seccategory: "",
+    secsubcategory: "",
+    subcategory: "",
+    type: "",
+    updatedAt: "",
+    _id: "",
+  })
+
   function getDLF() {
     const axios = require('axios');
     let data = '';
@@ -610,6 +637,17 @@ const Dashboard = ({
     } catch (err) {
       console.log(err.response);
     }
+  }
+
+  function selectedDataForInbound(data) {
+    console.log(data)
+    // console.log(localStorage.getItem('AgentType'))
+    // if(localStorage.getItem('AgentType') === 'Outbound'){
+    //   console.log('selected')
+    // }else{
+    //   console.log('You can not make a call')
+    // }
+
   }
 
   ///socket1 start
@@ -1149,6 +1187,7 @@ const Dashboard = ({
     });
 
 
+
     /////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -1215,6 +1254,45 @@ const Dashboard = ({
     }
   }, [reduxState.searchDistributor]);
 
+  function selectedDataForObutbound(data) {
+    setSelectedData1(data)
+    // console.log(localStorage.getItem('AgentType'))
+    if (localStorage.getItem('AgentType') === 'Outbound' && localStorage.getItem('callDispositionStatus') === 'Disposed') {
+      // console.log('selected', data)
+      localStorage.setItem('L1ID', data.asterixUniqueID)
+      setSelectedItem(data)
+
+      setOpen(true);
+    } else {
+      console.log('You cannot make a call')
+    }
+  }
+
+  const handleSearch = (e) => {
+    setSearchItem(e.target.value)
+  }
+
+  const searchaction = (e) => {
+    let config = {
+      method: 'get',
+
+      url: `http://164.52.205.10:42004/crm/callermobilenumber?callermobilenumber=${searchItem}`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+    };
+    axios(config)
+      .then(response => {
+        console.log('Response data', JSON.stringify(response.data));
+        setCustomertable(response.data)
+        // props.getALF();
+      })
+      .catch(error => {
+        console.log('dispostionFrom', error);
+      });
+  }
+
 
   return !loadingDetails ? (
     <div style={{ position: 'relative' }}>
@@ -1227,10 +1305,10 @@ const Dashboard = ({
             className={`${classes.timerComp} ${classes.callWrapper} ${classes.callInbound}`}
           >
             <CallIcon />
-            &nbsp;
-            <Typography display="inline">
+          &nbsp;
+          <Typography display="inline">
               Inbound Call In Progress
-            </Typography>
+          </Typography>
           </Box>{' '}
         </div>
       ) : null}
@@ -1244,239 +1322,73 @@ const Dashboard = ({
             className={`${classes.timerComp} ${classes.callWrapper} ${classes.callOutbound}`}
           >
             <CallIcon />
-            &nbsp;
-            <Typography display="inline">
+          &nbsp;
+          <Typography display="inline">
               Inbound Call Is Disconnected
-            </Typography>
+          </Typography>
           </Box>{' '}
         </div>
       ) : null}
-      <CustomBreadcrumbs />
-      {agent.AgentType === 'Outbound' &&
-        localStorage.getItem('callDispositionStatus') === 'Disposed' &&
-        localStorage.getItem('callStatus') === 'disconnected' &&
-        localStorage.getItem('breakStatus') === 'OUT' ? (
-        <div>
-          <Input value={mobile} onChange={onChange} margin="dense" />
-          <CallIcon onClick={onClick} />
+      <CustomBreadcrumbs /><br />
+      <Grid container spacing={3}>
+        <Grid item lg={12} md={12} xs={12}>
 
-        </div>
-      ) : null}
-      <Page className={classes.root} title="Dashboard">
-        <Container maxWidth={false}>
-          <Grid container spacing={3}>
-            <Grid item lg={4} md={6} xs={12}>
-            {user_Details.AgentQueueStatus === 'dynamic' ?
-              <Grid item>
-
-
-                {currentCall.callDispositionStatus === 'Disposed' && currentCall.callStatus != 'connected' ? <Button
-                  color="secondary"
-                  variant="contained"
-                  style={{ color: 'white' }}
-                  onClick={(e) => breakService(e)}
-                >
-                  {currentCall.breakStatus === 'OUT' || currentCall.breakStatus === 'NA' ? <label>Break OUT</label> : <label>Break IN</label>}
-                </Button> : null}
-                {/* <Button
-                  color="secondary"
-                  variant="contained"
-                  style={{ color: 'white' }}
-                  onClick={e => breakService(e)}
-                >
-
-                  <label>Break IN</label>
-
-                </Button> */}
-
-              </Grid> : null}
-
-
-            </Grid>
-
-
-
-          </Grid>
-          <Grid container spacing={3}>
-            <Grid item lg={4} md={4} xs={12}>
-
-              <Grid item>
-                {localStorage.getItem('Agenttype') === 'L2' ?
-                  <Card>
-                    <CardHeader title={'Caller details'} />
-
-                    <div>
-                      <DealerCard
-                        dealerDetails={dealerDetails}
-                      />
-                    </div>
-
-                  </Card> : null}
-                <br />
-                {/* <Card>
-                  <CardHeader title={'Caller last five interactions'} />
-                  {DLF.length && currentCall.callDispositionStatus === 'NotDisposed'? (
-                    <div>
-                      <BasicTable
-                        columns={lastFiveCallData}
-                        records={ALF.slice(0, 3)}
-                        redirectLink="/dash360/admin/distributerDisposedCallList"
-                        redirectLabel="View All"
-                      />
-                    </div>
-                  ) : (
-                      <CommonAlert text="Unable to get Caller details" />
-                    )}
-                </Card> */}
-                <br />
-                {localStorage.getItem('Agenttype') === 'L2' ?
-                  <Card>
-                    <CardHeader
-                      title={
-                        'Open Tickets (' + agent.AgentSipId + ')'
-                      }
-                    />
-                    {ALF.length ? (
-                      <div>
-                        <BasicTable
-                          setRootData={setRootData}
-                          setdealerDetails={setdealerDetails}
-                          columns={lastFiveCallData}
-                          records={ALF.slice(0, 3)}
-                        // redirectLink="/dash360/admin/agentlastfive"
-                        // redirectLabel="View All"
-                        />
-                      </div>
-                    ) : (
-                      <CommonAlert text="N/A" />
-                    )}
-                  </Card> : null}
-              </Grid>
-            </Grid>
-            {localStorage.getItem('Agenttype') === 'L2' ?
-              <Grid item lg={8} md={12} xs={12}>
-
-                <Card>
-                  <CardHeader title="Interaction Details" />
-                  <Divider />
-                  {currentCall.callDispositionStatus === 'NotDisposed' &&
-                    user.userType === 'Agent' ? (<CardContent>
-                      <DispositionForm
-                        agentSipID={agent.AgentSipId}
-                        DLF={DLF}
-                        setCurrentCallDetails={setCurrentCallDetails}
-                        addToQueue={addToQueue}
-                        removeFromQueue={removeFromQueue}
-                        // getALF={getALF}
-                        disForm={disForm}
-                        setdisForm={form => {
-                          setdisForm(form);
-                        }}
-                        category={category}
-                        setCategory={cat => {
-                          setCategory(cat);
-                        }}
-                        ticketType={ticketType}
-                        setTicketType={tkstyp => {
-                          setTicketType(tkstyp);
-                        }}
-                        subCategory={subCategory}
-                        setSubCategory={subcat => {
-                          setSubCategory(subcat);
-                        }}
-                        subCategoryItem={subCategoryItem}
-                        setSubCategoryItem={subcatitem => {
-                          setSubCategoryItem(subcatitem);
-                        }}
-                        remarks={remarks}
-                        setRemarks={rks => {
-                          setRemarks(rks);
-                        }}
-                      />
-                    </CardContent>
-                  ) : (
-                    <></>
-                    // <CommonAlert text="Unable to get disposition details" />
-                  )}
-                </Card>
+          <Card>
+            <CardHeader title="Disposition Details" />
+            <DispositionForm />
+          </Card>
+        </Grid>
+        <Grid item lg={12} md={12} xs={12}>
+          <Card>
+            <CardHeader title={'Caller Interactions'} />
+            <CardContent>
+              <TextField id="outlined-basic" label="search" variant="outlined" value={searchItem} onChange={handleSearch} size="small" />&nbsp;
+              <Button variant="contained" color="primary" onClick={searchaction}><SearchIcon /></Button>
+              {customerTable.length ? (
+                <div>
+                  <BasicTable
+                    columns={CallerInteractioncolumns}
+                    records={customerTable.slice(0, 3)}
+                    redirectLink={"/dash360/admin/callerInteraction/" + searchItem}
+                    redirectLabel="View All"
+                    ALF={customerTable}
+                    selectedData={selectedDataForInbound}
+                  />
+                </div>
+              ) : (
+                <>
+                  {/* <CommonAlert text="N/A" /> */}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item lg={12} md={12} xs={12}>
+          <Card>
+            <CardHeader title={'Agent Open Ticket'} />
+            {ALF.length ? (
+              <div>
+                <BasicTable
+                  columns={lastFiveCallData}
+                  records={ALF.filter((e) => e.type === 'open').slice(0, 3)}
+                  redirectLink="/dash360/admin/agentopentickets"
+                  redirectLabel="View All"
+                  ALF={ALF.filter((e) => e.type === 'open')}
+                  selectedData={selectedDataForObutbound}
+                />
+              </div>
+            ) : (
+              <>
+                {/* <CommonAlert text="N/A" /> */}
+              </>
+            )}
+          </Card>
 
 
-                <br />
-                {/* <FAQ /> */}
-                <Iframe url="http://106.51.86.75:4444"
-                  position="absolute"
-                  width="100%"
-                  height="500Px"
-                  id="myId"
-                  className="myClassname"
-                  display="initial"
-                  position="relative" />
-              </Grid> :
-              <Grid item lg={12} md={12} xs={12}>
+        </Grid>
 
-                <Card>
-                  <CardHeader title="Disposition Details" />
-                  <Divider />
-                  {currentCall.callDispositionStatus === 'NotDisposed' &&
-                    user.userType === 'Agent' ? (<CardContent>
-                      <DispositionForm
-                        agentSipID={agent.AgentSipId}
-                        DLF={DLF}
-                        setCurrentCallDetails={setCurrentCallDetails}
-                        addToQueue={addToQueue}
-                        removeFromQueue={removeFromQueue}
-                        // getALF={getALF}
-                        disForm={disForm}
-                        setdisForm={form => {
-                          setdisForm(form);
-                        }}
-                        category={category}
-                        setCategory={cat => {
-                          setCategory(cat);
-                        }}
-                        ticketType={ticketType}
-                        setTicketType={tkstyp => {
-                          setTicketType(tkstyp);
-                        }}
-                        subCategory={subCategory}
-                        setSubCategory={subcat => {
-                          setSubCategory(subcat);
-                        }}
-                        subCategoryItem={subCategoryItem}
-                        setSubCategoryItem={subcatitem => {
-                          setSubCategoryItem(subcatitem);
-                        }}
-                        remarks={remarks}
-                        setRemarks={rks => {
-                          setRemarks(rks);
-                        }}
-                      />
-                    </CardContent>
-                  ) : (
-                    <></>
-                    // <CommonAlert text="Unable to get disposition details" />
-                  )}
-                </Card>
-
-
-                <br />
-                {/* <FAQ /> */}
-                <Iframe url="http://106.51.86.75:4444"
-                  width="100%"
-                  height="500Px"
-                  id="myId"
-                  className="myClassname"
-                  display="initial"
-                  position="relative" />
-              </Grid>
-            }
-
-          </Grid>
-
-        </Container>
-      </Page>
-
-    </div>
+      </Grid>
+    </div >
   ) : (
     <MainLoader />
   );

@@ -3,6 +3,7 @@ import Orders from '../views/admin/orders';
 import Dashboard from '../views/DashboardView/index';
 import agentDispostionList from '../views/admin/agentlastfive';
 import distribuerCallDisposedList from '../views/admin/distributerlastfive';
+import Customers from '../views/admin/callerInteractions'
 
 export default [
   {
@@ -62,5 +63,11 @@ export default [
     exact: true,
     key: 'distributerCallById',
     component: distribuerCallDisposedList
+  },
+  {
+    path: '/callerInteraction/:callerNumber',
+    exact: true,
+    // key: 'distributerCallById',
+    component: Customers
   }
 ];

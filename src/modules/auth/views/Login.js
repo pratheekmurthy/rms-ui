@@ -205,8 +205,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url = 'http://106.51.86.75:4000/auth/apiM/login'
+      const url = 'http://192.168.3.36:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
+
+
       console.log("values", values)
 
       const res = await Axios.post(url, values);
@@ -234,14 +236,14 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
           // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
           // var queue=res.data.userDetails.AgentQueueStatus
           if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
+            // addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
           }
         }
         if (res.data.userDetails.AgentType === 'L2') {
           // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
           // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
           if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
+            // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
           }
         }
         setLoggedInMain(true);

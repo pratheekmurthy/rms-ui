@@ -75,16 +75,36 @@ export const lastFiveCallData = [
     flex: 1
   },
   {
-    field: 'type',
-    headerName: 'Type',
+    field: 'callerapplication',
+    headerName: 'Caller application type',
     flex: 1
   },
-  
+
   {
-    field: 'created',
-    headerName: 'Date',
+    field: 'category',
+    headerName: 'Category',
     flex: 1
-  }
+  },
+  {
+    field: 'subcategory',
+    headerName: 'Subcategory',
+    flex: 1
+  },
+  {
+    field: 'subcategoryitem',
+    headerName: 'Subcategory item',
+    flex: 1
+  },
+  {
+    field: 'solutions',
+    headerName: 'solutions',
+    flex: 1
+  },
+  {
+    field: 'comments',
+    headerName: 'comments',
+    flex: 1
+  },
 ];
 
 export const AgentCallColumns = [
@@ -182,4 +202,63 @@ export const DistributerCallColumns = [
   }
 ];
 
+export const CallerInteractioncolumns = [
+  {
+    field: 'CallerName',
+    headerName: 'CallerName',
+    flex: 1
+  },
+  {
+    field: 'callerapplication',
+    headerName: 'Caller Application',
+    flex: 1
+  },
+  {
+    field: 'issuetype',
+    headerName: 'Issue Type',
+    flex: 1
+  },
+  {
+    field: 'category',
+    headerName: 'Patner Name',
+    flex: 1
+  },
+  {
+    field: 'seccategory',
+    headerName: 'Tag',
+    flex: 1
+  },
+  {
+    field: 'subcategory',
+    headerName: 'Sub Tag 1',
+    flex: 1
+  },
+  {
+    field: 'secsubcategory',
+    headerName: 'Sub Tag 2',
+    flex: 1
+  },
+  {
+    field: 'type',
+    headerName: 'Type',
+    flex: 1
+  },
+
+  {
+    field: 'comments',
+    headerName: 'comments',
+    flex: 1
+  },
+
+  {
+    field: 'created',
+    headerName: 'Date',
+    flex: 1
+  },
+  {
+    field: 'callermobilenumber',
+    headerName: 'caller Number',
+    flex: 1
+  }
+];
 
