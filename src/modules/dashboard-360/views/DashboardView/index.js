@@ -1266,7 +1266,7 @@ const Dashboard = ({
         <Container maxWidth={false}>
           <Grid container spacing={3}>
             <Grid item lg={4} md={6} xs={12}>
-
+            {user_Details.AgentQueueStatus === 'dynamic' ?
               <Grid item>
 
 
@@ -1289,7 +1289,7 @@ const Dashboard = ({
 
                 </Button> */}
 
-              </Grid>
+              </Grid> : null}
 
 
             </Grid>
