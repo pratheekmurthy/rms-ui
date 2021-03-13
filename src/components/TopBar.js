@@ -270,13 +270,13 @@ const TopBar = ({
       if (localStorage.getItem('Agenttype') === 'L1') {
         // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
         if (user_Details.AgentQueueStatus === 'dynamic') {
-          removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+          // removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
         }
       }
       if (localStorage.getItem('Agenttype') === 'L2') {
         // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
         if (user_Details.AgentQueueStatus === 'dynamic') {
-          removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+          // removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
         }
       }
       updateAgentCallStatusV2(localStorage.getItem('callStatusId'), { loginStatus: 'false' })

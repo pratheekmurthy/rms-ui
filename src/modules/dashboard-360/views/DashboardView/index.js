@@ -1276,7 +1276,7 @@ const Dashboard = ({
     let config = {
       method: 'get',
 
-      url: `http://164.52.205.10:42004/crm/callermobilenumber?callermobilenumber=${searchItem}`,
+      url: `http://192.168.3.36:52004/crm/callermobilenumber?callermobilenumber=${searchItem}`,
       headers: {
         'Content-Type': 'application/json'
       },
