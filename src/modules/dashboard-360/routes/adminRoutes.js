@@ -69,5 +69,11 @@ export default [
     exact: true,
     // key: 'distributerCallById',
     component: Customers
+  },
+  {
+    path: '/agentopentickets',
+    exact: true,
+    // key: 'distributerCallById',
+    component: agentDispostionList
   }
 ];

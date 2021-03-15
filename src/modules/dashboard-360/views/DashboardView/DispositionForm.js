@@ -28,9 +28,15 @@ const useStyle = makeStyles(() => ({
   }
 }));
 export default function DispositionForm(props) {
+  const { selectedData } = props
   const config = 'http://192.168.3.45:8083/';
-  console.log('props.DLF', props.DLF);
+  // console.log('props.DLF', props.DLF);
   const { DLF } = props;
+
+  // console.log(selectedData, "selected data")
+
+
+
   let APIENDPOINT = SOCKETENDPOINT2;
   /// ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
@@ -274,6 +280,13 @@ export default function DispositionForm(props) {
       setSelected(false);
     }
   };
+
+
+  console.log(selectedData, "props data")
+
+
+
+
   useEffect(() => {
     let unmounted = false;
     getDLF();
@@ -316,8 +329,24 @@ export default function DispositionForm(props) {
   }, []);
 
   useEffect(() => {
+    var initialValue1 = initialValue;
+    if (selectedData.hasOwnProperty('dispostionFormData')) {
 
-  }, [initialValue]);
+      initialValue1.CallerName = selectedData.dispostionFormData.CallerName
+      initialValue1.callerapplication = selectedData.dispostionFormData.callerapplication
+      initialValue1.issuedescription = selectedData.dispostionFormData.issuedescription
+      initialValue1.subcategoryitem = selectedData.dispostionFormData.subcategoryitem
+      initialValue1.issuetype = selectedData.dispostionFormData.category
+      initialValue1.ostype = selectedData.dispostionFormData.ostype
+      initialValue1.connectivitytype = selectedData.dispostionFormData.connectivitytype
+      initialValue1.speedtype = selectedData.dispostionFormData.speedtype
+      initialValue1.devicetype = selectedData.dispostionFormData.devicetype
+    }
+    setInitialValue(initialValue1);
+
+  }, [props]);
+
+
 
   const getSubCategories = cat => {
     console.log('value', cat);
@@ -368,6 +397,7 @@ export default function DispositionForm(props) {
       unmounted = true;
     };
   };
+
   const getSubCategoryItems = (cat, sct) => {
     let unmounted = false;
     async function getItems() {
@@ -423,29 +453,30 @@ export default function DispositionForm(props) {
       unmounted = true;
     };
   };
+
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
     const data = JSON.stringify(dispostionData);
     console.log('updateCAllData', data, uniqueid);
 
-    const config = {
-      method: 'post',
+    // const config = {
+    //   method: 'post',
 
-      url: UPDATE_CALL_STATUS + uniqueid,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data
-    };
+    //   url: UPDATE_CALL_STATUS + uniqueid,
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   data
+    // };
 
-    axios(config)
-      .then(response => {
-        console.log('dispostionForm', JSON.stringify(response.data));
-        props.getALF();
-      })
-      .catch(error => {
-        console.log('dispostionFrom', error);
-      });
+    // axios(config)
+    //   .then(response => {
+    //     console.log('dispostionForm', JSON.stringify(response.data));
+    //     props.getALF();
+    //   })
+    //   .catch(error => {
+    //     console.log('dispostionFrom', error);
+    //   });
   }
 
   function updateAgentCallStatus(updateData) {
@@ -493,8 +524,10 @@ export default function DispositionForm(props) {
         console.log(error);
       });
   }
+
+
   function handleSubmit(e) {
-    console.log('formRefasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfs', formRef.current.values);
+    console.log('formRefasdfasdfasfasdfasdfasdfasdfs', formRef.current.values);
 
     console.log('state', initialValue);
     console.log('dispostion', {
@@ -507,136 +540,136 @@ export default function DispositionForm(props) {
 
     });
 
-    localStorage.setItem('callDispositionStatus', 'Disposed');
-    if (localStorage.getItem('Agenttype') === 'L1') {
-      // if (user_Details.AgentQueueStatus === 'dynamic') {
-      //   removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
-      // }
+    // localStorage.setItem('callDispositionStatus', 'Disposed');
+    // if (localStorage.getItem('Agenttype') === 'L1') {
+    //   // if (user_Details.AgentQueueStatus === 'dynamic') {
+    //   //   removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
+    //   // }
 
-      if (user_Details.AgentQueueStatus === 'dynamic') {
-        addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-      }
-    }
-    if (localStorage.getItem('Agenttype') === 'L2') {
-      // if (user_Details.AgentQueueStatus === 'dynamic') {
-      //   removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
-      // }
+    //   if (user_Details.AgentQueueStatus === 'dynamic') {
+    //     addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+    //   }
+    // }
+    // if (localStorage.getItem('Agenttype') === 'L2') {
+    //   // if (user_Details.AgentQueueStatus === 'dynamic') {
+    //   //   removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
+    //   // }
 
-      if (user_Details.AgentQueueStatus === 'dynamic') {
-        addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
-      }
-    }
-    // // props.removeFromQueue(props.AgentSipId, '7001');
-    // // props.addToQueue(props.agentSipID, '7001');
-    // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
-    props.setCurrentCallDetails(
-      localStorage.getItem('callStatusId'),
-      localStorage.getItem('callUniqueId'),
-      localStorage.getItem('callType'),
-      localStorage.getItem('callStatus'),
-      localStorage.getItem('callEvent'),
-      localStorage.getItem('callDispositionStatus'),
-      localStorage.getItem('callerNumber'),
-      localStorage.getItem('breakStatus')
-    );
-    updateAgentCallStatus({
-      callStatusId: localStorage.getItem('callStatusId'),
-      callUniqueId: localStorage.getItem('callUniqueId'),
-      callType: localStorage.getItem('callType'),
-      callStatus: localStorage.getItem('callStatus'),
-      callEvent: localStorage.getItem('callEvent'),
-      callDispositionStatus: localStorage.getItem('callDispositionStatus'),
-      callerNumber: localStorage.getItem('callerNumber'),
+    //   if (user_Details.AgentQueueStatus === 'dynamic') {
+    //     addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, user_Details)
+    //   }
+    // }
+    // // // props.removeFromQueue(props.AgentSipId, '7001');
+    // // // props.addToQueue(props.agentSipID, '7001');
+    // // // props.setCurrentCallDetails(localStorage.getItem("callUniqueId"), localStorage.getItem("callType"), localStorage.getItem("callStatus"), localStorage.getItem("callEvent"), localStorage.getItem("callDispositionStatus"))
+    // props.setCurrentCallDetails(
+    //   localStorage.getItem('callStatusId'),
+    //   localStorage.getItem('callUniqueId'),
+    //   localStorage.getItem('callType'),
+    //   localStorage.getItem('callStatus'),
+    //   localStorage.getItem('callEvent'),
+    //   localStorage.getItem('callDispositionStatus'),
+    //   localStorage.getItem('callerNumber'),
+    //   localStorage.getItem('breakStatus')
+    // );
+    // updateAgentCallStatus({
+    //   callStatusId: localStorage.getItem('callStatusId'),
+    //   callUniqueId: localStorage.getItem('callUniqueId'),
+    //   callType: localStorage.getItem('callType'),
+    //   callStatus: localStorage.getItem('callStatus'),
+    //   callEvent: localStorage.getItem('callEvent'),
+    //   callDispositionStatus: localStorage.getItem('callDispositionStatus'),
+    //   callerNumber: localStorage.getItem('callerNumber'),
 
-    });
-    if (localStorage.getItem('Agenttype') === 'L1') {
-      updateCallData(localStorage.getItem('callUniqueId'), {
-        category: formRef.current.values.category.label,
-        subcategory: formRef.current.values.subcategory.label,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        comments: formRef.current.values.comments,
-        type: formRef.current.values.type,
-        distributerID: localStorage.getItem('distributer_id'),
-        CallerName: formRef.current.values.CallerName,
-        callerapplication: formRef.current.values.callerapplication,
-        connectivitytype: formRef.current.values.connectivitytype.value,
-        devicetype: formRef.current.values.devicetype.value,
-        enable: `${formRef.current.values.enable}`,
-        issuedescription: formRef.current.values.issuedescription,
-        issuetype: formRef.current.values.issuetype,
-        ostype: formRef.current.values.ostype.value,
-        speedtype: formRef.current.values.speedtype.value,
-        status: formRef.current.values.status,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        type: formRef.current.values.type,
-        dispostionFormData: formRef.current.values,
-        anydeskid: formRef.current.values.anydeskid,
-        solution: formRef.current.values.solution,
-        L1ID: localStorage.getItem('callUniqueId')
-      });
-    }
-    if (localStorage.getItem('Agenttype') === 'L2') {
-      updateCallData(localStorage.getItem('callUniqueId'), {
-        category: formRef.current.values.category.label,
-        subcategory: formRef.current.values.subcategory.label,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        comments: formRef.current.values.comments,
-        type: formRef.current.values.type,
-        distributerID: localStorage.getItem('distributer_id'),
-        CallerName: formRef.current.values.CallerName,
-        callerapplication: formRef.current.values.callerapplication,
-        connectivitytype: formRef.current.values.connectivitytype.value,
-        devicetype: formRef.current.values.devicetype.value,
-        enable: `${formRef.current.values.enable}`,
-        issuedescription: formRef.current.values.issuedescription,
-        issuetype: formRef.current.values.issuetype,
-        ostype: formRef.current.values.ostype.value,
-        speedtype: formRef.current.values.speedtype.value,
-        status: formRef.current.values.status,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        type: formRef.current.values.type,
-        dispostionFormData: formRef.current.values,
-        anydeskid: formRef.current.values.anydeskid,
-        solution: formRef.current.values.solution,
-        L1ID: localStorage.getItem('callUniqueId')
-      });
-      updateCallData(localStorage.getItem('L1ID'), {
-        L2ID: localStorage.getItem('callUniqueId'),
-        type: formRef.current.values.type,
-        agenttype: 'L2'
-      });
-    }
-    if (localStorage.getItem('Agenttype') === 'L3') {
-      updateCallData(localStorage.getItem('callUniqueId'), {
-        category: formRef.current.values.category.label,
-        subcategory: formRef.current.values.subcategory.label,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        comments: formRef.current.values.comments,
-        type: formRef.current.values.type,
-        distributerID: localStorage.getItem('distributer_id'),
-        CallerName: formRef.current.values.CallerName,
-        callerapplication: formRef.current.values.callerapplication,
-        connectivitytype: formRef.current.values.connectivitytype.value,
-        devicetype: formRef.current.values.devicetype.value,
-        enable: `${formRef.current.values.enable}`,
-        issuedescription: formRef.current.values.issuedescription,
-        issuetype: formRef.current.values.issuetype,
-        ostype: formRef.current.values.ostype.value,
-        speedtype: formRef.current.values.speedtype.value,
-        status: formRef.current.values.status,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        type: formRef.current.values.type,
-        dispostionFormData: formRef.current.values,
-        anydeskid: formRef.current.values.anydeskid,
-        solution: formRef.current.values.solution,
-        L1ID: localStorage.getItem('callUniqueId')
-      });
-      updateCallData(localStorage.getItem('L2ID'), {
-        L2ID: localStorage.getItem('callUniqueId'),
-        type: formRef.current.values.type,
-        agenttype: 'L3'
-      });
-    }
+    // });
+    // if (localStorage.getItem('Agenttype') === 'L1') {
+    //   updateCallData(localStorage.getItem('callUniqueId'), {
+    //     category: formRef.current.values.category.label,
+    //     subcategory: formRef.current.values.subcategory.label,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     comments: formRef.current.values.comments,
+    //     type: formRef.current.values.type,
+    //     distributerID: localStorage.getItem('distributer_id'),
+    //     CallerName: formRef.current.values.CallerName,
+    //     callerapplication: formRef.current.values.callerapplication,
+    //     connectivitytype: formRef.current.values.connectivitytype.value,
+    //     devicetype: formRef.current.values.devicetype.value,
+    //     enable: `${formRef.current.values.enable}`,
+    //     issuedescription: formRef.current.values.issuedescription,
+    //     issuetype: formRef.current.values.issuetype,
+    //     ostype: formRef.current.values.ostype.value,
+    //     speedtype: formRef.current.values.speedtype.value,
+    //     status: formRef.current.values.status,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     type: formRef.current.values.type,
+    //     dispostionFormData: formRef.current.values,
+    //     anydeskid: formRef.current.values.anydeskid,
+    //     solution: formRef.current.values.solution,
+    //     L1ID: localStorage.getItem('callUniqueId')
+    //   });
+    // }
+    // if (localStorage.getItem('Agenttype') === 'L2') {
+    //   updateCallData(localStorage.getItem('callUniqueId'), {
+    //     category: formRef.current.values.category.label,
+    //     subcategory: formRef.current.values.subcategory.label,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     comments: formRef.current.values.comments,
+    //     type: formRef.current.values.type,
+    //     distributerID: localStorage.getItem('distributer_id'),
+    //     CallerName: formRef.current.values.CallerName,
+    //     callerapplication: formRef.current.values.callerapplication,
+    //     connectivitytype: formRef.current.values.connectivitytype.value,
+    //     devicetype: formRef.current.values.devicetype.value,
+    //     enable: `${formRef.current.values.enable}`,
+    //     issuedescription: formRef.current.values.issuedescription,
+    //     issuetype: formRef.current.values.issuetype,
+    //     ostype: formRef.current.values.ostype.value,
+    //     speedtype: formRef.current.values.speedtype.value,
+    //     status: formRef.current.values.status,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     type: formRef.current.values.type,
+    //     dispostionFormData: formRef.current.values,
+    //     anydeskid: formRef.current.values.anydeskid,
+    //     solution: formRef.current.values.solution,
+    //     L1ID: localStorage.getItem('callUniqueId')
+    //   });
+    //   updateCallData(localStorage.getItem('L1ID'), {
+    //     L2ID: localStorage.getItem('callUniqueId'),
+    //     type: formRef.current.values.type,
+    //     agenttype: 'L2'
+    //   });
+    // }
+    // if (localStorage.getItem('Agenttype') === 'L3') {
+    //   updateCallData(localStorage.getItem('callUniqueId'), {
+    //     category: formRef.current.values.category.label,
+    //     subcategory: formRef.current.values.subcategory.label,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     comments: formRef.current.values.comments,
+    //     type: formRef.current.values.type,
+    //     distributerID: localStorage.getItem('distributer_id'),
+    //     CallerName: formRef.current.values.CallerName,
+    //     callerapplication: formRef.current.values.callerapplication,
+    //     connectivitytype: formRef.current.values.connectivitytype.value,
+    //     devicetype: formRef.current.values.devicetype.value,
+    //     enable: `${formRef.current.values.enable}`,
+    //     issuedescription: formRef.current.values.issuedescription,
+    //     issuetype: formRef.current.values.issuetype,
+    //     ostype: formRef.current.values.ostype.value,
+    //     speedtype: formRef.current.values.speedtype.value,
+    //     status: formRef.current.values.status,
+    //     subcategoryitem: formRef.current.values.subcategoryitem.label,
+    //     type: formRef.current.values.type,
+    //     dispostionFormData: formRef.current.values,
+    //     anydeskid: formRef.current.values.anydeskid,
+    //     solution: formRef.current.values.solution,
+    //     L1ID: localStorage.getItem('callUniqueId')
+    //   });
+    //   updateCallData(localStorage.getItem('L2ID'), {
+    //     L2ID: localStorage.getItem('callUniqueId'),
+    //     type: formRef.current.values.type,
+    //     agenttype: 'L3'
+    //   });
+    // }
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
@@ -732,9 +765,9 @@ export default function DispositionForm(props) {
                   options={categories}
                   getOptionLabel={option => option.label}
                   // style={{ width: 400, overflow: "hidden" }}
-                  value={initialValue.category}
+                  value={initialValue.issuetype}
                   getOptionSelected={(option, value) => {
-                    console.log('category', value);
+                    // console.log('category', value);
                     return value.label === option.label;
                   }}
                   key={autoCompleteKey}
@@ -1041,7 +1074,7 @@ export default function DispositionForm(props) {
                 variant="outlined"
                 multiline
                 rows={2}
-                label="Response /Solution Provided"
+                label="Response/Solution Provided"
               />
             </Grid>
 
@@ -1100,7 +1133,6 @@ export default function DispositionForm(props) {
             </Grid>) : (<></>)
             } */}
             <Grid item>
-
               <Field component={RadioGroup} name="type" row>
                 {/* <FormControlLabel value="FCR" control={<Radio />} label="FCR" /> */}
                 <FormControlLabel
@@ -1114,7 +1146,6 @@ export default function DispositionForm(props) {
                   control={<Radio />}
                   label="Closed"
                   onChange={handleChange}
-
                 />
                 <FormControlLabel
                   value="disconnected"
@@ -1128,18 +1159,14 @@ export default function DispositionForm(props) {
                   label="Transfer Call"
                   onChange={handleChange}
                 />: null} */}
-
               </Field>
             </Grid>
           </Grid>
           <br />
           {/* {selected === true ?
-
 <Button color="primary" variant="contained"  onClick={(e) =>   transfercall(localStorage.getItem('channel'))}>
 Transfer
-</Button>
-
-                  : null} */}
+</Button>: null} */}
           <span>  </span>
           <span> </span>
           <span> </span>
@@ -1147,7 +1174,6 @@ Transfer
           <Button color="primary" variant="contained" onClick={handleSubmit}>
             Submit
           </Button>
-
         </Form>
       )}
     </Formik>

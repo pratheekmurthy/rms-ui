@@ -2,7 +2,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDistributorInvoices } from 'src/modules/dashboard-360/redux/action';
-import { CallerInteractioncolumns } from 'src/modules/dashboard-360/utils/columns-config';
+import { lastFiveCallData } from 'src/modules/dashboard-360/utils/columns-config';
 import PropTypes from 'prop-types';
 import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
@@ -13,6 +13,7 @@ import {
 } from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 import DownloadReport from '../../DashboardView/DownloadReport';
+import { Agent_service_url } from 'src/modules/dashboard-360/utils/endpoints';
 
 const style = makeStyles(() => ({
   dgContainer: {
@@ -27,27 +28,31 @@ function Invoices({
   ...props
 }) {
   const classes = style();
-  const [showLoader, setShowLoader] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
   console.log("props", props)
   const {
     match: {
-      params: { callerNumber }  // searchItem
-    },
+      params: { orderId }
+    }
   } = props;
-  console.log("props1", callerNumber)
+
   const [invoiceDetails, setSingleInvoiceDetails] = useState(null);
   const [agentdisposedCalls, setagentdisposedCalls] = useState(props.ALF);
 
-  // const orderIdPrev = useRef(orderId);
+  const orderIdPrev = useRef(orderId);
 
-  const agentServiceURL = 'http://164.52.205.10:42004/';
+  const agentType = 'L1'
+  const status = 'open'
+
+  const agentServiceURL = `${Agent_service_url}/crm/interactions/getByAgentStatus?type=` + agentType + '&status=' + status + '';
   function getALF() {
     const axios = require('axios');
     let data = '';
 
     let config = {
       method: 'get',
-      url: `http://164.52.205.10:42004/crm/callermobilenumber?callermobilenumber=${callerNumber}`,
+      url:
+        agentServiceURL,
       headers: {},
       data: data
     };
@@ -55,43 +60,36 @@ function Invoices({
     axios(config)
       .then(async response => {
         var ALFDATA = response.data;
-        console.log('ALFDATA', ALFDATA);
+        console.log('ALFDATA last five', ALFDATA);
         ALFDATA = ALFDATA.reverse();
         setagentdisposedCalls(ALFDATA);
-        setShowLoader(false);
       })
 
       .catch(error => {
         console.log(error);
-        setShowLoader(false);
       });
   }
 
   useEffect(() => {
     getALF();
-  }, [callerNumber]);
-
-  // useEffect(() => {
-  //   getALF();
-  //   if (!distributorInvoices || orderIdPrev !== orderId) {
-  //     (async function getDetails() {
-  //       try {
-  //         const res = await (orderId
-  //           ? getSingleInvoiceDetails(orderId)
-  //           : getDealerInvoiceDetails(1001));
-  //         if (!orderId) {
-  //           setDistributorInvoicesAction(res.data.data);
-  //         } else {
-  //           setSingleInvoiceDetails(res.data.data);
-  //         }
-  //       } catch (error) {
-  //       } finally {
-  //         setShowLoader(false);
-  //       }
-  //     })();
-  //   }
-  // }, [orderId]);
-
+    if (!distributorInvoices || orderIdPrev !== orderId) {
+      (async function getDetails() {
+        try {
+          const res = await (orderId
+            ? getSingleInvoiceDetails(orderId)
+            : getDealerInvoiceDetails(1001));
+          if (!orderId) {
+            setDistributorInvoicesAction(res.data.data);
+          } else {
+            setSingleInvoiceDetails(res.data.data);
+          }
+        } catch (error) {
+        } finally {
+          setShowLoader(false);
+        }
+      })();
+    }
+  }, [orderId]);
   const [page, setPage] = useState(1);
   return agentdisposedCalls ? (
     // <Card>
@@ -118,7 +116,7 @@ function Invoices({
         rowsPerPageOptions={[5, 10, 20]}
         pagination
         autoHeight
-        columns={CallerInteractioncolumns}
+        columns={lastFiveCallData}
         exportButton={true}
         rows={agentdisposedCalls.map(calls => ({
           ...calls,

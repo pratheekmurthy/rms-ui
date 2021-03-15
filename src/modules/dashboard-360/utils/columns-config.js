@@ -76,10 +76,29 @@ export const lastFiveCallData = [
   },
   {
     field: 'callerapplication',
-    headerName: 'Caller application type',
+    headerName: 'Caller application',
     flex: 1
   },
-
+  {
+    field: 'issuetype',
+    headerName: 'issuetype',
+    flex: 1
+  },
+  {
+    field: 'devicetype',
+    headerName: 'devicetype',
+    flex: 1
+  },
+  {
+    field: 'connectivitytype',
+    headerName: 'connectivitytype',
+    flex: 1
+  },
+  {
+    field: 'ostype',
+    headerName: 'ostype',
+    flex: 1
+  },
   {
     field: 'category',
     headerName: 'Category',
@@ -96,7 +115,12 @@ export const lastFiveCallData = [
     flex: 1
   },
   {
-    field: 'solutions',
+    field: 'issuedescription',
+    headerName: 'issuedescription',
+    flex: 1
+  },
+  {
+    field: 'solution',
     headerName: 'solutions',
     flex: 1
   },
@@ -105,6 +129,11 @@ export const lastFiveCallData = [
     headerName: 'comments',
     flex: 1
   },
+  {
+    field: 'type',
+    headerName: 'issue status',
+    flex: 1
+  }
 ];
 
 export const AgentCallColumns = [
@@ -261,4 +290,3 @@ export const CallerInteractioncolumns = [
     flex: 1
   }
 ];
-

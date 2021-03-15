@@ -38,14 +38,16 @@ const BasicTable = ({
   redirectLabel,
   setRootData,
   setdealerDetails,
+  selectedData,
   ...rest
 }) => {
   const classes = useStyles();
-  function showthedata(row){
-    console.log('showthedata', row);
-    setdealerDetails(row)
+  function showthedata(row) {
 
-    localStorage.setItem('L1ID',row.asterixUniqueID)
+    selectedData(row)
+    // setdealerDetails(row)
+
+    // localStorage.setItem('L1ID',row.asterixUniqueID)
     // setRootData([[],[{
     //    callNumber:row.callerNumber,
     //      callerName:row.CallerName
@@ -58,7 +60,7 @@ const BasicTable = ({
     //   callNumber:row.callerNumber,
     //   callerName:row.CallerName
     // })
-    
+
     // alert('data')
   }
   return (
@@ -78,7 +80,7 @@ const BasicTable = ({
             </TableHead>
             <TableBody>
               {records?.map((record, index) => (
-                <TableRow hover key={record.id || index}  onClick={( ) => showthedata(record)}>
+                <TableRow hover key={record.id || index} onClick={() => showthedata(record)}>
                   {columns.map((col, index2) => (
                     <TableCell key={`cell-${index}-${index2}`}>
                       {col.renderCell
@@ -118,3 +120,4 @@ BasicTable.propTypes = {
 };
 
 export default BasicTable;
+

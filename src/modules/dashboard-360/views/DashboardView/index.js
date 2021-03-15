@@ -40,6 +40,7 @@ import CustomTabs from 'src/modules/dashboard-360/components/CustomTabs';
 import CustomTabPanel from 'src/modules/dashboard-360/components/CustomTabPanel';
 import BasicTable from 'src/modules/dashboard-360/components/BasicTable';
 import MainLoader from 'src/components/MainLoader';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import axios from 'axios'
 import {
   invoicesColumns,
@@ -62,9 +63,8 @@ import { searchDistributor } from '../../../../redux/action';
 import DispositionForm from './DispositionForm';
 import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
-import DistributorSelectPopup from './DistributorSelectModal';
-import data from '../customer/CustomerListView/data';
-import { da } from 'date-fns/locale';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@material-ui/core/styles';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
 
 
@@ -257,6 +257,45 @@ const Dashboard = ({
     _id: "",
   })
 
+
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+  function makeCall() {
+    setOpen(false);
+    console.log(selectedData1, "selected data")
+    var Number = selectedData1.callerNumber
+    console.log('make call', Number)
+    Number = Number.substr(Number.length - 10);
+    console.log(Number)
+    // if (Number.length === 10) {
+    //   var axios = require('axios');
+
+    //   var config = {
+    //     method: 'get',
+    //     url: `http://164.52.205.10:42002/ami/actions/orginatecall?sipAgentID=Local%2F59935413775%40from-internal&NumbertobeCalled=${Number}`,,
+    //     headers: {}
+    //   };
+
+    //   axios(config)
+    //     .then(function (response) {
+    //       console.log(JSON.stringify(response.data));
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
+    // } else {
+    //   console.log('Invalide number');
+    //   console.log('make call errororrrr')
+    // }
+  }
+
   function getDLF() {
     const axios = require('axios');
     let data = '';
@@ -284,6 +323,7 @@ const Dashboard = ({
   }
 
   function getALF() {
+    console.log("i am in get alf")
     const axios = require('axios');
     let data = '';
     let config = {
@@ -296,6 +336,7 @@ const Dashboard = ({
     axios(config)
       .then(async response => {
         var ALFDATA = response.data;
+        console.log(ALFDATA)
         ALFDATA = ALFDATA.reverse();
         setALF(ALFDATA);
       })
@@ -747,7 +788,7 @@ const Dashboard = ({
 
   ///socket1 ends
   useEffect(() => {
-    // getALF();
+    getALF();
     if (localStorage.getItem('Agenttype') === 'L1') {
       // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
     }
@@ -1218,7 +1259,7 @@ const Dashboard = ({
   useEffect(() => {
     console.log('data second useEffect', currentCall);
     console.log('currentCall.callerNumber', currentCall.callerNumber);
-
+    getALF();
 
     if (
       currentCall.callerNumber !== '' &&
@@ -1228,7 +1269,7 @@ const Dashboard = ({
       getDLF();
 
     }
-    // getALF();
+    getALF();
     if (localStorage.getItem('Agenttype') === 'L1') {
       // getOpenTickets(localStorage.getItem('Agenttype'), 'open');
     }
@@ -1276,7 +1317,7 @@ const Dashboard = ({
     let config = {
       method: 'get',
 
-      url: `http://192.168.3.36:52004/crm/callermobilenumber?callermobilenumber=${searchItem}`,
+      url: `http://106.51.86.75:52004/crm/callermobilenumber?callermobilenumber=${searchItem}`,
       headers: {
         'Content-Type': 'application/json'
       },
@@ -1335,34 +1376,12 @@ const Dashboard = ({
 
           <Card>
             <CardHeader title="Disposition Details" />
-            <DispositionForm />
+            <DispositionForm 
+            selectedData={selectedData1}
+            />
           </Card>
         </Grid>
-        <Grid item lg={12} md={12} xs={12}>
-          <Card>
-            <CardHeader title={'Caller Interactions'} />
-            <CardContent>
-              <TextField id="outlined-basic" label="search" variant="outlined" value={searchItem} onChange={handleSearch} size="small" />&nbsp;
-              <Button variant="contained" color="primary" onClick={searchaction}><SearchIcon /></Button>
-              {customerTable.length ? (
-                <div>
-                  <BasicTable
-                    columns={CallerInteractioncolumns}
-                    records={customerTable.slice(0, 3)}
-                    redirectLink={"/dash360/admin/callerInteraction/" + searchItem}
-                    redirectLabel="View All"
-                    ALF={customerTable}
-                    selectedData={selectedDataForInbound}
-                  />
-                </div>
-              ) : (
-                <>
-                  {/* <CommonAlert text="N/A" /> */}
-                </>
-              )}
-            </CardContent>
-          </Card>
-        </Grid>
+       
         <Grid item lg={12} md={12} xs={12}>
           <Card>
             <CardHeader title={'Agent Open Ticket'} />
@@ -1388,6 +1407,27 @@ const Dashboard = ({
         </Grid>
 
       </Grid>
+      <Dialog
+        fullScreen={fullScreen}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="responsive-dialog-title"
+      >
+        <DialogTitle id="responsive-dialog-title">{"Outbound Call"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are You sure, You Want to make a Outbound Call ?
+      </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button autoFocus onClick={handleClose} color="primary">
+            Close
+      </Button>
+          <Button onClick={makeCall} color="primary" autoFocus>
+            Make A Call
+      </Button>
+        </DialogActions>
+      </Dialog>
     </div >
   ) : (
     <MainLoader />
