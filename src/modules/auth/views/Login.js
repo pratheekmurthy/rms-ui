@@ -225,8 +225,8 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
         localStorage.setItem("jwtToken", accessToken);
         localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
         localStorage.setItem('role', res.data.userDetails.role);
-        localStorage.setItem('Agenttype', res.data.userDetails.AgentType);
-        localStorage.setItem('AgentType', 'Inbound')
+        localStorage.setItem('Agenttype', 'L2');
+        localStorage.setItem('AgentType', 'Outbound')
         setUserDetailsMain(obj);
         setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
 
