@@ -42,6 +42,7 @@ const BasicTable = ({
   ...rest
 }) => {
   const classes = useStyles();
+  console.log("records", records)
   function showthedata(row) {
 
     selectedData(row)

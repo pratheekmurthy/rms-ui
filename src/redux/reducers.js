@@ -6,7 +6,8 @@ import {
   SET_NEW_CRUMB,
   SET_URL_MATCH_FOUND,
   SET_AGENT_CURRENT_STATUS,
-  SET_SEARCH_DISTRIBUTOR
+  SET_SEARCH_DISTRIBUTOR,
+  Add_Data
 } from './constants';
 
 const logInInitialState = false;
@@ -23,6 +24,18 @@ const agentInitialState = {
   "callerNumber":"",
   "callStatus":"",
   "AgentSIPID":""
+}
+const initialselectedData = {}
+
+export const selectedData = (state = initialselectedData, action) => {
+  switch (action.type) {
+    case Add_Data: {
+      console.log("i am in reddd")
+      return action.payload;
+    }
+    default:
+      return state;
+  }
 }
 
 export const logInState = (state = logInInitialState, action) => {

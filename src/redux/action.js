@@ -6,8 +6,12 @@ import {
   SET_NEW_CRUMB,
   SET_URL_MATCH_FOUND,
   SET_AGENT_CURRENT_STATUS,
-  SET_SEARCH_DISTRIBUTOR
+  SET_SEARCH_DISTRIBUTOR,
+  Add_Data
 } from './constants';
+
+
+
 
 export const setLoggedIn = isLoggedIn => {
   return {
@@ -61,4 +65,12 @@ export const setSearchDistributor = val => {
     type: SET_SEARCH_DISTRIBUTOR,
     payload: val
   };
+};
+
+export const setSelecteddata = data => {
+  console.log(data,"action")
+  return {
+    type: Add_Data,
+    payload: data
+  }
 };

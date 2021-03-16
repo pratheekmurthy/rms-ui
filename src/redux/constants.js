@@ -8,3 +8,4 @@ export const SET_NEW_CRUMB = 'SET_NEW_CRUMB';
 export const SET_URL_MATCH_FOUND = 'SET_URL_MATCH_FOUND';
 export const SET_AGENT_CURRENT_STATUS = 'SET_AGENT_CURRENT_STATUS';
 export const SET_SEARCH_DISTRIBUTOR='SET_SEARCH_DISTRIBUTOR';
+ export const Add_Data ='Add_Data ';
