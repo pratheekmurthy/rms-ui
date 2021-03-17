@@ -86,7 +86,7 @@ export default function StickyHeadTable(props) {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
-    console.log('inside ne table', records)
+    // console.log('inside ne table', records)
     return (
         <Paper className={classes.root}>
             <TableContainer className={classes.container}>

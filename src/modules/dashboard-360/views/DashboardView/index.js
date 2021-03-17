@@ -24,6 +24,7 @@ import {
   GET_CURRENT_STATUS_BY_AGENT_SIP_ID,
   ORIGINATE_CALL_WITH_SIP_ID,
   SOCKETENDPOINT1,
+  SOCKETENDPOINT5,
   // SOCKETENDPOINT2,
   SOCKETENDPOINT3,
   SOCKETENDPOINT4,
@@ -76,9 +77,10 @@ import { useTheme } from '@material-ui/core/styles';
 
 const SOCKETENDPOINT2 = "http://localhost:42002"
 // const socket1 = socketIOClient(SOCKETENDPOINT1, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
-const socket2 = socketIOClient(SOCKETENDPOINT2, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
+const socket2 = socketIOClient(SOCKETENDPOINT5, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
 // const socket3 = socketIOClient(SOCKETENDPOINT3, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
 // const socket4 = socketIOClient(SOCKETENDPOINT4, { transports: ['websocket'], 'reconnection limit': 1000, 'max reconnection attempts': 'Infinity' });
+
 
 
 
@@ -198,8 +200,7 @@ const Dashboard = ({
   function makeCall() {
     setOpen(false);
     console.log(selectedData1, "selected data")
-    // var Number = selectedData1.callerNumber
-    var Number = '8618681525';
+    var Number = selectedData1.callerNumber
     // console.log('make call', Number)
     Number = Number.substr(Number.length - 10);
     console.log(Number)
@@ -208,7 +209,7 @@ const Dashboard = ({
 
       var config = {
         method: 'get',
-        url: `${SOCKETENDPOINT2}/ami/actions/orginatecall?sipAgentID=Local%2F5${localStorage.getItem('AgentSIPID')}%40from-internal&NumbertobeCalled=5${Number}`,
+        url: `${SOCKETENDPOINT5}/ami/actions/orginatecall?sipAgentID=Local%2F5${localStorage.getItem('AgentSIPID')}%40from-internal&NumbertobeCalled=5${Number}`,
         headers: {}
       };
 
@@ -220,7 +221,7 @@ const Dashboard = ({
           console.log(error);
         });
     } else {
-      console.log('Invalide number');
+      console.log('Invalid number');
       console.log('make call errororrrr')
     }
   }
@@ -286,7 +287,7 @@ const Dashboard = ({
 
     axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        // console.log(JSON.stringify(response.data));
         var ALFDATA = response.data;
         console.log('calling the open tickets', ALFDATA)
         // ALFDATA = ALFDATA.reverse();
@@ -464,7 +465,7 @@ const Dashboard = ({
     };
     axios(config)
       .then(function (response) {
-        console.log('update', JSON.stringify(response.data));
+        // console.log('update', JSON.stringify(response.data));
       })
       .catch(function (error) {
         console.log(error);

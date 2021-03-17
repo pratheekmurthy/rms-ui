@@ -18,3 +18,5 @@ export const SOCKETENDPOINT2 = 'http://106.51.86.75:42002';
 export const SOCKETENDPOINT3 = 'http://106.51.86.75:42003';
 export const SOCKETENDPOINT4 = 'http://106.51.86.75:42005';
 export const Agent_service_url = 'http://192.168.3.36:42004';
+export const UPDATE_CALL_STATUS_336 = 'http://106.51.86.75:42004/crm/interactions/'
+export const SOCKETENDPOINT5 = 'http://106.51.86.75:62002';

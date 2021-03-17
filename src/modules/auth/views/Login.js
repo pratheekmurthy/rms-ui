@@ -205,7 +205,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     try {
-      const url = 'http://192.168.3.36:4000/auth/apiM/login'
+      const url = 'http://106.51.86.75:4000/auth/apiM/login'
       // const url='http://192.168.3.45:42009/user/login'
 
 

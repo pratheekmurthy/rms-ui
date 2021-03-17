@@ -47,7 +47,7 @@ function Invoices({
 
         let config = {
             method: 'get',
-            url: `http://164.52.205.10:42004/crm/callermobilenumber?callermobilenumber=${callerNumber}`,
+            url: `http://106.51.86.75:42004/crm/callermobilenumber?callermobilenumber=${callerNumber}`,
             headers: {},
             data: data
         };

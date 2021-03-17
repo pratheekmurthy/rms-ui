@@ -53,14 +53,14 @@ export const setUrlMatchFound = val => {
 };
 
 export const setAgentCurrentStatus = val => {
-  console.log("val", val)
+  // console.log("val", val)
   return {
     type: SET_AGENT_CURRENT_STATUS,
     payload: val
   };
 };
 export const setSearchDistributor = val => {
-  console.log("val", val)
+  // console.log("val", val)
   return {
     type: SET_SEARCH_DISTRIBUTOR,
     payload: val
@@ -68,7 +68,7 @@ export const setSearchDistributor = val => {
 };
 
 export const setSelecteddata = data => {
-  console.log(data,"action")
+  // console.log(data,"action")
   return {
     type: Add_Data,
     payload: data
