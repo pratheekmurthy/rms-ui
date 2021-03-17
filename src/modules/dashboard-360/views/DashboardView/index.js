@@ -29,6 +29,7 @@ import {
   SOCKETENDPOINT4,
   Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
+import AdvancedTable from '../../components/Advancedtable'
 import Iframe from 'react-iframe'
 import SearchIcon from '@material-ui/icons/Search';
 import { ExpandMore } from '@material-ui/icons';
@@ -50,7 +51,7 @@ import {
 } from 'src/modules/dashboard-360/utils/columns-config';
 import CommonAlert from 'src/components/CommonAlert';
 import EditIcon from '@material-ui/icons/Edit';
-import { connect, useSelector,useDispatch } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 // import CreateTicket from 'src/modules/ticketing/views/create-ticket';
 import CallIcon from '@material-ui/icons/Call';
@@ -58,7 +59,7 @@ import DealerCard from './DealerCard';
 // import TicketsList from './TicketsList';
 import dealerAPICalls from './apiCalls';
 import { setDistributorOrders } from '../../redux/action';
-import { setSearchDistributor,setSelecteddata } from '../../../../redux/action';
+import { setSearchDistributor, setSelecteddata } from '../../../../redux/action';
 import { searchDistributor } from '../../../../redux/action';
 import DispositionForm from './DispositionForm';
 import socketIOClient from 'socket.io-client';
@@ -138,10 +139,10 @@ const Dashboard = ({
   setSearchDistributor,
   searchDistributor
 }) => {
-  const classes = useStyles(); 
+  const classes = useStyles();
   const user_Details = useSelector(state => state.userData)
-   const [loadingDetails, setLoadingDetails] = useState(true);
-   const [open, setOpen] = React.useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(true);
+  const [open, setOpen] = React.useState(false);
   const [currentCall, setCurrentCall] = useState({
     callUniqueId: '',
     callType: '',
@@ -200,7 +201,7 @@ const Dashboard = ({
     // var Number = selectedData1.callerNumber
     var Number = '8618681525';
     // console.log('make call', Number)
-     Number = Number.substr(Number.length - 10);
+    Number = Number.substr(Number.length - 10);
     console.log(Number)
     if (Number.length === 10) {
       var axios = require('axios');
@@ -1214,10 +1215,10 @@ const Dashboard = ({
   // }, [reduxState.searchDistributor]);
 
   function selectedDataForObutbound(data) {
-    console.log(data,"dispatch one")
+    console.log(data, "dispatch one")
     dispatch(setSelecteddata(data))
-    localStorage.setItem('L1ID',data.asterixUniqueID)
-    
+    localStorage.setItem('L1ID', data.asterixUniqueID)
+
     // console.log(localStorage.getItem('AgentType'))
     if (localStorage.getItem('AgentType') === 'Outbound' && localStorage.getItem('callDispositionStatus') === 'Disposed') {
       // console.log('selected', data)
@@ -1294,49 +1295,34 @@ const Dashboard = ({
       <CustomBreadcrumbs /><br />
       <Page className={classes.root} title="Dashboard">
         <Container maxWidth={false}>
-      <Grid container spacing={3}>
-        <Grid item lg={12} md={12} xs={12}>
+          <Grid container spacing={3}>
+            <Grid item lg={12} md={12} xs={12}>
 
-          <Card>
-            <CardHeader title="Disposition Details" />
-            <CardContent>
-            <DispositionForm
-            setCurrentCallDetails={setCurrentCallDetails}
-             />
-            </CardContent>
-          </Card>
-        </Grid>
-       
-        <Grid item lg={12} md={12} xs={12}>
-          <Card>
-            <CardHeader title={'Agent Open Ticket'} />
-            <CardContent>
-            {ALF.length ? (
-              <div>
-                <BasicTable
-                  columns={lastFiveCallData}
-                  records={ALF.filter((e) => e.type === 'open').slice(0, 100)}
-                  redirectLink="/dash360/admin/agentopentickets"
-                  redirectLabel="View All"
-                  ALF={ALF.filter((e) => e.type === 'open')}
-                  selectedData={selectedDataForObutbound}
-                />
-              </div>
-            ) : (
-              <>
-                {/* <CommonAlert text="N/A" /> */}
-              </>
-             
-            )}
-             </CardContent>
-          </Card>
+              <Card>
+                <CardHeader title="Disposition Details" />
+                <CardContent>
+                  <DispositionForm
+                    setCurrentCallDetails={setCurrentCallDetails}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
 
+            <Grid item lg={12} md={12} xs={12}>
+              <Card>
+                <CardHeader title={'Agent Open Ticket'} />
+                <CardContent>
+                  <AdvancedTable
+                    records={ALF.filter((e) => e.type === 'open')}
+                    selectedData={selectedDataForObutbound}
+                  />
+                </CardContent>
+              </Card>
+            </Grid>
 
-        </Grid>
+          </Grid>
 
-      </Grid>
-      
-      </Container>
+        </Container>
       </Page>
 
       <Dialog
@@ -1360,7 +1346,7 @@ const Dashboard = ({
       </Button>
         </DialogActions>
       </Dialog>
-      
+
     </div >
   ) : (
     <MainLoader />

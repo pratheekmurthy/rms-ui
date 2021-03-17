@@ -20,7 +20,8 @@ import {
 import * as yup from 'yup';
 // import config from '../../../ticketing/views/config.json';g
 import { Autocomplete } from '@material-ui/lab';
-import { useSelector } from 'react-redux'
+import { setSelecteddata } from '../../../../redux/action'
+import { useSelector, useDispatch } from 'react-redux'
 // import { AlternateEmailTwoTone } from '@material-ui/icons';
 const useStyle = makeStyles(() => ({
   fieldContainer: {
@@ -148,7 +149,7 @@ export default function DispositionForm(props) {
     callerapplication: '',
     L1Name: '',
     status: '',
-    anydesk : ''
+    anydesk: ''
   });
   function getDLF() {
     const axios = require('axios');
@@ -269,7 +270,7 @@ export default function DispositionForm(props) {
   const [selected, setSelected] = useState(false);
   const user_Details = useSelector(state => state.userData)
   const selected1 = useSelector(state => state.selectedData)
-  console.log(selected1,"redux ka data")
+  console.log(selected1, "redux ka data")
   const url = 'http://192.168.3.45:7002';
   const handleChange = (e, s) => {
     // updateCallData(localStorage.getItem('callUniqueId'), {
@@ -283,7 +284,7 @@ export default function DispositionForm(props) {
       setSelected(false);
     }
   };
-
+  const dispatch = useDispatch()
 
   console.log(selectedData, "props data")
 
@@ -333,7 +334,6 @@ export default function DispositionForm(props) {
 
   useEffect(() => {
     var initialValue1 = initialValue;
-    console.log(selected1,"data gettingggg")
     if (selected1.hasOwnProperty('dispostionFormData')) {
       initialValue1.CallerName = selected1.dispostionFormData.CallerName
       initialValue1.callerapplication = selected1.dispostionFormData.callerapplication
@@ -348,6 +348,10 @@ export default function DispositionForm(props) {
     }
     setInitialValue(initialValue1);
   }, [props]);
+
+  useEffect(() => {
+
+  }, [selected1])
 
 
 
@@ -533,6 +537,7 @@ export default function DispositionForm(props) {
     console.log('formRefasdfasdfasfasdfasdfasdfasdfs', formRef.current.values);
 
     console.log('state', initialValue);
+
     console.log('dispostion', {
       category: formRef.current.values.category.label,
       subcategory: formRef.current.values.subcategory.label,
@@ -628,50 +633,41 @@ export default function DispositionForm(props) {
     //   });
     // }
     // if (localStorage.getItem('Agenttype') === 'L2') {
-      updateCallData(localStorage.getItem('callUniqueId'), {
-        category: formRef.current.values.category.label,
-        subcategory: formRef.current.values.subcategory.label,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
+    updateCallData(localStorage.getItem('callUniqueId'), {
+      category: formRef.current.values.category.label,
+      subcategory: formRef.current.values.subcategory.label,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
+      comments: formRef.current.values.comments,
+      type: formRef.current.values.type,
+      distributerID: localStorage.getItem('distributer_id'),
+      CallerName: formRef.current.values.CallerName,
+      callerapplication: formRef.current.values.callerapplication,
+      connectivitytype: formRef.current.values.connectivitytype.value,
+      devicetype: formRef.current.values.devicetype.value,
+      enable: `${formRef.current.values.enable}`,
+      issuedescription: formRef.current.values.issuedescription,
+      issuetype: formRef.current.values.issuetype,
+      ostype: formRef.current.values.ostype.value,
+      speedtype: formRef.current.values.speedtype.value,
+      status: formRef.current.values.status,
+      subcategoryitem: formRef.current.values.subcategoryitem.label,
+      type: formRef.current.values.type,
+      dispostionFormData: formRef.current.values,
+      anydeskid: formRef.current.values.anydeskid,
+      solution: formRef.current.values.solution,
+      L1ID: localStorage.getItem('callUniqueId')
+    });
+    if (formRef.current.values.type === 'open' || formRef.current.values.type === 'disconnected') {
+      updateCallData(localStorage.getItem('L1ID'), {
+        L2ID: localStorage.getItem('callUniqueId'),
+        type: 'open',
         comments: formRef.current.values.comments,
-        type: formRef.current.values.type,
-        distributerID: localStorage.getItem('distributer_id'),
-        CallerName: formRef.current.values.CallerName,
-        callerapplication: formRef.current.values.callerapplication,
-        connectivitytype: formRef.current.values.connectivitytype.value,
-        devicetype: formRef.current.values.devicetype.value,
-        enable: `${formRef.current.values.enable}`,
-        issuedescription: formRef.current.values.issuedescription,
-        issuetype: formRef.current.values.issuetype,
-        ostype: formRef.current.values.ostype.value,
-        speedtype: formRef.current.values.speedtype.value,
-        status: formRef.current.values.status,
-        subcategoryitem: formRef.current.values.subcategoryitem.label,
-        type: formRef.current.values.type,
-        dispostionFormData: formRef.current.values,
-        anydeskid: formRef.current.values.anydeskid,
         solution: formRef.current.values.solution,
-        L1ID: localStorage.getItem('callUniqueId')
+        issuedescription: formRef.current.values.issuedescription,
+        agenttype: 'L2'
       });
-      if(formRef.current.values.type === 'open' || formRef.current.values.type === 'disconnected'){
-        updateCallData(localStorage.getItem('L1ID'), {
-          L2ID: localStorage.getItem('callUniqueId'),
-          type: 'open',
-          comments: formRef.current.values.comments,
-          solution: formRef.current.values.solution,
-          issuedescription: formRef.current.values.issuedescription,
-          agenttype: 'L2'
-        });
-      }
-      if(formRef.current.values.type === 'close'){
-        updateCallData(localStorage.getItem('L1ID'), {
-          L2ID: localStorage.getItem('callUniqueId'),
-          type: formRef.current.values.type,
-          comments: formRef.current.values.comments,
-          solution: formRef.current.values.solution,
-          issuedescription: formRef.current.values.issuedescription,
-          agenttype: 'L2'
-        });
-      }
+    }
+    if (formRef.current.values.type === 'close') {
       updateCallData(localStorage.getItem('L1ID'), {
         L2ID: localStorage.getItem('callUniqueId'),
         type: formRef.current.values.type,
@@ -680,6 +676,17 @@ export default function DispositionForm(props) {
         issuedescription: formRef.current.values.issuedescription,
         agenttype: 'L2'
       });
+    }
+    updateCallData(localStorage.getItem('L1ID'), {
+      L2ID: localStorage.getItem('callUniqueId'),
+      type: formRef.current.values.type,
+      comments: formRef.current.values.comments,
+      solution: formRef.current.values.solution,
+      issuedescription: formRef.current.values.issuedescription,
+      agenttype: 'L2'
+    });
+
+
 
     // }
     // if (localStorage.getItem('Agenttype') === 'L3') {
@@ -713,6 +720,30 @@ export default function DispositionForm(props) {
     //     agenttype: 'L3'
     //   });
     // }
+    var ini = {
+      subcategory: '',
+      category: '',
+      comments: '',
+      type: '',
+      subcategoryitem: '',
+      enable: '',
+      issuetype: '',
+      devicetype: '',
+      connectivitytype: '',
+      speedtype: '',
+      ostype: '',
+      solution: '',
+      issuedescription: '',
+      CallerName: '',
+      callerapplication: '',
+      L1Name: '',
+      status: '',
+      anydesk: ''
+    }
+    dispatch(setSelecteddata({}))
+    setInitialValue(ini)
+
+
   }
   const [autoCompleteKey, setAutoCompleteKey] = useState(0);
   return (
@@ -783,7 +814,7 @@ export default function DispositionForm(props) {
                 variant="outlined"
                 multiline
                 disabled={true}
-
+                value={initialValue.CallerName}
                 label="Caller Name"
               />
             </Grid>
@@ -794,6 +825,7 @@ export default function DispositionForm(props) {
                 component={TextField}
                 variant="outlined"
                 multiline
+                value={initialValue.callerapplication}
                 disabled={true}
 
                 label="Caller Application"
@@ -1124,6 +1156,7 @@ export default function DispositionForm(props) {
               <Field
                 className={classes.fieldContainer}
                 name="solution"
+                value={initialValue.solution}
                 component={TextField}
                 variant="outlined"
                 multiline
