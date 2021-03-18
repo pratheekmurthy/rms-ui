@@ -201,6 +201,7 @@ const Dashboard = ({
     setOpen(false);
     console.log(selectedData1, "selected data")
     var Number = selectedData1.callerNumber
+    // var Number = '9448531031'
     // console.log('make call', Number)
     Number = Number.substr(Number.length - 10);
     console.log(Number)
@@ -321,7 +322,7 @@ const Dashboard = ({
     });
     localStorage.setItem('callStatusId', callStatusId);
     localStorage.setItem('callUniqueId', callUniqueId);
-    localStorage.setItem('callType', callType);
+    localStorage.setItem('callType', 'Outbound');
     localStorage.setItem('callStatus', callStatus);
     localStorage.setItem('callEvent', callEvent);
     localStorage.setItem('callDispositionStatus', callDispositionStatus);
