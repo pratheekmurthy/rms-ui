@@ -221,33 +221,27 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
         const obj = res.data.userDetails;
         const { accessToken } = res.data;
 
-        console.log('data resppppp', res.data)
-        localStorage.setItem("jwtToken", accessToken);
-        localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-        localStorage.setItem('role', res.data.userDetails.role);
-        localStorage.setItem('Agenttype', 'L2');
-        localStorage.setItem('AgentType', 'Outbound')
-        setUserDetailsMain(obj);
-        setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-
-
 
         if (res.data.userDetails.AgentType === 'L1') {
-          // addToQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 5000)
-          // var queue=res.data.userDetails.AgentQueueStatus
-          if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            // addToQueue('Local/5' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
-          }
+          alert(`You are not authorized for outbound call`)
+
         }
         if (res.data.userDetails.AgentType === 'L2') {
-          // addToQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 5001)
-          // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7002)
+          console.log('data resppppp', res.data)
+          localStorage.setItem("jwtToken", accessToken);
+          localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+          localStorage.setItem('role', res.data.userDetails.role);
+          localStorage.setItem('Agenttype', 'L2');
+          localStorage.setItem('AgentType', 'Outbound')
+          setUserDetailsMain(obj);
+          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
           if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
             // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
           }
+          setLoggedInMain(true);
+          setError(false);
         }
-        setLoggedInMain(true);
-        setError(false);
+
 
       } else {
         setLoggedInMain(false);
