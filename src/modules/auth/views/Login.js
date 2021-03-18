@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { Formik } from 'formik';
+import Alert from '@material-ui/lab/Alert';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux'
 import {
@@ -98,6 +99,12 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
+  },
+  root: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
   }
 }));
 
@@ -223,7 +230,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
 
 
         if (res.data.userDetails.AgentType === 'L1') {
-          alert(`You are not authorized for outbound call`)
+          setError(true)
 
         }
         if (res.data.userDetails.AgentType === 'L2') {
@@ -363,6 +370,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                 </form>
               )}
             </Formik>
+            {
+              error ? (<div className={classes.root1}>
+                <Alert variant="outlined" severity="error">You are not authorized to login !</Alert>
+              </div>) : (<div></div>)
+            }
             <Box mt={5}>
               <Copyright />
             </Box>
