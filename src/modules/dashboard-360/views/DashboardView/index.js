@@ -200,9 +200,9 @@ const Dashboard = ({
 
   function makeCall() {
     setOpen(false);
-    console.log(selectedData1, "selected data")
-    // var Number = selectedData1.callerNumber
-    var Number = '9513050850'
+    // console.log(selectedData1, "selected data")
+    var Number = selectedData1.callerNumber
+
     // console.log('make call', Number)
     Number = Number.substr(Number.length - 10);
     console.log(Number)
