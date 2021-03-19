@@ -382,11 +382,6 @@ export default function DealerCard(props) {
                     </Typography>
                   </Grid>
                 </Grid>
-
-
-
-
-
                 {/* <Grid item container>
                   <Grid item xs={5}>
                     <Typography variant="h5">Phone Number:</Typography>
@@ -470,8 +465,9 @@ export default function DealerCard(props) {
           </DialogActions>
         </Dialog>
       )}
-
-
     </Card>
   );
 }
+
+
+
