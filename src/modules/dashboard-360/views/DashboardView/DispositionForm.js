@@ -335,7 +335,7 @@ export default function DispositionForm(props) {
   useEffect(() => {
     var initialValue1 = initialValue;
     if (selected1.hasOwnProperty('dispostionFormData')) {
-      localStorage.setItem('L1ID', selected1.L1ID)
+      localStorage.setItem('L1ID', selected1.asterixUniqueID)
       initialValue1.CallerName = selected1.dispostionFormData.CallerName
       initialValue1.callerapplication = selected1.dispostionFormData.callerapplication
       initialValue1.issuedescription = selected1.dispostionFormData.issuedescription
@@ -464,22 +464,22 @@ export default function DispositionForm(props) {
 
   function updateCallData(uniqueid, dispostionData) {
     const axios = require('axios');
-    console.log(dispostionData)
+    console.log(dispostionData, "in api")
 
-    const data = JSON.stringify(dispostionData);
-    console.log('updateCAllData', data, uniqueid);
+    // const data = JSON.stringify(dispostionData);
+    // console.log('updateCAllData', data, uniqueid);
 
-    // }
+    // // }
 
-    const config = {
-      method: 'post',
+    // const config = {
+    //   method: 'post',
 
-      url: UPDATE_CALL_STATUS + uniqueid,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data
-    };
+    //   url: UPDATE_CALL_STATUS + uniqueid,
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   data
+    // };
 
     axios(config)
       .then(response => {
@@ -494,6 +494,7 @@ export default function DispositionForm(props) {
 
   function updateCallData1(uniqueid, dispostionData) {
     const axios = require('axios');
+
     const data = JSON.stringify(dispostionData);
     console.log('updateCAllData', data, uniqueid);
 
@@ -510,7 +511,7 @@ export default function DispositionForm(props) {
 
     axios(config)
       .then(response => {
-        // console.log('dispostionForm', JSON.stringify(response.data));
+        console.log('response', (response.data));
         props.getALF();
       })
       .catch(error => {
@@ -673,6 +674,7 @@ export default function DispositionForm(props) {
     delete selected1["_id"];
     delete selected1["asterixUniqueID"];
     selected1["type"] = formRef.current.values.type;
+    selected1.dispostionFormData["type"] = formRef.current.values.type;
 
     updateCallData(localStorage.getItem('callUniqueId'), selected1);
 
@@ -691,7 +693,7 @@ export default function DispositionForm(props) {
       console.log("i am in closed case")
       updateCallData1(localStorage.getItem('L1ID'), {
         L2ID: localStorage.getItem('callUniqueId'),
-        type: formRef.current.values.type,
+        type: 'closed',
         comments: formRef.current.values.comments,
         solution: formRef.current.values.solution,
         issuedescription: formRef.current.values.issuedescription,

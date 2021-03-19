@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { SET_USER_DATA } from 'src/modules/dashboard-360/redux/constants';
 import {
   SET_LOGGED_IN,
@@ -69,8 +70,11 @@ export const setSearchDistributor = val => {
 
 export const setSelecteddata = data => {
   // console.log(data,"action")
+  const data1 = data
+  data1.callType = "Outbound"
   return {
     type: Add_Data,
-    payload: data
+    payload: data1
   }
 };
+

@@ -470,8 +470,6 @@ export default function DealerCard(props) {
           </DialogActions>
         </Dialog>
       )}
-
-
     </Card>
   );
 }

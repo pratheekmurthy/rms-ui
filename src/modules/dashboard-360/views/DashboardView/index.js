@@ -67,6 +67,7 @@ import socketIOClient from 'socket.io-client';
 import { setAgentCurrentStatus } from 'src/redux/action';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
+import { fromPairs } from 'lodash';
 // import CreateCaller from '../../../agentForm/views/dashboard/Createcaller'
 
 
@@ -200,8 +201,8 @@ const Dashboard = ({
   function makeCall() {
     setOpen(false);
     console.log(selectedData1, "selected data")
-    var Number = selectedData1.callerNumber
-    // var Number = '9448531031'
+    // var Number = selectedData1.callerNumber
+    var Number = '9513050850'
     // console.log('make call', Number)
     Number = Number.substr(Number.length - 10);
     console.log(Number)
@@ -292,6 +293,7 @@ const Dashboard = ({
         var ALFDATA = response.data;
         console.log('calling the open tickets', ALFDATA)
         // ALFDATA = ALFDATA.reverse();
+        console.log(response.data)
         setALF(ALFDATA);
       })
       .catch(function (error) {
@@ -1309,7 +1311,6 @@ const Dashboard = ({
                 </CardContent>
               </Card>
             </Grid>
-
             <Grid item lg={12} md={12} xs={12}>
               <Card>
                 <CardHeader title={'Agent Open Ticket'} />
@@ -1321,9 +1322,7 @@ const Dashboard = ({
                 </CardContent>
               </Card>
             </Grid>
-
           </Grid>
-
         </Container>
       </Page>
 
@@ -1348,7 +1347,6 @@ const Dashboard = ({
       </Button>
         </DialogActions>
       </Dialog>
-
     </div >
   ) : (
     <MainLoader />
