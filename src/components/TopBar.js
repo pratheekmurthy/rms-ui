@@ -296,7 +296,7 @@ const TopBar = ({
   }
   var test = "green"
   return (
-    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: `${test}` }}>
+    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: 'blue' }}>
       <Toolbar>
         <RouterLink to="/">
           <Logo />

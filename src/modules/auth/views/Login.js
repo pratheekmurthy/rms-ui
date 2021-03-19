@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -358,7 +358,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   )}
                   <Box my={2} mt={5}>
                     <Button
-                      color="primary"
+                      color="secondary"
                       fullWidth
                       size="large"
                       type="submit"

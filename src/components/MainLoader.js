@@ -7,7 +7,7 @@ const useStyle = makeStyles((dtheme) => ({
   root: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#09AF00',
+    backgroundColor: 'blue',
     color: 'white'
   }
 }));
