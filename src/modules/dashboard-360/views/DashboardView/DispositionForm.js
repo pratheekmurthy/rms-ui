@@ -765,7 +765,8 @@ export default function DispositionForm(props) {
     }
     dispatch(setSelecteddata({}))
     setInitialValue(ini)
-    window.location.reload()
+
+    setInterval(function () { window.location.reload(); }, 1000);
 
 
 
