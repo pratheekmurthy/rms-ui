@@ -22,6 +22,7 @@ import {
   GET_INTERACTION_BY_AGENT_SIP_ID,
   Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
+import moment from 'moment';
 import Advancedtable from '../../Tables/AdvanceTable'
 import AgentLivecallsTable from '../../Tables/AgentLivecallsTable'
 import AgentLiveStatus from '../../Tables/AgentLiveStatus'
@@ -220,8 +221,10 @@ const Inbound = () => {
 
   }, [])
 
+
+
   // setInterval(window.location.reload(), 150000);
-  // window.setTimeout(function () { document.location.reload(true); }, 15000);
+  // window.setTimeout(function () { document.location.reload(true); }, 25000);
 
   const getIb = () => {
     axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
@@ -269,6 +272,12 @@ const Inbound = () => {
             'breakStatus': element1.breakStatus
           }
           i = i + 1;
+          if (element1.agentCallStatus === 'disconnected' && element1.agentCallDispositionStatus === 'NotDisposed') {
+            let difference = new Date() - new Date(element1.updatedAt)
+            difference = moment.utc(difference).format('HH:mm:ss');
+            obj1.difference = difference;
+          }
+
           agentstatus.push(obj1);
 
         }
@@ -347,6 +356,8 @@ const Inbound = () => {
   }
   const SOCKETENDPOINT = SOCKETENDPOINT2;
 
+
+
   useEffect(() => {
 
     getIBdata();
@@ -408,7 +419,6 @@ const Inbound = () => {
                 <br />
                 {agentstatus.length > 0 ? <DownloadReport
                   DownloadData={agentstatus}
-
                 /> : <></>}
               </Grid>
             </Grid>
@@ -461,7 +471,6 @@ const Inbound = () => {
         {/* <CurrentStatus/> */}
       </div>
       {/* {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> 
-      
       : <></>} */}
       <Box component="span" m={1}>
         <Grid container spacing={3} justify={'space-around'}>
@@ -507,6 +516,4 @@ const Inbound = () => {
   );
 };
 export default Inbound;
-
-
 

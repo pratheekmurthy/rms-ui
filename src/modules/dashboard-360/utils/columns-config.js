@@ -410,6 +410,7 @@ export const AgentLivestatuscolumns1 = [
       sort: true,
     }
   },
+
   {
     name: 'EmployeeName',
     label: 'Agent Name',
@@ -467,6 +468,15 @@ export const AgentLivestatuscolumns1 = [
   {
     name: 'breakStatus',
     label: 'Break Status',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'difference',
+    label: 'IDLE Time',
     flex: 1,
     options: {
       filter: true,
