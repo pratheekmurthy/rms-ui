@@ -279,6 +279,10 @@ const Inbound = () => {
 
   console.log(agentliveStatus, "livestatus")
 
+  const disposedInteractions = agentstatus.filter((record) => {
+    return record.agentCallDispositionStatus === 'Disposed'
+  })
+
   const onBreak = agentstatus.filter((agent) => {
     return agent.breakStatus === 'IN'
   })
@@ -396,7 +400,6 @@ const Inbound = () => {
                   </Card>
                 </Grid>
               ))}
-
               <DaterangeReport
                 getALF={getALF}
                 handleChange={handleChange}
@@ -408,7 +411,6 @@ const Inbound = () => {
 
                 /> : <></>}
               </Grid>
-
             </Grid>
             <Grid item xs={3}>
               <Accordion>
@@ -450,7 +452,7 @@ const Inbound = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography>Details</Typography>
+                  {/* <Typography>Details</Typography> */}
                 </AccordionDetails>
               </Accordion>
             </Grid>
@@ -492,7 +494,7 @@ const Inbound = () => {
           <Card>
             <CardContent>
               <MUIDataTable
-                title={"Agent Live Status"}
+                title={`Agent Live Status - Logged in (${agentstatus.length}) / Live Agents - (${agentstatus.length - onBreak.length}) /On Break (${onBreak.length}) / Disposed () / Not Disposed ()`}
                 data={agentstatus}
                 columns={AgentLivestatuscolumns1}
                 options={options}
@@ -504,5 +506,7 @@ const Inbound = () => {
     </>
   );
 };
-
 export default Inbound;
+
+
+
