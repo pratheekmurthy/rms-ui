@@ -230,6 +230,14 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
 
 
         if (res.data.userDetails.AgentType === 'L1') {
+          localStorage.setItem("jwtToken", accessToken);
+          // localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+          // localStorage.setItem('role', res.data.userDetails.role);
+          // localStorage.setItem('Agenttype', 'L2');
+          // localStorage.setItem('AgentType', 'Outbound')
+          // setUserDetailsMain(obj);
+          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+          setLoggedInMain(true);
           setError(true)
 
         }

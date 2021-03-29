@@ -13,17 +13,17 @@ import {
 const logInInitialState = false;
 const accountTypeInitialState = '';
 const agentInitialState = {
-  "AgentType":"",
-  "role":"",
-  "callUniqueId":"",
-  "distributer_id":"",
-  "callStatusId":"",
-  "callDispositionStatus":"",
-  "callType":"",
-  "callEvent":"",
-  "callerNumber":"",
-  "callStatus":"",
-  "AgentSIPID":""
+  "AgentType": "",
+  "role": "",
+  "callUniqueId": "",
+  "distributer_id": "",
+  "callStatusId": "",
+  "callDispositionStatus": "",
+  "callType": "",
+  "callEvent": "",
+  "callerNumber": "",
+  "callStatus": "",
+  "AgentSIPID": ""
 }
 const initialselectedData = {}
 
@@ -58,7 +58,7 @@ export const userData = (state = null, action) => {
   }
 };
 
-export const agentCurrentStatus = (state = agentInitialState, action) =>{
+export const agentCurrentStatus = (state = agentInitialState, action) => {
   switch (action.type) {
     case SET_AGENT_CURRENT_STATUS: {
       return action.payload
@@ -109,6 +109,17 @@ export const urlMatchFound = (state = false, action) => {
 export const searchDistributor = (state = '', action) => {
   switch (action.type) {
     case SET_SEARCH_DISTRIBUTOR: {
+      return action.payload;
+    }
+    default:
+      return state;
+  }
+};
+
+const allusersInitialState = []
+export const allusers = (state = allusersInitialState, action) => {
+  switch (action.type) {
+    case 'SET_ALL_USERS': {
       return action.payload;
     }
     default:

@@ -2,7 +2,7 @@ import routes from 'src/modules/dashboard-360/routes';
 import React from 'react';
 import telephonyRoutes from '../modules/telephony/routes';
 import faqRoutes from '../modules/FAQ/routes';
-
+import DailyReport from '.././modules/telephony/views/dashboard/DailyReport'
 import authRoutes from '../modules/auth/routes';
 
 import agentRoutes from '../modules/agentForm/routes';
@@ -36,7 +36,7 @@ export default [
     crumb: 'Student Interaction',
     requiresAuth: true
   },
- 
+
   {
     path: '/telephony',
     routes: telephonyRoutes,
@@ -45,7 +45,7 @@ export default [
     crumb: 'Telephony',
     requiresAuth: true
   },
-   
+
   {
     path: '/faq',
     routes: faqRoutes,
@@ -58,7 +58,7 @@ export default [
     path: '/agent',
     routes: agentRoutes,
     key: 'dashboardagent',
-    component:agentform,
+    component: agentform,
     crumb: 'Agents',
     requiresAuth: true
   },
@@ -66,7 +66,7 @@ export default [
     path: '/group',
     routes: groupRoutes,
     key: 'dashboardgroup',
-    component:groupform,
+    component: groupform,
     crumb: 'Groups',
     requiresAuth: true
   },
@@ -76,6 +76,11 @@ export default [
     key: 'auth',
     component: auth,
     requiresAuth: false
+  },
+  {
+    path: '/dailyreport',
+    component: DailyReport,
+    requiresAuth: true
   }
-  
+
 ];

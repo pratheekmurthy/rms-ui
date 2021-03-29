@@ -290,3 +290,196 @@ export const CallerInteractioncolumns = [
     flex: 1
   }
 ];
+
+export const CallsinQueuecolumns = [
+  {
+    field: 'CallerName',
+    headerName: 'Time',
+    flex: 1
+  },
+  {
+    field: 'callerapplication',
+    headerName: 'Queue',
+    flex: 1
+  },
+  {
+    field: 'issuetype',
+    headerName: 'Caller Phone Number',
+    flex: 1
+  },
+  {
+    field: 'category',
+    headerName: 'Duration in Queue',
+    flex: 1
+  },
+  {
+    field: 'Server',
+    headerName: 'Server',
+    flex: 1
+  },
+];
+
+export const AgentLiveCallscolumns = [
+  {
+    field: 'CallerName',
+    headerName: 'Agent Name',
+    flex: 1
+  },
+  {
+    field: 'callerapplication',
+    headerName: 'Agent ID',
+    flex: 1
+  },
+  {
+    field: 'callerapplication',
+    headerName: 'Caller Phone Number',
+    flex: 1
+  },
+  {
+    field: 'issuetype',
+    headerName: 'Location',
+    flex: 1
+  },
+  {
+    field: 'category',
+    headerName: 'Duration ',
+    flex: 1
+  },
+  {
+    field: 'Server',
+    headerName: 'Server',
+    flex: 1
+  },
+];
+
+export const AgentLivestatuscolumns = [
+  {
+    field: 'sl.no',
+    headerName: 'SL NO',
+    flex: 1
+  },
+  {
+    field: 'EmployeeName',
+    headerName: 'Agent Name',
+    flex: 1
+  },
+  {
+    field: 'agentID',
+    headerName: 'Agent Number',
+    flex: 1
+  },
+  {
+    field: 'EmailID',
+    headerName: 'Email ID',
+    flex: 1
+  },
+  {
+    field: 'agentCallStatus',
+    headerName: 'Agent Status ',
+    flex: 1
+  },
+  {
+    field: 'agentCallDispositionStatus',
+    headerName: 'Disposition',
+    flex: 1
+  },
+  {
+    field: 'Location',
+    headerName: 'Location',
+    flex: 1
+  },
+  {
+    field: 'breakStatus',
+    headerName: 'Break Status',
+    flex: 1
+  },
+  {
+    field: 'Server',
+    headerName: 'server',
+    flex: 1
+  },
+];
+
+export const AgentLivestatuscolumns1 = [
+  {
+    name: 'sl.no',
+    label: 'SL NO',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'EmployeeName',
+    label: 'Agent Name',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'agentID',
+    label: 'Agent Number',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'EmailID',
+    label: 'Email ID',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'agentCallStatus',
+    label: 'Agent Status ',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'agentCallDispositionStatus',
+    label: 'Disposition',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'Location',
+    label: 'Location',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'breakStatus',
+    label: 'Break Status',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'Server',
+    label: 'server',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+];

@@ -326,18 +326,8 @@ const TopBar = ({
             </Link>
           </Typography> : <></>}
           {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/telephony/dashboard" className="color-white">
-              Telephony
-            </Link>
-          </Typography> : <></>}
-          {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/agent/dashboard" className="color-white">
-              Agents
-            </Link>
-          </Typography> : <></>}
-          {localStorage.getItem("role") === "Admin" ? <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/group/dashboard" className="color-white">
-              Groups
+            <Link to="/dailyreport" className="color-white">
+              Daily Report
             </Link>
           </Typography> : <></>}
           {viewAccess === -1 ? (

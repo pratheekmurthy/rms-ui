@@ -10,6 +10,7 @@ import {
   SET_SEARCH_DISTRIBUTOR,
   Add_Data
 } from './constants';
+import axios from 'axios'
 
 
 
@@ -77,4 +78,23 @@ export const setSelecteddata = data => {
     payload: data1
   }
 };
+
+const addusers = (data) => {
+  return { type: "SET_ALL_USERS", payload: data }
+}
+
+export const getAllusers = () => {
+  return (dispatch) => {
+    axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+      .then((response) => {
+        console.log(response, "allusers in actionnnn")
+
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+
+  }
+}
+
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios'
 import {
   Avatar,
   Grid,
@@ -13,6 +14,7 @@ import {
   AccordionDetails,
   Card,
   CardContent,
+  CardHeader,
   Box
 } from '@material-ui/core';
 import {
@@ -20,6 +22,9 @@ import {
   GET_INTERACTION_BY_AGENT_SIP_ID,
   Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
+import Advancedtable from '../../Tables/AdvanceTable'
+import AgentLivecallsTable from '../../Tables/AgentLivecallsTable'
+import AgentLiveStatus from '../../Tables/AgentLiveStatus'
 import CallIcon from '@material-ui/icons/Call';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
@@ -37,14 +42,17 @@ import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded'
 import StarsIcon from '@material-ui/icons/Stars';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { grey } from '@material-ui/core/colors';
-
 import socketIOClient from 'socket.io-client';
 import DaterangeReport from './DaterangeReport';
 import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
 import DispositionTable from './DispositionTable';
 import { DataGrid } from '@material-ui/data-grid';
+import MUIDataTable from "mui-datatables";
 import CurrentStatus from './CurrentStatus'
 import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
+import { getAllusers } from '../../redux/action'
+import { AgentLivestatuscolumns1 } from '../../../dashboard-360/utils/columns-config'
+import { useSelector, useDispatch } from 'react-redux'
 import {
 
   lastFiveCallData
@@ -90,6 +98,8 @@ const useStyles = makeStyles(theme => ({
 const Inbound = () => {
   const classes = useStyles();
   const [agentdisposedCalls, setagentdisposedCalls] = useState([])
+  const [agentliveStatus, setagentliveStatus] = useState([])
+  const [currentstatus, setCurrentstatus] = useState([])
   const [Inbound, setInbound] = useState(
     {
       "callarrived": 0,
@@ -197,6 +207,86 @@ const Inbound = () => {
     //   label: 'I/B Answer Level (SL-10)'
     // }
   ];
+  const [allusers, setAllusers] = useState([])
+
+  console.log(allusers, "allusers")
+  console.log(currentstatus, "current status")
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    getIb()
+
+
+  }, [])
+
+  // setInterval(window.location.reload(), 150000);
+  // window.setTimeout(function () { document.location.reload(true); }, 15000);
+
+  const getIb = () => {
+    axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+      .then((response) => {
+        console.log(response, "allusers")
+        setAllusers(response.data.userdetails)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+
+    axios.get('http://192.168.3.36:42004/crm/currentstatus/report')
+      .then((response) => {
+        console.log(response)
+        setCurrentstatus(response.data.items)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+
+
+  }
+
+  var agentstatus = [];
+  var obj1 = {};
+
+  if (currentstatus.length && allusers.length > 0) {
+
+    var i = 1;
+    currentstatus.forEach(element1 => {
+      allusers.forEach(element2 => {
+        if (element1.agentID === element2.External_num && element1.loginStatus === "true") {
+
+          obj1 = {
+            'sl.no': i,
+            'EmployeeName': element2.EmployeeName,
+            'agentID': element1.agentID,
+            'contactNumber': element1.contactNumber,
+            'agentCallStatus': element1.agentCallStatus,
+            'agentCallDispositionStatus': element1.agentCallDispositionStatus,
+            'Location': element2.Location,
+            'loginStatus': element1.loginStatus,
+            'Server': element2.Server,
+            'EmailID': element2.EmailID,
+            'breakStatus': element1.breakStatus
+          }
+          i = i + 1;
+          agentstatus.push(obj1);
+
+        }
+      });
+    });
+
+  }
+
+  console.log(agentliveStatus, "livestatus")
+
+  const onBreak = agentstatus.filter((agent) => {
+    return agent.breakStatus === 'IN'
+  })
+
+
+
+
+
   function getALF(startDate, endDate) {
 
     const axios = require('axios');
@@ -227,6 +317,8 @@ const Inbound = () => {
   function handleChange() {
     setagentdisposedCalls([])
   }
+
+
   function getIBdata() {
     const axios = require('axios');
 
@@ -266,6 +358,10 @@ const Inbound = () => {
     })
 
   }, [])
+
+  const options = {
+    filterType: 'checkbox',
+  };
 
   return (
     <>
@@ -307,8 +403,8 @@ const Inbound = () => {
               />
               <Grid item lg={3} sm={6}>
                 <br />
-                {agentdisposedCalls.length > 0 ? <DownloadReport
-                  DownloadData={agentdisposedCalls}
+                {agentstatus.length > 0 ? <DownloadReport
+                  DownloadData={agentstatus}
 
                 /> : <></>}
               </Grid>
@@ -350,7 +446,7 @@ const Inbound = () => {
                   id="panel1a-header"
                 >
                   <Typography className={classes.heading}>
-                    Agents Live Status :: Logged in (34) / On Break (17)
+                    Agents Live Status :: Logged in ({agentstatus.length}) / On Break ({onBreak.length})
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -362,8 +458,49 @@ const Inbound = () => {
         </Box>
         {/* <CurrentStatus/> */}
       </div>
-      {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> : <></>}
-
+      {/* {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> 
+      
+      : <></>} */}
+      <Box component="span" m={1}>
+        <Grid container spacing={3} justify={'space-around'}>
+          <Grid item lg={6} md={12} xs={12}>
+            <Card>
+              <CardHeader title={'Calls in Queue'} />
+              <CardContent>
+                <Advancedtable
+                  records={allusers}
+                // selectedData={selectedDataForObutbound}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item lg={6} md={12} xs={12}>
+            <Card>
+              <CardHeader title={'Live calls'} />
+              <CardContent>
+                <AgentLivecallsTable
+                  records={allusers}
+                // selectedData={selectedDataForObutbound}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box>
+        <Grid item lg={12} md={12} xs={12}>
+          <Card>
+            <CardContent>
+              <MUIDataTable
+                title={"Agent Live Status"}
+                data={agentstatus}
+                columns={AgentLivestatuscolumns1}
+                options={options}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+      </Box>
     </>
   );
 };
