@@ -52,12 +52,13 @@ import MUIDataTable from "mui-datatables";
 import CurrentStatus from './CurrentStatus'
 import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
 import { getAllusers } from '../../redux/action'
-import { AgentLivestatuscolumns1 } from '../../../dashboard-360/utils/columns-config'
+import { AgentLivestatuscolumns1, callsinQueuecolumns } from '../../../dashboard-360/utils/columns-config'
 import { useSelector, useDispatch } from 'react-redux'
 import {
 
   lastFiveCallData
 } from 'src/modules/dashboard-360/utils/columns-config';
+import { Rowing } from '@material-ui/icons';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -209,6 +210,8 @@ const Inbound = () => {
     // }
   ];
   const [allusers, setAllusers] = useState([])
+  const [callsinQueue, setCallsInQueue] = useState([])
+  const [liveCalls, setLivecalls] = useState([])
 
   console.log(allusers, "allusers")
   console.log(currentstatus, "current status")
@@ -296,6 +299,18 @@ const Inbound = () => {
     return agent.breakStatus === 'IN'
   })
 
+  const getLiveCalls = () => {
+    axios.get('http://192.168.51.147:4000/report/api/callinqueue')
+      .then((response) => {
+        console.log(response, "live callllllllsss")
+        setCallsInQueue(response.data)
+        // setCurrentstatus(response.data.items)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
+
 
 
 
@@ -358,9 +373,12 @@ const Inbound = () => {
 
 
 
+
   useEffect(() => {
 
     getIBdata();
+    getLiveCalls()
+
     const socket = socketIOClient(SOCKETENDPOINT);
 
     socket.on('AstriskEvent', data => {
@@ -377,6 +395,8 @@ const Inbound = () => {
   const options = {
     filterType: 'checkbox',
   };
+
+
 
   return (
     <>
@@ -487,11 +507,13 @@ const Inbound = () => {
           </Grid>
           <Grid item lg={6} md={12} xs={12}>
             <Card>
-              <CardHeader title={'Live calls'} />
+              {/* <CardHeader title={'Live calls'} /> */}
               <CardContent>
-                <AgentLivecallsTable
-                  records={allusers}
-                // selectedData={selectedDataForObutbound}
+                <MUIDataTable
+                  title={`Calls in Queue - ${callsinQueue.length}`}
+                  data={callsinQueue}
+                  columns={callsinQueuecolumns}
+                  options={options}
                 />
               </CardContent>
             </Card>
@@ -516,4 +538,3 @@ const Inbound = () => {
   );
 };
 export default Inbound;
-

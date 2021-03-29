@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export const orderColumns = [
@@ -493,3 +493,53 @@ export const AgentLivestatuscolumns1 = [
     }
   },
 ];
+
+export const callsinQueuecolumns = [
+  {
+    name: 'datetime_entry_queue',
+    label: 'Time',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+
+  {
+    name: 'Queue',
+    label: 'Queue',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'callerid',
+    label: 'Caller Phone Number',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'duration',
+    label: 'Duration in Queue',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: '0',
+    label: 'Server',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  }
+];
+
