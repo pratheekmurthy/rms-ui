@@ -533,7 +533,7 @@ export const callsinQueuecolumns = [
     }
   },
   {
-    name: '0',
+    name: 'ServerIP',
     label: 'Server',
     flex: 1,
     options: {
@@ -542,4 +542,64 @@ export const callsinQueuecolumns = [
     }
   }
 ];
+
+export const LiveCallscolumns = [
+  {
+    name: 'EmployeeName',
+    label: 'Agent Name',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+
+  {
+    name: 'agentID',
+    label: 'Agent ID',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'callerid',
+    label: 'Caller Phone Number',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'Location',
+    label: 'Location',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'duration',
+    label: 'Duration',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'ServerIP',
+    label: 'server',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  }
+];
+
+
 

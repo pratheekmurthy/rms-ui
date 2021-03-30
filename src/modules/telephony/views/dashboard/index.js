@@ -52,7 +52,7 @@ import MUIDataTable from "mui-datatables";
 import CurrentStatus from './CurrentStatus'
 import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
 import { getAllusers } from '../../redux/action'
-import { AgentLivestatuscolumns1, callsinQueuecolumns } from '../../../dashboard-360/utils/columns-config'
+import { AgentLivestatuscolumns1, callsinQueuecolumns, LiveCallscolumns } from '../../../dashboard-360/utils/columns-config'
 import { useSelector, useDispatch } from 'react-redux'
 import {
 
@@ -102,6 +102,7 @@ const Inbound = () => {
   const [agentdisposedCalls, setagentdisposedCalls] = useState([])
   const [agentliveStatus, setagentliveStatus] = useState([])
   const [currentstatus, setCurrentstatus] = useState([])
+  const [data, setData] = useState({})
   const [Inbound, setInbound] = useState(
     {
       "callarrived": 0,
@@ -130,7 +131,7 @@ const Inbound = () => {
   const InboundDataList = [
     {
       icon: <CallIcon color="primary" />,
-      data: Inbound.callarrived,
+      data: data.callarrived,
       label: 'I/B Calls Arrived'
     },
     {
@@ -140,12 +141,12 @@ const Inbound = () => {
     },
     {
       icon: <AddIcCallIcon color="primary" />,
-      data: Inbound.callsoffered,
+      data: data.callsoffered,
       label: 'I/B Calls Offered'
     },
     {
       icon: <CallReceivedIcon color="primary" />,
-      data: Inbound.callsanswered,
+      data: data.callsanswered,
       label: 'I/B Calls Answered'
     },
     {
@@ -165,12 +166,12 @@ const Inbound = () => {
     },
     {
       icon: <RecordVoiceOverIcon color="primary" />,
-      data: Inbound.shortabandoned,
+      data: data.callsabandoned,
       label: 'I/B IVR Aband'
     },
     {
       icon: <VoicemailIcon color="primary" />,
-      data: '0',
+      data: data.callsabandonedinqueue,
       label: 'I/B Queue Aband'
     },
     {
@@ -212,6 +213,7 @@ const Inbound = () => {
   const [allusers, setAllusers] = useState([])
   const [callsinQueue, setCallsInQueue] = useState([])
   const [liveCalls, setLivecalls] = useState([])
+
 
   console.log(allusers, "allusers")
   console.log(currentstatus, "current status")
@@ -289,6 +291,8 @@ const Inbound = () => {
 
   }
 
+
+
   console.log(agentliveStatus, "livestatus")
 
   const disposedInteractions = agentstatus.filter((record) => {
@@ -300,9 +304,27 @@ const Inbound = () => {
   })
 
   const getLiveCalls = () => {
-    axios.get('http://192.168.51.147:4000/report/api/callinqueue')
+    axios.get('http://192.168.51.147:7000/report/api/livecalls')
       .then((response) => {
         console.log(response, "live callllllllsss")
+        response.data.map((call) => {
+          return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+        })
+        setLivecalls(response.data)
+        // setCurrentstatus(response.data.items)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
+
+  const getCallsinQueue = () => {
+    axios.get('http://192.168.51.147:7000/report/api/callinqueue')
+      .then((response) => {
+        console.log(response, "queue callllllllsss")
+        response.data.map((call) => {
+          return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+        })
         setCallsInQueue(response.data)
         // setCurrentstatus(response.data.items)
       })
@@ -311,7 +333,16 @@ const Inbound = () => {
       })
   }
 
-
+  const getValues = () => {
+    axios.get('http://192.168.51.147:7000/report/api/cdr')
+      .then((response) => {
+        console.log(response, "live data")
+        setData(response.data.count)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
 
 
 
@@ -376,19 +407,29 @@ const Inbound = () => {
 
   useEffect(() => {
 
-    getIBdata();
-    getLiveCalls()
+    const interval = setInterval(() => {
+      getIBdata();
+      getLiveCalls()
+      getCallsinQueue()
+      const socket = socketIOClient(SOCKETENDPOINT);
 
-    const socket = socketIOClient(SOCKETENDPOINT);
+      socket.on('AstriskEvent', data => {
+        if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
+          getIBdata()
+        }
+        if (data.Event === 'Hangup') {
+          getIBdata()
+        }
+      })
 
-    socket.on('AstriskEvent', data => {
-      if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
-        getIBdata()
-      }
-      if (data.Event === 'Hangup') {
-        getIBdata()
-      }
-    })
+    }, 15000);
+
+    const interval1 = setInterval(() => {
+      getValues()
+
+    }, 60000);
+
+
 
   }, [])
 
@@ -431,7 +472,7 @@ const Inbound = () => {
                   </Card>
                 </Grid>
               ))}
-              <DaterangeReport
+              {/* <DaterangeReport
                 getALF={getALF}
                 handleChange={handleChange}
               />
@@ -440,7 +481,7 @@ const Inbound = () => {
                 {agentstatus.length > 0 ? <DownloadReport
                   DownloadData={agentstatus}
                 /> : <></>}
-              </Grid>
+              </Grid> */}
             </Grid>
             <Grid item xs={3}>
               <Accordion>
@@ -450,7 +491,7 @@ const Inbound = () => {
                   id="panel1a-header"
                 >
                   <Typography className={classes.heading}>
-                    Calls in Queue (0)
+                    Calls in Queue ({callsinQueue.length})
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -464,7 +505,7 @@ const Inbound = () => {
                   id="panel1a-header"
                 >
                   <Typography className={classes.heading}>
-                    Live Calls ({Inbound.livecalls})
+                    Live Calls ({liveCalls.length})
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -496,11 +537,12 @@ const Inbound = () => {
         <Grid container spacing={3} justify={'space-around'}>
           <Grid item lg={6} md={12} xs={12}>
             <Card>
-              <CardHeader title={'Calls in Queue'} />
               <CardContent>
-                <Advancedtable
-                  records={allusers}
-                // selectedData={selectedDataForObutbound}
+                <MUIDataTable
+                  title={`calls in Queue - ${callsinQueue.length}`}
+                  data={callsinQueue}
+                  columns={callsinQueuecolumns}
+                  options={options}
                 />
               </CardContent>
             </Card>
@@ -510,9 +552,9 @@ const Inbound = () => {
               {/* <CardHeader title={'Live calls'} /> */}
               <CardContent>
                 <MUIDataTable
-                  title={`Calls in Queue - ${callsinQueue.length}`}
-                  data={callsinQueue}
-                  columns={callsinQueuecolumns}
+                  title={`Live calls - ${liveCalls.length}`}
+                  data={liveCalls}
+                  columns={LiveCallscolumns}
                   options={options}
                 />
               </CardContent>
