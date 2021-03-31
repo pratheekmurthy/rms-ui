@@ -601,5 +601,198 @@ export const LiveCallscolumns = [
   }
 ];
 
+export const LiveCallscolumns1 = [
+  {
+    name: 'sl_No',
+    label: 'sl_No',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+
+  {
+    name: 'Agent_Number',
+    label: 'Agent_Number',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'Agent_Name',
+    label: 'Agent_Name',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'Caller_Name',
+    label: 'Caller_Name',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'callerNumber',
+    label: 'callerNumber',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'callerapplication',
+    label: 'callerapplication',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'callType',
+    label: 'callType',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'issuetype',
+    label: 'issuetype',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'category',
+    label: 'category',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'subcategory',
+    label: 'subcategory',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'subcategoryitem',
+    label: 'subcategoryitem',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'connectivitytype',
+    label: 'connectivitytype',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+
+  {
+    name: 'ostype',
+    label: 'ostype',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  }, {
+    name: 'solution',
+    label: 'solution',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'comments',
+    label: 'comments',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'asterixUniqueID',
+    label: 'asterixUniqueID',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'agenttype',
+    label: 'agenttype',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'distributerID',
+    label: 'distributerID',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'distributerName',
+    label: 'distributerName',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'createdAt',
+    label: 'createdAt',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+  {
+    name: 'updatedAt',
+    label: 'updatedAt',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+];
+
 
 

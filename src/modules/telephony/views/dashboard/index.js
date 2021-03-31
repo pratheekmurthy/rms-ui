@@ -427,7 +427,7 @@ const Inbound = () => {
     const interval1 = setInterval(() => {
       getValues()
 
-    }, 60000);
+    }, 150000);
 
 
 
