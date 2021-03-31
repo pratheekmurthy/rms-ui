@@ -422,7 +422,7 @@ const Inbound = () => {
         }
       })
 
-    }, 2000);
+    }, 5000);
 
     const interval1 = setInterval(() => {
       getValues()
