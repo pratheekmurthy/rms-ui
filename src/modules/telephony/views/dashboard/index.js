@@ -304,7 +304,7 @@ const Inbound = () => {
   })
 
   const getLiveCalls = () => {
-    axios.get('http://192.168.51.147:7000/report/api/livecalls')
+    axios.get('http://106.51.86.75:7000/report/api/livecalls')
       .then((response) => {
         console.log(response, "live callllllllsss")
         response.data.map((call) => {
@@ -319,7 +319,7 @@ const Inbound = () => {
   }
 
   const getCallsinQueue = () => {
-    axios.get('http://192.168.51.147:7000/report/api/callinqueue')
+    axios.get('http://106.51.86.75:7000/report/api/callinqueue')
       .then((response) => {
         console.log(response, "queue callllllllsss")
         response.data.map((call) => {
