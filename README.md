@@ -1,5 +1,4 @@
-iv-ui
-Integrated front end application for indusviva CRM
+Merittrac-Reporting Tool
 
 The module is developed in React js.
 To run this module,
@@ -9,8 +8,3 @@ npm start </code>
 
 This project consists module based architecture
 		--- Telephony Module
-		--- Ticketing Module
-		--- Survey Module
-		--- Campaign Module
-# mt-ui
-# mt-multiple-server-ui
