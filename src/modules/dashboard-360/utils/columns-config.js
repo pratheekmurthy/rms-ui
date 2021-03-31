@@ -398,6 +398,7 @@ export const AgentLivestatuscolumns = [
     headerName: 'server',
     flex: 1
   },
+
 ];
 
 export const AgentLivestatuscolumns1 = [
@@ -492,6 +493,16 @@ export const AgentLivestatuscolumns1 = [
       sort: true,
     }
   },
+  {
+    name: 'currentserver',
+    label: 'current server',
+    flex: 1,
+    options: {
+      filter: true,
+      sort: true,
+    }
+  },
+
 ];
 
 export const callsinQueuecolumns = [

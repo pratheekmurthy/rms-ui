@@ -229,33 +229,33 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
         const { accessToken } = res.data;
 
 
-        if (res.data.userDetails.AgentType === 'L1') {
+        if (res.data.userDetails.AgentType === 'Admin') {
           localStorage.setItem("jwtToken", accessToken);
-          // localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+          localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
           localStorage.setItem('role', 'Admin');
           // localStorage.setItem('Agenttype', 'L2');
           // localStorage.setItem('AgentType', 'Outbound')
           // setUserDetailsMain(obj);
           setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
           setLoggedInMain(true);
-          setError(true)
+          setError(false)
 
         }
-        if (res.data.userDetails.AgentType === 'L2') {
-          console.log('data resppppp', res.data)
-          localStorage.setItem("jwtToken", accessToken);
-          localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-          localStorage.setItem('role', res.data.userDetails.role);
-          localStorage.setItem('Agenttype', 'L2');
-          localStorage.setItem('AgentType', 'Outbound')
-          setUserDetailsMain(obj);
-          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-          if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-            // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
-          }
-          setLoggedInMain(true);
-          setError(false);
-        }
+        // if (res.data.userDetails.AgentType === 'L2') {
+        //   console.log('data resppppp', res.data)
+        //   localStorage.setItem("jwtToken", accessToken);
+        //   localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+        //   localStorage.setItem('role', res.data.userDetails.role);
+        //   localStorage.setItem('Agenttype', 'L2');
+        //   localStorage.setItem('AgentType', 'Outbound')
+        //   setUserDetailsMain(obj);
+        //   setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+        //   if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
+        //     // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
+        //   }
+        //   setLoggedInMain(true);
+        //   setError(false);
+        // }
 
 
       } else {

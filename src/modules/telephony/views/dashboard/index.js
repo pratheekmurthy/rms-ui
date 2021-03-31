@@ -102,6 +102,10 @@ const Inbound = () => {
   const [agentdisposedCalls, setagentdisposedCalls] = useState([])
   const [agentliveStatus, setagentliveStatus] = useState([])
   const [currentstatus, setCurrentstatus] = useState([])
+  const [allusers, setAllusers] = useState([])
+  const [callsinQueue, setCallsInQueue] = useState([])
+  const [liveCalls, setLivecalls] = useState([])
+
   const [data, setData] = useState({})
   const [Inbound, setInbound] = useState(
     {
@@ -134,11 +138,11 @@ const Inbound = () => {
       data: data.callarrived,
       label: 'I/B Calls Arrived'
     },
-    {
-      icon: <QueryBuilderIcon color="primary" />,
-      data: Inbound.ooohourscalls,
-      label: 'OOO Hours Calls'
-    },
+    // {
+    //   icon: <QueryBuilderIcon color="primary" />,
+    //   data: Inbound.ooohourscalls,
+    //   label: 'OOO Hours Calls'
+    // },
     {
       icon: <AddIcCallIcon color="primary" />,
       data: data.callsoffered,
@@ -149,21 +153,21 @@ const Inbound = () => {
       data: data.callsanswered,
       label: 'I/B Calls Answered'
     },
-    {
-      icon: <QueueIcon color="primary" />,
-      data: Inbound.queuecalls,
-      label: 'I/B Calls in Queue'
-    },
-    {
-      icon: <SupervisorAccountIcon color="primary" />,
-      data: '0',
-      label: 'I/B Agents Available'
-    },
-    {
-      icon: <AvTimerIcon color="primary" />,
-      data: '0',
-      label: 'I/B Ans within SL'
-    },
+    // {
+    //   icon: <QueueIcon color="primary" />,
+    //   data: Inbound.queuecalls,
+    //   label: 'I/B Calls in Queue'
+    // },
+    // {
+    //   icon: <SupervisorAccountIcon color="primary" />,
+    //   data: '0',
+    //   label: 'I/B Agents Available'
+    // },
+    // {
+    //   icon: <AvTimerIcon color="primary" />,
+    //   data: '0',
+    //   label: 'I/B Ans within SL'
+    // },
     {
       icon: <RecordVoiceOverIcon color="primary" />,
       data: data.callsabandoned,
@@ -175,20 +179,26 @@ const Inbound = () => {
       label: 'I/B Queue Aband'
     },
     {
-      icon: <ListAltIcon color="primary" />,
-      data: '0',
-      label: 'I/B Service Level (SL-20)'
+      icon: <AddIcCallIcon color="primary" />,
+      data: liveCalls.length,
+      label: 'Live calls'
     },
     {
-      icon: <QuestionAnswerRoundedIcon color="primary" />,
-      data: Inbound.callsansweredwithin20,
-      label: 'I/B Answer Level (SL-20)'
+      icon: <AddIcCallIcon color="primary" />,
+      data: callsinQueue.length,
+      label: 'Queue calls'
     },
-    {
-      icon: <TimelapseRoundedIcon color="primary" />,
-      data: Inbound.aht,
-      label: 'I/B AHT'
-    }
+
+    // {
+    //   icon: <QuestionAnswerRoundedIcon color="primary" />,
+    //   data: Inbound.callsansweredwithin20,
+    //   label: 'I/B Answer Level (SL-20)'
+    // },
+    // {
+    //   icon: <TimelapseRoundedIcon color="primary" />,
+    //   data: Inbound.aht,
+    //   label: 'I/B AHT'
+    // }
     // {
     //   icon: <Timer10RoundedIcon color="primary" />,
     //   data: '0',
@@ -210,9 +220,6 @@ const Inbound = () => {
     //   label: 'I/B Answer Level (SL-10)'
     // }
   ];
-  const [allusers, setAllusers] = useState([])
-  const [callsinQueue, setCallsInQueue] = useState([])
-  const [liveCalls, setLivecalls] = useState([])
 
 
   console.log(allusers, "allusers")
@@ -274,7 +281,8 @@ const Inbound = () => {
             'loginStatus': element1.loginStatus,
             'Server': element2.Server,
             'EmailID': element2.EmailID,
-            'breakStatus': element1.breakStatus
+            'breakStatus': element1.breakStatus,
+            'currentserver': element1.currentserver
           }
           i = i + 1;
           if (element1.agentCallStatus === 'disconnected' && element1.agentCallDispositionStatus === 'NotDisposed') {
@@ -292,7 +300,7 @@ const Inbound = () => {
   }
 
 
-
+  console.log(agentstatus, "live agents")
   console.log(agentliveStatus, "livestatus")
 
   const disposedInteractions = agentstatus.filter((record) => {
@@ -334,7 +342,7 @@ const Inbound = () => {
   }
 
   const getValues = () => {
-    axios.get('http://192.168.51.147:7000/report/api/cdr')
+    axios.get('http://106.51.86.75:7000/report/api/cdr')
       .then((response) => {
         console.log(response, "live data")
         setData(response.data.count)
@@ -422,12 +430,12 @@ const Inbound = () => {
         }
       })
 
-    }, 5000);
+    }, 1000);
 
     const interval1 = setInterval(() => {
       getValues()
 
-    }, 150000);
+    }, 15000);
 
 
 
@@ -486,7 +494,7 @@ const Inbound = () => {
             <Grid item xs={3}>
               <Accordion>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  // expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
@@ -494,13 +502,13 @@ const Inbound = () => {
                     Calls in Queue ({callsinQueue.length})
                   </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                {/* <AccordionDetails>
                   <Typography>Details</Typography>
-                </AccordionDetails>
+                </AccordionDetails> */}
               </Accordion>
               <Accordion>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  // expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
@@ -514,7 +522,7 @@ const Inbound = () => {
               </Accordion>
               <Accordion>
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
+                  // expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
                   id="panel1a-header"
                 >
@@ -567,7 +575,7 @@ const Inbound = () => {
           <Card>
             <CardContent>
               <MUIDataTable
-                title={`Agent Live Status - Logged in (${agentstatus.length}) / Live Agents - (${agentstatus.length - onBreak.length}) /On Break (${onBreak.length}) / Disposed () / Not Disposed ()`}
+                title={`Agent Live Status - Logged in (${agentstatus.length}) / Live Agents - (${agentstatus.length - onBreak.length}) /On Break (${onBreak.length})`}
                 data={agentstatus}
                 columns={AgentLivestatuscolumns1}
                 options={options}
