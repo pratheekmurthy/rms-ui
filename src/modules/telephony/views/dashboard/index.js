@@ -52,8 +52,10 @@ import MUIDataTable from "mui-datatables";
 import CurrentStatus from './CurrentStatus'
 import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
 import { getAllusers } from '../../redux/action'
-import { AgentLivestatuscolumns1, callsinQueuecolumns, LiveCallscolumns } from '../../../dashboard-360/utils/columns-config'
+import { AgentLivestatuscolumns1, callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents } from '../../../dashboard-360/utils/columns-config'
 import { useSelector, useDispatch } from 'react-redux'
+import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
+import 'bootstrap/dist/css/bootstrap.css'
 import {
 
   lastFiveCallData
@@ -316,7 +318,8 @@ const Inbound = () => {
       .then((response) => {
         console.log(response, "live callllllllsss")
         response.data.map((call) => {
-          return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+          // return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+          return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
         })
         setLivecalls(response.data)
         // setCurrentstatus(response.data.items)
@@ -329,10 +332,11 @@ const Inbound = () => {
   const getCallsinQueue = () => {
     axios.get('http://106.51.86.75:7000/report/api/callinqueue')
       .then((response) => {
-        console.log(response, "queue callllllllsss")
+        // console.log(response, "queue callllllllsss")
         response.data.map((call) => {
-          return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+          return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
         })
+        console.log(response.data, "queue calllsss")
         setCallsInQueue(response.data)
         // setCurrentstatus(response.data.items)
       })
@@ -416,35 +420,81 @@ const Inbound = () => {
   useEffect(() => {
 
     const interval = setInterval(() => {
-      getIBdata();
       getLiveCalls()
       getCallsinQueue()
-      const socket = socketIOClient(SOCKETENDPOINT);
+      getIb()
 
-      socket.on('AstriskEvent', data => {
-        if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
-          getIBdata()
-        }
-        if (data.Event === 'Hangup') {
-          getIBdata()
-        }
-      })
+    }, 2000);
 
-    }, 1000);
+
 
     const interval1 = setInterval(() => {
       getValues()
+      // const socket = socketIOClient(SOCKETENDPOINT);
 
-    }, 15000);
+      // socket.on('AstriskEvent', data => {
+      //   if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
+      //     getIBdata()
+      //   }
+      //   if (data.Event === 'Hangup') {
+      //     getIBdata()
+      //   }
+      // })
 
+    }, 60000);
 
+    const interval2 = setInterval(() => {
+      getIb()
+
+    }, 6000);
 
   }, [])
 
+  useEffect(() => {
+
+  }, [getIBdata])
+
   const options = {
     filterType: 'checkbox',
+    rowsPerPage: 10
   };
 
+  const data1 = {}
+  console.log(agentstatus)
+  data1.rows = agentstatus;
+  data1.columns = LiveCallscolumns2;
+
+  const chennaiIdleAgents = agentstatus.filter((Agent) => {
+    return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'Chennai'
+  })
+
+  console.log(chennaiIdleAgents, "idleagents chennai")
+
+  const OmrIdleAgents = agentstatus.filter((Agent) => {
+    return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'OMR'
+  })
+
+  // console.log(OmrIdleAgents, "idleagents OMR")
+
+
+  const callsinQueueData = {}
+  callsinQueueData.rows = callsinQueue
+  callsinQueueData.columns = callsinQueuecolumns
+
+  const chennaiIdleAgentsData = {}
+  chennaiIdleAgentsData.rows = chennaiIdleAgents
+  chennaiIdleAgentsData.columns = ChennaiIdleAgents
+
+  const OmrIdleAgentsData = {}
+  OmrIdleAgentsData.rows = OmrIdleAgents
+  OmrIdleAgentsData.columns = omrIdleAgents
+
+  const liveCallsData = {}
+  liveCallsData.rows = liveCalls
+  liveCallsData.columns = LiveCallscolumns
+
+
+  console.log(callsinQueueData, "callsinQueueData")
 
 
   return (
@@ -516,9 +566,9 @@ const Inbound = () => {
                     Live Calls ({liveCalls.length})
                   </Typography>
                 </AccordionSummary>
-                <AccordionDetails>
+                {/* <AccordionDetails>
                   <Typography>Details</Typography>
-                </AccordionDetails>
+                </AccordionDetails> */}
               </Accordion>
               <Accordion>
                 <AccordionSummary
@@ -545,25 +595,81 @@ const Inbound = () => {
         <Grid container spacing={3} justify={'space-around'}>
           <Grid item lg={6} md={12} xs={12}>
             <Card>
+              <CardHeader
+                title={
+                  `Queue calls  :: ${callsinQueue.length}  `
+                }
+              />
               <CardContent>
-                <MUIDataTable
+                {/* <MUIDataTable
                   title={`calls in Queue - ${callsinQueue.length}`}
                   data={callsinQueue}
                   columns={callsinQueuecolumns}
                   options={options}
+                /> */}
+                <MDBDataTable
+                  striped
+                  hover
+                  data={callsinQueueData}
                 />
               </CardContent>
             </Card>
           </Grid>
           <Grid item lg={6} md={12} xs={12}>
             <Card>
-              {/* <CardHeader title={'Live calls'} /> */}
+              <CardHeader
+                title={
+                  `Live Calls ::  ${liveCalls.length}`
+                }
+              />
               <CardContent>
-                <MUIDataTable
+                {/* <MUIDataTable
                   title={`Live calls - ${liveCalls.length}`}
                   data={liveCalls}
                   columns={LiveCallscolumns}
                   options={options}
+                /> */}
+                <MDBDataTable
+                  striped
+                  hover
+                  data={liveCallsData}
+                />
+
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
+      <Box component="span" m={1}>
+        <Grid container spacing={3} justify={'space-around'}>
+          <Grid item lg={6} md={12} xs={12}>
+            <Card>
+              <CardHeader
+                title={
+                  `IDLE Agents OMR :: ${OmrIdleAgents.length}  `
+                }
+              />
+              <CardContent>
+                <MDBDataTable
+                  striped
+                  hover
+                  data={OmrIdleAgentsData}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item lg={6} md={12} xs={12}>
+            <Card>
+              <CardHeader
+                title={
+                  `IDLE Agents Chennai ::  ${chennaiIdleAgents.length}`
+                }
+              />
+              <CardContent>
+                <MDBDataTable
+                  striped
+                  hover
+                  data={chennaiIdleAgentsData}
                 />
               </CardContent>
             </Card>
@@ -573,12 +679,16 @@ const Inbound = () => {
       <Box>
         <Grid item lg={12} md={12} xs={12}>
           <Card>
+            <CardHeader
+              title={
+                `Agent Live Status - Logged in (${agentstatus.length}) / Live Agents - (${agentstatus.length - onBreak.length}) /On Break (${onBreak.length})`
+              }
+            />
             <CardContent>
-              <MUIDataTable
-                title={`Agent Live Status - Logged in (${agentstatus.length}) / Live Agents - (${agentstatus.length - onBreak.length}) /On Break (${onBreak.length})`}
-                data={agentstatus}
-                columns={AgentLivestatuscolumns1}
-                options={options}
+              <MDBDataTable
+                striped
+                hover
+                data={data1}
               />
             </CardContent>
           </Card>

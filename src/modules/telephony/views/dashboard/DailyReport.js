@@ -14,6 +14,7 @@ import { LiveCallscolumns1 } from '../../../dashboard-360/utils/columns-config'
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { MDBDataTable } from 'mdbreact';
 
 
 const useStyles = makeStyles((theme) => ({

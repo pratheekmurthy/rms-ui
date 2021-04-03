@@ -505,111 +505,185 @@ export const AgentLivestatuscolumns1 = [
 
 ];
 
+// export const callsinQueuecolumns = [
+//   {
+//     name: 'datetime_entry_queue',
+//     label: 'Time',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+
+//   {
+//     name: 'Queue',
+//     label: 'Queue',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'callerid',
+//     label: 'Caller Phone Number',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'duration',
+//     label: 'Duration in Queue',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'ServerIP',
+//     label: 'Server',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   }
+// ];
+
+// export const LiveCallscolumns = [
+//   {
+//     name: 'EmployeeName',
+//     label: 'Agent Name',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+
+//   {
+//     name: 'agentID',
+//     label: 'Agent ID',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'callerid',
+//     label: 'Caller Phone Number',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'Location',
+//     label: 'Location',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'duration',
+//     label: 'Duration',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   },
+//   {
+//     name: 'ServerIP',
+//     label: 'server',
+//     flex: 1,
+//     options: {
+//       filter: true,
+//       sort: true,
+//     }
+//   }
+// ];
+
 export const callsinQueuecolumns = [
   {
-    name: 'datetime_entry_queue',
+    field: 'datetime_entry_queue',
     label: 'Time',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
-
   {
-    name: 'Queue',
+    field: 'Queue',
     label: 'Queue',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'callerid',
+    field: 'callerid',
     label: 'Caller Phone Number',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'duration',
+    field: 'duration',
     label: 'Duration in Queue',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'ServerIP',
+    field: 'ServerIP',
     label: 'Server',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  }
+    sort: 'asc',
+    width: 150
+  },
 ];
 
 export const LiveCallscolumns = [
   {
-    name: 'EmployeeName',
-    label: 'Agent Name',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    field: 'EmployeeName',
+    label: 'EmployeeName',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'agentID',
+    label: 'agentID',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'callerid',
+    label: 'Caller Phone Number',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'Location',
+    label: 'Location',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'duration',
+    label: 'duration',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'ServerIP',
+    label: 'Server',
+    sort: 'asc',
+    width: 150
   },
 
-  {
-    name: 'agentID',
-    label: 'Agent ID',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'callerid',
-    label: 'Caller Phone Number',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'Location',
-    label: 'Location',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'duration',
-    label: 'Duration',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'ServerIP',
-    label: 'server',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  }
+
 ];
 
 export const LiveCallscolumns1 = [
@@ -803,6 +877,156 @@ export const LiveCallscolumns1 = [
       sort: true,
     }
   },
+];
+
+export const LiveCallscolumns2 = [
+
+  {
+    field: 'sl.no',
+    label: 'sl_No',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'EmployeeName',
+    label: 'Name',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentID',
+    label: 'agentID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'EmailID',
+    label: 'EmailID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallStatus',
+    label: 'Agent status',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallDispositionStatus',
+    label: 'Disposition',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'breakStatus',
+    label: 'Break status',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'Location',
+    label: 'Location',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'Server',
+    label: 'Server',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'currentserver',
+    label: 'current server',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'difference',
+    label: 'IDLE Time',
+    sort: 'asc',
+    width: 150
+  },
+
+];
+
+export const ChennaiIdleAgents = [
+  {
+    field: 'EmployeeName',
+    label: 'Name',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentID',
+    label: 'agentID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'EmailID',
+    label: 'EmailID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallStatus',
+    label: 'Agent status',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallDispositionStatus',
+    label: 'Disposition',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'breakStatus',
+    label: 'Break status',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'difference',
+    label: 'IDLE Time',
+    sort: 'asc',
+    width: 150
+  },
+
+];
+
+export const omrIdleAgents = [
+
+  {
+    field: 'EmployeeName',
+    label: 'Name',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentID',
+    label: 'agentID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'EmailID',
+    label: 'EmailID',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallStatus',
+    label: 'Agent status',
+    sort: 'asc',
+    width: 150
+  }, {
+    field: 'agentCallDispositionStatus',
+    label: 'Disposition',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'breakStatus',
+    label: 'Break status',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'difference',
+    label: 'IDLE Time',
+    sort: 'asc',
+    width: 150
+  },
+
 ];
 
 
