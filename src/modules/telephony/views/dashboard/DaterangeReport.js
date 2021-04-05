@@ -55,10 +55,10 @@ export default function MaterialUIPickers(props) {
           'aria-label': 'change date',
         }}
       />
+      <br />
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
-      <br />
-      <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
+      <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Show Records</Button>
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
       <br />

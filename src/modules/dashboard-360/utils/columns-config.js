@@ -688,195 +688,141 @@ export const LiveCallscolumns = [
 
 export const LiveCallscolumns1 = [
   {
-    name: 'sl_No',
+    field: 'sl_No',
     label: 'sl_No',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-
-  {
-    name: 'Agent_Number',
-    label: 'Agent_Number',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'Agent_Name',
-    label: 'Agent_Name',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    field: 'Agent_Number',
+    label: 'Agent Number',
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'Caller_Name',
-    label: 'Caller_Name',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    field: 'Agent_Name',
+    label: 'Agent Name',
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'callerNumber',
+    field: 'Caller_Name',
+    label: 'Caller Name',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'callerNumber',
     label: 'callerNumber',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'callerapplication',
-    label: 'callerapplication',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'callType',
-    label: 'callType',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'issuetype',
-    label: 'issuetype',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'category',
-    label: 'category',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'subcategory',
-    label: 'subcategory',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'subcategoryitem',
-    label: 'subcategoryitem',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  },
-  {
-    name: 'connectivitytype',
-    label: 'connectivitytype',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
 
   {
-    name: 'ostype',
+    field: 'callerapplication',
+    label: 'callerapplication',
+    sort: 'asc',
+    width: 150
+  },
+
+  {
+    field: 'callType',
+    label: 'callType',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'issuetype',
+    label: 'issuetype',
+    sort: 'asc',
+    width: 150
+  },
+
+  {
+    field: 'category',
+    label: 'category',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'subcategory',
+    label: 'subcategory',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'subcategoryitem',
+    label: 'subcategoryitem',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'connectivitytype',
+    label: 'connectivitytype',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'ostype',
     label: 'ostype',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
-  }, {
-    name: 'solution',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'solution',
     label: 'solution',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'comments',
+    field: 'comments',
     label: 'comments',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'asterixUniqueID',
+    field: 'asterixUniqueID',
     label: 'asterixUniqueID',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'agenttype',
-    label: 'agenttype',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    field: 'solution',
+    label: 'solution',
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'distributerID',
+    field: 'comments',
+    label: 'comments',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'distributerID',
     label: 'distributerID',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'distributerName',
+    field: 'distributerName',
     label: 'distributerName',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'createdAt',
+    field: 'createdAt',
     label: 'createdAt',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
   {
-    name: 'updatedAt',
+    field: 'updatedAt',
     label: 'updatedAt',
-    flex: 1,
-    options: {
-      filter: true,
-      sort: true,
-    }
+    sort: 'asc',
+    width: 150
   },
+
 ];
 
 export const LiveCallscolumns2 = [
