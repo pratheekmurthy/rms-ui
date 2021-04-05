@@ -153,6 +153,11 @@ const DailyReport = (props) => {
         {
             agentdisposedCalls.length > 1 ? <Grid>
                 <Card>
+                    <CardHeader
+                        title={
+                            `Total Records :: ${agentstatus1.length}  `
+                        }
+                    />
                     <CardContent>
                         {/* <MUIDataTable
                             title={`Records - ${agentdisposedCalls.length}`}

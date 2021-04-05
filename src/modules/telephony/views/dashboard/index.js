@@ -56,6 +56,7 @@ import { AgentLivestatuscolumns1, callsinQueuecolumns, LiveCallscolumns, LiveCal
 import { useSelector, useDispatch } from 'react-redux'
 import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
 import 'bootstrap/dist/css/bootstrap.css'
+import Example from './ExampleTable'
 import {
 
   lastFiveCallData
@@ -456,7 +457,7 @@ const Inbound = () => {
 
   const options = {
     filterType: 'checkbox',
-    rowsPerPage: 10
+    rowsPerPage: 10,
   };
 
   const data1 = {}
@@ -668,6 +669,7 @@ const Inbound = () => {
               <CardContent>
                 <MDBDataTable
                   striped
+                  stripeRowsStyle={{ backgroundColor: 'red' }}
                   hover
                   data={chennaiIdleAgentsData}
                 />
@@ -685,6 +687,12 @@ const Inbound = () => {
               }
             />
             <CardContent>
+              {/* <MUIDataTable
+                title={`calls in Queue - ${callsinQueue.length}`}
+                data={callsinQueue}
+                columns={callsinQueuecolumns}
+                options={options}
+              /> */}
               <MDBDataTable
                 striped
                 hover
