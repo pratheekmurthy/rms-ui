@@ -72,13 +72,13 @@ const CdrReports = props => {
                 <CardContent>
                     <Grid item lg={12} md={12} xs={12}>
                         <FormControl variant="outlined" className={classes.formControl}>
-                            <InputLabel id="demo-simple-select-outlined-label">server</InputLabel>
+                            <InputLabel id="demo-simple-select-outlined-label">select server</InputLabel>
                             <Select
                                 labelId="demo-simple-select-outlined-label"
                                 id="demo-simple-select-outlined"
                                 value={server}
                                 onChange={handleChange}
-                                label="Age"
+                                label="select server"
                                 autoWidth={false}
                             >
                                 <MenuItem value="">
