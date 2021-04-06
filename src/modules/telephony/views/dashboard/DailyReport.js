@@ -14,6 +14,9 @@ import { LiveCallscolumns1 } from '../../../dashboard-360/utils/columns-config'
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
+import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport'
+import 'bootstrap/dist/css/bootstrap.css'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +35,7 @@ const DailyReport = (props) => {
     const [agentdisposedCalls, setagentdisposedCalls] = useState([])
     const [allusers, setUsers] = useState([])
     const [agentStatus, setAgentstatus] = useState([])
-
+    var agentstatus1 = [];
 
 
     function getALF(startDate, endDate) {
@@ -76,7 +79,7 @@ const DailyReport = (props) => {
     }
 
     if (agentdisposedCalls.length > 1) {
-        var agentstatus1 = [];
+
         var obj1 = {};
         var i = 1;
         agentdisposedCalls.forEach((element1) => {
@@ -113,6 +116,10 @@ const DailyReport = (props) => {
         })
     }
 
+    const DailysReportsData = {}
+    DailysReportsData.rows = agentstatus1
+    DailysReportsData.columns = LiveCallscolumns1
+
     // console.log(agentstatus1, "filtered data111")
 
     function handleChange() {
@@ -138,17 +145,32 @@ const DailyReport = (props) => {
         {
             progress && <LinearProgress />
         }
-
+        <Grid item lg={12} sm={6}>
+            {agentstatus1.length > 1 ? <DownloadReport
+                DownloadData={agentstatus1}
+            /> : null}
+        </Grid>
         {
             agentdisposedCalls.length > 1 ? <Grid>
                 <Card>
+                    <CardHeader
+                        title={
+                            `Total Records :: ${agentstatus1.length}  `
+                        }
+                    />
                     <CardContent>
-                        <MUIDataTable
+                        {/* <MUIDataTable
                             title={`Records - ${agentdisposedCalls.length}`}
                             data={agentstatus1}
                             columns={LiveCallscolumns1}
                             options={options}
+                        /> */}
+                        <MDBDataTable
+                            striped
+                            hover
+                            data={DailysReportsData}
                         />
+
                     </CardContent>
                 </Card>
             </Grid> : null

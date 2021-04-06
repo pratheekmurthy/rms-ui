@@ -341,8 +341,11 @@ const TopBar = ({
               badgeContent={notifications.length}
               color="primary"
               variant="dot"
-            >
-              <NotificationsIcon />
+            ><Typography className={classes.title} variant="h5" noWrap>
+                <Link to="/cdrreports" className="color-white">
+                  CDR Reports
+            </Link>
+              </Typography>
             </Badge>
           </IconButton>
           <IconButton color="inherit">

@@ -3,6 +3,7 @@ import React from 'react';
 import telephonyRoutes from '../modules/telephony/routes';
 import faqRoutes from '../modules/FAQ/routes';
 import DailyReport from '.././modules/telephony/views/dashboard/DailyReport'
+import CdrReport from '../modules/telephony/views/dashboard/cdrReports'
 import authRoutes from '../modules/auth/routes';
 
 import agentRoutes from '../modules/agentForm/routes';
@@ -80,6 +81,11 @@ export default [
   {
     path: '/dailyreport',
     component: DailyReport,
+    requiresAuth: true
+  },
+  {
+    path: '/cdrreports',
+    component: CdrReport,
     requiresAuth: true
   }
 
