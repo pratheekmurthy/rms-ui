@@ -26,6 +26,17 @@ import Axios from 'axios';
 import {
   UPDATE_CURRENT_STATUS
 } from '../modules/dashboard-360/utils/endpoints'
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MailIcon from '@material-ui/icons/Mail';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import CallIcon from '@material-ui/icons/Call';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+
+
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -125,8 +136,28 @@ const TopBar = ({
 
   const classes = useStyles();
   const [notifications] = useState([]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
 
   async function logoutUser() {
@@ -160,7 +191,65 @@ const TopBar = ({
     }
   }
   var test = "green"
-  return (
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton color="inherit">
+          <Badge color="secondary">
+            <AssignmentIndIcon />
+          </Badge>
+        </IconButton>
+        <Link to="/dailyreport" className="color-black"> Daily Reports</Link>
+      </MenuItem>
+      <MenuItem>
+        <IconButton color="inherit">
+          <Badge color="secondary">
+            <CallIcon />
+          </Badge>
+        </IconButton>
+        <Link to="/cdrreports" className="color-black"> CDR Reports</Link>
+      </MenuItem>
+      <MenuItem onClick={() => logoutUser()}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+
+        >
+          <ExitToAppIcon />
+        </IconButton>
+        <p>logout</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  return (<div>
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: 'blue' }}>
       <Toolbar>
         <RouterLink to="/">
@@ -208,9 +297,9 @@ const TopBar = ({
               </Typography>
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
-          </IconButton>
+          </IconButton> */}
           <Tooltip title="Logout">
             <IconButton color="inherit" onClick={() => logoutUser()}>
               <ExitToAppIcon />
@@ -218,12 +307,17 @@ const TopBar = ({
           </Tooltip>
         </Hidden>
         <Hidden lgUp>
-          <IconButton color="inherit" onClick={onMobileNavOpen}>
+          <IconButton color="inherit" onClick={handleMobileMenuOpen} aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true" >
             <MenuIcon />
           </IconButton>
         </Hidden>
       </Toolbar>
     </AppBar>
+    { renderMobileMenu}
+    { renderMenu}
+  </div>
   );
 };
 const mapStateToProps = state => ({

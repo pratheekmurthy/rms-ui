@@ -15,14 +15,14 @@ import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadR
 import 'bootstrap/dist/css/bootstrap.css'
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-    },
-}));
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         width: '100%',
+//         '& > * + *': {
+//             marginTop: theme.spacing(2),
+//         },
+//     },
+// }));
 
 
 const DailyReport = (props) => {
@@ -120,9 +120,9 @@ const DailyReport = (props) => {
         setagentdisposedCalls([])
     }
 
-    const options = {
-        filterType: 'checkbox',
-    };
+    // const options = {
+    //     filterType: 'checkbox',
+    // };
 
 
     return (<div>

@@ -78,9 +78,9 @@ export const setSelecteddata = data => {
   }
 };
 
-const addusers = (data) => {
-  return { type: "SET_ALL_USERS", payload: data }
-}
+// const addusers = (data) => {
+//   return { type: "SET_ALL_USERS", payload: data }
+// }
 
 export const getAllusers = () => {
   return (dispatch) => {

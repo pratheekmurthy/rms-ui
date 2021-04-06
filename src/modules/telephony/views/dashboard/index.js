@@ -19,8 +19,6 @@ import {
 } from '@material-ui/core';
 import {
   GET_INBOUND_DASHBOARD_DATA,
-  GET_INTERACTION_BY_AGENT_SIP_ID,
-  Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import moment from 'moment';
 import CallIcon from '@material-ui/icons/Call';
@@ -29,9 +27,7 @@ import CallReceivedIcon from '@material-ui/icons/CallReceived';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import VoicemailIcon from '@material-ui/icons/Voicemail';
 import { grey } from '@material-ui/core/colors';
-import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
 import { callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents } from '../../../dashboard-360/utils/columns-config'
-import { useDispatch } from 'react-redux'
 import { MDBDataTable } from 'mdbreact';
 import 'bootstrap/dist/css/bootstrap.css'
 const useStyles = makeStyles(theme => ({
@@ -75,37 +71,13 @@ const useStyles = makeStyles(theme => ({
 const Inbound = () => {
   const classes = useStyles();
   const [agentdisposedCalls, setagentdisposedCalls] = useState([])
-  const [agentliveStatus, setagentliveStatus] = useState([])
   const [currentstatus, setCurrentstatus] = useState([])
   const [allusers, setAllusers] = useState([])
   const [callsinQueue, setCallsInQueue] = useState([])
   const [liveCalls, setLivecalls] = useState([])
 
   const [data, setData] = useState({})
-  const [Inbound, setInbound] = useState(
-    {
-      "callarrived": 0,
-      "callsoffered": 0,
-      "callsanswered": 0,
-      "callsabandonedonivr": 0,
-      "callsabandonedonqueue": 0,
-      "shortabandoned": 0,
-      "shortabandoned_ten": 0,
-      "callsansweredwithin20": 0,
-      "callsansweredwithin10": 0,
-      "servicelevel": null,
-      "answerlevel": null,
-      "servicelevel_ten": null,
-      "answerlevel_ten": null,
-      "aht": null,
-      "ooohourscalls": 0,
-      "livecalls": 0,
-      "queuecalls": 0,
-      "callstransferedtoCSAT": 0,
-      "GaveCSAT": 0,
-      "totalcsatscore": null
-    }
-  )
+
 
   const InboundDataList = [
     {
@@ -200,7 +172,7 @@ const Inbound = () => {
   // console.log(allusers, "allusers")
   // console.log(currentstatus, "current status")
 
-  const dispatch = useDispatch()
+
 
   useEffect(() => {
     getIb()
@@ -331,36 +303,36 @@ const Inbound = () => {
 
 
 
-  function getALF(startDate, endDate) {
+  // function getALF(startDate, endDate) {
 
-    const axios = require('axios');
-    let data = '';
-    let u = Agent_service_url
-    let config = {
-      method: 'get',
-      url: u + GET_INTERACTION_BY_AGENT_SIP_ID + localStorage.getItem('AgentSIPID') + '',
-      headers: {},
-      data: data
-    };
+  //   const axios = require('axios');
+  //   let data = '';
+  //   let u = Agent_service_url
+  //   let config = {
+  //     method: 'get',
+  //     url: u + GET_INTERACTION_BY_AGENT_SIP_ID + localStorage.getItem('AgentSIPID') + '',
+  //     headers: {},
+  //     data: data
+  //   };
 
-    axios(config)
-      .then(async (response) => {
-        var ALFDATA = response.data;
-        ALFDATA = ALFDATA.reverse();
-        var filteredData = ALFDATA.filter(data => data.created.substring(0, 10) >= startDate.toISOString().substring(0, 10) && data.created.substring(0, 10) <= endDate.toISOString().substring(0, 10))
-        setagentdisposedCalls(filteredData)
-        return filteredData;
-      })
+  //   axios(config)
+  //     .then(async (response) => {
+  //       var ALFDATA = response.data;
+  //       ALFDATA = ALFDATA.reverse();
+  //       var filteredData = ALFDATA.filter(data => data.created.substring(0, 10) >= startDate.toISOString().substring(0, 10) && data.created.substring(0, 10) <= endDate.toISOString().substring(0, 10))
+  //       setagentdisposedCalls(filteredData)
+  //       return filteredData;
+  //     })
 
-      .catch((error) => {
-        console.log(error);
-      });
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
 
 
-  }
-  function handleChange() {
-    setagentdisposedCalls([])
-  }
+  // }
+  // function handleChange() {
+  //   setagentdisposedCalls([])
+  // }
 
 
   function getIBdata() {
@@ -377,7 +349,7 @@ const Inbound = () => {
 
         var data = response.data;
 
-        setInbound(data[0][0])
+        // setInbound(data[0][0])
       })
       .catch((error) => {
         console.log(error);
@@ -385,7 +357,7 @@ const Inbound = () => {
 
 
   }
-  const SOCKETENDPOINT = SOCKETENDPOINT2;
+  // const SOCKETENDPOINT = SOCKETENDPOINT2;
 
 
 

@@ -3,14 +3,13 @@ import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
-import Box from '@material-ui/core/Box';
 import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport'
 import moment from 'moment';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import {
     Grid,
     Button,
@@ -34,6 +33,7 @@ const CdrReports = props => {
     const [server, setServer] = React.useState('');
     const [startDate, setStartDate] = React.useState(new Date());
     const [cdrData, setcdrData] = useState([])
+    const [progress, setProgress] = useState(false);
 
     const handleChange = (event) => {
         setServer(event.target.value);
@@ -44,6 +44,7 @@ const CdrReports = props => {
         if (server.length === 0) {
             alert(`Please select the server`)
         } else {
+            setProgress(true)
             let data = {
                 "server": server,
                 "date": startDate1
@@ -52,6 +53,7 @@ const CdrReports = props => {
                 .then((res) => {
                     console.log(res)
                     setcdrData(res.data.cdr)
+                    setProgress(false)
                 })
                 .catch((error) => {
                     console.log(error.message)
@@ -112,10 +114,15 @@ const CdrReports = props => {
                         </MuiPickersUtilsProvider>
                             </CardContent>
                         </card>
+
                         {/* </Grid>
             <Grid item lg={2} md={12} xs={12}> */}
                         <Button variant="contained" color="primary" onClick={handleSubmit}>generate report </Button>
                     </Grid>
+                    <br />
+                    {
+                        progress && <LinearProgress />
+                    }
                     <Grid item lg={12} md={12} xs={12}>
                         <DownloadReport
                             DownloadData={cdrData}

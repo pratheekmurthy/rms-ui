@@ -1,30 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Avatar,
   Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   makeStyles,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Card,
   CardContent,
   Container,
   CardHeader,
-  Box
 } from '@material-ui/core';
-import {
-  GET_INBOUND_DASHBOARD_DATA,
-  GET_INTERACTION_BY_AGENT_SIP_ID
-} from 'src/modules/dashboard-360/utils/endpoints';
+
 import Axios from 'axios';
 import { grey } from '@material-ui/core/colors';
 
-import socketIOClient from 'socket.io-client';
 
 
 import CreateAgent from './CreateAgentform'
