@@ -23,45 +23,17 @@ import {
   Agent_service_url
 } from 'src/modules/dashboard-360/utils/endpoints';
 import moment from 'moment';
-import Advancedtable from '../../Tables/AdvanceTable'
-import AgentLivecallsTable from '../../Tables/AgentLivecallsTable'
-import AgentLiveStatus from '../../Tables/AgentLiveStatus'
 import CallIcon from '@material-ui/icons/Call';
-import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import AddIcCallIcon from '@material-ui/icons/AddIcCall';
 import CallReceivedIcon from '@material-ui/icons/CallReceived';
-import QueueIcon from '@material-ui/icons/Queue';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import AvTimerIcon from '@material-ui/icons/AvTimer';
 import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import VoicemailIcon from '@material-ui/icons/Voicemail';
-import ListAltIcon from '@material-ui/icons/ListAlt';
-import QuestionAnswerRoundedIcon from '@material-ui/icons/QuestionAnswerRounded';
-import TimelapseRoundedIcon from '@material-ui/icons/TimelapseRounded';
-import Timer10RoundedIcon from '@material-ui/icons/Timer10Rounded';
-import HourglassEmptyRoundedIcon from '@material-ui/icons/HourglassEmptyRounded';
-import StarsIcon from '@material-ui/icons/Stars';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { grey } from '@material-ui/core/colors';
-import socketIOClient from 'socket.io-client';
-import DaterangeReport from './DaterangeReport';
-import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport';
-import DispositionTable from './DispositionTable';
-import { DataGrid } from '@material-ui/data-grid';
-import MUIDataTable from "mui-datatables";
-import CurrentStatus from './CurrentStatus'
 import { SOCKETENDPOINT2 } from '../../../dashboard-360/utils/endpoints'
-import { getAllusers } from '../../redux/action'
-import { AgentLivestatuscolumns1, callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents } from '../../../dashboard-360/utils/columns-config'
-import { useSelector, useDispatch } from 'react-redux'
-import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
+import { callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents } from '../../../dashboard-360/utils/columns-config'
+import { useDispatch } from 'react-redux'
+import { MDBDataTable } from 'mdbreact';
 import 'bootstrap/dist/css/bootstrap.css'
-import Example from './ExampleTable'
-import {
-
-  lastFiveCallData
-} from 'src/modules/dashboard-360/utils/columns-config';
-import { Rowing } from '@material-ui/icons';
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -225,8 +197,8 @@ const Inbound = () => {
   ];
 
 
-  console.log(allusers, "allusers")
-  console.log(currentstatus, "current status")
+  // console.log(allusers, "allusers")
+  // console.log(currentstatus, "current status")
 
   const dispatch = useDispatch()
 
@@ -244,7 +216,7 @@ const Inbound = () => {
   const getIb = () => {
     axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
       .then((response) => {
-        console.log(response, "allusers")
+        // console.log(response, "allusers")
         setAllusers(response.data.userdetails)
       })
       .catch((error) => {
@@ -253,7 +225,7 @@ const Inbound = () => {
 
     axios.get('http://192.168.3.36:42004/crm/currentstatus/report')
       .then((response) => {
-        console.log(response)
+        // console.log(response)
         setCurrentstatus(response.data.items)
       })
       .catch((error) => {
@@ -303,8 +275,8 @@ const Inbound = () => {
   }
 
 
-  console.log(agentstatus, "live agents")
-  console.log(agentliveStatus, "livestatus")
+  // console.log(agentstatus, "live agents")
+  // console.log(agentliveStatus, "livestatus")
 
   const disposedInteractions = agentstatus.filter((record) => {
     return record.agentCallDispositionStatus === 'Disposed'
@@ -317,7 +289,7 @@ const Inbound = () => {
   const getLiveCalls = () => {
     axios.get('http://106.51.86.75:7000/report/api/livecalls')
       .then((response) => {
-        console.log(response, "live callllllllsss")
+        // console.log(response, "live callllllllsss")
         response.data.map((call) => {
           // return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
           return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
@@ -326,7 +298,7 @@ const Inbound = () => {
         // setCurrentstatus(response.data.items)
       })
       .catch((error) => {
-        console.log(error.message)
+        // console.log(error.message)
       })
   }
 
@@ -337,19 +309,19 @@ const Inbound = () => {
         response.data.map((call) => {
           return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
         })
-        console.log(response.data, "queue calllsss")
+        // console.log(response.data, "queue calllsss")
         setCallsInQueue(response.data)
         // setCurrentstatus(response.data.items)
       })
       .catch((error) => {
-        console.log(error.message)
+        // console.log(error.message)
       })
   }
 
   const getValues = () => {
     axios.get('http://106.51.86.75:7000/report/api/cdr')
       .then((response) => {
-        console.log(response, "live data")
+        // console.log(response, "live data")
         setData(response.data.count)
       })
       .catch((error) => {
@@ -461,7 +433,7 @@ const Inbound = () => {
   };
 
   const data1 = {}
-  console.log(agentstatus)
+  // console.log(agentstatus)
   data1.rows = agentstatus;
   data1.columns = LiveCallscolumns2;
 
@@ -469,7 +441,7 @@ const Inbound = () => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'Chennai'
   })
 
-  console.log(chennaiIdleAgents, "idleagents chennai")
+  // console.log(chennaiIdleAgents, "idleagents chennai")
 
   const OmrIdleAgents = agentstatus.filter((Agent) => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'OMR'
@@ -495,7 +467,7 @@ const Inbound = () => {
   liveCallsData.columns = LiveCallscolumns
 
 
-  console.log(callsinQueueData, "callsinQueueData")
+  // console.log(callsinQueueData, "callsinQueueData")
 
 
   return (

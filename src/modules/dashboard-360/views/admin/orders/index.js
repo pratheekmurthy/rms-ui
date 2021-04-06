@@ -31,7 +31,7 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
     }
   } = props;
 
-  const [orderDetails, setSingleOrderDetails] = useState(null);
+  const [orderDetails, setSingleOrderDetails] = useState("");
 
   const orderIdPrev = useRef(orderId);
 
@@ -90,8 +90,8 @@ function Orders({ distributorOrders, setDistributorOrdersAction, ...props }) {
     showLoader ? (
       <MainLoader />
     ) : (
-        <CommonAlert style={{ margin: 20 }} />
-      );
+      <CommonAlert style={{ margin: 20 }} />
+    );
 }
 
 Orders.propTypes = {

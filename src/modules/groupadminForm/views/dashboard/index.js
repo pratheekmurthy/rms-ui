@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-  Avatar,
+
   Grid,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
+
   makeStyles,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+
   Card,
   CardContent,
   Container,
   CardHeader,
   Box
 } from '@material-ui/core';
-import {
-  GET_INBOUND_DASHBOARD_DATA,  
-  GET_INTERACTION_BY_AGENT_SIP_ID
-} from 'src/modules/dashboard-360/utils/endpoints';
+
 
 import { grey } from '@material-ui/core/colors';
 
-import socketIOClient from 'socket.io-client';
+
 
 
 import CreateGroup from './Createform'
@@ -74,45 +65,45 @@ const AgentDashboard = () => {
 
   useEffect(() => {
 
- 
+
 
   }, [])
 
   return (
     // <>
     <Container maxWidth={false}>
-        <div className={classes.root}>
-      <Grid container spacing={3}>
-    
-        <Grid item xs={12} sm={4}>
-        <div>
-       
-         <Card>
-                  <CardHeader title={'Create Group Admin'} />
-                  <CardContent>
-                    <CreateGroup/>
-                    </CardContent>
-                    </Card>
-                  
-               </div>
-        
+      <div className={classes.root}>
+        <Grid container spacing={3}>
+
+          <Grid item xs={12} sm={4}>
+            <div>
+
+              <Card>
+                <CardHeader title={'Create Group Admin'} />
+                <CardContent>
+                  <CreateGroup />
+                </CardContent>
+              </Card>
+
+            </div>
+
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <div>
+              <Card>
+                <CardHeader title={'Group Admin Details'} />
+                <CardContent>
+                  <GroupTable />
+                </CardContent>
+              </Card>
+            </div>
+
+          </Grid>
+
         </Grid>
-        <Grid item xs={12} sm={8}>
-        <div>
-        <Card>
-                  <CardHeader title={'Group Admin Details'} />
-                  <CardContent>
-        <GroupTable/>
-        </CardContent>
-           </Card>
-               </div>
-         
-        </Grid>
-      
-      </Grid>
-    </div>
-  
-     </Container>
+      </div>
+
+    </Container>
     // </>
   );
 };

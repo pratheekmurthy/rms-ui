@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 // import config from '../modules/ticketing/views/config.json';
-import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -13,22 +13,18 @@ import {
   Toolbar,
   makeStyles,
   Typography,
-  InputBase,
   fade,
   Tooltip
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import Logo from 'src/modules/dashboard-360/components/Logo';
-import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { setLoggedIn, setSearchDistributor } from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-import { SET_SEARCH_DISTRIBUTOR } from 'src/redux/constants';
 import {
-  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT3, SOCKETENDPOINT4, UPDATE_CURRENT_STATUS
+  UPDATE_CURRENT_STATUS
 } from '../modules/dashboard-360/utils/endpoints'
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -85,81 +81,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = SOCKETENDPOINT2;
+// var APIENDPOINT = SOCKETENDPOINT2;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function addToQueue(agentId, queue) {
-  var axios = require('axios');
-  var data = JSON.stringify({
-    agentId: agentId,
-    queue: queue,
-    action: 'QueueAdd'
-  });
 
-  var config = {
-    method: 'get',
-    url:
-      APIENDPOINT +
-      '/ami/actions/addq?Interface=' + agentId + '&Queue=' +
-      queue +
-      '',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then(function (response) { })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function removeFromQueue(agentId, queue, user_Details) {
-  const axios = require('axios');
-  var APIENDPOINT = '';
-  console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.Server === 'server1') {
-    APIENDPOINT = SOCKETENDPOINT1
-  }
-  if (user_Details.Server === 'server2') {
-    APIENDPOINT = SOCKETENDPOINT2
-  }
-  if (user_Details.Server === 'server3') {
-    APIENDPOINT = SOCKETENDPOINT3
-  }
-  if (user_Details.Server === 'server4') {
-    APIENDPOINT = SOCKETENDPOINT4
-  }
-  console.log('remove', agentId);
-  const config = {
-    method: 'get',
-    url:
-      `${APIENDPOINT
-      }/ami/actions/rmq?Queue=${queue
-      }&Interface=${agentId}`,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then((response) => {
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
@@ -193,77 +120,15 @@ const TopBar = ({
   searchDist,
   ...rest
 }) => {
-  const userData = useSelector(state => state.userData);
   const user_Details = useSelector(state => state.userData)
-  const [createAccess, setCreateAccess] = useState(-1);
-  const [viewAccess, setViewAccess] = useState(-1);
-  const [assignAccess, setAssignAccess] = useState(-1);
-  const [reportsAccess, setReportsAccess] = useState(-1);
-  const [editAccess, setEditAccess] = useState(-1);
-  const [role, setRole] = useState(-1);
+
+
   const classes = useStyles();
   const [notifications] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  useEffect(() => {
-    // const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
-    // fetch(apiUrl)
-    //   .then(res => res.json())
-    //   .then(repos => {
-    //     setRole(repos.role.role);
-    //     setCreateAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '1'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setViewAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '2'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setEditAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '3'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setAssignAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '4'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setReportsAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '5'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //   });
-  }, []);
-  const updateSearchText = evt => {
-    setSearchText(evt.target.value);
-  };
-  const distributorID = evt => {
-    console.log('searchText', searchText);
-    searchDist(searchText);
-  };
+
+
+
+
   async function logoutUser() {
 
     try {
@@ -330,11 +195,6 @@ const TopBar = ({
               Daily Report
             </Link>
           </Typography> : <></>}
-          {viewAccess === -1 ? (
-            ''
-          ) : (
-            <></>
-          )}
 
           <IconButton color="inherit">
             <Badge

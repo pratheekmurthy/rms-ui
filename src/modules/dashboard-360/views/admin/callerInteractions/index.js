@@ -1,5 +1,5 @@
 import { DataGrid } from '@material-ui/data-grid';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setDistributorInvoices } from 'src/modules/dashboard-360/redux/action';
 import { CallerInteractioncolumns } from 'src/modules/dashboard-360/utils/columns-config';
@@ -7,10 +7,6 @@ import PropTypes from 'prop-types';
 import CommonAlert from 'src/components/CommonAlert';
 import MainLoader from 'src/components/MainLoader';
 import { Box, makeStyles, Typography } from '@material-ui/core';
-import {
-    getDealerInvoiceDetails,
-    getSingleInvoiceDetails
-} from '../../DashboardView/apiCalls';
 import CustomBreadcrumbs from 'src/components/CustomBreadcrumbs';
 import DownloadReport from '../../DashboardView/DownloadReport';
 

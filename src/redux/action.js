@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { SET_USER_DATA } from 'src/modules/dashboard-360/redux/constants';
 import {
   SET_LOGGED_IN,
