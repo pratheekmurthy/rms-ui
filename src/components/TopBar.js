@@ -280,11 +280,11 @@ const TopBar = ({
             </Link>
           </Typography> : <></>}
           {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
-            <Badge color="secondary">
-              <AssignmentIndIcon />
-            </Badge>
+
             <Link to="/dailyreport" className="color-white">
-              Daily Report
+              <Badge color="secondary">
+                <AssignmentIndIcon />
+              </Badge> Daily Report
             </Link>
           </Typography> : <></>}
 
@@ -294,11 +294,11 @@ const TopBar = ({
               color="primary"
               variant="dot"
             ><Typography className={classes.title} variant="h5" noWrap>
-                <Badge color="secondary">
-                  <CallIcon />
-                </Badge>
+
                 <Link to="/cdrreports" className="color-white">
-                  CDR Reports
+                  <Badge color="secondary">
+                    <CallIcon />
+                  </Badge> CDR Reports
             </Link>
               </Typography>
             </Badge>
