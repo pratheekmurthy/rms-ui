@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 // import config from '../modules/ticketing/views/config.json';
-import { Link, Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link, Link as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -13,23 +13,30 @@ import {
   Toolbar,
   makeStyles,
   Typography,
-  InputBase,
   fade,
   Tooltip
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import Logo from 'src/modules/dashboard-360/components/Logo';
-import { SearchIcon } from '@material-ui/data-grid';
 import AccountBoxRoundedIcon from '@material-ui/icons/AccountBoxRounded';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { setLoggedIn, setSearchDistributor } from 'src/redux/action';
 import { connect } from 'react-redux';
 import Axios from 'axios';
-import { SET_SEARCH_DISTRIBUTOR } from 'src/redux/constants';
 import {
-  SOCKETENDPOINT1, SOCKETENDPOINT2, SOCKETENDPOINT3, SOCKETENDPOINT4, UPDATE_CURRENT_STATUS
+  UPDATE_CURRENT_STATUS
 } from '../modules/dashboard-360/utils/endpoints'
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MailIcon from '@material-ui/icons/Mail';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import CallIcon from '@material-ui/icons/Call';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+
+
 const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
@@ -85,81 +92,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-var APIENDPOINT = SOCKETENDPOINT2;
+// var APIENDPOINT = SOCKETENDPOINT2;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function addToQueue(agentId, queue) {
-  var axios = require('axios');
-  var data = JSON.stringify({
-    agentId: agentId,
-    queue: queue,
-    action: 'QueueAdd'
-  });
 
-  var config = {
-    method: 'get',
-    url:
-      APIENDPOINT +
-      '/ami/actions/addq?Interface=' + agentId + '&Queue=' +
-      queue +
-      '',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then(function (response) { })
-    .catch(function (error) {
-      console.log(error);
-    });
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function removeFromQueue(agentId, queue, user_Details) {
-  const axios = require('axios');
-  var APIENDPOINT = '';
-  console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.Server === 'server1') {
-    APIENDPOINT = SOCKETENDPOINT1
-  }
-  if (user_Details.Server === 'server2') {
-    APIENDPOINT = SOCKETENDPOINT2
-  }
-  if (user_Details.Server === 'server3') {
-    APIENDPOINT = SOCKETENDPOINT3
-  }
-  if (user_Details.Server === 'server4') {
-    APIENDPOINT = SOCKETENDPOINT4
-  }
-  console.log('remove', agentId);
-  const config = {
-    method: 'get',
-    url:
-      `${APIENDPOINT
-      }/ami/actions/rmq?Queue=${queue
-      }&Interface=${agentId}`,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then((response) => {
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////
@@ -193,77 +131,35 @@ const TopBar = ({
   searchDist,
   ...rest
 }) => {
-  const userData = useSelector(state => state.userData);
   const user_Details = useSelector(state => state.userData)
-  const [createAccess, setCreateAccess] = useState(-1);
-  const [viewAccess, setViewAccess] = useState(-1);
-  const [assignAccess, setAssignAccess] = useState(-1);
-  const [reportsAccess, setReportsAccess] = useState(-1);
-  const [editAccess, setEditAccess] = useState(-1);
-  const [role, setRole] = useState(-1);
+
+
   const classes = useStyles();
   const [notifications] = useState([]);
-  const [searchText, setSearchText] = useState('');
-  useEffect(() => {
-    // const apiUrl = config.APIS_URL + '/access/email/' + userData.email;
-    // fetch(apiUrl)
-    //   .then(res => res.json())
-    //   .then(repos => {
-    //     setRole(repos.role.role);
-    //     setCreateAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '1'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setViewAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '2'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setEditAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '3'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setAssignAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '4'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //     setReportsAccess(
-    //       parseInt(
-    //         (
-    //           repos.data.filter(
-    //             access => access.functionalityId === '5'
-    //           )[0] || { accessLevelId: -1 }
-    //         ).accessLevelId
-    //       )
-    //     );
-    //   });
-  }, []);
-  const updateSearchText = evt => {
-    setSearchText(evt.target.value);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
   };
-  const distributorID = evt => {
-    console.log('searchText', searchText);
-    searchDist(searchText);
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
   };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+
   async function logoutUser() {
 
     try {
@@ -295,7 +191,65 @@ const TopBar = ({
     }
   }
   var test = "green"
-  return (
+  const menuId = 'primary-search-account-menu';
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = 'primary-search-account-menu-mobile';
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton color="inherit">
+          <Badge color="secondary">
+            <AssignmentIndIcon />
+          </Badge>
+        </IconButton>
+        <Link to="/dailyreport" className="color-black"> Daily Reports</Link>
+      </MenuItem>
+      <MenuItem>
+        <IconButton color="inherit">
+          <Badge color="secondary">
+            <CallIcon />
+          </Badge>
+        </IconButton>
+        <Link to="/cdrreports" className="color-black"> CDR Reports</Link>
+      </MenuItem>
+      <MenuItem onClick={() => logoutUser()}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+
+        >
+          <ExitToAppIcon />
+        </IconButton>
+        <p>logout</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  return (<div>
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: 'blue' }}>
       <Toolbar>
         <RouterLink to="/">
@@ -326,15 +280,13 @@ const TopBar = ({
             </Link>
           </Typography> : <></>}
           {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
+
             <Link to="/dailyreport" className="color-white">
-              Daily Report
+              <Badge color="secondary">
+                <AssignmentIndIcon />
+              </Badge> Daily Report
             </Link>
           </Typography> : <></>}
-          {viewAccess === -1 ? (
-            ''
-          ) : (
-            <></>
-          )}
 
           <IconButton color="inherit">
             <Badge
@@ -342,15 +294,18 @@ const TopBar = ({
               color="primary"
               variant="dot"
             ><Typography className={classes.title} variant="h5" noWrap>
+
                 <Link to="/cdrreports" className="color-white">
-                  CDR Reports
+                  <Badge color="secondary">
+                    <CallIcon />
+                  </Badge> CDR Reports
             </Link>
               </Typography>
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
-          </IconButton>
+          </IconButton> */}
           <Tooltip title="Logout">
             <IconButton color="inherit" onClick={() => logoutUser()}>
               <ExitToAppIcon />
@@ -358,12 +313,17 @@ const TopBar = ({
           </Tooltip>
         </Hidden>
         <Hidden lgUp>
-          <IconButton color="inherit" onClick={onMobileNavOpen}>
+          <IconButton color="inherit" onClick={handleMobileMenuOpen} aria-label="show more"
+            aria-controls={mobileMenuId}
+            aria-haspopup="true" >
             <MenuIcon />
           </IconButton>
         </Hidden>
       </Toolbar>
     </AppBar>
+    { renderMobileMenu}
+    { renderMenu}
+  </div>
   );
 };
 const mapStateToProps = state => ({

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const orderColumns = [
@@ -318,6 +318,8 @@ export const CallsinQueuecolumns = [
     flex: 1
   },
 ];
+
+// callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents
 
 export const AgentLiveCallscolumns = [
   {
@@ -648,13 +650,13 @@ export const callsinQueuecolumns = [
 export const LiveCallscolumns = [
   {
     field: 'EmployeeName',
-    label: 'EmployeeName',
+    label: 'Employee Name',
     sort: 'asc',
     width: 150
   },
   {
     field: 'agentID',
-    label: 'agentID',
+    label: 'Agent ID',
     sort: 'asc',
     width: 150
   },
@@ -672,7 +674,7 @@ export const LiveCallscolumns = [
   },
   {
     field: 'duration',
-    label: 'duration',
+    label: 'Duration',
     sort: 'asc',
     width: 150
   },
@@ -829,28 +831,28 @@ export const LiveCallscolumns2 = [
 
   {
     field: 'sl.no',
-    label: 'sl_No',
+    label: 'SL.NO',
     sort: 'asc',
     width: 150
   },
   {
     field: 'EmployeeName',
-    label: 'Name',
+    label: 'Employee Name',
     sort: 'asc',
     width: 150
   }, {
     field: 'agentID',
-    label: 'agentID',
+    label: 'AgentID',
     sort: 'asc',
     width: 150
   }, {
     field: 'EmailID',
-    label: 'EmailID',
+    label: 'Email ID',
     sort: 'asc',
     width: 150
   }, {
     field: 'agentCallStatus',
-    label: 'Agent status',
+    label: 'Agent Call Status',
     sort: 'asc',
     width: 150
   }, {
@@ -861,7 +863,7 @@ export const LiveCallscolumns2 = [
   },
   {
     field: 'breakStatus',
-    label: 'Break status',
+    label: 'Break Status',
     sort: 'asc',
     width: 150
   }, {
@@ -877,13 +879,13 @@ export const LiveCallscolumns2 = [
   },
   {
     field: 'currentserver',
-    label: 'current server',
+    label: 'Current Server',
     sort: 'asc',
     width: 150
   },
   {
     field: 'difference',
-    label: 'IDLE Time',
+    label: 'Idle Time',
     sort: 'asc',
     width: 150
   },
@@ -898,12 +900,12 @@ export const ChennaiIdleAgents = [
     width: 150
   }, {
     field: 'agentID',
-    label: 'agentID',
+    label: 'Agent ID',
     sort: 'asc',
     width: 150
   }, {
     field: 'EmailID',
-    label: 'EmailID',
+    label: 'Email ID',
     sort: 'asc',
     width: 150
   }, {
@@ -925,7 +927,7 @@ export const ChennaiIdleAgents = [
   },
   {
     field: 'difference',
-    label: 'IDLE Time',
+    label: 'Idle Time',
     sort: 'asc',
     width: 150
   },
@@ -941,12 +943,12 @@ export const omrIdleAgents = [
     width: 150
   }, {
     field: 'agentID',
-    label: 'agentID',
+    label: 'Agent ID',
     sort: 'asc',
     width: 150
   }, {
     field: 'EmailID',
-    label: 'EmailID',
+    label: 'Email ID',
     sort: 'asc',
     width: 150
   }, {
@@ -962,13 +964,13 @@ export const omrIdleAgents = [
   },
   {
     field: 'breakStatus',
-    label: 'Break status',
+    label: 'Break Status',
     sort: 'asc',
     width: 150
   },
   {
     field: 'difference',
-    label: 'IDLE Time',
+    label: 'Idle Time',
     sort: 'asc',
     width: 150
   },

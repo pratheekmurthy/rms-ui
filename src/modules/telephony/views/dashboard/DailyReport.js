@@ -1,40 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import DaterangeReport from '../dashboard/DaterangeReport'
-import { useSelector } from 'react-redux'
 import {
     Grid,
     Card,
     CardContent,
-    CardHeader,
-    Box
+    CardHeader
 } from '@material-ui/core';
-import axios from 'axios'
-import MUIDataTable from "mui-datatables";
 import { LiveCallscolumns1 } from '../../../dashboard-360/utils/columns-config'
 import moment from 'moment';
 import { makeStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
+import { MDBDataTable } from 'mdbreact';
 import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport'
 import 'bootstrap/dist/css/bootstrap.css'
 
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        width: '100%',
-        '& > * + *': {
-            marginTop: theme.spacing(2),
-        },
-    },
-}));
+// const useStyles = makeStyles((theme) => ({
+//     root: {
+//         width: '100%',
+//         '& > * + *': {
+//             marginTop: theme.spacing(2),
+//         },
+//     },
+// }));
 
 
 const DailyReport = (props) => {
-    const classes = useStyles();
     const [progress, setProgress] = useState(false);
     const [agentdisposedCalls, setagentdisposedCalls] = useState([])
     const [allusers, setUsers] = useState([])
-    const [agentStatus, setAgentstatus] = useState([])
     var agentstatus1 = [];
 
 
@@ -44,7 +38,7 @@ const DailyReport = (props) => {
         var enddate = moment(endDate).format('YYYY-MM-DD')
 
 
-        console.log(startdate, enddate, "foramtted date")
+        // console.log(startdate, enddate, "foramtted date")
         const axios = require('axios');
 
         axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
@@ -126,13 +120,13 @@ const DailyReport = (props) => {
         setagentdisposedCalls([])
     }
 
-    const options = {
-        filterType: 'checkbox',
-    };
+    // const options = {
+    //     filterType: 'checkbox',
+    // };
 
 
     return (<div>
-        <Grid>
+        <Grid >
             <Card>
                 <CardContent>
                     <DaterangeReport

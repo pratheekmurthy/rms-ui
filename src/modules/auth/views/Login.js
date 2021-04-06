@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,18 +20,10 @@ import {
   setUserDetails,
   setAccountType
 } from '../../../redux/action';
-import {
-  SOCKETENDPOINT1,
-  SOCKETENDPOINT2,
-  SOCKETENDPOINT3,
-  SOCKETENDPOINT4,
-  Agent_service_url
-} from '../../dashboard-360/utils/endpoints'
 import Axios from 'axios';
 import { ADMIN, USER } from 'src/redux/constants';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 // import Typography from '@material-ui/core/Typography';
-import Logo from '../../dashboard-360/components/loginlogo'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -100,7 +92,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center'
   },
-  root: {
+  root1: {
     width: '100%',
     '& > * + *': {
       marginTop: theme.spacing(2),
@@ -109,93 +101,14 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-var APIENDPOINT = SOCKETENDPOINT2;
+// var APIENDPOINT = SOCKETENDPOINT2;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// addToQueue start //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-function addToQueue(agentId, queue, user_Details) {
-  const axios = require('axios');
-  console.log(user_Details, "addddd")
-  var APIENDPOINT = '';
-  console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.Server === 'server1') {
-    APIENDPOINT = SOCKETENDPOINT1
-  }
-  if (user_Details.Server === 'server2') {
-    APIENDPOINT = SOCKETENDPOINT2
-  }
-  if (user_Details.Server === 'server3') {
-    APIENDPOINT = SOCKETENDPOINT3
-  }
-  if (user_Details.Server === 'server4') {
-    APIENDPOINT = SOCKETENDPOINT4
-  }
 
-  const config = {
-    method: 'get',
-    url:
-      `${APIENDPOINT
-      }/ami/actions/addq?Interface=${agentId}&Queue=${queue
-      }`,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then((response) => { })
-    .catch((error) => {
-      console.log(error);
-    });
-
-}
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// addToQueue end //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// removeFromQueue start //////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function removeFromQueue(agentId, queue, user_Details) {
-  const axios = require('axios');
-  var APIENDPOINT = '';
-  console.log('userDetails sdsdfgsdfgsdf', user_Details)
-  if (user_Details.Server === 'server1') {
-    APIENDPOINT = SOCKETENDPOINT1
-  }
-  if (user_Details.Server === 'server2') {
-    APIENDPOINT = SOCKETENDPOINT2
-  }
-  if (user_Details.Server === 'server3') {
-    APIENDPOINT = SOCKETENDPOINT3
-  }
-  if (user_Details.Server === 'server4') {
-    APIENDPOINT = SOCKETENDPOINT4
-  }
-  console.log('remove', agentId);
-  const config = {
-    method: 'get',
-    url:
-      `${APIENDPOINT
-      }/ami/actions/rmq?Queue=${queue
-      }&Interface=${agentId}`,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  };
-
-  axios(config)
-    .then((response) => {
-
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// removeFromQueue end //////////////////////////////////////////////////////////////////////////////////////////

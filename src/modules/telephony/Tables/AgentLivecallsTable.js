@@ -23,7 +23,7 @@ const useStyles = makeStyles({
 });
 
 export default function StickyHeadTable(props) {
-    const { records, selectedData } = props
+    const { records } = props
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);

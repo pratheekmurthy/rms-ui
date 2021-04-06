@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { SET_USER_DATA } from 'src/modules/dashboard-360/redux/constants';
 import {
   SET_LOGGED_IN,
@@ -79,9 +78,9 @@ export const setSelecteddata = data => {
   }
 };
 
-const addusers = (data) => {
-  return { type: "SET_ALL_USERS", payload: data }
-}
+// const addusers = (data) => {
+//   return { type: "SET_ALL_USERS", payload: data }
+// }
 
 export const getAllusers = () => {
   return (dispatch) => {
