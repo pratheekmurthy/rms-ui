@@ -615,35 +615,35 @@ export const AgentLivestatuscolumns1 = [
 // ];
 
 export const callsinQueuecolumns = [
-  {
-    field: 'datetime_entry_queue',
-    label: 'Time',
-    sort: 'asc',
-    width: 150
-  },
-  {
-    field: 'Queue',
-    label: 'Queue',
-    sort: 'asc',
-    width: 150
-  },
+  // {
+  //   field: 'datetime_entry_queue',
+  //   label: 'Time',
+  //   sort: 'asc',
+  //   width: 150
+  // },
+  // {
+  //   field: 'Queue',
+  //   label: 'Queue',
+  //   sort: 'asc',
+  //   width: 150
+  // },
   {
     field: 'callerid',
     label: 'Caller Phone Number',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'duration',
     label: 'Duration in Queue',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'ServerIP',
     label: 'Server',
     sort: 'asc',
-    width: 150
+    width: 70
   },
 ];
 
@@ -684,38 +684,38 @@ export const LiveCallscolumns = [
     field: 'EmployeeName',
     label: 'Employee Name',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'agentID',
     label: 'Agent ID',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'callerid',
     label: 'Caller Phone Number',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'Location',
     label: 'Location',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'duration',
     label: 'Duration',
     sort: 'asc',
-    width: 150
+    width: 70
   },
-  {
-    field: 'ServerIP',
-    label: 'Server',
-    sort: 'asc',
-    width: 150
-  },
+  // {
+  //   field: 'ServerIP',
+  //   label: 'Server',
+  //   sort: 'asc',
+  //   width: 150
+  // },
 
 
 ];
@@ -727,7 +727,7 @@ export const LiveCallscolumns1 = [
     field: 'sl_No',
     label: 'SL.No',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'Agent_Number',
@@ -931,12 +931,12 @@ export const ChennaiIdleAgents = [
     field: 'EmployeeName',
     label: 'Name',
     sort: 'asc',
-    width: 150
+    width: 70
   }, {
     field: 'agentID',
     label: 'Agent ID',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   // {
   //   field: 'EmailID',
@@ -948,24 +948,24 @@ export const ChennaiIdleAgents = [
     field: 'agentCallStatus',
     label: 'Agent status',
     sort: 'asc',
-    width: 150
+    width: 70
   }, {
     field: 'agentCallDispositionStatus',
     label: 'Disposition',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'breakStatus',
     label: 'Break status',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   {
     field: 'difference',
     label: 'Idle Time',
     sort: 'asc',
-    width: 150
+    width: 70
   },
 
 ];
@@ -976,12 +976,12 @@ export const omrIdleAgents = [
     field: 'EmployeeName',
     label: 'Name',
     sort: 'asc',
-    width: 150
+    width: 70
   }, {
     field: 'agentID',
     label: 'Agent ID',
     sort: 'asc',
-    width: 150
+    width: 70
   },
   // {
   //   field: 'EmailID',
@@ -998,19 +998,19 @@ export const omrIdleAgents = [
     field: 'agentCallDispositionStatus',
     label: 'Disposition',
     sort: 'asc',
-    width: 150
+    width: 70
   },
-  {
-    field: 'breakStatus',
-    label: 'Break Status',
-    sort: 'asc',
-    width: 150
-  },
+  // {
+  //   field: 'breakStatus',
+  //   label: 'Break Status',
+  //   sort: 'asc',
+  //   width: 70
+  // },
   {
     field: 'difference',
     label: 'Idle Time',
     sort: 'asc',
-    width: 150
+    width: 70
   },
 
 ];

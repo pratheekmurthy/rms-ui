@@ -425,6 +425,10 @@ const Inbound = () => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'OMR'
   })
 
+  const idleagentsAll1 = agentstatus.filter((Agent) => {
+    return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected'
+  })
+
   // console.log(OmrIdleAgents, "idleagents OMR")
 
 
@@ -432,8 +436,8 @@ const Inbound = () => {
   callsinQueueData.rows = callsinQueue
   callsinQueueData.columns = callsinQueuecolumns
 
-  console.log(callsinQueue, "rows")
-  console.log(callsinQueuecolumns, "columns")
+  // console.log(callsinQueue, "rows")
+  // console.log(callsinQueuecolumns, "columns")
 
 
   const chennaiIdleAgentsData = {}
@@ -447,6 +451,14 @@ const Inbound = () => {
   const liveCallsData = {}
   liveCallsData.rows = liveCalls
   liveCallsData.columns = LiveCallscolumns
+
+  const idleagentsAll = {}
+  idleagentsAll.rows = idleagentsAll1
+  idleagentsAll.columns = omrIdleAgents
+
+
+
+
 
 
   // console.log(callsinQueueData, "callsinQueueData")
@@ -547,8 +559,8 @@ const Inbound = () => {
       {/* {agentdisposedCalls.length > 0 ? <DispositionTable getALF={getALF} agentdisposedCalls={agentdisposedCalls} /> 
       : <></>} */}
       <Box component="span" m={1}>
-        <Grid container spacing={3} justify={'space-around'}>
-          <Grid item lg={6} md={12} xs={12}>
+        <Grid container spacing={2} justify={'space-around'}>
+          <Grid item lg={4} md={12} xs={12}>
             <Card>
               <CardHeader
                 title={
@@ -572,7 +584,7 @@ const Inbound = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item lg={6} md={12} xs={12}>
+          <Grid item lg={4} md={12} xs={12}>
             <Card>
               <CardHeader
                 title={
@@ -592,6 +604,30 @@ const Inbound = () => {
                   data={liveCallsData}
                 /> */}
                 <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={liveCallsData} />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item lg={4} md={12} xs={12}>
+            <Card>
+              <CardHeader
+                title={
+                  `IDLE Agents :: ${idleagentsAll1.length}  `
+                }
+              />
+              <CardContent>
+                {/* <MUIDataTable
+                  title={`calls in Queue - ${callsinQueue.length}`}
+                  data={callsinQueue}
+                  columns={callsinQueuecolumns}
+                  options={options}
+                /> */}
+                {/* <MDBDataTable
+                  striped
+                  hover
+                  data={callsinQueueData}
+                /> */}
+                {/* <DataGrid rows={callsinQueue} columns={callsinQueuecolumns} pageSize={5} checkboxSelection /> */}
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={idleagentsAll} />
               </CardContent>
             </Card>
           </Grid>
