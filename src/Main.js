@@ -27,38 +27,38 @@ function Main({
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
-        if (localStorage.getItem('jwtToken')) {
+        if (localStorage.getItem('email')) {
           setLoggedInMain(true);
-          var test = await Axios.post('http://192.168.3.36:4000/auth/apiM/verifyClient', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
-            .then(response => {
-              console.log('respose', response)
-              var result = response.data.userDetails
-              var obj = {
-                UserID: result.UserID,
-                AllowPublic: result.AllowPublic,
-                UserName: result.UserName,
-                EmployeeName: result.EmployeeName,
-                EmailID: result.EmailID,
-                OTP: result.OTP,
-                tenetID: result.tenetID,
-                tenentId: result.tenentId,
-                tenentName: result.tenentName,
-                roleids: result.roleids,
-                role: result.role,
-                modules: result.modules,
-                External_num: result.External_num,
-                Server: result.Server,
-                AgentQueueStatus: result.AgentQueueStatus
-              }
-              setUserDetailsMain(obj)
-              localStorage.setItem('AgentSIPID', obj.External_num);
-              setAccountTypeMain(obj.role === 'Agent' || obj.role === 'Admin' || obj.role === 'Group admin' ? ADMIN : USER);
-              // setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-              if (obj.role === 'Agent') {
-                setRouteAccess(true)
-              }
-            })
-            .catch(error => console.log(error));
+          // var test = await Axios.post('http://192.168.3.36:4000/auth/apiM/verifyClient', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
+          //   .then(response => {
+          //     console.log('respose', response)
+          //     var result = response.data.userDetails
+          //     var obj = {
+          //       UserID: result.UserID,
+          //       AllowPublic: result.AllowPublic,
+          //       UserName: result.UserName,
+          //       EmployeeName: result.EmployeeName,
+          //       EmailID: result.EmailID,
+          //       OTP: result.OTP,
+          //       tenetID: result.tenetID,
+          //       tenentId: result.tenentId,
+          //       tenentName: result.tenentName,
+          //       roleids: result.roleids,
+          //       role: result.role,
+          //       modules: result.modules,
+          //       External_num: result.External_num,
+          //       Server: result.Server,
+          //       AgentQueueStatus: result.AgentQueueStatus
+          //     }
+          //     setUserDetailsMain(obj)
+          //     localStorage.setItem('AgentSIPID', obj.External_num);
+          //     setAccountTypeMain(obj.role === 'Agent' || obj.role === 'Admin' || obj.role === 'Group admin' ? ADMIN : USER);
+          //     // setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+          //     if (obj.role === 'Agent') {
+          //       setRouteAccess(true)
+          //     }
+          //   })
+          //   .catch(error => console.log(error));
         } else {
           setLoggedInMain(false);
         }

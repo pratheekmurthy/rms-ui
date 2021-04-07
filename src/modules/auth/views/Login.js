@@ -123,60 +123,72 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   console.log(user_Details)
 
   async function authenticate(values) {
-    setError('');
-    try {
-      const url = 'http://106.51.86.75:4000/auth/apiM/login'
-      // const url='http://192.168.3.45:42009/user/login'
+    // setError('');
+    // try {
+    //   const url = 'http://106.51.86.75:4000/auth/apiM/login'
+    //   // const url='http://192.168.3.45:42009/user/login'
 
 
-      console.log("values", values)
+    //   console.log("values", values)
 
-      const res = await Axios.post(url, values);
-      var myObj = res.data;
-      if ('statusCode' in myObj) {
-        setLoggedInMain(false);
-        setError(true);
-      } if ('status' in myObj) {
-        console.log("login api", res.data)
-        const obj = res.data.userDetails;
-        const { accessToken } = res.data;
-
-
-        if (res.data.userDetails.AgentType === 'Admin') {
-          localStorage.setItem("jwtToken", accessToken);
-          localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-          localStorage.setItem('role', 'Admin');
-          // localStorage.setItem('Agenttype', 'L2');
-          // localStorage.setItem('AgentType', 'Outbound')
-          // setUserDetailsMain(obj);
-          setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-          setLoggedInMain(true);
-          setError(false)
-
-        }
-        // if (res.data.userDetails.AgentType === 'L2') {
-        //   console.log('data resppppp', res.data)
-        //   localStorage.setItem("jwtToken", accessToken);
-        //   localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-        //   localStorage.setItem('role', res.data.userDetails.role);
-        //   localStorage.setItem('Agenttype', 'L2');
-        //   localStorage.setItem('AgentType', 'Outbound')
-        //   setUserDetailsMain(obj);
-        //   setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-        //   if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-        //     // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
-        //   }
-        //   setLoggedInMain(true);
-        //   setError(false);
-        // }
+    //   const res = await Axios.post(url, values);
+    //   var myObj = res.data;
+    //   if ('statusCode' in myObj) {
+    //     setLoggedInMain(false);
+    //     setError(true);
+    //   } if ('status' in myObj) {
+    //     console.log("login api", res.data)
+    //     const obj = res.data.userDetails;
+    //     const { accessToken } = res.data;
 
 
-      } else {
-        setLoggedInMain(false);
-        setError(true);
-      }
+    //     if (res.data.userDetails.AgentType === 'Admin') {
+    //       // localStorage.setItem("jwtToken", accessToken);
+    //       // localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+    //       localStorage.setItem('role', 'Admin');
+    //       // localStorage.setItem('Agenttype', 'L2');
+    //       // localStorage.setItem('AgentType', 'Outbound')
+    //       // setUserDetailsMain(obj);
+    //       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+    //       setLoggedInMain(true);
+    //       setError(false)
 
-    } catch (err) {
+    //     }
+    //     // if (res.data.userDetails.AgentType === 'L2') {
+    //     //   console.log('data resppppp', res.data)
+    //     //   localStorage.setItem("jwtToken", accessToken);
+    //     //   localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
+    //     //   localStorage.setItem('role', res.data.userDetails.role);
+    //     //   localStorage.setItem('Agenttype', 'L2');
+    //     //   localStorage.setItem('AgentType', 'Outbound')
+    //     //   setUserDetailsMain(obj);
+    //     //   setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
+    //     //   if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
+    //     //     // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
+    //     //   }
+    //     //   setLoggedInMain(true);
+    //     //   setError(false);
+    //     // }
+
+
+    //   } else {
+    //     setLoggedInMain(false);
+    //     setError(true);
+    //   }
+
+    // } catch (err) {
+    //   setLoggedInMain(false);
+    //   setError(true);
+    // }
+    if (values.email === 'operations' && values.password === 'operations') {
+      localStorage.setItem('role', 'Admin');
+      localStorage.setItem('email', 'operations')
+      localStorage.setItem('password', 'operations')
+
+      setAccountTypeMain(ADMIN);
+      setLoggedInMain(true);
+      setError(false)
+    } else {
       setLoggedInMain(false);
       setError(true);
     }
@@ -217,7 +229,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
               }}
               validationSchema={Yup.object().shape({
                 email: Yup.string()
-                  .email('Must be a valid email')
+                  // .email('Must be a valid email')
                   .max(255)
                   .required('Email is required'),
                 password: Yup.string()
@@ -252,7 +264,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     name="email"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="email"
+                    type="text"
                     value={values.email}
                     variant="outlined"
                   />
