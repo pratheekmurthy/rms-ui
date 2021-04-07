@@ -187,7 +187,7 @@ const Inbound = () => {
   // window.setTimeout(function () { document.location.reload(true); }, 25000);
 
   const getIb = () => {
-    axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+    axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
       .then((response) => {
         // console.log(response, "allusers")
         setAllusers(response.data.userdetails)
@@ -196,7 +196,7 @@ const Inbound = () => {
         console.log(error.message)
       })
 
-    axios.get('http://192.168.3.36:42004/crm/currentstatus/report')
+    axios.get('http://106.51.86.75:42004/crm/currentstatus/report')
       .then((response) => {
         // console.log(response)
         setCurrentstatus(response.data.items)

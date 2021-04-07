@@ -84,7 +84,7 @@ export const setSelecteddata = data => {
 
 export const getAllusers = () => {
   return (dispatch) => {
-    axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+    axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
       .then((response) => {
         console.log(response, "allusers in actionnnn")
 

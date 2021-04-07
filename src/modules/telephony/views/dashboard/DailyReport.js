@@ -41,7 +41,7 @@ const DailyReport = (props) => {
         // console.log(startdate, enddate, "foramtted date")
         const axios = require('axios');
 
-        axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+        axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
             .then((response) => {
                 setUsers(response.data.userdetails)
             })
@@ -52,7 +52,7 @@ const DailyReport = (props) => {
         let data = '';
         let config = {
             method: 'get',
-            url: `http://192.168.3.36:42004/crm/?startDate=${startdate}T01%3A00%3A00.000Z&endDate=${enddate}T23%3A00%3A00.000Z`,
+            url: `http://106.51.86.75:42004/crm/?startDate=${startdate}T01%3A00%3A00.000Z&endDate=${enddate}T23%3A00%3A00.000Z`,
             headers: {},
             data: data
         };

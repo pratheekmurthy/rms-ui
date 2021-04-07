@@ -29,7 +29,7 @@ function Main({
       try {
         if (localStorage.getItem('email')) {
           setLoggedInMain(true);
-          // var test = await Axios.post('http://192.168.3.36:4000/auth/apiM/verifyClient', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
+          // var test = await Axios.post('http://106.51.86.75:4000/auth/apiM/verifyClient', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
           //   .then(response => {
           //     console.log('respose', response)
           //     var result = response.data.userDetails
