@@ -903,12 +903,14 @@ export const ChennaiIdleAgents = [
     label: 'Agent ID',
     sort: 'asc',
     width: 150
-  }, {
-    field: 'EmailID',
-    label: 'Email ID',
-    sort: 'asc',
-    width: 150
-  }, {
+  },
+  // {
+  //   field: 'EmailID',
+  //   label: 'Email ID',
+  //   sort: 'asc',
+  //   width: 150
+  // }, 
+  {
     field: 'agentCallStatus',
     label: 'Agent status',
     sort: 'asc',
@@ -946,12 +948,14 @@ export const omrIdleAgents = [
     label: 'Agent ID',
     sort: 'asc',
     width: 150
-  }, {
-    field: 'EmailID',
-    label: 'Email ID',
-    sort: 'asc',
-    width: 150
-  }, {
+  },
+  // {
+  //   field: 'EmailID',
+  //   label: 'Email ID',
+  //   sort: 'asc',
+  //   width: 150
+  // }, 
+  {
     field: 'agentCallStatus',
     label: 'Agent status',
     sort: 'asc',

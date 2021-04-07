@@ -587,7 +587,7 @@ const Inbound = () => {
       </Box>
       <Box component="span" m={1}>
         <Grid container spacing={3} justify={'space-around'}>
-          <Grid item lg={12} md={12} xs={12}>
+          <Grid item lg={6} md={12} xs={12}>
             <Card>
               <CardHeader
                 title={
@@ -603,7 +603,7 @@ const Inbound = () => {
               </CardContent>
             </Card>
           </Grid>
-          <Grid item lg={12} md={12} xs={12}>
+          <Grid item lg={6} md={12} xs={12}>
             <Card>
               <CardHeader
                 title={
