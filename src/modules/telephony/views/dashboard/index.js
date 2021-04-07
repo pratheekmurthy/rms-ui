@@ -28,7 +28,8 @@ import RecordVoiceOverIcon from '@material-ui/icons/RecordVoiceOver';
 import VoicemailIcon from '@material-ui/icons/Voicemail';
 import { grey } from '@material-ui/core/colors';
 import { callsinQueuecolumns, LiveCallscolumns, LiveCallscolumns2, omrIdleAgents, ChennaiIdleAgents } from '../../../dashboard-360/utils/columns-config'
-import { MDBDataTable } from 'mdbreact';
+import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
+import { DataGrid } from '@material-ui/data-grid';
 import 'bootstrap/dist/css/bootstrap.css'
 const useStyles = makeStyles(theme => ({
   root: {
@@ -186,7 +187,7 @@ const Inbound = () => {
   // window.setTimeout(function () { document.location.reload(true); }, 25000);
 
   const getIb = () => {
-    axios.get('http://192.168.3.36:4000/auth/apiM/allusers',)
+    axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
       .then((response) => {
         // console.log(response, "allusers")
         setAllusers(response.data.userdetails)
@@ -195,7 +196,7 @@ const Inbound = () => {
         console.log(error.message)
       })
 
-    axios.get('http://192.168.3.36:42004/crm/currentstatus/report')
+    axios.get('http://106.51.86.75:42004/crm/currentstatus/report')
       .then((response) => {
         // console.log(response)
         setCurrentstatus(response.data.items)
@@ -279,9 +280,14 @@ const Inbound = () => {
       .then((response) => {
         // console.log(response, "queue callllllllsss")
         response.data.map((call) => {
-          return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
+          return (call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0]);
         })
         // console.log(response.data, "queue calllsss")
+        let id = 0;
+        response.data.map((call) => {
+          id = id + 1;
+          return (call.id = id);
+        })
         setCallsInQueue(response.data)
         // setCurrentstatus(response.data.items)
       })
@@ -426,6 +432,10 @@ const Inbound = () => {
   callsinQueueData.rows = callsinQueue
   callsinQueueData.columns = callsinQueuecolumns
 
+  console.log(callsinQueue, "rows")
+  console.log(callsinQueuecolumns, "columns")
+
+
   const chennaiIdleAgentsData = {}
   chennaiIdleAgentsData.rows = chennaiIdleAgents
   chennaiIdleAgentsData.columns = ChennaiIdleAgents
@@ -552,11 +562,13 @@ const Inbound = () => {
                   columns={callsinQueuecolumns}
                   options={options}
                 /> */}
-                <MDBDataTable
+                {/* <MDBDataTable
                   striped
                   hover
                   data={callsinQueueData}
-                />
+                /> */}
+                {/* <DataGrid rows={callsinQueue} columns={callsinQueuecolumns} pageSize={5} checkboxSelection /> */}
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={callsinQueueData} />
               </CardContent>
             </Card>
           </Grid>
@@ -574,12 +586,12 @@ const Inbound = () => {
                   columns={LiveCallscolumns}
                   options={options}
                 /> */}
-                <MDBDataTable
+                {/* <MDBDataTable
                   striped
                   hover
                   data={liveCallsData}
-                />
-
+                /> */}
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={liveCallsData} />
               </CardContent>
             </Card>
           </Grid>
@@ -595,11 +607,12 @@ const Inbound = () => {
                 }
               />
               <CardContent>
-                <MDBDataTable
+                {/* <MDBDataTable
                   striped
                   hover
                   data={OmrIdleAgentsData}
-                />
+                /> */}
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={OmrIdleAgentsData} />
               </CardContent>
             </Card>
           </Grid>
@@ -611,12 +624,13 @@ const Inbound = () => {
                 }
               />
               <CardContent>
-                <MDBDataTable
+                {/* <MDBDataTable
                   striped
                   stripeRowsStyle={{ backgroundColor: 'red' }}
                   hover
                   data={chennaiIdleAgentsData}
-                />
+                /> */}
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={chennaiIdleAgentsData} />
               </CardContent>
             </Card>
           </Grid>
@@ -637,11 +651,12 @@ const Inbound = () => {
                 columns={callsinQueuecolumns}
                 options={options}
               /> */}
-              <MDBDataTable
+              {/* <MDBDataTable
                 striped
                 hover
                 data={data1}
-              />
+              /> */}
+              <MDBDataTableV5 hover entriesOptions={[10, 20, 50]} entries={10} pagesAmount={4} data={data1} />
             </CardContent>
           </Card>
         </Grid>

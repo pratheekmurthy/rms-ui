@@ -295,7 +295,7 @@ export const CallsinQueuecolumns = [
   {
     field: 'CallerName',
     headerName: 'Time',
-    flex: 1
+    width: 130
   },
   {
     field: 'callerapplication',
@@ -647,6 +647,38 @@ export const callsinQueuecolumns = [
   },
 ];
 
+export const callsinQueuecolumns1 = [
+  {
+    field: 'datetime_entry_queue',
+    label: 'Time',
+    width: 150
+  },
+  {
+    field: 'Queue',
+    headerName: 'Queue',
+    // sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'callerid',
+    headerName: 'Caller Phone Number',
+    // sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'duration',
+    headerName: 'Duration in Queue',
+    //sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'ServerIP',
+    headerName: 'Server',
+    //sort: 'asc',
+    width: 150
+  },
+];
+
 export const LiveCallscolumns = [
   {
     field: 'EmployeeName',
@@ -688,10 +720,12 @@ export const LiveCallscolumns = [
 
 ];
 
+
+
 export const LiveCallscolumns1 = [
   {
     field: 'sl_No',
-    label: 'sl_No',
+    label: 'SL.No',
     sort: 'asc',
     width: 150
   },
