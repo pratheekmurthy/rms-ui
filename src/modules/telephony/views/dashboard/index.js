@@ -392,7 +392,7 @@ const Inbound = () => {
       //   }
       // })
 
-    }, 3000);
+    }, 5000);
 
     const interval2 = setInterval(() => {
       getIb()
@@ -582,7 +582,7 @@ const Inbound = () => {
                   data={callsinQueueData}
                 /> */}
                 {/* <DataGrid rows={callsinQueue} columns={callsinQueuecolumns} pageSize={5} checkboxSelection /> */}
-                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={callsinQueueData} />
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={callsinQueueData} searching={false} />
               </CardContent>
             </Card>
           </Grid>
@@ -605,7 +605,7 @@ const Inbound = () => {
                   hover
                   data={liveCallsData}
                 /> */}
-                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={liveCallsData} />
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={liveCallsData} searching={false} />
               </CardContent>
             </Card>
           </Grid>
@@ -629,7 +629,7 @@ const Inbound = () => {
                   data={callsinQueueData}
                 /> */}
                 {/* <DataGrid rows={callsinQueue} columns={callsinQueuecolumns} pageSize={5} checkboxSelection /> */}
-                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={idleagentsAll} />
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={idleagentsAll} searching={false} />
               </CardContent>
             </Card>
           </Grid>
@@ -650,7 +650,7 @@ const Inbound = () => {
                   hover
                   data={OmrIdleAgentsData}
                 /> */}
-                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={OmrIdleAgentsData} />
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={OmrIdleAgentsData} searching={false} />
               </CardContent>
             </Card>
           </Grid>
@@ -668,7 +668,7 @@ const Inbound = () => {
                   hover
                   data={chennaiIdleAgentsData}
                 /> */}
-                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={chennaiIdleAgentsData} />
+                <MDBDataTableV5 hover entriesOptions={[5, 20, 25]} entries={5} pagesAmount={4} data={chennaiIdleAgentsData} searching={false} />
               </CardContent>
             </Card>
           </Grid>
