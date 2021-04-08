@@ -259,7 +259,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                     error={Boolean(touched.email && errors.email)}
                     fullWidth
                     helperText={touched.email && errors.email}
-                    label="Email Address"
+                    label="User Name"
                     margin="normal"
                     name="email"
                     onBlur={handleBlur}

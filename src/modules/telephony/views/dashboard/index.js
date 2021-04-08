@@ -271,7 +271,7 @@ const Inbound = () => {
         // setCurrentstatus(response.data.items)
       })
       .catch((error) => {
-        // console.log(error.message)
+        console.log(error.message)
       })
   }
 
@@ -292,7 +292,7 @@ const Inbound = () => {
         // setCurrentstatus(response.data.items)
       })
       .catch((error) => {
-        // console.log(error.message)
+        console.log(error.message)
       })
   }
 
@@ -392,7 +392,7 @@ const Inbound = () => {
       //   }
       // })
 
-    }, 60000);
+    }, 3000);
 
     const interval2 = setInterval(() => {
       getIb()
@@ -425,9 +425,11 @@ const Inbound = () => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'OMR'
   })
 
-  const idleagentsAll1 = agentstatus.filter((Agent) => {
+  let idleagentsAll1 = agentstatus.filter((Agent) => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected'
   })
+
+  idleagentsAll1 = idleagentsAll1.sort((a, b) => new Date(a.difference) - new Date(b.difference)).slice(0, 5)
 
   // console.log(OmrIdleAgents, "idleagents OMR")
 
