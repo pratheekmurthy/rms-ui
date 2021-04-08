@@ -76,6 +76,7 @@ const Inbound = () => {
   const [allusers, setAllusers] = useState([])
   const [callsinQueue, setCallsInQueue] = useState([])
   const [liveCalls, setLivecalls] = useState([])
+  const [idleA, setIdleA] = useState([])
 
   const [data, setData] = useState({})
 
@@ -230,12 +231,14 @@ const Inbound = () => {
             'Server': element2.Server,
             'EmailID': element2.EmailID,
             'breakStatus': element1.breakStatus,
-            'currentserver': element1.currentserver
+            'currentserver': element1.currentserver,
+            'missedCalls': element1.notAnsweredCalls,
+            'answeredCalls': element1.AnsweredCalls
           }
           i = i + 1;
           if (element1.agentCallStatus === 'disconnected' && element1.agentCallDispositionStatus === 'NotDisposed') {
             let difference = new Date() - new Date(element1.updatedAt)
-            difference = moment.utc(difference).format('HH:mm:ss');
+            // difference = moment.utc(difference).format('HH:mm:ss');
             obj1.difference = difference;
           }
 
@@ -429,7 +432,17 @@ const Inbound = () => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected'
   })
 
-  idleagentsAll1 = idleagentsAll1.sort((a, b) => new Date(a.difference) - new Date(b.difference)).slice(0, 5)
+  idleagentsAll1 = idleagentsAll1.sort((a, b) => a.difference - b.difference)
+  idleagentsAll1.sort((a, b) => (a.difference > b.difference) ? 1 : ((b.difference > a.difference) ? -1 : 0))
+  idleagentsAll1 = idleagentsAll1.reverse().slice(0, 5)
+  // const idleagentsAll2 = idleagentsAll1.map((ele) => {
+  //   return ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  // })
+  idleagentsAll1.forEach((ele) => {
+    ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  })
+  console.log(idleagentsAll1, "sliced value")
+  // idleagentsAll1 = idleagentsAll1.sort()
 
   // console.log(OmrIdleAgents, "idleagents OMR")
 
@@ -461,7 +474,8 @@ const Inbound = () => {
 
 
 
-
+  console.log(allusers, "all users")
+  console.log(currentstatus, "currents")
 
   // console.log(callsinQueueData, "callsinQueueData")
 
@@ -613,7 +627,7 @@ const Inbound = () => {
             <Card>
               <CardHeader
                 title={
-                  `IDLE Agents :: ${idleagentsAll1.length}  `
+                  `Top -5 :: Idle Agents  `
                 }
               />
               <CardContent>

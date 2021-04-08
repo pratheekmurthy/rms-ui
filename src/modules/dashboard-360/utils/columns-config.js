@@ -923,6 +923,18 @@ export const LiveCallscolumns2 = [
     sort: 'asc',
     width: 150
   },
+  {
+    field: 'missedCalls',
+    label: 'Missed Calls',
+    sort: 'asc',
+    width: 150
+  },
+  {
+    field: 'answeredCalls',
+    label: 'Answered Calls',
+    sort: 'asc',
+    width: 150
+  },
 
 ];
 

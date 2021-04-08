@@ -36,6 +36,7 @@ const DailyReport = (props) => {
         setProgress(true)
         var startdate = moment(startDate).format('YYYY-MM-DD')
         var enddate = moment(endDate).format('YYYY-MM-DD')
+        console.log(startdate, enddate, "i am here")
 
 
         // console.log(startdate, enddate, "foramtted date")
@@ -43,6 +44,7 @@ const DailyReport = (props) => {
 
         axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
             .then((response) => {
+                console.log(response)
                 setUsers(response.data.userdetails)
             })
             .catch((error) => {
@@ -59,9 +61,11 @@ const DailyReport = (props) => {
 
         axios(config)
             .then(async (response) => {
+                // console.log(response.data)
                 var ALFDATA = response.data;
                 ALFDATA = ALFDATA.reverse();
                 var filteredData = ALFDATA.filter(data => data.created.substring(0, 10) >= startDate.toISOString().substring(0, 10) && data.created.substring(0, 10) <= endDate.toISOString().substring(0, 10))
+                console.log(filteredData)
                 setagentdisposedCalls(filteredData)
                 setProgress(false)
                 return filteredData;
@@ -71,6 +75,9 @@ const DailyReport = (props) => {
                 console.log(error);
             });
     }
+
+    console.log(agentdisposedCalls)
+    console.log(allusers, "all users")
 
     if (agentdisposedCalls.length > 1) {
 
@@ -109,6 +116,7 @@ const DailyReport = (props) => {
             })
         })
     }
+    console.log(agentstatus1)
 
     const DailysReportsData = {}
     DailysReportsData.rows = agentstatus1
