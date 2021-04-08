@@ -715,7 +715,7 @@ const Inbound = () => {
                 hover
                 data={data1}
               /> */}
-              <MDBDataTableV5 hover entriesOptions={[10, 20, 50]} entries={10} pagesAmount={4} data={data1} />
+              <MDBDataTableV5 hover entriesOptions={[10, 20, 50]} entries={10} pagesAmount={4} data={data1} searchTop searchBottom={false} barReverse />
             </CardContent>
           </Card>
         </Grid>
