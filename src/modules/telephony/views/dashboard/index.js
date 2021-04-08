@@ -454,6 +454,13 @@ const Inbound = () => {
   // console.log(callsinQueue, "rows")
   // console.log(callsinQueuecolumns, "columns")
 
+  OmrIdleAgents.forEach((ele) => {
+    ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  })
+
+  chennaiIdleAgents.forEach((ele) => {
+    ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  })
 
   const chennaiIdleAgentsData = {}
   chennaiIdleAgentsData.rows = chennaiIdleAgents
