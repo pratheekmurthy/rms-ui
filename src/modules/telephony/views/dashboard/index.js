@@ -454,6 +454,13 @@ const Inbound = () => {
   // console.log(callsinQueue, "rows")
   // console.log(callsinQueuecolumns, "columns")
 
+  OmrIdleAgents.forEach((ele) => {
+    ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  })
+
+  chennaiIdleAgents.forEach((ele) => {
+    ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  })
 
   const chennaiIdleAgentsData = {}
   chennaiIdleAgentsData.rows = chennaiIdleAgents
@@ -708,7 +715,7 @@ const Inbound = () => {
                 hover
                 data={data1}
               /> */}
-              <MDBDataTableV5 hover entriesOptions={[10, 20, 50]} entries={10} pagesAmount={4} data={data1} />
+              <MDBDataTableV5 hover entriesOptions={[10, 20, 50]} entries={10} pagesAmount={4} data={data1} searchTop searchBottom={false} barReverse />
             </CardContent>
           </Card>
         </Grid>
