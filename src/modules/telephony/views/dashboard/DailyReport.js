@@ -36,12 +36,9 @@ const DailyReport = (props) => {
         setProgress(true)
         var startdate = moment(startDate).format('YYYY-MM-DD')
         var enddate = moment(endDate).format('YYYY-MM-DD')
-        console.log(startdate, enddate, "i am here")
-
-
-        // console.log(startdate, enddate, "foramtted date")
         const axios = require('axios');
 
+        //Api for All users data
         axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
             .then((response) => {
                 console.log(response)
@@ -51,6 +48,7 @@ const DailyReport = (props) => {
                 console.log(error.message)
             })
 
+        //Api call to get date range adily report 
         let data = '';
         let config = {
             method: 'get',
@@ -76,11 +74,8 @@ const DailyReport = (props) => {
             });
     }
 
-    console.log(agentdisposedCalls)
-    console.log(allusers, "all users")
-
+    //Mapping Allusers and daily report data 
     if (agentdisposedCalls.length > 1) {
-
         var obj1 = {};
         var i = 1;
         agentdisposedCalls.forEach((element1) => {
@@ -116,21 +111,15 @@ const DailyReport = (props) => {
             })
         })
     }
-    console.log(agentstatus1)
 
+    //Table configuring
     const DailysReportsData = {}
     DailysReportsData.rows = agentstatus1
     DailysReportsData.columns = LiveCallscolumns1
 
-    // console.log(agentstatus1, "filtered data111")
-
     function handleChange() {
         setagentdisposedCalls([])
     }
-
-    // const options = {
-    //     filterType: 'checkbox',
-    // };
 
 
     return (<div>
@@ -147,7 +136,8 @@ const DailyReport = (props) => {
         {
             progress && <LinearProgress />
         }
-        <Grid item lg={12} sm={6}>
+
+        <Grid item lg={4} sm={6}>
             {agentstatus1.length > 1 ? <DownloadReport
                 DownloadData={agentstatus1}
             /> : null}
@@ -161,16 +151,11 @@ const DailyReport = (props) => {
                         }
                     />
                     <CardContent>
-                        {/* <MUIDataTable
-                            title={`Records - ${agentdisposedCalls.length}`}
-                            data={agentstatus1}
-                            columns={LiveCallscolumns1}
-                            options={options}
-                        /> */}
                         <MDBDataTable
                             striped
                             hover
                             data={DailysReportsData}
+                            scrollX
                         />
 
                     </CardContent>
@@ -182,30 +167,3 @@ const DailyReport = (props) => {
 }
 
 export default DailyReport
-
-// var agentstatus1 = [];
-//         var obj1 = {};
-
-// console.log(" i am in condition")
-// var i = 1;
-// agentdisposedCalls.forEach((element1) => {
-//     allusers.forEach((element2) => {
-//         if (element1.agentID === element2.External_num) {
-//             obj1 = {
-//                 'sl.no': i,
-//                 'EmployeeName': element2.EmployeeName,
-//                 'agentID': element1.agentID,
-//                 'CallerName': element1.CallerName,
-//                 'CallerNumber': element1.callerNumber,
-//                 'callerapplication': element1.callerapplication,
-//                 'issuetype': element1.issuetype
-
-//             }
-
-//             i = i + 1;
-//             agentstatus1.push(obj1);
-//             console.log(agentstatus1, "agentstatus")
-
-// }
-// })
-// })

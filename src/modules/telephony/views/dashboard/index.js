@@ -78,7 +78,7 @@ const Inbound = () => {
   const [liveCalls, setLivecalls] = useState([])
   const [idleA, setIdleA] = useState([])
 
-  const [data, setData] = useState({})
+  const [data, setData] = useState({ callarrived: 0, callsabandoned: 0, callsabandonedinqueue: 0, callsanswered: 0, callsoffered: 0 })
 
 
   const InboundDataList = [
@@ -87,11 +87,6 @@ const Inbound = () => {
       data: data.callarrived,
       label: 'I/B Calls Arrived'
     },
-    // {
-    //   icon: <QueryBuilderIcon color="primary" />,
-    //   data: Inbound.ooohourscalls,
-    //   label: 'OOO Hours Calls'
-    // },
     {
       icon: <AddIcCallIcon color="primary" />,
       data: data.callsoffered,
@@ -102,21 +97,6 @@ const Inbound = () => {
       data: data.callsanswered,
       label: 'I/B Calls Answered'
     },
-    // {
-    //   icon: <QueueIcon color="primary" />,
-    //   data: Inbound.queuecalls,
-    //   label: 'I/B Calls in Queue'
-    // },
-    // {
-    //   icon: <SupervisorAccountIcon color="primary" />,
-    //   data: '0',
-    //   label: 'I/B Agents Available'
-    // },
-    // {
-    //   icon: <AvTimerIcon color="primary" />,
-    //   data: '0',
-    //   label: 'I/B Ans within SL'
-    // },
     {
       icon: <RecordVoiceOverIcon color="primary" />,
       data: data.callsabandoned,
@@ -136,58 +116,13 @@ const Inbound = () => {
       icon: <AddIcCallIcon color="primary" />,
       data: callsinQueue.length,
       label: 'Queue calls'
-    },
-
-    // {
-    //   icon: <QuestionAnswerRoundedIcon color="primary" />,
-    //   data: Inbound.callsansweredwithin20,
-    //   label: 'I/B Answer Level (SL-20)'
-    // },
-    // {
-    //   icon: <TimelapseRoundedIcon color="primary" />,
-    //   data: Inbound.aht,
-    //   label: 'I/B AHT'
-    // }
-    // {
-    //   icon: <Timer10RoundedIcon color="primary" />,
-    //   data: '0',
-    //   label: 'TeI/B Ans within SL=10 sec'
-    // },
-    // {
-    //   icon: <HourglassEmptyRoundedIcon color="primary" />,
-    //   data: '09',
-    //   label: 'I/B Service Level (SL-10)'
-    // },
-    // {
-    //   icon: <StarsIcon color="primary" />,
-    //   data: '09',
-    //   label: 'I/B Answer Level (SL-10)'
-    // },
-    // {
-    //   icon: <StarsIcon color="primary" />,
-    //   data: '09',
-    //   label: 'I/B Answer Level (SL-10)'
-    // }
-  ];
+    }
+  ]
 
 
-  // console.log(allusers, "allusers")
-  // console.log(currentstatus, "current status")
-
-
-
-  useEffect(() => {
-    getIb()
-
-
-  }, [])
-
-
-
-  // setInterval(window.location.reload(), 150000);
-  // window.setTimeout(function () { document.location.reload(true); }, 25000);
 
   const getIb = () => {
+    //Api for fetching All users 
     axios.get('http://106.51.86.75:4000/auth/apiM/allusers',)
       .then((response) => {
         // console.log(response, "allusers")
@@ -197,6 +132,7 @@ const Inbound = () => {
         console.log(error.message)
       })
 
+    //Api for fetching currentstatus data
     axios.get('http://106.51.86.75:42004/crm/currentstatus/report')
       .then((response) => {
         // console.log(response)
@@ -205,10 +141,60 @@ const Inbound = () => {
       .catch((error) => {
         console.log(error.message)
       })
-
-
   }
 
+  const getLiveCalls = () => {
+    //Api call for fetching livecalls data
+    axios.get('http://106.51.86.75:7000/report/api/livecalls')
+      .then((response) => {
+        // console.log(response, "live callllllllsss")
+        if (response.data) {
+          response.data.map((call) => {
+            // return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
+            return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
+          })
+          setLivecalls(response.data)
+        }
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
+
+  const getCallsinQueue = () => {
+    //Api call for fetching queue calls data
+    axios.get('http://106.51.86.75:7000/report/api/callinqueue')
+      .then((response) => {
+        // console.log(response, "queue callllllllsss")
+        let data1 = response.data
+        if (response.data) {
+          data1.map((call) => {
+            return (call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0]);
+          })
+
+
+        }
+        setCallsInQueue(response.data)
+      })
+      .catch((error) => {
+        // console.log(error.message)
+      })
+  }
+
+  const getValues = () => {
+    //Api call for fectching calls count data
+    axios.get('http://106.51.86.75:7000/report/api/cdr')
+      .then((response) => {
+        // console.log(response, "live data")
+        setData(response.data.count)
+      })
+      .catch((error) => {
+        console.log(error.message)
+      })
+  }
+
+
+  //Mapping All users and current status for matching currentstatus of each user
   var agentstatus = [];
   var obj1 = {};
 
@@ -220,7 +206,7 @@ const Inbound = () => {
         if (element1.agentID === element2.External_num && element1.loginStatus === "true") {
 
           obj1 = {
-            'sl.no': i,
+            // 'sl.no': i,
             'EmployeeName': element2.EmployeeName,
             'agentID': element1.agentID,
             'contactNumber': element1.contactNumber,
@@ -250,179 +236,48 @@ const Inbound = () => {
 
   }
 
-
-  // console.log(agentstatus, "live agents")
-  // console.log(agentliveStatus, "livestatus")
-
+  //filter method for disposed callstatus agents
   const disposedInteractions = agentstatus.filter((record) => {
     return record.agentCallDispositionStatus === 'Disposed'
   })
 
+  //filter method for on Break Agents
   const onBreak = agentstatus.filter((agent) => {
     return agent.breakStatus === 'IN'
   })
 
-  const getLiveCalls = () => {
-    axios.get('http://106.51.86.75:7000/report/api/livecalls')
-      .then((response) => {
-        // console.log(response, "live callllllllsss")
-        response.data.map((call) => {
-          // return call.duration = moment.utc(new Date(call.duration)).format('HH:mm:ss');
-          return call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
-        })
-        setLivecalls(response.data)
-        // setCurrentstatus(response.data.items)
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
-  }
-
-  const getCallsinQueue = () => {
-    axios.get('http://106.51.86.75:7000/report/api/callinqueue')
-      .then((response) => {
-        // console.log(response, "queue callllllllsss")
-        response.data.map((call) => {
-          return (call.duration = (new Date(call.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0]);
-        })
-        // console.log(response.data, "queue calllsss")
-        let id = 0;
-        response.data.map((call) => {
-          id = id + 1;
-          return (call.id = id);
-        })
-        setCallsInQueue(response.data)
-        // setCurrentstatus(response.data.items)
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
-  }
-
-  const getValues = () => {
-    axios.get('http://106.51.86.75:7000/report/api/cdr')
-      .then((response) => {
-        // console.log(response, "live data")
-        setData(response.data.count)
-      })
-      .catch((error) => {
-        console.log(error.message)
-      })
-  }
-
-
-
-  // function getALF(startDate, endDate) {
-
-  //   const axios = require('axios');
-  //   let data = '';
-  //   let u = Agent_service_url
-  //   let config = {
-  //     method: 'get',
-  //     url: u + GET_INTERACTION_BY_AGENT_SIP_ID + localStorage.getItem('AgentSIPID') + '',
-  //     headers: {},
-  //     data: data
-  //   };
-
-  //   axios(config)
-  //     .then(async (response) => {
-  //       var ALFDATA = response.data;
-  //       ALFDATA = ALFDATA.reverse();
-  //       var filteredData = ALFDATA.filter(data => data.created.substring(0, 10) >= startDate.toISOString().substring(0, 10) && data.created.substring(0, 10) <= endDate.toISOString().substring(0, 10))
-  //       setagentdisposedCalls(filteredData)
-  //       return filteredData;
-  //     })
-
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-
-
-  // }
-  // function handleChange() {
-  //   setagentdisposedCalls([])
-  // }
-
-
-  function getIBdata() {
-    const axios = require('axios');
-
-    let config = {
-      method: 'get',
-      url: GET_INBOUND_DASHBOARD_DATA,
-      headers: {}
-    };
-
-    axios(config)
-      .then((response) => {
-
-        var data = response.data;
-
-        // setInbound(data[0][0])
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-
-  }
-  // const SOCKETENDPOINT = SOCKETENDPOINT2;
-
-
-
 
   useEffect(() => {
 
+    //calling live calls & Queuecalls every 3 seconds
     const interval = setInterval(() => {
       getLiveCalls()
       getCallsinQueue()
-      getIb()
 
-    }, 2000);
+    }, 3000);
 
-
-
+    //calling calls count api for every 5 seconds
     const interval1 = setInterval(() => {
       getValues()
-      // const socket = socketIOClient(SOCKETENDPOINT);
-
-      // socket.on('AstriskEvent', data => {
-      //   if (data.Event === 'Bridge' && data.Bridgestate === 'Link') {
-      //     getIBdata()
-      //   }
-      //   if (data.Event === 'Hangup') {
-      //     getIBdata()
-      //   }
-      // })
-
     }, 5000);
 
+    //calling current status & All users api for every 6 seconds
     const interval2 = setInterval(() => {
       getIb()
-
     }, 6000);
 
   }, [])
 
   useEffect(() => {
 
-  }, [getIBdata])
+  }, [getIb])
 
-  const options = {
-    filterType: 'checkbox',
-    rowsPerPage: 10,
-  };
 
-  const data1 = {}
-  // console.log(agentstatus)
-  data1.rows = agentstatus;
-  data1.columns = LiveCallscolumns2;
-
+  //filtering for ideal Agents is particular location
   const chennaiIdleAgents = agentstatus.filter((Agent) => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'Chennai'
   })
 
-  // console.log(chennaiIdleAgents, "idleagents chennai")
 
   const OmrIdleAgents = agentstatus.filter((Agent) => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected' && Agent.Location === 'OMR'
@@ -432,27 +287,47 @@ const Inbound = () => {
     return Agent.agentCallDispositionStatus === 'NotDisposed' && Agent.agentCallStatus === 'disconnected'
   })
 
+  //sorting of Top 5 idle Agents
   idleagentsAll1 = idleagentsAll1.sort((a, b) => a.difference - b.difference)
   idleagentsAll1.sort((a, b) => (a.difference > b.difference) ? 1 : ((b.difference > a.difference) ? -1 : 0))
   idleagentsAll1 = idleagentsAll1.reverse().slice(0, 5)
-  // const idleagentsAll2 = idleagentsAll1.map((ele) => {
-  //   return ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
-  // })
+
+  //sorting for Agent status table based on number of calls answered
+  agentstatus.sort((a, b) => (a.answeredCalls > b.answeredCalls) ? 1 : ((b.answeredCalls > a.answeredCalls) ? -1 : 0))
+  // idleagentsAll1 = idleagentsAll1.reverse()
+  console.log(agentstatus, "before sorting")
+  if (agentstatus.length > 0) {
+    let id = 0;
+    agentstatus.map((call) => {
+      id = id + 1;
+      return (call['sl.no'] = id);
+    })
+  }
+  console.log(agentstatus, "After sorting")
+
+
+  //converting milliseconds to required date format
+  // if (idleagentsAll1.length > 0) {
+  //   idleagentsAll1.forEach((ele) => {
+  //     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  //   })
+  // }
+
+  // if (OmrIdleAgents.length > 1) {
+  //   OmrIdleAgents.forEach((ele) => {
+  //     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  //   })
+  // }
+
+  // if (chennaiIdleAgents.length > 0) {
+  //   chennaiIdleAgents.forEach((ele) => {
+  //     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  //   })
+  // }
+
   idleagentsAll1.forEach((ele) => {
     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
   })
-  console.log(idleagentsAll1, "sliced value")
-  // idleagentsAll1 = idleagentsAll1.sort()
-
-  // console.log(OmrIdleAgents, "idleagents OMR")
-
-
-  const callsinQueueData = {}
-  callsinQueueData.rows = callsinQueue
-  callsinQueueData.columns = callsinQueuecolumns
-
-  // console.log(callsinQueue, "rows")
-  // console.log(callsinQueuecolumns, "columns")
 
   OmrIdleAgents.forEach((ele) => {
     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
@@ -462,6 +337,23 @@ const Inbound = () => {
     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
   })
 
+  // if(callsinQueue.length > 1){
+  //   callsinQueue.forEach((ele) => {
+  //     ele.difference = moment.utc(ele.difference).format('HH:mm:ss');
+  //   })
+  // }
+
+  console.log(callsinQueue, "calls in queue")
+
+
+  //Table configuring
+  const data1 = {}
+  data1.rows = agentstatus;
+  data1.columns = LiveCallscolumns2;
+
+  const callsinQueueData = {}
+  callsinQueueData.rows = callsinQueue
+  callsinQueueData.columns = callsinQueuecolumns
   const chennaiIdleAgentsData = {}
   chennaiIdleAgentsData.rows = chennaiIdleAgents
   chennaiIdleAgentsData.columns = ChennaiIdleAgents
@@ -478,13 +370,6 @@ const Inbound = () => {
   idleagentsAll.rows = idleagentsAll1
   idleagentsAll.columns = omrIdleAgents
 
-
-
-
-  console.log(allusers, "all users")
-  console.log(currentstatus, "currents")
-
-  // console.log(callsinQueueData, "callsinQueueData")
 
 
   return (
