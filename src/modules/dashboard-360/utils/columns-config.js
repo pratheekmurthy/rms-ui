@@ -1131,7 +1131,7 @@ export const profilesColumns1 = [
   {
     field: 'updated_At',
     width: 150,
-    headerName: 'Updated_At',
+    headerName: 'Last Updated',
     flex: 1
   },
 ];

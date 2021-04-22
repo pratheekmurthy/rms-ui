@@ -223,7 +223,7 @@ const Inbound = () => {
             <Grid container spacing={3} direction="row">
                 <Grid item xs={2} sm={2}></Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem" }}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }}>
                         <div class="card-body">
                             <h5 class="card-title">Total Profiles</h5>
                             <p class="card-text">{profiles.length}</p>
@@ -231,7 +231,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem" }}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: "#7FFF00" }}>
                         <div class="card-body">
                             <h5 class="card-title">Shortlisted Profiles</h5>
                             <p class="card-text">{shortlisted1.length}</p>
@@ -239,7 +239,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem" }}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#FF0000' }}>
                         <div class="card-body">
                             <h5 class="card-title">Rejected Profiles</h5>
                             <p class="card-text">{rejected1.length}</p>
@@ -247,7 +247,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem" }}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFD700' }}>
                         <div class="card-body">
                             <h5 class="card-title">Pending Profiles</h5>
                             <p class="card-text" >{profiles.length - (shortlisted1.length + rejected1.length)}</p>
@@ -256,10 +256,14 @@ const Inbound = () => {
                 </Grid>
                 <Grid item xs={2} sm={2}></Grid>
                 <Grid item xs={3} sm={3}>
-                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button>
+                    <Card>
+                        <CardContent>
+                            <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button>
+                        </CardContent>
+                    </Card>
                 </Grid>
-                <Grid item xs={7} sm={7}></Grid>
-                <Grid item xs={2} sm={2}>
+                <Grid item xs={8} sm={8}></Grid>
+                <Grid item xs={1} sm={1}>
                     <FormControl variant="outlined" className={classes.formControl} >
                         <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
                         <Select
@@ -286,12 +290,17 @@ const Inbound = () => {
                     <DownloadReport
                         DownloadData={profiles1}
                     />
-                    {
-                        profiles1.length > 1 ? (<DataTable
-                            records={profiles1}
-                            selectedData={showProfile}
-                        />) : null
-                    }
+                    <Card>
+                        <CardContent>
+                            {
+                                profiles1.length > 1 ? (<DataTable
+                                    records={profiles1}
+                                    selectedData={showProfile}
+                                />) : null
+                            }
+                        </CardContent>
+                    </Card>
+
                 </Grid>
             </Grid>
             <Modal show={show} onHide={handleClose}>
