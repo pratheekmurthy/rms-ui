@@ -43,7 +43,7 @@ export default [
     routes: telephonyRoutes,
     key: 'telephony',
     component: telephony,
-    crumb: 'Telephony',
+    crumb: 'Resume Bank',
     requiresAuth: true
   },
 

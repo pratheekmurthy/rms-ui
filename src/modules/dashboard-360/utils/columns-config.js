@@ -938,6 +938,79 @@ export const LiveCallscolumns2 = [
 
 ];
 
+export const profilesColumns = [
+
+  {
+    label: 'Sl.No',
+    field: 'sl.no',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Sl.No',
+    },
+  },
+  {
+    label: 'First Name',
+    field: 'firstName',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'First Name',
+    },
+  },
+  {
+    label: 'Last Name',
+    field: 'lastName',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Last Name',
+    },
+  }, {
+    label: 'Role',
+    field: 'role',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Role',
+    },
+  }, {
+    label: 'Applied Date',
+    field: 'created_At',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Applied Date',
+    },
+  }, {
+    label: 'Profile status',
+    field: 'prrofileStatus',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Profile status',
+    },
+  },
+  {
+    label: 'updated_At',
+    field: 'updated_At',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'updated_At',
+    },
+  },
+  {
+    label: 'Reference_ID',
+    field: '_id',
+    width: 150,
+    attributes: {
+      'aria-controls': 'DataTable',
+      'aria-label': 'Reference_ID',
+    },
+  },
+];
+
 export const ChennaiIdleAgents = [
   {
     field: 'EmployeeName',
