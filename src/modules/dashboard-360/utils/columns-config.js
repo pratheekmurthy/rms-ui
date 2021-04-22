@@ -1100,5 +1100,41 @@ export const omrIdleAgents = [
 
 ];
 
+export const profilesColumns1 = [
+  {
+    field: 'slNo',
+    headerName: 'Sl.No',
+    flex: 1
+  },
+  {
+    field: 'firstName',
+    headerName: 'First Name',
+    flex: 1
+  },
+  {
+    field: 'lastName',
+    headerName: 'Last Name',
+    flex: 1
+  }, {
+    field: 'role',
+    headerName: 'Role',
+    flex: 1
+  }, {
+    field: 'created_At',
+    headerName: 'Applied Date',
+    flex: 1
+  }, {
+    field: 'prrofileStatus',
+    headerName: 'Resume Status',
+    flex: 1
+  },
+  {
+    field: 'updated_At',
+    width: 150,
+    headerName: 'Updated_At',
+    flex: 1
+  },
+];
+
 
 

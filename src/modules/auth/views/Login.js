@@ -180,10 +180,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     //   setLoggedInMain(false);
     //   setError(true);
     // }
-    if (values.email === 'operations' && values.password === 'operations') {
+    if (values.email === 'Admin@gmail.com' && values.password === 'Admin@123') {
       localStorage.setItem('role', 'Admin');
-      localStorage.setItem('email', 'operations')
-      localStorage.setItem('password', 'operations')
+      localStorage.setItem('email', 'Admin@gmail.com')
+      localStorage.setItem('password', 'Admin@gmail.com')
 
       setAccountTypeMain(ADMIN);
       setLoggedInMain(true);

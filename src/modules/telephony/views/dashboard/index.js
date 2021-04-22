@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
+import 'react-toastify/dist/ReactToastify.css'
+import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport'
 import {
     Avatar,
     Grid,
@@ -15,14 +17,23 @@ import {
     Card,
     CardContent,
     CardHeader,
-    Box
+    Box,
+    Button,
+    TextField
 } from '@material-ui/core';
+import {
+    MenuItem, InputLabel, Select,
+    FormControl
+} from '@material-ui/core'
 import { grey } from '@material-ui/core/colors';
+import { toast } from 'react-toastify'
 import { MDBDataTable, MDBDataTableV5 } from 'mdbreact';
 import { profilesColumns } from '../../../dashboard-360/utils/columns-config'
 import DataTable from './datatable'
-
+import { Modal } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
+import SearchIcon from '@material-ui/icons/Search';
+import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -58,19 +69,30 @@ const useStyles = makeStyles(theme => ({
         '&:last-child': {
             paddingBottom: 0
         }
-    }
+    },
+    formControl: {
+        minWidth: 100,
+    },
 }));
 
+toast.configure()
 
 const Inbound = () => {
     const [profiles, setProfiles] = useState([])
-    const [checkbox1, setCheckbox1] = React.useState('');
+    const [profiles1, setProfiles1] = useState([])
+    const [candidate, setCandidate] = useState("")
+    const [show, setShow] = useState(false)
+    const [link, setLink] = useState()
+    const [filter, setFilter] = useState("")
+    const [shortlisted, setShortlisted] = useState(0)
+    const [rejected, setRejected] = useState(0)
+    const [pending, setPending] = useState(0)
+    const [search, setSearch] = useState("")
+    var url = "http://192.168.3.45:3056/resumes/"
 
-    const showLogs2 = (e) => {
-        setCheckbox1(e);
-        console.log(checkbox1)
-    };
+    const classes = useStyles();
 
+    //getALl profiles
     const getProfiles = () => {
         axios.get('http://192.168.3.45:3056/api/profiles')
             .then((response) => {
@@ -80,8 +102,103 @@ const Inbound = () => {
                     return ele.slNo = i
 
                 })
+                response.data.map((ele) => {
+                    return ele.created_At = ele.created_At.slice(0, 10)
+                })
+                response.data.map((ele) => {
+                    return ele.updated_At = ele.updated_At.slice(0, 10)
+                })
                 console.log(response)
                 setProfiles(response.data)
+                setProfiles1(response.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    //handle shortlist and handle reject
+    const handleshortlisted = (id) => {
+        const result = profiles.filter((ele) => {
+            return ele._id === id
+        })
+        result[0].prrofileStatus = 'shortlisted'
+        result[0].updated_At = new Date()
+
+        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+            .then((response) => {
+                getProfiles()
+                toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                window.location.reload()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const handlerejected = (id) => {
+        const result = profiles.filter((ele) => {
+            return ele._id === id
+        })
+        result[0].prrofileStatus = 'rejected'
+        result[0].updated_At = new Date()
+        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+            .then((response) => {
+                getProfiles()
+                toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                window.location.reload()
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const role1 = [{ name: 'MERN Developer', value: 'MERN Developer' }, { name: 'Manual Tester', value: 'Manual Tester' }, { name: 'Automation Tester', value: 'Automation Tester' }]
+
+    const handleClose = () => {
+        setLink()
+        setShow(false)
+    }
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
+    const searchcandidate = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.firstName === search
+        })
+        setProfiles1(result)
+    }
+
+    const onChangeFilter = (e, value) => {
+        setFilter(e.target.value)
+        // setFilter('ALL')
+
+    }
+
+    const setValue = () => {
+        if (filter === 'ALL') {
+            getProfiles()
+        }
+
+        if (filter !== 'ALL') {
+            const result = profiles.filter((ele) => {
+                return ele.role === filter
+            })
+            setProfiles1(result)
+        }
+    }
+
+    useEffect(() => {
+        getProfiles()
+    }, [])
+
+    const showProfile = (data) => {
+        axios.get(`http://192.168.3.45:3056/api/profiles/${data._id}`)
+            .then((response) => {
+                setCandidate(response.data)
+                setShow(true)
             })
             .catch((error) => {
                 console.log(error)
@@ -89,39 +206,121 @@ const Inbound = () => {
     }
 
 
+    const shortlisted1 = profiles.filter((ele) => {
+        return ele.prrofileStatus === 'shortlisted'
+    })
+    const rejected1 = profiles.filter((ele) => {
+        return ele.prrofileStatus === 'rejected'
+    })
 
     useEffect(() => {
-        getProfiles()
-    }, [])
-
-
-    console.log(profiles)
-
-    const data1 = {}
-    data1.rows = profiles;
-    data1.columns = profilesColumns;
-
+        setValue()
+    }, [filter])
 
 
     return (
         <>
-            {/* <MDBDataTableV5
-                hover
-                entriesOptions={[5, 20, 25]}
-                entries={5}
-                pagesAmount={4}
-                data={data1}
-                checkbox
-                headCheckboxID='uniq1'
-                bodyCheckboxID='uniq12'
-                getValueCheckBox={(e) => {
-                    showLogs2(e);
-                }}
-                proCheckboxes
-                filledCheckboxes
-                proSelect
-            /> */}
-            <DataTable profiles={data1} />
+            <Grid container spacing={3} direction="row">
+                <Grid item xs={2} sm={2}></Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "18rem" }}>
+                        <div class="card-body">
+                            <h5 class="card-title">Total Profiles</h5>
+                            <p class="card-text">{profiles.length}</p>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "18rem" }}>
+                        <div class="card-body">
+                            <h5 class="card-title">Shortlisted Profiles</h5>
+                            <p class="card-text">{shortlisted1.length}</p>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "18rem" }}>
+                        <div class="card-body">
+                            <h5 class="card-title">Rejected Profiles</h5>
+                            <p class="card-text">{rejected1.length}</p>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "18rem" }}>
+                        <div class="card-body">
+                            <h5 class="card-title">Pending Profiles</h5>
+                            <p class="card-text" >{profiles.length - (shortlisted1.length + rejected1.length)}</p>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={2} sm={2}></Grid>
+                <Grid item xs={3} sm={3}>
+                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button>
+                </Grid>
+                <Grid item xs={7} sm={7}></Grid>
+                <Grid item xs={2} sm={2}>
+                    <FormControl variant="outlined" className={classes.formControl} >
+                        <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-outlined-label"
+                            id="demo-simple-select-outlined"
+                            value={filter}
+                            onChange={onChangeFilter}
+                            label="Filter"
+                            required="true"
+                        >
+                            <MenuItem value="ALL">
+                                <em>All</em>
+
+                            </MenuItem>
+                            {
+                                role1.map((exp) => {
+                                    return (<MenuItem value={exp.value}>{exp.name}</MenuItem>)
+                                })
+                            }
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                    <DownloadReport
+                        DownloadData={profiles1}
+                    />
+                    {
+                        profiles1.length > 1 ? (<DataTable
+                            records={profiles1}
+                            selectedData={showProfile}
+                        />) : null
+                    }
+                </Grid>
+            </Grid>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    {/* <Modal.Title>{candidate.firstName} {candidate.lastName}</Modal.Title> */}
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Full Name : {candidate.firstName} {candidate.lastName} </p>
+                    <p>First Name : {candidate.firstName}</p>
+                    <p> Last Name: {candidate.lastName}</p>
+                    <p> Role : {candidate.role}</p>
+                    <p>Email : {candidate.email}</p>
+                    <p>DOB :{candidate.Dob}</p>
+                    <p>Mobile Number : {candidate.mobile}</p>
+                    <p>Alternate Number : {candidate.alternatemob}</p>
+                    <p> Experience: {candidate.experience}</p>
+                    <p>Applied Date : {candidate.created_At}</p>
+                    <p>Graduation year : {candidate.graduation}</p>
+                    <p>Backlogs : {candidate.backlogs}</p>
+                    <p>Current CTC : {candidate.ctc}</p>
+                    <p>Available for Immediate Joining : {candidate.joining}</p>
+                    <p>Profile Status : {candidate.prrofileStatus === 'Applied' ? (<div><Button variant="contained" color="primary" onClick={() => { handleshortlisted(candidate._id); }}>Shortlist</Button> <Button variant="contained" color="secondary" onClick={() => { handlerejected(candidate._id); }}>Reject</Button></div>) : (candidate.prrofileStatus)}</p>
+                    <p>Resume : {candidate.resume ? (<a href={url + candidate.resume} target="_blank" rel="noopener noreferrer">show</a>) : null}</p>
+                    <p>{link}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button type="button" class="btn btn-primary" onClick={handleClose} >Close</button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

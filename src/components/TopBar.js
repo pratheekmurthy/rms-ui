@@ -162,33 +162,10 @@ const TopBar = ({
 
   async function logoutUser() {
 
-    try {
-      if (localStorage.getItem('Agenttype') === 'L1') {
-        // removeFromQueue('Local/5'+localStorage.getItem('AgentSIPID')+'@from-internal', 7001)
-        if (user_Details.AgentQueueStatus === 'dynamic') {
-          // removeFromQueue(`Local/5${localStorage.getItem('AgentSIPID')}@from-queue`, 7001, user_Details);
-        }
-      }
-      if (localStorage.getItem('Agenttype') === 'L2') {
-        // removeFromQueue('Local/3'+localStorage.getItem('AgentSIPID')+'@from-internal', 7002)
-        if (user_Details.AgentQueueStatus === 'dynamic') {
-          // removeFromQueue(`Local/3${localStorage.getItem('AgentSIPID')}@from-queue`, 7002, user_Details);
-        }
-      }
-      updateAgentCallStatusV2(localStorage.getItem('callStatusId'), { loginStatus: 'false' })
-      // axios
-      // .delete(BackendURL.AuthenticationURL + '/auth/api/logout', { headers: { "authorization": userData } })
-      const userData = localStorage.jwtToken
 
-      const url = 'http://106.51.86.75:4000/auth/apiM/logout'
-      await Axios.delete(url, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } });
+    localStorage.clear();
+    window.location.reload()
 
-      localStorage.clear();
-
-      logout();
-    } catch (err) {
-      console.log(err);
-    }
   }
   var test = "green"
   const menuId = 'primary-search-account-menu';
@@ -218,22 +195,7 @@ const TopBar = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton color="inherit">
-          <Badge color="secondary">
-            <AssignmentIndIcon />
-          </Badge>
-        </IconButton>
-        <Link to="/dailyreport" className="color-black"> Daily Reports</Link>
-      </MenuItem>
-      <MenuItem>
-        <IconButton color="inherit">
-          <Badge color="secondary">
-            <CallIcon />
-          </Badge>
-        </IconButton>
-        <Link to="/cdrreports" className="color-black"> CDR Reports</Link>
-      </MenuItem>
+
       <MenuItem onClick={() => logoutUser()}>
         <IconButton
           aria-label="account of current user"
@@ -274,35 +236,7 @@ const TopBar = ({
         </div> */}
         <Box flexGrow={1} />
         <Hidden mdDown>
-          {localStorage.getItem("role") === "Agent" ? <Typography className={classes.title} variant="h5" noWrap>
-            <Link to="/dash360" className="color-white">
-              Agent {localStorage.getItem('Agenttype') + ' ' + localStorage.getItem('AgentSIPID')}
-            </Link>
-          </Typography> : <></>}
-          {localStorage.getItem("role") === "Admin" || localStorage.getItem("role") === "Group admin" ? <Typography className={classes.title} variant="h5" noWrap>
 
-            <Link to="/dailyreport" className="color-white">
-              <Badge color="secondary">
-                <AssignmentIndIcon />
-              </Badge> Daily Report
-            </Link>
-          </Typography> : <></>}
-
-          <IconButton color="inherit">
-            <Badge
-              badgeContent={notifications.length}
-              color="primary"
-              variant="dot"
-            ><Typography className={classes.title} variant="h5" noWrap>
-
-                <Link to="/cdrreports" className="color-white">
-                  <Badge color="secondary">
-                    <CallIcon />
-                  </Badge> CDR Reports
-            </Link>
-              </Typography>
-            </Badge>
-          </IconButton>
           {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton> */}
