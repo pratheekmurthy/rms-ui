@@ -254,11 +254,11 @@ const TopBar = ({
           {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton> */}
-          <Tooltip title="Logout">
+          {/* <Tooltip title="Logout">
             <IconButton color="inherit" onClick={() => logoutUser()}>
               <ExitToAppIcon />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Logout">
             <IconButton color="inherit" onClick={() => logoutUser()}>
               <ExitToAppIcon />

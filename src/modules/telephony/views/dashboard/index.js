@@ -315,7 +315,7 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: '#FFD700' }}>
                         <div class="card-body">
                             <h5 class="card-title">Pending Profiles</h5>
-                            <p class="card-text" >{profiles.length - (shortlisted + rejected)}</p>
+                            <p class="card-text" >{profiles1.length - (shortlisted + rejected)}</p>
                         </div>
                     </div>
                 </Grid>
@@ -323,15 +323,15 @@ const Inbound = () => {
                 <Grid item xs={10} sm={10}>
                     <Card>
                         <CardContent>
-                           
+
                             <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
-                        
-                            
+
+
                             <DaterangeReport
                                 getALF={getALF}
                                 handleChange={handleChange}
                             />
-                            
+
                         </CardContent>
                     </Card>
                 </Grid>
