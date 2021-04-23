@@ -1,4 +1,4 @@
-// import { distributorOrders, distributorInvoices } from './reducers';
+import { profilesReducers } from './reducers';
 
 export default function getTelephonyModule() {
   return {
@@ -6,7 +6,7 @@ export default function getTelephonyModule() {
     id: 'telephony',
     // Maps the Store key to the reducer
     reducerMap: {
-      // distributorOrders,
+      profilesReducers,
       // distributorInvoices
     }
     // This module uses redux-saga middleware

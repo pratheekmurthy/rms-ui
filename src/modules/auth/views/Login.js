@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     height: '100vh'
   },
   image: {
-    backgroundImage: 'url(/static/images/merittrack.jpg)',
+    backgroundImage: 'url(/static/images/login1.jpg)',
     backgroundRepeat: 'no-repeat',
     backgroundColor:
       theme.palette.type === 'light'
@@ -291,7 +291,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   )}
                   <Box my={2} mt={5}>
                     <Button
-                      color="secondary"
+                      color="primary"
                       fullWidth
                       size="large"
                       type="submit"

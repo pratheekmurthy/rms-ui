@@ -34,6 +34,8 @@ import { Modal } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.css'
 import SearchIcon from '@material-ui/icons/Search';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
+import { setProfiles } from '../../../../redux/action'
+import { useDispatch, useSelector } from 'react-redux'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -88,14 +90,19 @@ const Inbound = () => {
     const [rejected, setRejected] = useState(0)
     const [pending, setPending] = useState(0)
     const [search, setSearch] = useState("")
+    const [selectedCandaidate, setSelectedCandidate] = useState([])
     var url = "http://192.168.3.45:3056/resumes/"
 
     const classes = useStyles();
+
+
+
 
     //getALl profiles
     const getProfiles = () => {
         axios.get('http://192.168.3.45:3056/api/profiles')
             .then((response) => {
+                response.data.reverse()
                 let i = 0;
                 response.data.map((ele) => {
                     i = i + 1;
@@ -108,14 +115,16 @@ const Inbound = () => {
                 response.data.map((ele) => {
                     return ele.updated_At = ele.updated_At.slice(0, 10)
                 })
-                console.log(response)
                 setProfiles(response.data)
                 setProfiles1(response.data)
+
             })
             .catch((error) => {
                 console.log(error)
             })
     }
+
+    console.log(profiles1)
 
     //handle shortlist and handle reject
     const handleshortlisted = (id) => {
@@ -165,11 +174,14 @@ const Inbound = () => {
     }
 
     const searchcandidate = (e) => {
-        const result = profiles.filter((ele) => {
+        console.log(search)
+        const result = profiles1.filter((ele) => {
             return ele.firstName === search
         })
         setProfiles1(result)
     }
+
+    console.log(selectedCandaidate)
 
     const onChangeFilter = (e, value) => {
         setFilter(e.target.value)
@@ -218,6 +230,7 @@ const Inbound = () => {
     }, [filter])
 
 
+
     return (
         <>
             <Grid container spacing={3} direction="row">
@@ -262,8 +275,8 @@ const Inbound = () => {
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={8} sm={8}></Grid>
-                <Grid item xs={1} sm={1}>
+                <Grid item xs={7} sm={7}></Grid>
+                <Grid item xs={2} sm={2}>
                     <FormControl variant="outlined" className={classes.formControl} >
                         <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
                         <Select
@@ -293,7 +306,7 @@ const Inbound = () => {
                     <Card>
                         <CardContent>
                             {
-                                profiles1.length > 1 ? (<DataTable
+                                profiles1.length > 0 ? (<DataTable
                                     records={profiles1}
                                     selectedData={showProfile}
                                 />) : null

@@ -96,4 +96,12 @@ export const getAllusers = () => {
   }
 }
 
+export const setProfiles = (data) => {
+  console.log(data)
+  return {
+    type: 'SET_PROFILES',
+    payload: data
+
+  }
+}
 

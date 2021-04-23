@@ -195,7 +195,15 @@ const TopBar = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-
+      <MenuItem>
+        <IconButton color="inherit">
+          <Badge color="secondary">
+            <AssignmentIndIcon />
+          </Badge>
+        </IconButton>
+        <Link to="/dailyreport" className="color-black"> Date filter</Link>
+      </MenuItem>
+      <MenuItem></MenuItem>
       <MenuItem onClick={() => logoutUser()}>
         <IconButton
           aria-label="account of current user"
@@ -236,7 +244,13 @@ const TopBar = ({
         </div> */}
         <Box flexGrow={1} />
         <Hidden mdDown>
-
+          <Typography>
+            <Link to="/dailyreport" className="color-white">
+              <Badge color="secondary">
+                <AssignmentIndIcon />
+              </Badge> Date filter
+            </Link>
+          </Typography>
           {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton> */}
@@ -255,8 +269,8 @@ const TopBar = ({
         </Hidden>
       </Toolbar>
     </AppBar>
-    { renderMobileMenu}
-    { renderMenu}
+    {renderMobileMenu}
+    {renderMenu}
   </div>
   );
 };

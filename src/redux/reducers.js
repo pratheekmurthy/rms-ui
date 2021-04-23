@@ -126,3 +126,15 @@ export const allusers = (state = allusersInitialState, action) => {
       return state;
   }
 };
+
+let profilesInitilaState = []
+
+export const profilesReducers = (state = profilesInitilaState, action) => {
+  switch (action.type) {
+    case 'SET_PROFILES': {
+      return action.payload;
+    }
+    default:
+      return state
+  }
+}

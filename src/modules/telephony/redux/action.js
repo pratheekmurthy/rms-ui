@@ -21,3 +21,11 @@
 //     payload: invoices
 //   };
 // };
+
+export const setProfiles = (data) => {
+    return {
+        type: 'SET_PROFILES',
+        payload: data
+
+    }
+}

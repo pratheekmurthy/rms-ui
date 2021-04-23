@@ -15,7 +15,7 @@ export default function MaterialUIPickers(props) {
     props.getALF(startDate, endDate)
   };
 
-  console.log(startDate, endDate)
+  //console.log(startDate, endDate)
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -54,10 +54,9 @@ export default function MaterialUIPickers(props) {
           'aria-label': 'change date',
         }}
       />
-      <br />
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
-      <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Show Records</Button>
+      <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Show Profiles</Button>
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
       <br />
