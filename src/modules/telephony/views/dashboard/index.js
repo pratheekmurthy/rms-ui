@@ -36,6 +36,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import RotateLeftIcon from '@material-ui/icons/RotateLeft';
 import { setProfiles } from '../../../../redux/action'
 import { useDispatch, useSelector } from 'react-redux'
+import DaterangeReport from './DaterangeReport'
+import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -90,11 +92,16 @@ const Inbound = () => {
     const [rejected, setRejected] = useState(0)
     const [pending, setPending] = useState(0)
     const [search, setSearch] = useState("")
+    const [progress, setProgress] = useState(false);
+    const [startDate, setStartDate] = useState(new Date())
+    const [endDate, setEndDate] = useState(new Date())
     const [selectedCandaidate, setSelectedCandidate] = useState([])
     var url = "http://192.168.3.45:3056/resumes/"
 
     const classes = useStyles();
 
+    let shortlisted1 = ""
+    let rejected1 = ""
 
 
 
@@ -118,13 +125,44 @@ const Inbound = () => {
                 setProfiles(response.data)
                 setProfiles1(response.data)
 
+
             })
             .catch((error) => {
                 console.log(error)
             })
     }
 
-    console.log(profiles1)
+    // console.log(profiles1)
+    function getALF(startDate, endDate) {
+        setProgress(true)
+        var startdate = moment(startDate).format('YYYY-MM-DD')
+        var enddate = moment(endDate).format('YYYY-MM-DD')
+        const axios = require('axios');
+
+        setStartDate(startdate)
+        setEndDate(enddate)
+
+        const filteredData = []
+        profiles.map((ele) => {
+            if (new Date(ele.created_At) >= new Date(startDate) && new Date(ele.created_At) <= new Date(endDate)) {
+                //console.log(ele)
+                filteredData.push(ele)
+            }
+            setProfiles1(filteredData)
+        })
+
+        // //Api for All users data
+        // axios.get('http://192.168.3.45:3056/api/profiles')
+        //     .then((response) => {
+        //         setProfiles(response.data)
+        //         //setProfiles1(response.data)
+
+        //     })
+        //     .catch((error) => {
+        //         console.log(error)
+        //     })
+
+    }
 
     //handle shortlist and handle reject
     const handleshortlisted = (id) => {
@@ -145,6 +183,7 @@ const Inbound = () => {
             })
     }
 
+    //api call for updated rejected state
     const handlerejected = (id) => {
         const result = profiles.filter((ele) => {
             return ele._id === id
@@ -199,11 +238,16 @@ const Inbound = () => {
                 return ele.role === filter
             })
             setProfiles1(result)
+            setCardValue()
         }
     }
 
     useEffect(() => {
+        setCardValue()
+    }, [profiles1])
+    useEffect(() => {
         getProfiles()
+
     }, [])
 
     const showProfile = (data) => {
@@ -217,18 +261,26 @@ const Inbound = () => {
             })
     }
 
+    const setCardValue = () => {
+        const shortlisted1 = profiles1.filter((ele) => {
+            return ele.prrofileStatus === 'shortlisted'
+        })
+        setShortlisted(shortlisted1.length)
+        const rejected1 = profiles1.filter((ele) => {
+            return ele.prrofileStatus === 'rejected'
+        })
+        setRejected(rejected1.length)
+    }
 
-    const shortlisted1 = profiles.filter((ele) => {
-        return ele.prrofileStatus === 'shortlisted'
-    })
-    const rejected1 = profiles.filter((ele) => {
-        return ele.prrofileStatus === 'rejected'
-    })
 
     useEffect(() => {
         setValue()
+        setCardValue()
     }, [filter])
 
+    const handleChange = () => {
+
+    }
 
 
     return (
@@ -239,7 +291,7 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }}>
                         <div class="card-body">
                             <h5 class="card-title">Total Profiles</h5>
-                            <p class="card-text">{profiles.length}</p>
+                            <p class="card-text">{profiles1.length}</p>
                         </div>
                     </div>
                 </Grid>
@@ -247,7 +299,7 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: "#7FFF00" }}>
                         <div class="card-body">
                             <h5 class="card-title">Shortlisted Profiles</h5>
-                            <p class="card-text">{shortlisted1.length}</p>
+                            <p class="card-text">{shortlisted}</p>
                         </div>
                     </div>
                 </Grid>
@@ -255,7 +307,7 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: '#FF0000' }}>
                         <div class="card-body">
                             <h5 class="card-title">Rejected Profiles</h5>
-                            <p class="card-text">{rejected1.length}</p>
+                            <p class="card-text">{rejected}</p>
                         </div>
                     </div>
                 </Grid>
@@ -263,19 +315,23 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: '#FFD700' }}>
                         <div class="card-body">
                             <h5 class="card-title">Pending Profiles</h5>
-                            <p class="card-text" >{profiles.length - (shortlisted1.length + rejected1.length)}</p>
+                            <p class="card-text" >{profiles.length - (shortlisted + rejected)}</p>
                         </div>
                     </div>
                 </Grid>
-                <Grid item xs={2} sm={2}></Grid>
-                <Grid item xs={3} sm={3}>
+                {/* <Grid item xs={2} sm={2}></Grid> */}
+                <Grid item xs={8} sm={8}>
                     <Card>
                         <CardContent>
-                            <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button>
+                            <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
+                            <DaterangeReport
+                                getALF={getALF}
+                                handleChange={handleChange}
+                            />
                         </CardContent>
                     </Card>
                 </Grid>
-                <Grid item xs={7} sm={7}></Grid>
+                {/* <Grid item xs={3} sm={3}></Grid> */}
                 <Grid item xs={2} sm={2}>
                     <FormControl variant="outlined" className={classes.formControl} >
                         <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>

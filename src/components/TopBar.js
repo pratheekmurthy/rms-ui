@@ -195,14 +195,14 @@ const TopBar = ({
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton color="inherit">
           <Badge color="secondary">
             <AssignmentIndIcon />
           </Badge>
         </IconButton>
         <Link to="/dailyreport" className="color-black"> Date filter</Link>
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem></MenuItem>
       <MenuItem onClick={() => logoutUser()}>
         <IconButton
@@ -244,13 +244,13 @@ const TopBar = ({
         </div> */}
         <Box flexGrow={1} />
         <Hidden mdDown>
-          <Typography>
+          {/* <Typography>
             <Link to="/dailyreport" className="color-white">
               <Badge color="secondary">
                 <AssignmentIndIcon />
               </Badge> Date filter
             </Link>
-          </Typography>
+          </Typography> */}
           {/* <IconButton color="inherit">
             <AccountBoxRoundedIcon />
           </IconButton> */}
