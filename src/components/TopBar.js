@@ -259,6 +259,11 @@ const TopBar = ({
               <ExitToAppIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Logout">
+            <IconButton color="inherit" onClick={() => logoutUser()}>
+              <ExitToAppIcon />
+            </IconButton>
+          </Tooltip>
         </Hidden>
         <Hidden lgUp>
           <IconButton color="inherit" onClick={handleMobileMenuOpen} aria-label="show more"
