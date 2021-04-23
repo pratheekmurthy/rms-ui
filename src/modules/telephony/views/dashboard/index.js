@@ -320,14 +320,18 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 {/* <Grid item xs={2} sm={2}></Grid> */}
-                <Grid item xs={8} sm={8}>
+                <Grid item xs={10} sm={10}>
                     <Card>
                         <CardContent>
+                           
                             <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
+                        
+                            
                             <DaterangeReport
                                 getALF={getALF}
                                 handleChange={handleChange}
                             />
+                            
                         </CardContent>
                     </Card>
                 </Grid>
