@@ -1,6 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import {
+  Button,
+  Container,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  makeStyles,
+  Paper,
+  Snackbar,
+  TextField,
+  Tooltip
+} from '@material-ui/core';
+
 export const orderColumns = [
   {
     field: 'OrderNumber',
@@ -939,75 +953,55 @@ export const LiveCallscolumns2 = [
 ];
 
 export const profilesColumns = [
-
-  {
-    label: 'Sl.No',
-    field: 'sl.no',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Sl.No',
-    },
+  { 
+    headerName : 'SL.No',
+    field: 'id',
+    flex: 1
   },
   {
-    label: 'First Name',
+    headerName: 'First Name',
     field: 'firstName',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'First Name',
-    },
+    flex: 1
+   
   },
   {
-    label: 'Last Name',
+    headerName: 'Last Name',
     field: 'lastName',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Last Name',
-    },
-  }, {
-    label: 'Role',
+    flex: 1
+  }, 
+  {
+    headerName: 'Role',
     field: 'role',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Role',
-    },
+    flex: 1
   }, {
-    label: 'Applied Date',
+    headerName: 'Applied Date',
     field: 'created_At',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Applied Date',
-    },
+    flex: 1
   }, {
-    label: 'Profile status',
+    headerName: 'Profile status',
     field: 'prrofileStatus',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Profile status',
-    },
+    flex: 1
   },
   {
-    label: 'updated_At',
+    headerName: 'updated_At',
     field: 'updated_At',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'updated_At',
-    },
+    flex: 1
   },
   {
-    label: 'Reference_ID',
-    field: '_id',
-    width: 150,
-    attributes: {
-      'aria-controls': 'DataTable',
-      'aria-label': 'Reference_ID',
-    },
+    headerName: 'Actions',
+    field: '',
+    renderCell: rowData => (
+      <>
+        <Tooltip title="Edit">
+          <IconButton
+            onClick={() => alert(`hi`)}
+          >
+            bjbh
+          </IconButton>
+        </Tooltip>
+      </>
+    ),
+    flex: 1
   },
 ];
 
@@ -1133,6 +1127,49 @@ export const profilesColumns1 = [
     width: 150,
     headerName: 'Last Updated',
     flex: 1
+  },
+];
+
+export const profilesColumns2 = [
+
+  { 
+    headerName : 'SL.No',
+    field: 'sl.no',
+    width: 150,
+  },
+  {
+    headerName: 'First Name',
+    field: 'firstName',
+    width: 150,
+   
+  },
+  {
+    headerName: 'Last Name',
+    field: 'lastName',
+    width: 150,
+  }, 
+  {
+    headerName: 'Role',
+    field: 'role',
+    width: 150,
+  }, {
+    headerName: 'Applied Date',
+    field: 'created_At',
+    width: 150,
+  }, {
+    headerName: 'Profile status',
+    field: 'prrofileStatus',
+    width: 150,
+  },
+  {
+    headerName: 'updated_At',
+    field: 'updated_At',
+    width: 150,
+  },
+  {
+    headerName: 'Reference_ID',
+    field: '_id',
+    width: 150,
   },
 ];
 

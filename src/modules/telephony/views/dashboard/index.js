@@ -43,7 +43,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import DaterangeReport from './DaterangeReport'
 import moment from 'moment';
 import { propTypes } from 'react-bootstrap/esm/Image';
-import { DataGrid } from '@material-ui/data-grid'
+import { DataGrid } from '@material-ui/data-grid';
 import Popup from './PopUp'
 import EditIcon from '@material-ui/icons/Edit';
 
@@ -89,6 +89,8 @@ const useStyles = makeStyles(theme => ({
 
 toast.configure()
 
+
+
 const Inbound = () => {
     const [profiles, setProfiles] = useState([])
     const [profiles1, setProfiles1] = useState([])
@@ -103,6 +105,7 @@ const Inbound = () => {
     const [progress, setProgress] = useState(false);
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState(new Date())
+    const [resume,setResume] = useState("")
     const [selectedCandaidate, setSelectedCandidate] = useState([])
     var url = "http://192.168.3.45:3056/resumes/"
 
@@ -110,6 +113,67 @@ const Inbound = () => {
 
     let shortlisted1 = ""
     let rejected1 = ""
+
+    const profilesColumns = [
+        { 
+          headerName : 'SL.No',
+          field: 'id',
+          flex: 1
+        },
+        {
+          headerName: 'First Name',
+          field: 'firstName',
+          flex: 1
+         
+        },
+        {
+          headerName: 'Last Name',
+          field: 'lastName',
+          flex: 1
+        }, 
+        {
+          headerName: 'Role',
+          field: 'role',
+          flex: 1
+        }, {
+          headerName: 'Applied Date',
+          field: 'created_At',
+          flex: 1
+        }, {
+          headerName: 'Profile status',
+          field: 'prrofileStatus',
+          flex: 1
+        },
+        {
+          headerName: 'Updated At',
+          field: 'updated_At',
+          renderCell: rowData => (setCandidate(rowData.row)),
+          flex: 1
+        },
+        {
+          headerName: 'Actions',
+          field: '',
+          renderCell: rowData => (
+            <>
+              <Tooltip title="Shortlist">
+                <IconButton
+                  onClick={() => handleshortlisted(rowData.row._id)}
+                ><Button variant="contained" color="primary" >Shortlist</Button> 
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Reject">
+                <IconButton
+                  onClick={() => handlerejected(rowData.row._id)}
+                ><Button variant="contained" color="secondary" >Reject</Button>
+                </IconButton>
+              </Tooltip>
+            </>
+          ),
+          flex: 1.1
+        },
+   
+      ];
+
 
 
 
@@ -163,6 +227,7 @@ const Inbound = () => {
 
     //handle shortlist and handle reject
     const handleshortlisted = (id) => {
+        setShow(false)
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
@@ -172,9 +237,10 @@ const Inbound = () => {
 
         axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
-                getProfiles()
+                //getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
-                window.location.reload()
+                //window.location.reload()
+                
             })
             .catch((error) => {
                 console.log(error)
@@ -183,6 +249,7 @@ const Inbound = () => {
 
     //api call for updated rejected state
     const handlerejected = (id) => {
+        setShow(false)
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
@@ -190,10 +257,10 @@ const Inbound = () => {
         result[0].updated_At = new Date()
         axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
-                getProfiles()
+                //getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 //propTypes.history.push("/telephony/dashboard")
-                window.location.reload()
+                //window.location.reload()
             })
             .catch((error) => {
                 console.log(error)
@@ -251,14 +318,29 @@ const Inbound = () => {
     }, [])
 
     const showProfile = (data) => {
-        axios.get(`http://192.168.3.45:3056/api/profiles/${data._id}`)
-            .then((response) => {
-                setCandidate(response.data)
-                setShow(true)
-            })
-            .catch((error) => {
-                console.log(error)
-            })
+       
+        axios.get(`http://192.168.3.45:3056/api/profiles/${data.row._id}`)
+            // .then((response) => {
+            //     console.log(response.data)
+            //     setCandidate(response.data)
+            //     // setCandidate(resume.data.resume)
+            //     setShow(true)
+            // })
+            // .catch((error) => {
+            //     console.log(error)
+            // })
+        const result = profiles1.filter((profile)=>{
+            return profile._id === data.row._id
+        })
+        console.log(result,"result")
+        if(result[0].resume.length >0){
+            setResume(result[0].resume)
+        }else {
+            setResume("")
+        }
+        
+        setCandidate(result)
+        setShow(true)
     }
 
     const setCardValue = () => {
@@ -282,6 +364,12 @@ const Inbound = () => {
 
     }
 
+    const handleSelected1=(id)=>{
+        console.log(id)
+    }
+
+    
+    
 
     return (
         <>
@@ -365,7 +453,7 @@ const Inbound = () => {
                     <DownloadReport
                         DownloadData={profiles1}
                     />
-                    <Card>
+                    {/* <Card>
                         <CardContent>
                             {
                                 profiles1.length > 0 ? (<DataTable
@@ -374,57 +462,27 @@ const Inbound = () => {
                                 />) : null
                             }
                         </CardContent>
-                    </Card>
+                    </Card> */}
 
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <h1>Table for profiles</h1>
-                <DataGrid
-                      columns={[
-                        { field: 'id', headerName: 'SL.No', flex: 1 },
-                        { field: 'firstName', headerName: 'First Name', flex: 1 },
-                        { field: 'lastName', headerName: 'Last Name', flex: 1 },
-                        { field: 'role', headerName: 'Role', flex: 1 },
-                        { field: 'created_At', headerName: 'Applied Date', flex: 1 },
-                        { field: 'prrofileStatus', headerName: 'Resume Status', flex: 1 },
-                        { field: 'updated_At', headerName: 'Last Updated', flex: 1 },
-                        {
-                          field: 'id',
-                          headerName: 'Actions',
-                          renderCell: rowData => (
-                            <>
-                              <Tooltip title="Edit">
-                                <IconButton
-                                  onClick={() => console.log(rowData.row)}
-                                >
-                                  <EditIcon color="primary" />
-                                </IconButton>
-                                <IconButton
-                                  onClick={() => console.log(rowData.row)}
-                                >
-                                  <EditIcon color="primary" />
-                                </IconButton>
-                              </Tooltip>
-                            </>
-                          ),
-                          flex: 3
-                        }
-                      ]}
-                      rows={profiles1.map(user => ({
-                        id: user.id,
-                        ...user
-                      }))}
-                    // rowss={profiles1}
-                    // rows={profiles1}
-                      pageSize={10}
-                      rowsPerPageOptions={[10, 20, 50]}
-                      pagination
-                    />
+                    <Card>
+                        <CardContent>
+                        <div style={{ height: 500, width: '100%' }}>
+                            <DataGrid rows={profiles1} columns={profilesColumns}  pageSize={20}
+                            //rowsPerPageOptions={[10, 20, 50]}
+                            pagination onRowClick={showProfile}/>
+                        </div>
+
+                        </CardContent>
+                    </Card>
+                    
                     </Grid>
             </Grid>
-            <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} />
+            <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} resume={resume}/>
         </>
     );
 };
 export default Inbound;
+
 
