@@ -19,7 +19,11 @@ import {
     CardHeader,
     Box,
     Button,
-    TextField
+    TextField,
+    Paper,
+    Snackbar,
+    Tooltip,
+    IconButton
 } from '@material-ui/core';
 import {
     MenuItem, InputLabel, Select,
@@ -39,7 +43,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import DaterangeReport from './DaterangeReport'
 import moment from 'moment';
 import { propTypes } from 'react-bootstrap/esm/Image';
+import { DataGrid } from '@material-ui/data-grid'
 import Popup from './PopUp'
+import EditIcon from '@material-ui/icons/Edit';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -115,7 +121,7 @@ const Inbound = () => {
                 let i = 0;
                 response.data.map((ele) => {
                     i = i + 1;
-                    return ele.slNo = i
+                    return ele.id = i
 
                 })
                 response.data.map((ele) => {
@@ -371,6 +377,50 @@ const Inbound = () => {
                     </Card>
 
                 </Grid>
+                <Grid item xs={12} sm={12}>
+                    <h1>Table for profiles</h1>
+                <DataGrid
+                      columns={[
+                        { field: 'id', headerName: 'SL.No', flex: 1 },
+                        { field: 'firstName', headerName: 'First Name', flex: 1 },
+                        { field: 'lastName', headerName: 'Last Name', flex: 1 },
+                        { field: 'role', headerName: 'Role', flex: 1 },
+                        { field: 'created_At', headerName: 'Applied Date', flex: 1 },
+                        { field: 'prrofileStatus', headerName: 'Resume Status', flex: 1 },
+                        { field: 'updated_At', headerName: 'Last Updated', flex: 1 },
+                        {
+                          field: 'id',
+                          headerName: 'Actions',
+                          renderCell: rowData => (
+                            <>
+                              <Tooltip title="Edit">
+                                <IconButton
+                                  onClick={() => console.log(rowData.row)}
+                                >
+                                  <EditIcon color="primary" />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => console.log(rowData.row)}
+                                >
+                                  <EditIcon color="primary" />
+                                </IconButton>
+                              </Tooltip>
+                            </>
+                          ),
+                          flex: 3
+                        }
+                      ]}
+                      rows={profiles1.map(user => ({
+                        id: user.id,
+                        ...user
+                      }))}
+                    // rowss={profiles1}
+                    // rows={profiles1}
+                      pageSize={10}
+                      rowsPerPageOptions={[10, 20, 50]}
+                      pagination
+                    />
+                    </Grid>
             </Grid>
             <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} />
         </>
