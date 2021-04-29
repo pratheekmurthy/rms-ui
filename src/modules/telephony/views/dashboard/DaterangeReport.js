@@ -17,18 +17,18 @@ export default function MaterialUIPickers(props) {
           // padding: 0,
           // paddingLeft: 10
         },
-        "&.MuiFormControl-marginNormal":{
-           
+        "&.MuiFormControl-marginNormal": {
+
         },
         "& .MuiInputBase-input": {
           padding: 0,
           // paddingLeft: 0,
-          marginTop:0
+          marginTop: 0
         }
       }
     }
   });
-const classes= useStyles();
+  const classes = useStyles();
 
   const handleSubmit = (e) => {
     console.log("i submitted")
@@ -41,7 +41,7 @@ const classes= useStyles();
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {/* <Grid item lg={3} sm={6}> */}
       <KeyboardDatePicker
-       className={classes.root}
+        className={classes.root}
         disableToolbar
         variant="inline"
         format="dd/MM/yyyy"
@@ -60,7 +60,7 @@ const classes= useStyles();
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
       <KeyboardDatePicker
-      className={classes.root}
+        className={classes.root}
         disableToolbar
         variant="inline"
         format="dd/MM/yyyy"
@@ -78,6 +78,7 @@ const classes= useStyles();
       />
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
+      <br />
       <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Show Profiles</Button>
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}

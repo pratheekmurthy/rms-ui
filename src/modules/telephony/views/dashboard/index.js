@@ -171,12 +171,15 @@ const Inbound = () => {
         })
         result[0].prrofileStatus = 'shortlisted'
         result[0].updated_At = new Date()
+        // handleClose()
 
         axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 window.location.reload()
+                //setCandidate("")
+
             })
             .catch((error) => {
                 console.log(error)
@@ -245,6 +248,7 @@ const Inbound = () => {
     useEffect(() => {
         setCardValue()
     }, [profiles1])
+
     useEffect(() => {
         getProfiles()
 
@@ -320,44 +324,50 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 {/* <Grid item xs={2} sm={2}></Grid> */}
-                <Grid item xs={10} sm={10}>
+                <Grid item xs={12} sm={12}>
                     <Card>
                         <CardContent>
+                            <Grid container spacing={3} direction="row">
+                                <Grid item xs={4} sm={4}>
+                                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} /><Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
 
-                            <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
+                            </Grid>
+                                <Grid item xs={6} sm={6}>
+                                    <DaterangeReport
+                                        getALF={getALF}
+                                        handleChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={2} sm={2}>
+                                    <FormControl variant="outlined" className={classes.formControl} >
+                                        <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-outlined-label"
+                                            id="demo-simple-select-outlined"
+                                            value={filter}
+                                            onChange={onChangeFilter}
+                                            label="Filter"
+                                            required="true"
+                                        >
+                                            <MenuItem value="ALL">
+                                                <em>All</em>
 
-
-                            <DaterangeReport
-                                getALF={getALF}
-                                handleChange={handleChange}
-                            />
-
+                                            </MenuItem>
+                                            {
+                                                role1.map((exp) => {
+                                                    return (<MenuItem value={exp.value}>{exp.name}</MenuItem>)
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                         </CardContent>
                     </Card>
-                </Grid>
-                {/* <Grid item xs={3} sm={3}></Grid> */}
-                <Grid item xs={2} sm={2}>
-                    <FormControl variant="outlined" className={classes.formControl} >
-                        <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-outlined-label"
-                            id="demo-simple-select-outlined"
-                            value={filter}
-                            onChange={onChangeFilter}
-                            label="Filter"
-                            required="true"
-                        >
-                            <MenuItem value="ALL">
-                                <em>All</em>
+                    {/* </Grid> */}
+                    {/* <Grid item xs={3} sm={3}></Grid> */}
+                    {/* <Grid item xs={2} sm={2}> */}
 
-                            </MenuItem>
-                            {
-                                role1.map((exp) => {
-                                    return (<MenuItem value={exp.value}>{exp.name}</MenuItem>)
-                                })
-                            }
-                        </Select>
-                    </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <DownloadReport
