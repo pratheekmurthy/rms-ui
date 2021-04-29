@@ -249,7 +249,7 @@ const Inbound = () => {
 
     //api call for updated rejected state
     const handlerejected = (id) => {
-        setShow(false)
+        //setShow(false)
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
