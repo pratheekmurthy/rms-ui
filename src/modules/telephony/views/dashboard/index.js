@@ -38,6 +38,8 @@ import { setProfiles } from '../../../../redux/action'
 import { useDispatch, useSelector } from 'react-redux'
 import DaterangeReport from './DaterangeReport'
 import moment from 'moment';
+import { propTypes } from 'react-bootstrap/esm/Image';
+import Popup from './PopUp'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -151,17 +153,6 @@ const Inbound = () => {
             setProfiles1(filteredData)
         })
 
-        // //Api for All users data
-        // axios.get('http://192.168.3.45:3056/api/profiles')
-        //     .then((response) => {
-        //         setProfiles(response.data)
-        //         //setProfiles1(response.data)
-
-        //     })
-        //     .catch((error) => {
-        //         console.log(error)
-        //     })
-
     }
 
     //handle shortlist and handle reject
@@ -178,8 +169,6 @@ const Inbound = () => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 window.location.reload()
-                //setCandidate("")
-
             })
             .catch((error) => {
                 console.log(error)
@@ -197,7 +186,8 @@ const Inbound = () => {
             .then((response) => {
                 getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
-                window.location.reload()
+                propTypes.history.push("/telephony/dashboard")
+                //window.location.reload()
             })
             .catch((error) => {
                 console.log(error)
@@ -329,7 +319,7 @@ const Inbound = () => {
                         <CardContent>
                             <Grid container spacing={3} direction="row">
                                 <Grid item xs={4} sm={4}>
-                                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} /><Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
+                                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
 
                             </Grid>
                                 <Grid item xs={6} sm={6}>
@@ -364,10 +354,6 @@ const Inbound = () => {
                             </Grid>
                         </CardContent>
                     </Card>
-                    {/* </Grid> */}
-                    {/* <Grid item xs={3} sm={3}></Grid> */}
-                    {/* <Grid item xs={2} sm={2}> */}
-
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <DownloadReport
@@ -386,34 +372,9 @@ const Inbound = () => {
 
                 </Grid>
             </Grid>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    {/* <Modal.Title>{candidate.firstName} {candidate.lastName}</Modal.Title> */}
-                </Modal.Header>
-                <Modal.Body>
-                    <p>Full Name : {candidate.firstName} {candidate.lastName} </p>
-                    <p>First Name : {candidate.firstName}</p>
-                    <p> Last Name: {candidate.lastName}</p>
-                    <p> Role : {candidate.role}</p>
-                    <p>Email : {candidate.email}</p>
-                    <p>DOB :{candidate.Dob}</p>
-                    <p>Mobile Number : {candidate.mobile}</p>
-                    <p>Alternate Number : {candidate.alternatemob}</p>
-                    <p> Experience: {candidate.experience}</p>
-                    <p>Applied Date : {candidate.created_At}</p>
-                    <p>Graduation year : {candidate.graduation}</p>
-                    <p>Backlogs : {candidate.backlogs}</p>
-                    <p>Current CTC : {candidate.ctc}</p>
-                    <p>Available for Immediate Joining : {candidate.joining}</p>
-                    <p>Profile Status : {candidate.prrofileStatus === 'Applied' ? (<div><Button variant="contained" color="primary" onClick={() => { handleshortlisted(candidate._id); }}>Shortlist</Button> <Button variant="contained" color="secondary" onClick={() => { handlerejected(candidate._id); }}>Reject</Button></div>) : (candidate.prrofileStatus)}</p>
-                    <p>Resume : {candidate.resume ? (<a href={url + candidate.resume} target="_blank" rel="noopener noreferrer">show</a>) : null}</p>
-                    <p>{link}</p>
-                </Modal.Body>
-                <Modal.Footer>
-                    <button type="button" class="btn btn-primary" onClick={handleClose} >Close</button>
-                </Modal.Footer>
-            </Modal>
+            <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} />
         </>
     );
 };
 export default Inbound;
+

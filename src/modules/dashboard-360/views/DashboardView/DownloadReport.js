@@ -1,11 +1,11 @@
 import React from 'react';
 import {
     JsonToCsv,
-  
+
 } from 'react-json-csv';
 
 export default function DownloadReport({ DownloadData }) {
-  
+
     var filename = 'Download'
     var fields = {
         "no data": "no data"
@@ -27,10 +27,14 @@ export default function DownloadReport({ DownloadData }) {
         filename = 'Download'
         fields = header
         style = {
-            padding: "5px"
+            padding: "5px",
+            //color: 'blue',
+            backgroundColor: 'blue',
+            border: '5px'
+
         }
         data = DownloadData
-        text = "Download"
+        text = "Download report"
 
 
     }
