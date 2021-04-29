@@ -105,7 +105,7 @@ const Inbound = () => {
     const [progress, setProgress] = useState(false);
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState(new Date())
-    const [resume,setResume] = useState("")
+    const [resume, setResume] = useState("")
     const [selectedCandaidate, setSelectedCandidate] = useState([])
     var url = "http://192.168.3.45:3056/resumes/"
 
@@ -115,64 +115,64 @@ const Inbound = () => {
     let rejected1 = ""
 
     const profilesColumns = [
-        { 
-          headerName : 'SL.No',
-          field: 'id',
-          flex: 1
+        {
+            headerName: 'SL.No',
+            field: 'id',
+            flex: 1
         },
         {
-          headerName: 'First Name',
-          field: 'firstName',
-          flex: 1
-         
+            headerName: 'First Name',
+            field: 'firstName',
+            flex: 1
+
         },
         {
-          headerName: 'Last Name',
-          field: 'lastName',
-          flex: 1
-        }, 
+            headerName: 'Last Name',
+            field: 'lastName',
+            flex: 1
+        },
         {
-          headerName: 'Role',
-          field: 'role',
-          flex: 1
+            headerName: 'Role',
+            field: 'role',
+            flex: 1
         }, {
-          headerName: 'Applied Date',
-          field: 'created_At',
-          flex: 1
+            headerName: 'Applied Date',
+            field: 'created_At',
+            flex: 1
         }, {
-          headerName: 'Profile status',
-          field: 'prrofileStatus',
-          flex: 1
+            headerName: 'Profile status',
+            field: 'prrofileStatus',
+            flex: 1
         },
         {
-          headerName: 'Updated At',
-          field: 'updated_At',
-          renderCell: rowData => (setCandidate(rowData.row)),
-          flex: 1
+            headerName: 'Updated At',
+            field: 'updated_At',
+            renderCell: rowData => (setCandidate(rowData.row)),
+            flex: 1
         },
         {
-          headerName: 'Actions',
-          field: '',
-          renderCell: rowData => (
-            <>
-              <Tooltip title="Shortlist">
-                <IconButton
-                  onClick={() => handleshortlisted(rowData.row._id)}
-                ><Button variant="contained" color="primary" >Shortlist</Button> 
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Reject">
-                <IconButton
-                  onClick={() => handlerejected(rowData.row._id)}
-                ><Button variant="contained" color="secondary" >Reject</Button>
-                </IconButton>
-              </Tooltip>
-            </>
-          ),
-          flex: 1.1
+            headerName: 'Actions',
+            field: '',
+            renderCell: rowData => (
+                <>
+                    <Tooltip title="Shortlist">
+                        <IconButton
+                            onClick={() => handleshortlisted(rowData.row._id)}
+                        ><Button variant="contained" color="primary" >Shortlist</Button>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Reject">
+                        <IconButton
+                            onClick={() => handlerejected(rowData.row._id)}
+                        ><Button variant="contained" color="secondary" >Reject</Button>
+                        </IconButton>
+                    </Tooltip>
+                </>
+            ),
+            flex: 1.1
         },
-   
-      ];
+
+    ];
 
 
 
@@ -227,7 +227,7 @@ const Inbound = () => {
 
     //handle shortlist and handle reject
     const handleshortlisted = (id) => {
-        setShow(false)
+        handleClose()
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
@@ -240,7 +240,7 @@ const Inbound = () => {
                 //getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 //window.location.reload()
-                
+
             })
             .catch((error) => {
                 console.log(error)
@@ -249,7 +249,7 @@ const Inbound = () => {
 
     //api call for updated rejected state
     const handlerejected = (id) => {
-        setShow(false)
+        handleClose()
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
@@ -261,6 +261,7 @@ const Inbound = () => {
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 //propTypes.history.push("/telephony/dashboard")
                 //window.location.reload()
+
             })
             .catch((error) => {
                 console.log(error)
@@ -318,27 +319,27 @@ const Inbound = () => {
     }, [])
 
     const showProfile = (data) => {
-       
+
         axios.get(`http://192.168.3.45:3056/api/profiles/${data.row._id}`)
-            // .then((response) => {
-            //     console.log(response.data)
-            //     setCandidate(response.data)
-            //     // setCandidate(resume.data.resume)
-            //     setShow(true)
-            // })
-            // .catch((error) => {
-            //     console.log(error)
-            // })
-        const result = profiles1.filter((profile)=>{
+        // .then((response) => {
+        //     console.log(response.data)
+        //     setCandidate(response.data)
+        //     // setCandidate(resume.data.resume)
+        //     setShow(true)
+        // })
+        // .catch((error) => {
+        //     console.log(error)
+        // })
+        const result = profiles1.filter((profile) => {
             return profile._id === data.row._id
         })
-        console.log(result,"result")
-        if(result[0].resume.length >0){
+        console.log(result, "result")
+        if (result[0].resume.length > 0) {
             setResume(result[0].resume)
-        }else {
+        } else {
             setResume("")
         }
-        
+
         setCandidate(result)
         setShow(true)
     }
@@ -364,12 +365,12 @@ const Inbound = () => {
 
     }
 
-    const handleSelected1=(id)=>{
+    const handleSelected1 = (id) => {
         console.log(id)
     }
 
-    
-    
+    console.log(candidate)
+
 
     return (
         <>
@@ -468,18 +469,18 @@ const Inbound = () => {
                 <Grid item xs={12} sm={12}>
                     <Card>
                         <CardContent>
-                        <div style={{ height: 500, width: '100%' }}>
-                            <DataGrid rows={profiles1} columns={profilesColumns}  pageSize={20}
-                            //rowsPerPageOptions={[10, 20, 50]}
-                            pagination onRowClick={showProfile}/>
-                        </div>
+                            <div style={{ height: 500, width: '100%' }}>
+                                <DataGrid rows={profiles1} columns={profilesColumns} pageSize={20}
+                                    //rowsPerPageOptions={[10, 20, 50]}
+                                    pagination onRowClick={showProfile} />
+                            </div>
 
                         </CardContent>
                     </Card>
-                    
-                    </Grid>
+
+                </Grid>
             </Grid>
-            <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} resume={resume}/>
+            <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} resume={resume} />
         </>
     );
 };

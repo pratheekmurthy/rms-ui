@@ -6,7 +6,7 @@ const Logo = props => {
       alt="Logo"
       src="/static/grassroots.png"
       {...props}
-      style={{ height: '50px', width: '100px' }}
+      style={{ height: '50px', width: '150px' }}
     />
   );
 };
