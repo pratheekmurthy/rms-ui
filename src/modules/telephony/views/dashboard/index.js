@@ -187,7 +187,7 @@ const Inbound = () => {
                 getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 propTypes.history.push("/telephony/dashboard")
-                //window.location.reload()
+                window.location.reload()
             })
             .catch((error) => {
                 console.log(error)
