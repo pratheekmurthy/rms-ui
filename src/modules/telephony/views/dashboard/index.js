@@ -385,7 +385,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: "#7FFF00" }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: "#7FFF00" }}>
                         <div class="card-body">
                             <h5 class="card-title">Shortlisted Profiles</h5>
                             <p class="card-text">{shortlisted}</p>
@@ -393,7 +393,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#FF0000' }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF0000' }}>
                         <div class="card-body">
                             <h5 class="card-title">Rejected Profiles</h5>
                             <p class="card-text">{rejected}</p>
@@ -401,7 +401,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFD700' }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#FFD700' }}>
                         <div class="card-body">
                             <h5 class="card-title">Pending Profiles</h5>
                             <p class="card-text" >{profiles1.length - (shortlisted + rejected)}</p>
