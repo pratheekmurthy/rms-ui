@@ -162,13 +162,19 @@ const Inbound = () => {
                         ><Button variant="contained" color="secondary" >Reject</Button>
                         </IconButton>
                     </Tooltip>}
-                    {rowData.row.prrofileStatus === 'rejected' &&
+                    {rowData.row.prrofileStatus === 'rejected' && <div>
                         <Tooltip title="Shortlist">
                             <IconButton
                                 onClick={() => handleshortlisted(rowData.row._id)}
                             ><Button variant="contained" color="primary" >Shortlist</Button>
                             </IconButton>
-                        </Tooltip>}
+                        </Tooltip>
+                        <Tooltip title="Reject">
+                            <IconButton
+                                onClick={() => handleRejectPopup(rowData.row._id)}
+                            ><Button variant="contained" color="secondary" >Discard</Button>
+                            </IconButton>
+                        </Tooltip></div>}
 
                     {rowData.row.prrofileStatus === 'Applied' && <div>
                         <Tooltip title="Shortlist">
