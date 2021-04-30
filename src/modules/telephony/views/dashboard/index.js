@@ -112,6 +112,7 @@ const Inbound = () => {
     const [reason, setReason] = useState("")
     const [rejectId, setRejectID] = useState("")
     const [profileCount, setProfileCount] = useState("")
+    const [header, setHeader] = useState("All Profiles")
 
     var url = "http://192.168.3.45:3056/resumes/"
 
@@ -418,6 +419,7 @@ const Inbound = () => {
             return ele.prrofileStatus === 'shortlisted'
         })
         setProfiles1(result)
+        setHeader(`Shortlisted Profiles - (${result.length})`)
     }
 
     const handlerejectCard = (e) => {
@@ -425,6 +427,7 @@ const Inbound = () => {
             return ele.prrofileStatus === 'rejected'
         })
         setProfiles1(result)
+        setHeader(`Rejected Profiles - (${result.length})`)
     }
 
     const handleAll = (e) => {
@@ -435,6 +438,7 @@ const Inbound = () => {
             return ele.prrofileStatus !== 'Blocked'
         })
         setProfileCount(result.length)
+        setHeader(`All Profiles - (${result.length})`)
 
 
         setProfiles1(result)
@@ -445,6 +449,7 @@ const Inbound = () => {
             return ele.prrofileStatus === 'Applied'
         })
         setProfiles1(result)
+        setHeader(`Applied Profiles - (${result.length})`)
     }
 
     const handleClose1 = () => {
@@ -562,6 +567,9 @@ const Inbound = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Card>
+                        <CardHeader
+                            title={header}
+                        />
                         <CardContent>
                             <div style={{ height: 500, width: '100%' }}>
                                 <DataGrid rows={profiles1} columns={profilesColumns} pageSize={20}
