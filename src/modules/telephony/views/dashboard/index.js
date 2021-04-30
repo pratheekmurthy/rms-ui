@@ -471,7 +471,7 @@ const Inbound = () => {
                         <CardContent>
                             <div style={{ height: 500, width: '100%' }}>
                                 <DataGrid rows={profiles1} columns={profilesColumns} pageSize={20}
-                                    //rowsPerPageOptions={[10, 20, 50]}
+                                    // rowsPerPageOptions={[10, 20, 50]}
                                     pagination onRowClick={showProfile} />
                             </div>
 

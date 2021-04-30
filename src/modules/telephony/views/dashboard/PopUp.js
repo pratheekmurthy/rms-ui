@@ -25,18 +25,18 @@ import {
 
 
 const Popup = (props) => {
-    const { candidate, handleshortlisted, handlerejected, handleClose, show, link ,resume} = props
+    const { candidate, handleshortlisted, handlerejected, handleClose, show, link, resume } = props
     console.log(candidate)
     console.log(resume)
 
     var url = "http://192.168.3.45:3056/resumes/"
-    
+
 
     return (<div>
-        <Dialog 
-             open={show}
-             onClose={() => handleClose()}
-             style={{ padding: 2 }}
+        <Dialog
+            open={show}
+            onClose={() => handleClose()}
+            style={{ padding: 2 }}
         >
             <DialogTitle>{candidate.firstName} {candidate.lastName}</DialogTitle>
             < DialogContent>
@@ -53,7 +53,7 @@ const Popup = (props) => {
                 <p>Backlogs : {candidate.backlogs}</p>
                 <p>Current CTC : {candidate.ctc}</p>
                 <p>Available for Immediate Joining : {candidate.joining}</p>
-                <p>Profile Status : {candidate.prrofileStatus === 'Applied' ? (<div><Button variant="contained" color="primary" onClick={() => { handleshortlisted(candidate._id); }}>Shortlist</Button> <Button variant="contained" color="secondary" onClick={() => { handlerejected(candidate._id); }}>Reject</Button></div>) : (candidate.prrofileStatus)}</p>
+                <p>Profile Status : {candidate.prrofileStatus} </p>
                 <p>Resume : {resume ? (<a href={url + resume} target="_blank" rel="noopener noreferrer">show</a>) : null}</p>
                 <p>{link}</p>
                 <p><Button variant="contained" color="primary" onClick={handleClose}>Close</Button></p>
