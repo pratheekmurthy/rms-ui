@@ -29,7 +29,7 @@ export default function DownloadReport({ DownloadData }) {
         style = {
             padding: "5px",
             //color: 'blue',
-            backgroundColor: 'blue',
+            //backgroundColor: 'green',
             border: '5px'
 
         }

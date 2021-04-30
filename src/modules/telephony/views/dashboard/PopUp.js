@@ -40,21 +40,21 @@ const Popup = (props) => {
         >
             <DialogTitle>{candidate.firstName} {candidate.lastName}</DialogTitle>
             < DialogContent>
-                <p>First Name : {candidate.firstName}</p>
-                <p> Last Name: {candidate.lastName}</p>
-                <p> Role : {candidate.role}</p>
-                <p>Email : {candidate.email}</p>
+                <p><b>First Name : </b>{candidate.firstName}</p>
+                <p> <b>Last Name: </b>{candidate.lastName}</p>
+                <p> <b>Role : </b>{candidate.role}</p>
+                <p><b>Email : </b>{candidate.email}</p>
                 <p>DOB :{candidate.Dob}</p>
-                <p>Mobile Number : {candidate.mobile}</p>
-                <p>Alternate Number : {candidate.alternatemob}</p>
-                <p> Experience: {candidate.experience}</p>
-                <p>Applied Date : {candidate.created_At}</p>
-                <p>Graduation year : {candidate.graduation}</p>
-                <p>Backlogs : {candidate.backlogs}</p>
-                <p>Current CTC : {candidate.ctc}</p>
-                <p>Available for Immediate Joining : {candidate.joining}</p>
-                <p>Profile Status : {candidate.prrofileStatus} </p>
-                <p>Resume : {resume ? (<a href={url + resume} target="_blank" rel="noopener noreferrer">show</a>) : null}</p>
+                <p><b>Mobile Number : </b>{candidate.mobile}</p>
+                <p><b>Alternate Number : </b>{candidate.alternatemob}</p>
+                <p><b>Experience: </b>{candidate.experience}</p>
+                <p><b>Applied Date : </b>{candidate.created_At}</p>
+                <p><b>Graduation year : </b>{candidate.graduation}</p>
+                <p><b>Backlogs : </b>{candidate.backlogs}</p>
+                <p><b>Current CTC : </b>{candidate.ctc}</p>
+                <p><b>Available for Immediate Joining : </b>{candidate.joining}</p>
+                <p><b>Profile Status : </b>{candidate.prrofileStatus} </p>
+                <p><b>Resume</b> : {resume ? (<a href={url + resume} target="_blank" rel="noopener noreferrer">View</a>) : null}</p>
                 <p>{link}</p>
                 <p><Button variant="contained" color="primary" onClick={handleClose}>Close</Button></p>
             </DialogContent>

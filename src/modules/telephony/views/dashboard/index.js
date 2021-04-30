@@ -46,6 +46,7 @@ import { propTypes } from 'react-bootstrap/esm/Image';
 import { DataGrid } from '@material-ui/data-grid';
 import Popup from './PopUp'
 import EditIcon from '@material-ui/icons/Edit';
+import RejectPopup from './RejectPopup'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -107,6 +108,10 @@ const Inbound = () => {
     const [endDate, setEndDate] = useState(new Date())
     const [resume, setResume] = useState("")
     const [selectedCandaidate, setSelectedCandidate] = useState([])
+    const [show1, setShow1] = useState(false)
+    const [reason, setReason] = useState("")
+    const [rejectId, setRejectID] = useState("")
+
     var url = "http://192.168.3.45:3056/resumes/"
 
     const classes = useStyles();
@@ -118,7 +123,7 @@ const Inbound = () => {
         {
             headerName: 'SL.No',
             field: 'id',
-            flex: 1
+            flex: 0.5
         },
         {
             headerName: 'First Name',
@@ -145,28 +150,38 @@ const Inbound = () => {
             flex: 1
         },
         {
-            headerName: 'Updated At',
-            field: 'updated_At',
-            renderCell: rowData => (setCandidate(rowData.row)),
-            flex: 1
-        },
-        {
             headerName: 'Actions',
             field: '',
             renderCell: rowData => (
                 <>
-                    <Tooltip title="Shortlist">
+                    {rowData.row.prrofileStatus === 'shortlisted' && <Tooltip title="Reject">
                         <IconButton
-                            onClick={() => handleshortlisted(rowData.row._id)}
-                        ><Button variant="contained" color="primary" >Shortlist</Button>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Reject">
-                        <IconButton
-                            onClick={() => handlerejected(rowData.row._id)}
+                            onClick={() => handleRejectPopup(rowData.row._id)}
                         ><Button variant="contained" color="secondary" >Reject</Button>
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip>}
+                    {rowData.row.prrofileStatus === 'rejected' &&
+                        <Tooltip title="Shortlist">
+                            <IconButton
+                                onClick={() => handleshortlisted(rowData.row._id)}
+                            ><Button variant="contained" color="primary" >Shortlist</Button>
+                            </IconButton>
+                        </Tooltip>}
+
+                    {rowData.row.prrofileStatus === 'Applied' && <div>
+                        <Tooltip title="Shortlist">
+                            <IconButton
+                                onClick={() => handleshortlisted(rowData.row._id)}
+                            ><Button variant="contained" color="primary" >Shortlist</Button>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Reject">
+                            <IconButton
+                                onClick={() => handleRejectPopup(rowData.row._id)}
+                            ><Button variant="contained" color="secondary" >Reject</Button>
+                            </IconButton>
+                        </Tooltip></div>}
+
                 </>
             ),
             flex: 1.1
@@ -188,6 +203,7 @@ const Inbound = () => {
                     return ele.id = i
 
                 })
+                //console.log(response.data)
                 response.data.map((ele) => {
                     return ele.created_At = ele.created_At.slice(0, 10)
                 })
@@ -195,7 +211,7 @@ const Inbound = () => {
                     return ele.updated_At = ele.updated_At.slice(0, 10)
                 })
                 setProfiles(response.data)
-                setProfiles1(response.data)
+                //setProfiles1(response.data)
 
 
             })
@@ -233,12 +249,14 @@ const Inbound = () => {
         })
         result[0].prrofileStatus = 'shortlisted'
         result[0].updated_At = new Date()
+
         // handleClose()
 
         axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
-                //getProfiles()
+                getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                setCardValue()
                 //window.location.reload()
 
             })
@@ -248,17 +266,26 @@ const Inbound = () => {
     }
 
     //api call for updated rejected state
-    const handlerejected = (id) => {
+    const handlerejected = (id, reason) => {
         handleClose()
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
-        result[0].prrofileStatus = 'rejected'
+        //alert(reason)
+        if (reason === 'Block') {
+            result[0].prrofileStatus = 'Blocked'
+        } else {
+            result[0].prrofileStatus = 'rejected'
+        }
+
         result[0].updated_At = new Date()
+        result[0].reason_reject = reason
         axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
-                //getProfiles()
+                getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                setCardValue()
+                handleClose1()
                 //propTypes.history.push("/telephony/dashboard")
                 //window.location.reload()
 
@@ -330,6 +357,7 @@ const Inbound = () => {
         // .catch((error) => {
         //     console.log(error)
         // })
+
         const result = profiles1.filter((profile) => {
             return profile._id === data.row._id
         })
@@ -340,19 +368,25 @@ const Inbound = () => {
             setResume("")
         }
 
-        setCandidate(result)
+        // console.log(result)
+        setCandidate(result[0])
         setShow(true)
     }
 
     const setCardValue = () => {
-        const shortlisted1 = profiles1.filter((ele) => {
+        const shortlisted1 = profiles.filter((ele) => {
             return ele.prrofileStatus === 'shortlisted'
         })
         setShortlisted(shortlisted1.length)
-        const rejected1 = profiles1.filter((ele) => {
+        const rejected1 = profiles.filter((ele) => {
             return ele.prrofileStatus === 'rejected'
         })
         setRejected(rejected1.length)
+        const pending1 = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Applied'
+        })
+        setPending(pending1.length)
+
     }
 
 
@@ -360,6 +394,10 @@ const Inbound = () => {
         setValue()
         setCardValue()
     }, [filter])
+
+    useEffect(() => {
+        handleApplied()
+    }, [profiles])
 
     const handleChange = () => {
 
@@ -371,21 +409,62 @@ const Inbound = () => {
 
     console.log(candidate)
 
+    const handleShortlistCard = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'shortlisted'
+        })
+        setProfiles1(result)
+    }
+
+    const handlerejectCard = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'rejected'
+        })
+        setProfiles1(result)
+    }
+
+    const handleAll = (e) => {
+        // const result = profiles.filter((ele) => {
+        //     return ele.prrofileStatus === 'Applied'
+        // })
+
+        setProfiles1(profiles)
+    }
+
+    const handleApplied = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Applied'
+        })
+        setProfiles1(result)
+    }
+
+    const handleClose1 = () => {
+        setShow1(false)
+    }
+
+    const handleRejectPopup = (id) => {
+        handleClose()
+        setRejectID(id)
+        setShow1(true)
+    }
 
     return (
         <>
+
             <Grid container spacing={3} direction="row">
                 <Grid item xs={2} sm={2}></Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#FFD700' }} onClick={handleApplied}>
                         <div class="card-body">
-                            <h5 class="card-title">Total Profiles</h5>
-                            <p class="card-text">{profiles1.length}</p>
+                            <h5 class="card-title">Applied Profiles</h5>
+                            <p class="card-text" >{pending}</p>
                         </div>
                     </div>
                 </Grid>
+
+
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: "#7FFF00" }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: "#7FFF00" }} onClick={handleShortlistCard} >
                         <div class="card-body">
                             <h5 class="card-title">Shortlisted Profiles</h5>
                             <p class="card-text">{shortlisted}</p>
@@ -393,21 +472,23 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF0000' }}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF0000' }} onClick={handlerejectCard}>
                         <div class="card-body">
                             <h5 class="card-title">Rejected Profiles</h5>
                             <p class="card-text">{rejected}</p>
                         </div>
                     </div>
                 </Grid>
+                {/* <Grid item xs={1} sm={1}></Grid> */}
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#FFD700' }}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }} onClick={handleAll}>
                         <div class="card-body">
-                            <h5 class="card-title">Pending Profiles</h5>
-                            <p class="card-text" >{profiles1.length - (shortlisted + rejected)}</p>
+                            <h5 class="card-title">Total Profiles</h5>
+                            <p class="card-text">{profiles.length}</p>
                         </div>
                     </div>
                 </Grid>
+
                 {/* <Grid item xs={2} sm={2}></Grid> */}
                 <Grid item xs={12} sm={12}>
                     <Card>
@@ -417,11 +498,17 @@ const Inbound = () => {
                                     <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
 
                             </Grid>
-                                <Grid item xs={6} sm={6}>
+                                <Grid item xs={4} sm={4}>
                                     <DaterangeReport
                                         getALF={getALF}
                                         handleChange={handleChange}
                                     />
+
+                                </Grid>
+                                <Grid item xs={2} sm={2}>
+                                    <button type="button" class="btn btn-light"><DownloadReport
+                                        DownloadData={profiles1}
+                                    /></button>
                                 </Grid>
                                 <Grid item xs={2} sm={2}>
                                     <FormControl variant="outlined" className={classes.formControl} >
@@ -451,9 +538,7 @@ const Inbound = () => {
                     </Card>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <DownloadReport
-                        DownloadData={profiles1}
-                    />
+
                     {/* <Card>
                         <CardContent>
                             {
@@ -481,6 +566,7 @@ const Inbound = () => {
                 </Grid>
             </Grid>
             <Popup candidate={candidate} handleshortlisted={handleshortlisted} handlerejected={handlerejected} handleClose={handleClose} show={show} link={link} resume={resume} />
+            <RejectPopup show={show1} handleClose={handleClose1} handlerejected={handlerejected} setReason={setReason} rejectId={rejectId} setReason={setReason} />
         </>
     );
 };
