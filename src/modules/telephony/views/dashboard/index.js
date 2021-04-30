@@ -111,6 +111,7 @@ const Inbound = () => {
     const [show1, setShow1] = useState(false)
     const [reason, setReason] = useState("")
     const [rejectId, setRejectID] = useState("")
+    const [profileCount, setProfileCount] = useState("")
 
     var url = "http://192.168.3.45:3056/resumes/"
 
@@ -257,6 +258,7 @@ const Inbound = () => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
+                handleShortlistCard()
                 //window.location.reload()
 
             })
@@ -286,6 +288,7 @@ const Inbound = () => {
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleClose1()
+                handlerejectCard()
                 //propTypes.history.push("/telephony/dashboard")
                 //window.location.reload()
 
@@ -397,6 +400,7 @@ const Inbound = () => {
 
     useEffect(() => {
         handleApplied()
+        handleAll()
     }, [profiles])
 
     const handleChange = () => {
@@ -427,8 +431,13 @@ const Inbound = () => {
         // const result = profiles.filter((ele) => {
         //     return ele.prrofileStatus === 'Applied'
         // })
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus !== 'Blocked'
+        })
+        setProfileCount(result.length)
 
-        setProfiles1(profiles)
+
+        setProfiles1(result)
     }
 
     const handleApplied = (e) => {
@@ -484,7 +493,7 @@ const Inbound = () => {
                     <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }} onClick={handleAll}>
                         <div class="card-body">
                             <h5 class="card-title">Total Profiles</h5>
-                            <p class="card-text">{profiles.length}</p>
+                            <p class="card-text">{profileCount}</p>
                         </div>
                     </div>
                 </Grid>
