@@ -404,7 +404,8 @@ const Inbound = () => {
         const data = {
             profileID: profileID,
             action: action,
-            userID: localStorage.getItem('ID')
+            userID: localStorage.getItem('ID'),
+            userName: localStorage.getItem('username')
         }
         console.log("i am here", data)
 

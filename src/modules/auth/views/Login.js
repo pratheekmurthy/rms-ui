@@ -128,9 +128,11 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
     const url = 'http://localhost:3056//api/users/login'
     axios.post(`http://localhost:3056/api/users/login`, values)
       .then((res) => {
+        console.log(res)
         if (res.data.token) {
           localStorage.setItem('jwt', res.data.token)
           localStorage.setItem('ID', res.data.userID)
+          localStorage.setItem('username', res.data.username)
           setAccountTypeMain(ADMIN);
           setLoggedInMain(true);
           setError(false)
