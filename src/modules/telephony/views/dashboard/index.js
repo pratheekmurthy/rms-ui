@@ -113,8 +113,10 @@ const Inbound = () => {
     const [rejectId, setRejectID] = useState("")
     const [profileCount, setProfileCount] = useState("")
     const [header, setHeader] = useState("All Profiles")
+    const [hired, setHired] = useState(0)
+    const [but, setBut] = useState(false)
 
-    var url = "http://192.168.3.45:3056/resumes/"
+    var url = "http://localhost:3056/resumes/"
 
     const classes = useStyles();
 
@@ -122,11 +124,11 @@ const Inbound = () => {
     let rejected1 = ""
 
     const profilesColumns = [
-        {
-            headerName: 'SL.No',
-            field: 'id',
-            flex: 0.5
-        },
+        // {
+        //     headerName: 'SL.No',
+        //     field: 'id',
+        //     flex: 0.5
+        // },
         {
             headerName: 'First Name',
             field: 'firstName',
@@ -139,7 +141,7 @@ const Inbound = () => {
             flex: 1
         },
         {
-            headerName: 'Role',
+            headerName: 'Position Applied',
             field: 'role',
             flex: 1
         }, {
@@ -147,32 +149,62 @@ const Inbound = () => {
             field: 'created_At',
             flex: 1
         }, {
-            headerName: 'Profile status',
+            headerName: 'Profile Status',
             field: 'prrofileStatus',
             flex: 1
         },
+        {
+            headerName: 'Job Code',
+            field: 'jobcode',
+            flex: 0.5
+        },
+        {
+            headerName: 'Source',
+            field: 'reference',
+            flex: 0.5
+        },
+        // {
+        //     headerName: 'Details',
+        //     flex: 1,
+        //     field: 'Details',
+        //     renderCell: rowData => (
+        //         <Tooltip title="Reject">
+        //             <IconButton
+        //                 onClick={() => showProfile(rowData.row._id)}
+        //             ><Button variant="contained" >Reject</Button>
+        //             </IconButton>
+        //         </Tooltip>
+        //     )
+        // },
         {
             headerName: 'Actions',
             field: '',
             renderCell: rowData => (
                 <>
-                    {rowData.row.prrofileStatus === 'shortlisted' && <Tooltip title="Reject">
-                        <IconButton
-                            onClick={() => handleRejectPopup(rowData.row._id)}
-                        ><Button variant="contained" color="secondary" >Reject</Button>
-                        </IconButton>
-                    </Tooltip>}
+                    {rowData.row.prrofileStatus === 'shortlisted' && <div>
+                        <Tooltip title="Reject">
+                            <IconButton
+                                onClick={() => handleRejectPopup(rowData.row._id)}
+                            ><Button variant="contained" >Reject</Button>
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Reject">
+                            <IconButton
+                                onClick={() => HandleHired(rowData.row._id)}
+                            ><Button variant="contained" fullWidth="true">Hire</Button>
+                            </IconButton>
+                        </Tooltip></div>}
                     {rowData.row.prrofileStatus === 'rejected' && <div>
                         <Tooltip title="Shortlist">
                             <IconButton
-                                onClick={() => handleshortlisted(rowData.row._id)}
-                            ><Button variant="contained" color="primary" >Shortlist</Button>
+                                onClick={(e) => handleshortlisted(rowData.row._id, e)}
+                            ><Button variant="contained" id="shortlistbutton">Shortlist</Button>
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Reject">
                             <IconButton
                                 onClick={() => handleRejectPopup(rowData.row._id)}
-                            ><Button variant="contained" color="secondary" >Discard</Button>
+                            ><Button variant="contained"  >Discard</Button>
                             </IconButton>
                         </Tooltip></div>}
 
@@ -180,15 +212,22 @@ const Inbound = () => {
                         <Tooltip title="Shortlist">
                             <IconButton
                                 onClick={() => handleshortlisted(rowData.row._id)}
-                            ><Button variant="contained" color="primary" >Shortlist</Button>
+                            ><Button variant="contained"  >Shortlist</Button>
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Reject">
                             <IconButton
                                 onClick={() => handleRejectPopup(rowData.row._id)}
-                            ><Button variant="contained" color="secondary" >Reject</Button>
+                            ><Button variant="contained">Reject</Button>
                             </IconButton>
                         </Tooltip></div>}
+                    {rowData.row.prrofileStatus === 'Hired' && <div>
+                        <Tooltip title="Shortlist">
+                            <IconButton
+                            ><Button variant="contained" disabled="true" fullWidth="true">Hired</Button>
+                            </IconButton>
+                        </Tooltip>
+                    </div>}
 
                 </>
             ),
@@ -202,7 +241,7 @@ const Inbound = () => {
 
     //getALl profiles
     const getProfiles = () => {
-        axios.get('http://192.168.3.45:3056/api/profiles')
+        axios.get('http://localhost:3056/api/profiles')
             .then((response) => {
                 response.data.reverse()
                 let i = 0;
@@ -220,13 +259,13 @@ const Inbound = () => {
                 })
                 setProfiles(response.data)
                 //setProfiles1(response.data)
-
-
             })
             .catch((error) => {
                 console.log(error)
             })
     }
+
+    //console.log(profiles1)
 
     // console.log(profiles1)
     function getALF(startDate, endDate) {
@@ -250,8 +289,10 @@ const Inbound = () => {
     }
 
     //handle shortlist and handle reject
-    const handleshortlisted = (id) => {
-        handleClose()
+    const handleshortlisted = (id, e) => {
+        //handleClose()
+        //e.preventDefault()
+        // console.log(e.target.id)
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
@@ -260,12 +301,13 @@ const Inbound = () => {
 
         // handleClose()
 
-        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleShortlistCard()
+                handleLog(id, 'shortlisted')
                 //window.location.reload()
 
             })
@@ -274,22 +316,54 @@ const Inbound = () => {
             })
     }
 
+    //handle shortlist and handle reject
+    const HandleHired = (id) => {
+        //handleClose()
+        const result = profiles.filter((ele) => {
+            return ele._id === id
+        })
+        result[0].prrofileStatus = 'Hired'
+        result[0].updated_At = new Date()
+
+        // handleClose()
+
+        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
+            .then((response) => {
+                getProfiles()
+                toast.success("Hired", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                setCardValue()
+                handleShortlistCard()
+                handleLog(id, 'Hired')
+                //window.location.reload()
+
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+
+    const handleshortlisted1 = (id) => {
+        setBut(true)
+        handleshortlisted(id)
+    }
     //api call for updated rejected state
     const handlerejected = (id, reason) => {
-        handleClose()
+        //handleClose()
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
         //alert(reason)
         if (reason === 'Block') {
             result[0].prrofileStatus = 'Blocked'
+            handleLog(id, 'Blocked')
         } else {
             result[0].prrofileStatus = 'rejected'
+            handleLog(id, 'rejected')
         }
 
         result[0].updated_At = new Date()
         result[0].reason_reject = reason
-        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -317,14 +391,32 @@ const Inbound = () => {
     }
 
     const searchcandidate = (e) => {
-        console.log(search)
+        //console.log(search)
         const result = profiles1.filter((ele) => {
             return ele.firstName === search
         })
         setProfiles1(result)
     }
 
-    console.log(selectedCandaidate)
+    // console.log(selectedCandaidate)
+
+    const handleLog = (profileID, action) => {
+        const data = {
+            profileID: profileID,
+            action: action,
+            userID: localStorage.getItem('ID')
+        }
+        console.log("i am here", data)
+
+        axios.post(`http://localhost:3056/api/profile/log`, data)
+            .then((res) => {
+                console.log(res, "resssssssssssss")
+            })
+            .catch((err) => {
+                console.log(err, "errrrrrrrrrrr")
+            })
+
+    }
 
     const onChangeFilter = (e, value) => {
         setFilter(e.target.value)
@@ -357,7 +449,7 @@ const Inbound = () => {
 
     const showProfile = (data) => {
 
-        axios.get(`http://192.168.3.45:3056/api/profiles/${data.row._id}`)
+        axios.get(`http://localhost:3056/api/profiles/${data.row._id}`)
         // .then((response) => {
         //     console.log(response.data)
         //     setCandidate(response.data)
@@ -371,16 +463,24 @@ const Inbound = () => {
         const result = profiles1.filter((profile) => {
             return profile._id === data.row._id
         })
-        console.log(result, "result")
+        //console.log(result, "result")
         if (result[0].resume.length > 0) {
             setResume(result[0].resume)
         } else {
             setResume("")
         }
 
+        //console.log(but)
         // console.log(result)
         setCandidate(result[0])
-        setShow(true)
+        if (but === true) {
+            console.log(but)
+            setShow(false)
+        } else {
+            console.log(but)
+            setShow(true)
+        }
+
     }
 
     const setCardValue = () => {
@@ -396,6 +496,10 @@ const Inbound = () => {
             return ele.prrofileStatus === 'Applied'
         })
         setPending(pending1.length)
+        const hired1 = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Hired'
+        })
+        setHired(hired1.length)
 
     }
 
@@ -418,7 +522,7 @@ const Inbound = () => {
         console.log(id)
     }
 
-    console.log(candidate)
+    //console.log(candidate)
 
     const handleShortlistCard = (e) => {
         const result = profiles.filter((ele) => {
@@ -435,6 +539,16 @@ const Inbound = () => {
         setProfiles1(result)
         setHeader(`Rejected Profiles - (${result.length})`)
     }
+
+    const handleHired = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Hired'
+        })
+        setProfiles1(result)
+        setHeader(`Hired Profiles - (${result.length})`)
+        setHired(result.length)
+    }
+
 
     const handleAll = (e) => {
         // const result = profiles.filter((ele) => {
@@ -470,55 +584,60 @@ const Inbound = () => {
 
     return (
         <>
-
             <Grid container spacing={3} direction="row">
-                <Grid item xs={2} sm={2}></Grid>
+                <Grid item xs={1} sm={1}></Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#FFD700' }} onClick={handleApplied}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#5F9EA0' }} onClick={handleApplied}>
                         <div class="card-body">
-                            <h5 class="card-title">Applied Profiles</h5>
-                            <p class="card-text" >{pending}</p>
-                        </div>
-                    </div>
-                </Grid>
-
-
-                <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: "#7FFF00" }} onClick={handleShortlistCard} >
-                        <div class="card-body">
-                            <h5 class="card-title">Shortlisted Profiles</h5>
-                            <p class="card-text">{shortlisted}</p>
+                            <h5 class="card-title">Applied</h5>
+                            <h3 class="card-text" >{pending}</h3>
                         </div>
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF0000' }} onClick={handlerejectCard}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: "#90EE90" }} onClick={handleShortlistCard} >
                         <div class="card-body">
-                            <h5 class="card-title">Rejected Profiles</h5>
-                            <p class="card-text">{rejected}</p>
+                            <h5 class="card-title">Shortlisted</h5>
+                            <h3 class="card-text">{shortlisted}</h3>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF6347', justifyContent: "center" }} onClick={handlerejectCard}>
+                        <div class="card-body">
+                            <h5 class="card-title">Rejected</h5>
+                            <h3 class="card-text">{rejected}</h3>
                         </div>
                     </div>
                 </Grid>
                 {/* <Grid item xs={1} sm={1}></Grid> */}
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#FFF8DC' }} onClick={handleAll}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#F5DEB3' }} onClick={handleAll}>
                         <div class="card-body">
                             <h5 class="card-title">Total Profiles</h5>
-                            <p class="card-text">{profileCount}</p>
+                            <h3 class="card-text">{profileCount}</h3>
                         </div>
                     </div>
                 </Grid>
-
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "18rem", backgroundColor: '#4682B4' }} onClick={handleHired}>
+                        <div class="card-body">
+                            <h5 class="card-title">Hired</h5>
+                            <h3 class="card-text">{hired}</h3>
+                        </div>
+                    </div>
+                </Grid>
+                <Grid item xs={1} sm={1}></Grid>
                 {/* <Grid item xs={2} sm={2}></Grid> */}
                 <Grid item xs={12} sm={12}>
                     <Card>
                         <CardContent>
                             <Grid container spacing={3} direction="row">
                                 <Grid item xs={4} sm={4}>
-                                    <TextField id="outlined-basic" label="search by first name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" color="primary" onClick={searchcandidate}><SearchIcon /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
+                                    <TextField id="outlined-basic" label="Search By First Name" variant="outlined" size="small" value={search} onChange={handleSearch} />&nbsp;<Button variant="contained" onClick={searchcandidate}><SearchIcon style={{ color: 'grey' }} /></Button>&nbsp;<Button variant="contained" onClick={() => { getProfiles(); setSearch("") }}><RotateLeftIcon /></Button> &nbsp;
 
                             </Grid>
-                                <Grid item xs={4} sm={4}>
+                                <Grid item xs={6} sm={6}>
                                     <DaterangeReport
                                         getALF={getALF}
                                         handleChange={handleChange}
@@ -530,8 +649,8 @@ const Inbound = () => {
                                         DownloadData={profiles1}
                                     /></button>
                                 </Grid>
-                                <Grid item xs={2} sm={2}>
-                                    <FormControl variant="outlined" className={classes.formControl} >
+                                {/* <Grid item xs={2} sm={2}> */}
+                                {/* <FormControl variant="outlined" className={classes.formControl} >
                                         <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-outlined-label"
@@ -551,31 +670,17 @@ const Inbound = () => {
                                                 })
                                             }
                                         </Select>
-                                    </FormControl>
-                                </Grid>
+                                    </FormControl> */}
+                                {/* </Grid> */}
                             </Grid>
                         </CardContent>
                     </Card>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-
-                    {/* <Card>
-                        <CardContent>
-                            {
-                                profiles1.length > 0 ? (<DataTable
-                                    records={profiles1}
-                                    selectedData={showProfile}
-                                />) : null
-                            }
-                        </CardContent>
-                    </Card> */}
-
+                    <h6>&emsp;&emsp;{header}</h6>
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Card>
-                        <CardHeader
-                            title={header}
-                        />
                         <CardContent>
                             <div style={{ height: 500, width: '100%' }}>
                                 <DataGrid rows={profiles1} columns={profilesColumns} pageSize={20}

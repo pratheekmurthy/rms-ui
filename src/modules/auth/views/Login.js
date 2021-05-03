@@ -23,6 +23,7 @@ import {
 import Axios from 'axios';
 import { ADMIN, USER } from 'src/redux/constants';
 import { createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
 // import Typography from '@material-ui/core/Typography';
 function Copyright() {
   return (
@@ -123,76 +124,41 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   console.log(user_Details)
 
   async function authenticate(values) {
-    // setError('');
-    // try {
-    //   const url = 'http://106.51.86.75:4000/auth/apiM/login'
-    //   // const url='http://192.168.3.45:42009/user/login'
+    setError('');
+    const url = 'http://localhost:3056//api/users/login'
+    axios.post(`http://localhost:3056/api/users/login`, values)
+      .then((res) => {
+        if (res.data.token) {
+          localStorage.setItem('jwt', res.data.token)
+          localStorage.setItem('ID', res.data.userID)
+          setAccountTypeMain(ADMIN);
+          setLoggedInMain(true);
+          setError(false)
+        }
+        // setAccountTypeMain(ADMIN);
+        // setLoggedInMain(true);
+        // setError(false)
+      })
+      .catch((err) => {
+        console.log(err)
+        setLoggedInMain(false);
+        setError(true);
+      })
 
 
-    //   console.log("values", values)
+    // if (values.email === 'Admin@gmail.com' && values.password === 'Admin@123') {
+    //   localStorage.setItem('role', 'Admin');
+    //   localStorage.setItem('email', 'Admin@gmail.com')
+    //   localStorage.setItem('password', 'Admin@gmail.com')
 
-    //   const res = await Axios.post(url, values);
-    //   var myObj = res.data;
-    //   if ('statusCode' in myObj) {
-    //     setLoggedInMain(false);
-    //     setError(true);
-    //   } if ('status' in myObj) {
-    //     console.log("login api", res.data)
-    //     const obj = res.data.userDetails;
-    //     const { accessToken } = res.data;
-
-
-    //     if (res.data.userDetails.AgentType === 'Admin') {
-    //       // localStorage.setItem("jwtToken", accessToken);
-    //       // localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-    //       localStorage.setItem('role', 'Admin');
-    //       // localStorage.setItem('Agenttype', 'L2');
-    //       // localStorage.setItem('AgentType', 'Outbound')
-    //       // setUserDetailsMain(obj);
-    //       setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-    //       setLoggedInMain(true);
-    //       setError(false)
-
-    //     }
-    //     // if (res.data.userDetails.AgentType === 'L2') {
-    //     //   console.log('data resppppp', res.data)
-    //     //   localStorage.setItem("jwtToken", accessToken);
-    //     //   localStorage.setItem('AgentSIPID', res.data.userDetails.External_num);
-    //     //   localStorage.setItem('role', res.data.userDetails.role);
-    //     //   localStorage.setItem('Agenttype', 'L2');
-    //     //   localStorage.setItem('AgentType', 'Outbound')
-    //     //   setUserDetailsMain(obj);
-    //     //   setAccountTypeMain(obj.role === 'Agent' ? ADMIN : USER);
-    //     //   if (res.data.userDetails.AgentQueueStatus === 'dynamic') {
-    //     //     // addToQueue('Local/3' + localStorage.getItem('AgentSIPID') + '@from-queue\n', 7001, res.data.userDetails)
-    //     //   }
-    //     //   setLoggedInMain(true);
-    //     //   setError(false);
-    //     // }
-
-
-    //   } else {
-    //     setLoggedInMain(false);
-    //     setError(true);
-    //   }
-
-    // } catch (err) {
+    //   setAccountTypeMain(ADMIN);
+    //   setLoggedInMain(true);
+    //   setError(false)
+    // } else {
     //   setLoggedInMain(false);
     //   setError(true);
-    // }
-    if (values.email === 'Admin@gmail.com' && values.password === 'Admin@123') {
-      localStorage.setItem('role', 'Admin');
-      localStorage.setItem('email', 'Admin@gmail.com')
-      localStorage.setItem('password', 'Admin@gmail.com')
-
-      setAccountTypeMain(ADMIN);
-      setLoggedInMain(true);
-      setError(false)
-    } else {
-      setLoggedInMain(false);
-      setError(true);
-    }
   }
+
 
 
 
@@ -237,10 +203,10 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
                   .required('Password is required')
               })}
               onSubmit={values => {
-                console.log('values', values);
-                localStorage.setItem('AgentType', values.AgentType);
-                localStorage.setItem('role', values.role);
-                localStorage.setItem('AgentSIPID', values.AgentSIPID);
+                // console.log('values', values);
+                // localStorage.setItem('AgentType', values.AgentType);
+                // localStorage.setItem('role', values.role);
+                // localStorage.setItem('AgentSIPID', values.AgentSIPID);
 
                 // navigate('/app/dashboard', { replace: true });
                 authenticate(values);

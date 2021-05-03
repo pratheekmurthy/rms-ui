@@ -78,8 +78,8 @@ export default function MaterialUIPickers(props) {
       />
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
-      <br />
-      <Button size="large" variant="contained" color="primary" onClick={handleSubmit}>Show Profiles</Button>
+      {/* <br /> */}
+      <Button size="small" variant="contained" onClick={handleSubmit}>Show Profiles</Button>
       {/* </Grid> */}
       {/* <Grid item lg={3} sm={6}> */}
       <br />

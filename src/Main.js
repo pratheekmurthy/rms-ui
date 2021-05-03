@@ -27,7 +27,7 @@ function Main({
   useEffect(() => {
     (async function checkLoggedInState() {
       try {
-        if (localStorage.getItem('email')) {
+        if (localStorage.getItem('jwt')) {
           setLoggedInMain(true);
           // var test = await Axios.post('http://106.51.86.75:4000/auth/apiM/verifyClient', {}, { headers: { Authorization: `Bearer ${localStorage.getItem('jwtToken')}` } })
           //   .then(response => {

@@ -62,7 +62,7 @@ const RejectPopup = (props) => {
 
     }
 
-    const rejectValues = [{ name: 'Screening Reject', value: 'Screening Reject' }, { name: 'Candidate Not Interested', value: 'Candidate Not Interested' }, { name: 'High Expectation', value: 'High Expectation' }, { name: 'Unwilling to relocate', value: 'Unwilling to relocate' }, { name: 'Communication', value: 'Communication' }, { name: 'Notice Period', value: 'Notice Period' }, { name: 'Block', value: 'Block' }]
+    const rejectValues = [{ name: 'Screening Reject', value: 'Screening Reject' }, { name: 'Candidate Not Interested', value: 'Candidate Not Interested' }, { name: 'High Expectation', value: 'High Expectation' }, { name: 'Unwilling to relocate', value: 'Unwilling to relocate' }, { name: 'Communication', value: 'Communication' }, { name: 'Notice Period', value: 'Notice Period' }, { name: 'Discard', value: 'Block' }]
 
     return (<div>
         <Dialog

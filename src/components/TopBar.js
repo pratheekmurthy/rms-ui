@@ -220,7 +220,7 @@ const TopBar = ({
   );
 
   return (<div>
-    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: 'blue' }}>
+    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest} style={{ background: '#e0e0e0' }}>
       <Toolbar>
         <RouterLink to="/">
           <Logo />
