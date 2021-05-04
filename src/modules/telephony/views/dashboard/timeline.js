@@ -12,10 +12,10 @@ export default function ColorsTimeline(props) {
 
     const getTimeline = () => {
         const data = {
-            id: id
+            id: "609089b5cc6f3b12918f9281"
         }
 
-        axios.get(`http://localhost:3056/api/profile/getlog`, data)
+        axios.post(`http://localhost:3056/api/profile/getlog`, data)
             .then((res) => {
                 console.log(res)
             })
@@ -28,6 +28,20 @@ export default function ColorsTimeline(props) {
 
     useEffect(() => {
         getTimeline()
+        // alert("chaitra")
+        // const data = {
+        //     id: "609089b5cc6f3b12918f9281"
+        // }
+
+        // axios.post(`http://localhost:3056/api/profile/getlog`, data)
+        //     .then((res) => {
+        //         console.log(res)
+        //     })
+        //     .catch((err) => {
+        //         console.log(err)
+        //     })
+
+        // console.log(data)
     }, [])
 
 
