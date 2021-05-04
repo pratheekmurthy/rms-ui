@@ -126,7 +126,7 @@ function Login({ setLoggedInMain, setAccountTypeMain, setUserDetailsMain }) {
   async function authenticate(values) {
     setError('');
     const url = 'http://localhost:3056//api/users/login'
-    axios.post(`http://localhost:3056/api/users/login`, values)
+    axios.post(`http://192.168.3.45:3056/api/users/login`, values)
       .then((res) => {
         console.log(res)
         if (res.data.token) {
