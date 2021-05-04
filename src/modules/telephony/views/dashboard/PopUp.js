@@ -75,7 +75,7 @@ const Popup = (props) => {
                         <p><b>Current CTC : </b>{candidate.ctc}</p>
                         <p><b>Notice Period : </b>{candidate.joining}</p>
                         <p><b>Profile Status : </b>{candidate.prrofileStatus} </p>
-                        <p><b>Resume</b> : {resume ? (<a href={url + resume} target="_blank" rel="noopener noreferrer">View</a>) : null}</p>
+                        <p><b>Resume</b> : {resume ? (<a href={URL1 + resume} target="_blank" rel="noopener noreferrer">View</a>) : null}</p>
                         <p>{link}</p>
                     </Grid>
                     <Grid item xs={12} sm={12}>
