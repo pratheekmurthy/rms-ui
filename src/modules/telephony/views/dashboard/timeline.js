@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Timeline from '@material-ui/lab/Timeline';
 import TimelineItem from '@material-ui/lab/TimelineItem';
 import TimelineSeparator from '@material-ui/lab/TimelineSeparator';
@@ -8,16 +8,19 @@ import TimelineDot from '@material-ui/lab/TimelineDot';
 import axios from 'axios'
 
 export default function ColorsTimeline(props) {
-    const { id } = props
+    const { id, Applied } = props
+    const [log, setLogs] = useState([])
 
     const getTimeline = () => {
         const data = {
-            id: "609089b5cc6f3b12918f9281"
+            id: id
         }
 
         axios.post(`http://localhost:3056/api/profile/getlog`, data)
             .then((res) => {
                 console.log(res)
+                res.data.unshift(Applied)
+                setLogs(res.data)
             })
             .catch((err) => {
                 console.log(err)
@@ -26,6 +29,7 @@ export default function ColorsTimeline(props) {
         console.log(data)
     }
 
+    console.log(log)
     useEffect(() => {
         getTimeline()
         // alert("chaitra")
@@ -47,14 +51,21 @@ export default function ColorsTimeline(props) {
 
     return (
         <Timeline align="alternate">
-            <TimelineItem>
-                <TimelineSeparator>
-                    <TimelineDot />
-                    <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>Eat</TimelineContent>
-            </TimelineItem>
-            <TimelineItem>
+            {
+                log.map((ele) => {
+                    return (
+                        <TimelineItem>
+                            <TimelineSeparator>
+                                <TimelineDot color="primary" />
+                                <TimelineConnector />
+                            </TimelineSeparator>
+                            <TimelineContent><div><h5>{ele.action}</h5>{ele.userName}<p>{ele.created_At.slice(0, 10)}</p></div></TimelineContent>
+                        </TimelineItem>
+                    )
+                })
+            }
+
+            {/* <TimelineItem>
                 <TimelineSeparator>
                     <TimelineDot color="primary" />
                     <TimelineConnector />
@@ -73,7 +84,7 @@ export default function ColorsTimeline(props) {
                     <TimelineDot />
                 </TimelineSeparator>
                 <TimelineContent>Repeat</TimelineContent>
-            </TimelineItem>
+            </TimelineItem> */}
         </Timeline>
     );
 }

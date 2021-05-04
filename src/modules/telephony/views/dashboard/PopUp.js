@@ -34,16 +34,13 @@ const Popup = (props) => {
     var url = "http://192.168.3.45:3056/resumes/"
 
 
-
-    const getTimeline = () => {
-        const data = {
-            id: candidate._id
-        }
-
-        console.log(data)
+    const Applied = {
+        action: "Applied",
+        created_At: candidate.created_At,
+        userName: candidate.firstName
     }
 
-    getTimeline()
+
 
     useEffect(() => {
 
@@ -79,10 +76,9 @@ const Popup = (props) => {
                         <p><b>Profile Status : </b>{candidate.prrofileStatus} </p>
                         <p><b>Resume</b> : {resume ? (<a href={url + resume} target="_blank" rel="noopener noreferrer">View</a>) : null}</p>
                         <p>{link}</p>
-                        <p><button onClick={getTimeline}>get log</button></p>
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <Timeline id={candidate._id} />
+                        <Timeline id={candidate._id} Applied={Applied} />
                     </Grid>
                 </Grid>
 
