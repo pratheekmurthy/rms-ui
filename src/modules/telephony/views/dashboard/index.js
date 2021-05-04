@@ -47,6 +47,7 @@ import { DataGrid } from '@material-ui/data-grid';
 import Popup from './PopUp'
 import EditIcon from '@material-ui/icons/Edit';
 import RejectPopup from './RejectPopup'
+import { GET_PROFILES, SHORTLIST, REJECT, HIRED, MAKE_LOG, SHOW_PROFILE, URL } from './constants'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -116,7 +117,7 @@ const Inbound = () => {
     const [hired, setHired] = useState(0)
     const [but, setBut] = useState(false)
 
-    var url = "http://192.168.3.45:3056/resumes/"
+    var url = URL
 
     const classes = useStyles();
 
@@ -241,8 +242,9 @@ const Inbound = () => {
 
     //getALl profiles
     const getProfiles = () => {
-        axios.get('http://192.168.3.45:3056/api/profiles')
+        axios.get(GET_PROFILES)
             .then((response) => {
+                console.log(response)
                 response.data.reverse()
                 let i = 0;
                 response.data.map((ele) => {
@@ -301,7 +303,7 @@ const Inbound = () => {
 
         // handleClose()
 
-        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+        axios.put(`${SHORTLIST}${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -327,7 +329,7 @@ const Inbound = () => {
 
         // handleClose()
 
-        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+        axios.put(`${REJECT}${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Hired", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -363,7 +365,7 @@ const Inbound = () => {
 
         result[0].updated_At = new Date()
         result[0].reason_reject = reason
-        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
+        axios.put(`${HIRED}${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -409,7 +411,7 @@ const Inbound = () => {
         }
 
 
-        axios.post(`http://192.168.3.45:3056/api/profile/log`, data)
+        axios.post(`${MAKE_LOG}`, data)
             .then((res) => {
                 console.log(res)
             })
@@ -445,12 +447,13 @@ const Inbound = () => {
 
     useEffect(() => {
         getProfiles()
+        handleApplied()
 
     }, [])
 
     const showProfile = (data) => {
 
-        axios.get(`http://192.168.3.45:3056/api/profiles/${data.row._id}`)
+        axios.get(`${SHOW_PROFILE}${data.row._id}`)
         // .then((response) => {
         //     console.log(response.data)
         //     setCandidate(response.data)
@@ -511,8 +514,9 @@ const Inbound = () => {
     }, [filter])
 
     useEffect(() => {
-        handleApplied()
+        //handleApplied()
         handleAll()
+        handleApplied()
     }, [profiles])
 
     const handleChange = () => {

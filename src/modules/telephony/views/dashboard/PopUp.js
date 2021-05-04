@@ -24,6 +24,7 @@ import {
 } from '@material-ui/core';
 import Timeline from './timeline'
 import axios from 'axios'
+import { URL1 } from './constants'
 
 
 const Popup = (props) => {
@@ -31,7 +32,7 @@ const Popup = (props) => {
     //console.log(candidate)
     //console.log(resume)
 
-    var url = "http://192.168.3.45:3056/resumes/"
+    var url = URL1
 
 
     const Applied = {
@@ -78,7 +79,7 @@ const Popup = (props) => {
                         <p>{link}</p>
                     </Grid>
                     <Grid item xs={12} sm={12}>
-                        <Timeline id={candidate._id} Applied={Applied} />
+                        <Timeline id1={candidate._id} Applied={Applied} />
                     </Grid>
                 </Grid>
 

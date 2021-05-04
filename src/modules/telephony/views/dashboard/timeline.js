@@ -6,17 +6,20 @@ import TimelineConnector from '@material-ui/lab/TimelineConnector';
 import TimelineContent from '@material-ui/lab/TimelineContent';
 import TimelineDot from '@material-ui/lab/TimelineDot';
 import axios from 'axios'
+import { GET_LOG } from './constants'
 
 export default function ColorsTimeline(props) {
-    const { id, Applied } = props
+    const { id1, Applied } = props
     const [log, setLogs] = useState([])
 
     const getTimeline = () => {
         const data = {
-            id: id
+            id: id1
         }
 
-        axios.post(`http://192.168.3.45:3056/api/profile/getlog`, data)
+        console.log(data)
+
+        axios.post(GET_LOG, data)
             .then((res) => {
                 console.log(res)
                 res.data.unshift(Applied)
