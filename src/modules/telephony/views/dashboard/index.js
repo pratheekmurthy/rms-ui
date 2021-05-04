@@ -116,7 +116,7 @@ const Inbound = () => {
     const [hired, setHired] = useState(0)
     const [but, setBut] = useState(false)
 
-    var url = "http://localhost:3056/resumes/"
+    var url = "http://192.168.3.45:3056/resumes/"
 
     const classes = useStyles();
 
@@ -181,7 +181,7 @@ const Inbound = () => {
             field: '',
             renderCell: rowData => (
                 <>
-                    {rowData.row.prrofileStatus === 'shortlisted' && <div>
+                    {rowData.row.prrofileStatus === 'Shortlisted' && <div>
                         <Tooltip title="Reject">
                             <IconButton
                                 onClick={() => handleRejectPopup(rowData.row._id)}
@@ -194,7 +194,7 @@ const Inbound = () => {
                             ><Button variant="contained" fullWidth="true">Hire</Button>
                             </IconButton>
                         </Tooltip></div>}
-                    {rowData.row.prrofileStatus === 'rejected' && <div>
+                    {rowData.row.prrofileStatus === 'Rejected' && <div>
                         <Tooltip title="Shortlist">
                             <IconButton
                                 onClick={(e) => handleshortlisted(rowData.row._id, e)}
@@ -241,7 +241,7 @@ const Inbound = () => {
 
     //getALl profiles
     const getProfiles = () => {
-        axios.get('http://localhost:3056/api/profiles')
+        axios.get('http://192.168.3.45:3056/api/profiles')
             .then((response) => {
                 response.data.reverse()
                 let i = 0;
@@ -296,18 +296,18 @@ const Inbound = () => {
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
-        result[0].prrofileStatus = 'shortlisted'
+        result[0].prrofileStatus = 'Shortlisted'
         result[0].updated_At = new Date()
 
         // handleClose()
 
-        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
+        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleShortlistCard()
-                handleLog(id, 'shortlisted')
+                handleLog(id, 'Shortlisted')
                 //window.location.reload()
 
             })
@@ -327,7 +327,7 @@ const Inbound = () => {
 
         // handleClose()
 
-        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
+        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.success("Hired", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -357,13 +357,13 @@ const Inbound = () => {
             result[0].prrofileStatus = 'Blocked'
             handleLog(id, 'Blocked')
         } else {
-            result[0].prrofileStatus = 'rejected'
-            handleLog(id, 'rejected')
+            result[0].prrofileStatus = 'Rejected'
+            handleLog(id, 'Rejected')
         }
 
         result[0].updated_At = new Date()
         result[0].reason_reject = reason
-        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
+        axios.put(`http://192.168.3.45:3056/api/profiles/${id}`, result[0])
             .then((response) => {
                 getProfiles()
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
@@ -407,14 +407,14 @@ const Inbound = () => {
             userID: localStorage.getItem('ID'),
             userName: localStorage.getItem('username')
         }
-        console.log("i am here", data)
 
-        axios.post(`http://localhost:3056/api/profile/log`, data)
+
+        axios.post(`http://192.168.3.45:3056/api/profile/log`, data)
             .then((res) => {
-                console.log(res, "resssssssssssss")
+                console.log(res)
             })
             .catch((err) => {
-                console.log(err, "errrrrrrrrrrr")
+                console.log(err)
             })
 
     }
@@ -450,7 +450,7 @@ const Inbound = () => {
 
     const showProfile = (data) => {
 
-        axios.get(`http://localhost:3056/api/profiles/${data.row._id}`)
+        axios.get(`http://192.168.3.45:3056/api/profiles/${data.row._id}`)
         // .then((response) => {
         //     console.log(response.data)
         //     setCandidate(response.data)
@@ -486,11 +486,11 @@ const Inbound = () => {
 
     const setCardValue = () => {
         const shortlisted1 = profiles.filter((ele) => {
-            return ele.prrofileStatus === 'shortlisted'
+            return ele.prrofileStatus === 'Shortlisted'
         })
         setShortlisted(shortlisted1.length)
         const rejected1 = profiles.filter((ele) => {
-            return ele.prrofileStatus === 'rejected'
+            return ele.prrofileStatus === 'Rejected'
         })
         setRejected(rejected1.length)
         const pending1 = profiles.filter((ele) => {
@@ -527,7 +527,7 @@ const Inbound = () => {
 
     const handleShortlistCard = (e) => {
         const result = profiles.filter((ele) => {
-            return ele.prrofileStatus === 'shortlisted'
+            return ele.prrofileStatus === 'Shortlisted'
         })
         setProfiles1(result)
         setHeader(`Shortlisted Profiles - (${result.length})`)
@@ -535,7 +535,7 @@ const Inbound = () => {
 
     const handlerejectCard = (e) => {
         const result = profiles.filter((ele) => {
-            return ele.prrofileStatus === 'rejected'
+            return ele.prrofileStatus === 'Rejected'
         })
         setProfiles1(result)
         setHeader(`Rejected Profiles - (${result.length})`)

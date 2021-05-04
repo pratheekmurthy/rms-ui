@@ -16,7 +16,7 @@ export default function ColorsTimeline(props) {
             id: id
         }
 
-        axios.post(`http://localhost:3056/api/profile/getlog`, data)
+        axios.post(`http://192.168.3.45:3056/api/profile/getlog`, data)
             .then((res) => {
                 console.log(res)
                 res.data.unshift(Applied)
