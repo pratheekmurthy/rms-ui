@@ -59,7 +59,7 @@ export default function ColorsTimeline(props) {
                     <TimelineDot color="secondary" />
                     <TimelineConnector />
                 </TimelineSeparator>
-                <TimelineContent><div><h5>{Applied.action}</h5>{Applied.reject_reason}<br />{Applied.userName}<p>{Applied.created_At.slice(0, 10)}</p></div></TimelineContent>
+                <TimelineContent><div><h5>{Applied.action}</h5>{Applied.userName}<p>{Applied.created_At.slice(0, 10)}</p></div></TimelineContent>
             </TimelineItem>
             {
                 log.map((ele) => {
@@ -69,7 +69,7 @@ export default function ColorsTimeline(props) {
                                 <TimelineDot color="primary" />
                                 <TimelineConnector />
                             </TimelineSeparator>
-                            <TimelineContent><div><h5>{ele.action}</h5>{ele.reject_reason}<br />{ele.userName}<p>{ele.created_At.slice(0, 10)}</p></div></TimelineContent>
+                            <TimelineContent><div><h5>{ele.action}</h5>{ele.userName}<p>{ele.created_At.slice(0, 10)}<br />{ele.reject_reason}</p></div></TimelineContent>
                         </TimelineItem>
                     )
                 })

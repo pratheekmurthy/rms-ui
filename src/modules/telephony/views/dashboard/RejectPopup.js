@@ -78,7 +78,7 @@ const RejectPopup = (props) => {
 
     const handleSubmit = (e) => {
         if (reason1.length > 30) {
-            alert("Please Enter reason less than 30 characters")
+            alert("Reason entered should be less than 30 characters")
         } else {
             handlerejected(rejectId, reason, reason1)
             setReason("")

@@ -153,6 +153,16 @@ const Inbound = () => {
             flex: 0.5
         },
         {
+            headerName: 'Location',
+            field: 'currentLocation',
+            flex: 0.5
+        },
+        {
+            headerName: 'Source',
+            field: 'reference',
+            flex: 0.5
+        },
+        {
             headerName: 'Profile Status',
             field: 'prrofileStatus',
             flex: 0.5
@@ -162,16 +172,7 @@ const Inbound = () => {
             field: 'jobcode',
             flex: 0.5
         },
-        {
-            headerName: 'Source',
-            field: 'reference',
-            flex: 0.5
-        },
-        {
-            headerName: 'Location',
-            field: 'currentLocation',
-            flex: 0.5
-        },
+
         {
             headerName: 'Applied Date',
             field: 'created_At',
@@ -180,6 +181,7 @@ const Inbound = () => {
         {
             headerName: 'Actions',
             field: '',
+
             renderCell: rowData => (
                 <>
                     {rowData.row.prrofileStatus === 'Shortlisted' && <div>
@@ -228,6 +230,7 @@ const Inbound = () => {
                             ><Button variant="contained" disabled="true" fullWidth="true">Hired</Button>
                             </IconButton>
                         </Tooltip>
+
                     </div>}
 
                 </>
@@ -359,6 +362,7 @@ const Inbound = () => {
     //api call for updated rejected state
     const handlerejected = (id, reason, reason1) => {
         //handleClose()
+        console.log(id, reason, reason1)
         console.log(reason1)
         const result = profiles.filter((ele) => {
             return ele._id === id
@@ -370,7 +374,7 @@ const Inbound = () => {
         } else {
             result[0].prrofileStatus = 'Rejected'
 
-            handleLog(id, 'Rejected')
+            handleLog(id, 'Rejected', reason)
         }
 
         result[0].updated_At = new Date()
