@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import {
     Avatar,
@@ -45,24 +45,52 @@ const useStyles = makeStyles((theme) => ({
 const RejectPopup = (props) => {
     const { show, handleClose, handlerejected, rejectId } = props
     const [reason, setReason] = useState("")
+    // const [reason1, setReason1] = useState("")
     const [val, setVal] = useState(true)
+    const [disable, setDisbale] = useState(true)
+    const [reason1, setReason1] = useState("")
 
     const classes = useStyles();
 
+    const onChangeReason1 = (e) => setReason1(e.target.value)
 
     const handleChange = (event) => {
+        if (event.target.value === 'Others' || event.target.value === 'Discarded') {
+            setDisbale(false)
+        }
         setReason(event.target.value);
+
         setVal(false)
     };
 
+    const handleReason = () => {
+        console.log("i am callerd")
+        // if (reason === 'Others' || reason === 'Discarded') {
+        //     setDisbale(false)
+        // }
+    }
+
+    // useState(() => {
+    //     handleReason()
+    // }, [val])
+
+
+
     const handleSubmit = (e) => {
-        handlerejected(rejectId, reason)
-        setReason("")
-        handleClose()
+        if (reason1.length > 30) {
+            alert("Please Enter reason less than 30 characters")
+        } else {
+            handlerejected(rejectId, reason, reason1)
+            setReason("")
+            handleClose()
+            setReason1("")
+        }
+
+
 
     }
 
-    const rejectValues = [{ name: 'Screening Reject', value: 'Screening Reject' }, { name: 'Candidate Not Interested', value: 'Candidate Not Interested' }, { name: 'High Expectation', value: 'High Expectation' }, { name: 'Unwilling to relocate', value: 'Unwilling to relocate' }, { name: 'Communication', value: 'Communication' }, { name: 'Notice Period', value: 'Notice Period' }, { name: 'Discard', value: 'Block' }]
+    const rejectValues = [{ name: 'Screening Reject', value: 'Screening Reject' }, { name: 'Candidate Not Interested', value: 'Candidate Not Interested' }, { name: 'High Expectation', value: 'High Expectation' }, { name: 'Unwilling to relocate', value: 'Unwilling to relocate' }, { name: 'Communication', value: 'Communication' }, { name: 'Notice Period', value: 'Notice Period' }, { name: 'Others', value: 'Others' }, { name: 'Discard', value: 'Discarded' }]
 
     return (<div>
         <Dialog
@@ -90,6 +118,7 @@ const RejectPopup = (props) => {
 
                         </Select>
                     </FormControl><br />
+                    <TextField id="outlined-basic" label="Reason" variant="outlined" size="small" fullWidth={false} disabled={disable} onChange={onChangeReason1} value={reason1} /><br /><br />
                     <p>&nbsp;&nbsp;&nbsp;<Button variant="contained" color="primary" disabled={val} onClick={handleSubmit}>Submit</Button></p>
                 </div>
             </DialogContent>

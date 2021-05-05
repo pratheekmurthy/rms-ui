@@ -115,6 +115,7 @@ const Inbound = () => {
     const [profileCount, setProfileCount] = useState("")
     const [header, setHeader] = useState("All Profiles")
     const [hired, setHired] = useState(0)
+    const [Discarded, setDiscarded] = useState(0)
     const [but, setBut] = useState(false)
 
     var url = URL
@@ -133,26 +134,28 @@ const Inbound = () => {
         {
             headerName: 'First Name',
             field: 'firstName',
-            flex: 1
+            flex: 0.5
 
         },
         {
             headerName: 'Last Name',
             field: 'lastName',
-            flex: 1
+            flex: 0.5
         },
         {
             headerName: 'Position Applied',
             field: 'role',
-            flex: 1
-        }, {
-            headerName: 'Applied Date',
-            field: 'created_At',
-            flex: 1
-        }, {
+            flex: 0.5
+        },
+        {
+            headerName: 'Experience',
+            field: 'experience',
+            flex: 0.5
+        },
+        {
             headerName: 'Profile Status',
             field: 'prrofileStatus',
-            flex: 1
+            flex: 0.5
         },
         {
             headerName: 'Job Code',
@@ -164,19 +167,16 @@ const Inbound = () => {
             field: 'reference',
             flex: 0.5
         },
-        // {
-        //     headerName: 'Details',
-        //     flex: 1,
-        //     field: 'Details',
-        //     renderCell: rowData => (
-        //         <Tooltip title="Reject">
-        //             <IconButton
-        //                 onClick={() => showProfile(rowData.row._id)}
-        //             ><Button variant="contained" >Reject</Button>
-        //             </IconButton>
-        //         </Tooltip>
-        //     )
-        // },
+        {
+            headerName: 'Location',
+            field: 'currentLocation',
+            flex: 0.5
+        },
+        {
+            headerName: 'Applied Date',
+            field: 'created_At',
+            flex: 0.5
+        },
         {
             headerName: 'Actions',
             field: '',
@@ -252,7 +252,11 @@ const Inbound = () => {
                     return ele.id = i
 
                 })
-                //console.log(response.data)
+
+                // response.data.map((ele) => {
+                //     return ele.created_At = moment(ele.created_At).format("MMM Do YYYY")
+                // })
+                console.log(response.data)
                 response.data.map((ele) => {
                     return ele.created_At = ele.created_At.slice(0, 10)
                 })
@@ -302,14 +306,17 @@ const Inbound = () => {
         result[0].updated_At = new Date()
 
         // handleClose()
+        // console.log("i am here")
 
-        axios.put(`${SHORTLIST}${id}`, result[0])
+        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
             .then((response) => {
+                console.log(response)
                 getProfiles()
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleShortlistCard()
-                handleLog(id, 'Shortlisted')
+                let r = ''
+                handleLog(id, 'Shortlisted', r)
                 //window.location.reload()
 
             })
@@ -335,7 +342,8 @@ const Inbound = () => {
                 toast.success("Hired", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleShortlistCard()
-                handleLog(id, 'Hired')
+                let r = ''
+                handleLog(id, 'Hired', r)
                 //window.location.reload()
 
             })
@@ -349,17 +357,19 @@ const Inbound = () => {
         handleshortlisted(id)
     }
     //api call for updated rejected state
-    const handlerejected = (id, reason) => {
+    const handlerejected = (id, reason, reason1) => {
         //handleClose()
+        console.log(reason1)
         const result = profiles.filter((ele) => {
             return ele._id === id
         })
         //alert(reason)
-        if (reason === 'Block') {
-            result[0].prrofileStatus = 'Blocked'
-            handleLog(id, 'Blocked')
+        if (reason === 'Discarded' || reason === 'Others') {
+            result[0].prrofileStatus = 'Discarded'
+            handleLog(id, 'Discarded', reason1)
         } else {
             result[0].prrofileStatus = 'Rejected'
+
             handleLog(id, 'Rejected')
         }
 
@@ -368,6 +378,7 @@ const Inbound = () => {
         axios.put(`${HIRED}${id}`, result[0])
             .then((response) => {
                 getProfiles()
+
                 toast.error("Rejected", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
                 setCardValue()
                 handleClose1()
@@ -402,12 +413,13 @@ const Inbound = () => {
 
     // console.log(selectedCandaidate)
 
-    const handleLog = (profileID, action) => {
+    const handleLog = (profileID, action, reason1) => {
         const data = {
             profileID: profileID,
             action: action,
             userID: localStorage.getItem('ID'),
-            userName: localStorage.getItem('username')
+            userName: localStorage.getItem('username'),
+            reject_reason: reason1
         }
 
 
@@ -504,7 +516,10 @@ const Inbound = () => {
             return ele.prrofileStatus === 'Hired'
         })
         setHired(hired1.length)
-
+        const Discarded = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Discarded'
+        })
+        setDiscarded(Discarded.length)
     }
 
 
@@ -515,6 +530,7 @@ const Inbound = () => {
 
     useEffect(() => {
         //handleApplied()
+        //setCardValue()
         handleAll()
         handleApplied()
     }, [profiles])
@@ -545,6 +561,14 @@ const Inbound = () => {
         setHeader(`Rejected Profiles - (${result.length})`)
     }
 
+    const handleDiscarded = (e) => {
+        const result = profiles.filter((ele) => {
+            return ele.prrofileStatus === 'Discarded'
+        })
+        setProfiles1(result)
+        setHeader(`Discarded Profiles - (${result.length})`)
+    }
+
     const handleHired = (e) => {
         const result = profiles.filter((ele) => {
             return ele.prrofileStatus === 'Hired'
@@ -554,13 +578,22 @@ const Inbound = () => {
         setHired(result.length)
     }
 
+    // const handleDiscarded = (e) => {
+    //     const result = profiles.filter((ele) => {
+    //         return ele.prrofileStatus === 'Dis'
+    //     })
+    //     setProfiles1(result)
+    //     setHeader(`Hired Profiles - (${result.length})`)
+    //     setHired(result.length)
+    // }
+
 
     const handleAll = (e) => {
         // const result = profiles.filter((ele) => {
         //     return ele.prrofileStatus === 'Applied'
         // })
         const result = profiles.filter((ele) => {
-            return ele.prrofileStatus !== 'Blocked'
+            return ele.prrofileStatus !== 'Discarded'
         })
         setProfileCount(result.length)
         setHeader(`All Profiles - (${result.length})`)
@@ -590,9 +623,8 @@ const Inbound = () => {
     return (
         <>
             <Grid container spacing={3} direction="row">
-                <Grid item xs={1} sm={1}></Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#5F9EA0' }} onClick={handleApplied}>
+                    <div class="card" style={{ width: "14rem", backgroundColor: '#5F9EA0' }} onClick={handleApplied}>
                         <div class="card-body">
                             <h5 class="card-title">Applied</h5>
                             <h3 class="card-text" >{pending}</h3>
@@ -600,7 +632,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: "#90EE90" }} onClick={handleShortlistCard} >
+                    <div class="card" style={{ width: "16rem", backgroundColor: "#90EE90" }} onClick={handleShortlistCard} >
                         <div class="card-body">
                             <h5 class="card-title">Shortlisted</h5>
                             <h3 class="card-text">{shortlisted}</h3>
@@ -608,7 +640,7 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "17rem", backgroundColor: '#FF6347', justifyContent: "center" }} onClick={handlerejectCard}>
+                    <div class="card" style={{ width: "16rem", backgroundColor: '#FF6347', justifyContent: "center" }} onClick={handlerejectCard}>
                         <div class="card-body">
                             <h5 class="card-title">Rejected</h5>
                             <h3 class="card-text">{rejected}</h3>
@@ -617,7 +649,7 @@ const Inbound = () => {
                 </Grid>
                 {/* <Grid item xs={1} sm={1}></Grid> */}
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#F5DEB3' }} onClick={handleAll}>
+                    <div class="card" style={{ width: "16rem", backgroundColor: '#F5DEB3' }} onClick={handleAll}>
                         <div class="card-body">
                             <h5 class="card-title">Total Profiles</h5>
                             <h3 class="card-text">{profileCount}</h3>
@@ -625,14 +657,21 @@ const Inbound = () => {
                     </div>
                 </Grid>
                 <Grid item xs={2} sm={2}>
-                    <div class="card" style={{ width: "18rem", backgroundColor: '#4682B4' }} onClick={handleHired}>
+                    <div class="card" style={{ width: "16rem", backgroundColor: '#4682B4' }} onClick={handleHired}>
                         <div class="card-body">
                             <h5 class="card-title">Hired</h5>
                             <h3 class="card-text">{hired}</h3>
                         </div>
                     </div>
                 </Grid>
-                <Grid item xs={1} sm={1}></Grid>
+                <Grid item xs={2} sm={2}>
+                    <div class="card" style={{ width: "16rem", backgroundColor: '#48D1CC' }} onClick={handleDiscarded}>
+                        <div class="card-body">
+                            <h5 class="card-title">Discarded</h5>
+                            <h3 class="card-text">{Discarded}</h3>
+                        </div>
+                    </div>
+                </Grid>
                 {/* <Grid item xs={2} sm={2}></Grid> */}
                 <Grid item xs={12} sm={12}>
                     <Card>
