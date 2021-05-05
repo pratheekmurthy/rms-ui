@@ -368,9 +368,13 @@ const Inbound = () => {
             return ele._id === id
         })
         //alert(reason)
-        if (reason === 'Discarded' || reason === 'Others') {
+        if (reason === 'Discarded') {
             result[0].prrofileStatus = 'Discarded'
             handleLog(id, 'Discarded', reason1)
+        } else if (reason === 'Others') {
+            result[0].prrofileStatus = 'Rejected'
+            result[0].reason_reject = reason1
+            handleLog(id, 'Rejected', reason1)
         } else {
             result[0].prrofileStatus = 'Rejected'
 
