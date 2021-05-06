@@ -311,11 +311,12 @@ const Inbound = () => {
         // handleClose()
         // console.log("i am here")
 
-        axios.put(`http://localhost:3056/api/profiles/${id}`, result[0])
+        axios.put(`${SHORTLIST}${id}`, result[0])
             .then((response) => {
                 console.log(response)
-                getProfiles()
+                // console.log(response)
                 toast.success("Shortlisted", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 })
+                getProfiles()
                 setCardValue()
                 handleShortlistCard()
                 let r = ''
