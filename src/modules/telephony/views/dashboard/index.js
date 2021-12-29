@@ -3,6 +3,7 @@ import axios from 'axios'
 import 'react-toastify/dist/ReactToastify.css'
 import DownloadReport from '../../../dashboard-360/views/DashboardView/DownloadReport'
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@material-ui/data-grid';
+import Popup from './PopUp'
 
 import {
     Avatar,
@@ -25,13 +26,15 @@ import {
     Paper,
     Snackbar,
     Tooltip,
-    IconButton
+    IconButton,
+     //Modal
 } from '@material-ui/core';
 import {
     MenuItem, InputLabel, Select,
     FormControl
 } from '@material-ui/core'
 import { grey } from '@material-ui/core/colors';
+import data from 'src/modules/dashboard-360/views/customer/CustomerListView/data';
 
 
 const useStyles = makeStyles(theme => ({
@@ -93,6 +96,16 @@ const Inbound = () => {
     const [Shortlisted, setshortlist] = useState([])
     const [total, settotal] = useState([])
     const [Applied, setapplied] = useState([])
+    const[show,setshow] = useState(false)
+    const [data,setdata]= useState([])
+
+   
+    
+    
+    const handleClose=(e)=>{
+        setshow(false)
+    }
+
 
     const handlehired = (e) => {
         setprofiles(Hired)
@@ -117,6 +130,9 @@ const Inbound = () => {
     const handletotal = (e) => {
         setprofiles(total)
     }
+
+    
+
     const getprofile = () => {
         axios.get(`https://rms.grssl.com/api/profiles`)
             .then((response) => {
@@ -127,7 +143,7 @@ const Inbound = () => {
                 })
                 setprofiles(response.data)
                 console.log(response.data)
-
+                
                 const hired1 = response.data.filter((ele) => {
 
                     return ele.prrofileStatus === 'Hired'
@@ -227,18 +243,22 @@ const Inbound = () => {
     ];
 
     const showProfile = (data) => {
-
-
+        console.log(data.row)
+        setshow(true)
+     setdata(data.row)
     }
-
+ 
     return (
         <div>
             <Grid container spacing={2}>
                 <Grid item xs={12} md={3} lg={2} >
                     <Card onClick={handleapplied} style={{ backgroundColor: "#bb2020" }}>
                         <CardContent >
+                        
                             Applied <br />
                             {Applied.length}
+                            
+
                         </CardContent>
                     </Card>
 
@@ -248,7 +268,7 @@ const Inbound = () => {
 
                     <Card onClick={handleshort} style={{ backgroundColor: "pink" }}>
                         <CardContent>
-                            Shortlisted <br />
+                        Shortlisted <br />
                             {Shortlisted.length}
                         </CardContent>
                     </Card>
@@ -278,7 +298,8 @@ const Inbound = () => {
 
                 <Grid item xs={2} md={3} lg={2}>
                     <Card onClick={handlehired} style={{ backgroundColor: "#cddc39" }}>
-                        <CardContent>
+                        <CardContent >
+                       
                             Hired <br />
                             {Hired.length}
                         </CardContent>
@@ -310,6 +331,7 @@ const Inbound = () => {
 
                 </Grid>
             </Grid>
+            <Popup  handleClose={handleClose} show={show} data={data} />
 
         </div>
     );
